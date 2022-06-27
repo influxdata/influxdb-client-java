@@ -23,6 +23,9 @@ package com.influxdb.client.write.events;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+
+import com.influxdb.utils.Arguments;
 
 /**
  * The event is published when is backpressure applied.
@@ -31,11 +34,40 @@ import java.util.logging.Logger;
  */
 public final class BackpressureEvent extends AbstractWriteEvent {
 
+    private final BackpressureReason reason;
+
+    public enum BackpressureReason {
+        /**
+         * DataPoint are emitted to fast.
+         */
+        FAST_EMITTING,
+
+        /**
+         * Server is not able to process batches fast enough.
+         */
+        TOO_MUCH_BATCHES,
+    }
+
     private static final Logger LOG = Logger.getLogger(BackpressureEvent.class.getName());
+
+    public BackpressureEvent(@Nonnull final BackpressureReason reason) {
+
+        Arguments.checkNotNull(reason, "reason");
+
+        this.reason = reason;
+    }
 
     @Override
     public void logEvent() {
 
         LOG.log(Level.WARNING, "Backpressure applied, try increase WriteOptions.bufferLimit");
+    }
+
+    /**
+     * @return reason of the backpressure
+     */
+    @Nonnull
+    public BackpressureReason getReason() {
+        return reason;
     }
 }

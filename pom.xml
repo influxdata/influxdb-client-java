@@ -197,7 +197,7 @@
                     <configLocation>scripts/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <linkXRef>false</linkXRef>
-                    <excludes>**/examples/**</excludes>
+                    <excludes>**/examples/**,**/BackpressureBatchesBufferStrategy.java</excludes>
                     <resourceExcludes>**/influx2.properties</resourceExcludes>
                     <sourceDirectories>
                         <sourceDirectory>src/main/java</sourceDirectory>
@@ -435,7 +435,7 @@
                     <configLocation>scripts/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <linkXRef>false</linkXRef>
-                    <excludes>**/example/**</excludes>
+                    <excludes>**/example/**,**/BackpressureBatchesBufferStrategy.java</excludes>
                     <resourceExcludes>**/influx2.properties</resourceExcludes>
                     <sourceDirectories>
                         <sourceDirectory>src/main/java</sourceDirectory>

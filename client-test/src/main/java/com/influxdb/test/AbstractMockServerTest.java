@@ -40,6 +40,7 @@ public abstract class AbstractMockServerTest extends AbstractTest {
 
     private static final int INTERNAL_SERVER_ERROR = 500;
     protected MockWebServer mockServer;
+    protected MockServerExtension mockServerExtension;
 
     /**
      * Start Mock server.
@@ -49,21 +50,16 @@ public abstract class AbstractMockServerTest extends AbstractTest {
     @Nonnull
     protected String startMockServer() {
 
-        mockServer = new MockWebServer();
-        try {
-            mockServer.start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        mockServerExtension = new MockServerExtension();
+        mockServerExtension.start();
+        mockServer = mockServerExtension.server;
 
-        return mockServer.url("/").url().toString();
+        return mockServerExtension.baseURL;
     }
 
     @AfterEach
     protected void after() throws IOException {
-        if (mockServer != null) {
-            mockServer.shutdown();
-        }
+        mockServerExtension.shutdown();
     }
 
     @Nonnull

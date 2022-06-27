@@ -21,14 +21,17 @@
  */
 package com.influxdb.client;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
@@ -36,10 +39,13 @@ import com.influxdb.client.write.events.AbstractWriteEvent;
 import com.influxdb.client.write.events.BackpressureEvent;
 import com.influxdb.client.write.events.WriteErrorEvent;
 import com.influxdb.client.write.events.WriteSuccessEvent;
+import com.influxdb.test.MockServerExtension;
 
 import io.reactivex.rxjava3.core.BackpressureOverflowStrategy;
 import io.reactivex.rxjava3.exceptions.MissingBackpressureException;
+import okhttp3.mockwebserver.MockResponse;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -56,15 +62,47 @@ class ITBackpressure extends AbstractITWrite {
     private static final int BATCH_SIZE = 50_000;
     private static final int SECONDS_COUNT = 15;
 
+    protected MockServerExtension mockServerExtension = new MockServerExtension();
+
+    @AfterEach
+    protected void after() throws IOException {
+        mockServerExtension.shutdown();
+    }
+
     @Test
     public void backpressureAndBufferConsistency() throws InterruptedException {
 
         WriteOptions build = WriteOptions.builder()
                 .batchSize(BATCH_SIZE)
                 .flushInterval(1_000_000)
+                .bufferLimit(BATCH_SIZE * 10)
                 .build();
 
-        stressfulWriteValidate(build);
+        stressfulWriteValidate(build, null);
+    }
+
+    @Test
+    public void backpressureWithNotRunningInstance() throws InterruptedException {
+
+        influxDBClient.close();
+        mockServerExtension.start();
+        influxDBClient = InfluxDBClientFactory.create(
+                mockServerExtension.baseURL,
+                "my-token".toCharArray(),
+                "my-org",
+                "my-bucket");
+
+        mockServerExtension.server.enqueue(new MockResponse());
+
+        WriteOptions build = WriteOptions.builder()
+                .batchSize(BATCH_SIZE)
+                .bufferLimit(BATCH_SIZE * 10)
+                .flushInterval(1_000_000)
+                .build();
+
+        stressfulWriteValidate(build, backpressureEvents -> Assertions.assertThat(backpressureEvents)
+                .anyMatch(backpressureEvent -> backpressureEvent.getReason()
+                        .equals(BackpressureEvent.BackpressureReason.TOO_MUCH_BATCHES)));
     }
 
     @Test
@@ -72,11 +110,12 @@ class ITBackpressure extends AbstractITWrite {
 
         WriteOptions build = WriteOptions.builder()
                 .batchSize(BATCH_SIZE)
+                .bufferLimit(BATCH_SIZE * 10)
                 .jitterInterval(1_000)
                 .flushInterval(1_000_000)
                 .build();
 
-        stressfulWriteValidate(build);
+        stressfulWriteValidate(build, null);
     }
 
     @Test
@@ -101,7 +140,8 @@ class ITBackpressure extends AbstractITWrite {
                 .hasMessage(null);
     }
 
-    private void stressfulWriteValidate(@Nonnull final WriteOptions writeOptions) throws InterruptedException {
+    private void stressfulWriteValidate(@Nonnull final WriteOptions writeOptions,
+                                        @Nullable final Consumer<List<BackpressureEvent>> backpressureAssert) throws InterruptedException {
 
         List<AbstractWriteEvent> events = stressfulWrite(writeOptions);
 
@@ -113,7 +153,11 @@ class ITBackpressure extends AbstractITWrite {
                 .map(it -> (BackpressureEvent) it)
                 .collect(Collectors.toList());
 
-        Assertions.assertThat(backpressure).isNotEmpty();
+        if (backpressureAssert == null) {
+            Assertions.assertThat(backpressure).isNotEmpty();
+        } else {
+            backpressureAssert.accept(backpressure);
+        }
 
         //
         // Test consistent Bath size
