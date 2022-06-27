@@ -60,7 +60,8 @@ public final class BackpressureEvent extends AbstractWriteEvent {
     @Override
     public void logEvent() {
 
-        LOG.log(Level.WARNING, "Backpressure applied, try increase WriteOptions.bufferLimit");
+        LOG.log(Level.WARNING,
+                String.format("Backpressure[%s] applied, try increase WriteOptions.bufferLimit", reason));
     }
 
     /**

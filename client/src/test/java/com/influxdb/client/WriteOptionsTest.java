@@ -21,10 +21,18 @@
  */
 package com.influxdb.client;
 
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
+
+import com.influxdb.client.write.events.WriteRetriableErrorEvent;
+
 import io.reactivex.rxjava3.core.BackpressureOverflowStrategy;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
@@ -57,7 +65,7 @@ class WriteOptionsTest {
 
         WriteOptions writeOptions = WriteOptions.builder()
                 .batchSize(10_000)
-                .bufferLimit(500)
+                .bufferLimit(50_000)
                 .flushInterval(500)
                 .jitterInterval(1_000)
                 .retryInterval(2_000)
@@ -69,7 +77,7 @@ class WriteOptionsTest {
                 .build();
 
         Assertions.assertThat(writeOptions.getBatchSize()).isEqualTo(10_000);
-        Assertions.assertThat(writeOptions.getBufferLimit()).isEqualTo(500);
+        Assertions.assertThat(writeOptions.getBufferLimit()).isEqualTo(50_000);
         Assertions.assertThat(writeOptions.getFlushInterval()).isEqualTo(500);
         Assertions.assertThat(writeOptions.getJitterInterval()).isEqualTo(1_000);
         Assertions.assertThat(writeOptions.getRetryInterval()).isEqualTo(2_000);
@@ -78,5 +86,29 @@ class WriteOptionsTest {
         Assertions.assertThat(writeOptions.getExponentialBase()).isEqualTo(2);
         Assertions.assertThat(writeOptions.getWriteScheduler()).isEqualTo(Schedulers.computation());
         Assertions.assertThat(writeOptions.getBackpressureStrategy()).isEqualTo(BackpressureOverflowStrategy.ERROR);
+    }
+
+    @Test
+    void warningBufferSize() {
+
+        MockLogHandler handler = new MockLogHandler();
+
+        final Logger logger = Logger.getLogger(WriteOptions.class.getName());
+        logger.addHandler(handler);
+
+        WriteOptions.builder()
+                .batchSize(50_000)
+                .bufferLimit(10_000)
+                .build();
+
+        List<LogRecord> records = handler.getRecords(Level.WARNING);
+
+        Assertions.assertThat(records).hasSize(1);
+        Assertions.assertThat(records.get(0).getMessage())
+                .isEqualTo("The minimal recommended size for buffer is 'batchSize * 5'. Current settings: batch={0}, buffer={1}.");
+        Assertions.assertThat(records.get(0).getParameters()).hasSize(2);
+        Assertions.assertThat(records.get(0).getParameters()[0]).isEqualTo(50_000);
+        Assertions.assertThat(records.get(0).getParameters()[1]).isEqualTo(10_000);
+
     }
 }

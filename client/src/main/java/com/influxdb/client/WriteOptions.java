@@ -21,6 +21,8 @@
  */
 package com.influxdb.client;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.annotation.concurrent.ThreadSafe;
@@ -53,6 +55,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
 @ThreadSafe
 public final class WriteOptions implements WriteApi.RetryOptions {
 
+    private static final Logger LOG = Logger.getLogger(WriteOptions.class.getName());
     public static final int DEFAULT_BATCH_SIZE = 1000;
     public static final int DEFAULT_FLUSH_INTERVAL = 1000;
     public static final int DEFAULT_JITTER_INTERVAL = 0;
@@ -395,7 +398,14 @@ public final class WriteOptions implements WriteApi.RetryOptions {
          * @return {@code WriteOptions}
          */
         @Nonnull
+        @SuppressWarnings("MagicNumber")
         public WriteOptions build() {
+
+            if (bufferLimit < (batchSize * 5)) {
+                String msg = "The minimal recommended size for buffer is 'batchSize * 5'. "
+                        + "Current settings: batch={0}, buffer={1}.";
+                LOG.log(Level.WARNING, msg, new Object[]{batchSize, bufferLimit});
+            }
 
             return new WriteOptions(this);
         }
