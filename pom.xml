@@ -197,7 +197,7 @@
                     <configLocation>scripts/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <linkXRef>false</linkXRef>
-                    <excludes>**/examples/**,**/BackpressureBatchesBufferStrategy.java</excludes>
+                    <excludes>**/examples/**,**/flowable/*.java</excludes>
                     <resourceExcludes>**/influx2.properties</resourceExcludes>
                     <sourceDirectories>
                         <sourceDirectory>src/main/java</sourceDirectory>
@@ -233,7 +233,7 @@
                         **/*nightly*/**, **/.m2/**, LICENSE, **/*.md, **/PLACEHOLDER, **/.influxdb/**, **/generated/**,
                         **/openapi-generator/**, **/swagger.yml, **/*.json, **/spring.factories, **/PULL_REQUEST_TEMPLATE,
                         release.properties/, **/pom.xml.releaseBackup, **/pom.xml.tag, **/semantic.yml, **/test.txt, **/*.csv,
-                        codecov.yml
+                        codecov.yml, **/flowable/*.java
                     </excludes>
                     <properties>
                         <organizationName>${project.organization.name}</organizationName>
@@ -435,7 +435,7 @@
                     <configLocation>scripts/checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <linkXRef>false</linkXRef>
-                    <excludes>**/example/**,**/BackpressureBatchesBufferStrategy.java</excludes>
+                    <excludes>**/example/**,**/flowable/*.java</excludes>
                     <resourceExcludes>**/influx2.properties</resourceExcludes>
                     <sourceDirectories>
                         <sourceDirectory>src/main/java</sourceDirectory>

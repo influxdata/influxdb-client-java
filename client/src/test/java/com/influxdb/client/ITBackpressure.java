@@ -22,17 +22,22 @@
 package com.influxdb.client;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.influxdb.LogLevel;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.AbstractWriteEvent;
@@ -46,6 +51,7 @@ import io.reactivex.rxjava3.exceptions.MissingBackpressureException;
 import okhttp3.mockwebserver.MockResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
@@ -60,9 +66,15 @@ class ITBackpressure extends AbstractITWrite {
 
     private static final int WRITER_COUNT = 4;
     private static final int BATCH_SIZE = 50_000;
-    private static final int SECONDS_COUNT = 15;
+
+    private WriterConfig writerConfig;
 
     protected MockServerExtension mockServerExtension = new MockServerExtension();
+
+    @BeforeEach
+    protected void before() {
+        writerConfig = new WriterConfig();
+    }
 
     @AfterEach
     protected void after() throws IOException {
@@ -84,13 +96,7 @@ class ITBackpressure extends AbstractITWrite {
     @Test
     public void backpressureWithNotRunningInstance() throws InterruptedException {
 
-        influxDBClient.close();
-        mockServerExtension.start();
-        influxDBClient = InfluxDBClientFactory.create(
-                mockServerExtension.baseURL,
-                "my-token".toCharArray(),
-                "my-org",
-                "my-bucket");
+        initWithMockServer();
 
         mockServerExtension.server.enqueue(new MockResponse());
 
@@ -138,6 +144,55 @@ class ITBackpressure extends AbstractITWrite {
         Assertions.assertThat(errors.get(0).getThrowable().getCause())
                 .isInstanceOf(MissingBackpressureException.class)
                 .hasMessage(null);
+    }
+
+    @Test
+    void writeToDifferentBuckets() throws InterruptedException {
+
+        writerConfig.secondsCount = -1;
+        writerConfig.differentBucketsCount = 500;
+        initWithMockServer();
+
+
+        // Generate mocked HTTP responses
+        //
+        // (500 * 4 * 4) / 1_000 = 8 batches
+        IntStream
+                .range(0, (writerConfig.differentBucketsCount * WRITER_COUNT * 4) / 1_000)
+                .forEach(nbr -> mockServerExtension.server.enqueue(new MockResponse()));
+
+        List<AbstractWriteEvent> events = stressfulWrite(WriteOptions.builder()
+                .flushInterval(1_000_000)
+                .batchSize(1_000)
+                .build());
+
+        Assertions.assertThat(events).hasSize(8);
+        Assertions.assertThat(mockServerExtension.server.getRequestCount()).isEqualTo(8);
+
+        Map<String, Long> batches = new HashMap<>();
+        for (AbstractWriteEvent event : events) {
+            Assertions.assertThat(event).isExactlyInstanceOf(WriteSuccessEvent.class);
+            WriteSuccessEvent successEvent = (WriteSuccessEvent) event;
+
+            String[] protocols = successEvent.getLineProtocol().split("\n");
+
+            // correct content of batch
+            Assertions
+                    .assertThat(protocols)
+                    .allMatch(protocol -> protocol.startsWith(successEvent.getBucket()), "All starts with: " + successEvent.getBucket());
+
+            Assertions.assertThat(protocols.length).isEqualTo(1_000);
+
+            Long count = batches.getOrDefault(successEvent.getBucket(), 0L);
+            count += protocols.length;
+            batches.put(successEvent.getBucket(), count);
+        }
+
+        Assertions.assertThat(batches).hasSize(4);
+        Assertions.assertThat(batches.get("my-bucket_1")).isEqualTo(2000);
+        Assertions.assertThat(batches.get("my-bucket_2")).isEqualTo(2000);
+        Assertions.assertThat(batches.get("my-bucket_3")).isEqualTo(2000);
+        Assertions.assertThat(batches.get("my-bucket_4")).isEqualTo(2000);
     }
 
     private void stressfulWriteValidate(@Nonnull final WriteOptions writeOptions,
@@ -208,13 +263,17 @@ class ITBackpressure extends AbstractITWrite {
         ExecutorService executorService = Executors.newFixedThreadPool(WRITER_COUNT);
 
         for (int i = 1; i <= WRITER_COUNT; i++) {
-            executorService.submit(new Writer(i, stopped, api));
+            executorService.submit(new Writer(i, stopped, writerConfig, api));
         }
 
         long start = System.currentTimeMillis();
 
-        while (System.currentTimeMillis() - start <= SECONDS_COUNT * 1_000) {
-            Thread.sleep(100);
+        if (writerConfig.secondsCount != -1) {
+            while (System.currentTimeMillis() - start <= writerConfig.secondsCount * 1_000) {
+                Thread.sleep(100);
+            }
+        } else {
+            executorService.awaitTermination(5, TimeUnit.SECONDS);
         }
 
         //
@@ -230,32 +289,62 @@ class ITBackpressure extends AbstractITWrite {
         return it.getThrowable().getCause() == null || !(it.getThrowable().getCause() instanceof java.io.InterruptedIOException);
     }
 
+    private void initWithMockServer() {
+        influxDBClient.close();
+        mockServerExtension.start();
+        influxDBClient = InfluxDBClientFactory.create(
+                mockServerExtension.baseURL,
+                "my-token".toCharArray(),
+                "my-org",
+                "my-bucket");
+        influxDBClient.setLogLevel(LogLevel.BASIC);
+    }
+
     private static class Writer implements Runnable {
 
         private final int id;
         private final AtomicBoolean stopped;
+        private final WriterConfig config;
         private final WriteApi api;
 
-        public Writer(final int id, final AtomicBoolean stopped, final WriteApi api) {
+        public Writer(final int id, final AtomicBoolean stopped, final WriterConfig config, final WriteApi api) {
             this.id = id;
             this.stopped = stopped;
+            this.config = config;
             this.api = api;
         }
 
         @Override
         public void run() {
             long time = 1;
-            while (!stopped.get()) {
-                Point point = Point.measurement("push")
-                        .addTag("id", String.valueOf(id))
-                        .addField("value", 1)
-                        .time(time, WritePrecision.NS);
-                api.writePoint(point);
-                if (id == 1 && time % 250_000 == 0) {
-                    LOG.info("Generated point: " + point.toLineProtocol());
+            while (!stopped.get() && (config.differentBucketsCount == -1 || time <= config.differentBucketsCount)) {
+
+                if (config.differentBucketsCount == -1) {
+                    Point point = Point.measurement("push")
+                            .addTag("id", String.valueOf(id))
+                            .addField("value", 1)
+                            .time(time, WritePrecision.NS);
+                    api.writePoint(point);
+                    if (id == 1 && time % 250_000 == 0) {
+                        LOG.info("Generated point: " + point.toLineProtocol());
+                    }
+                } else {
+                    for (int i = 1; i <= 4; i++) {
+                        String bucketName = "my-bucket_" + i;
+                        Point point = Point.measurement(bucketName)
+                                .addTag("id", String.valueOf(id))
+                                .addField("value", 1)
+                                .time(time, WritePrecision.NS);
+                        api.writePoint(bucketName, "my-org", point);
+                    }
                 }
                 time += 1;
             }
         }
+    }
+
+    private static class WriterConfig {
+        private int differentBucketsCount = -1;
+        private int secondsCount = 15;
     }
 }
