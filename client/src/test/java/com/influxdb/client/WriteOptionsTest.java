@@ -105,7 +105,7 @@ class WriteOptionsTest {
 
         Assertions.assertThat(records).hasSize(1);
         Assertions.assertThat(records.get(0).getMessage())
-                .isEqualTo("The minimal recommended size for buffer is 'batchSize * 5'. Current settings: batch={0}, buffer={1}.");
+                .isEqualTo("The recommended size for buffer is 'batchSize * 5'. Current settings: batch={0}, buffer={1}.");
         Assertions.assertThat(records.get(0).getParameters()).hasSize(2);
         Assertions.assertThat(records.get(0).getParameters()[0]).isEqualTo(50_000);
         Assertions.assertThat(records.get(0).getParameters()[1]).isEqualTo(10_000);

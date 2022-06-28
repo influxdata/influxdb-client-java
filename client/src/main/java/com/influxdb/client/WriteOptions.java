@@ -402,7 +402,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         public WriteOptions build() {
 
             if (bufferLimit < (batchSize * 5)) {
-                String msg = "The minimal recommended size for buffer is 'batchSize * 5'. "
+                String msg = "The recommended size for buffer is 'batchSize * 5'. "
                         + "Current settings: batch={0}, buffer={1}.";
                 LOG.log(Level.WARNING, msg, new Object[]{batchSize, bufferLimit});
             }
