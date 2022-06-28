@@ -4,6 +4,9 @@
 1. [#367](https://github.com/influxdata/influxdb-client-java/pull/367): Add HTTP status code to detail message of `InfluxException`
 1. [#367](https://github.com/influxdata/influxdb-client-java/pull/367): Add `GatewayTimeoutException` for HTTP status code 504
 
+### CI
+1. [#369](https://github.com/influxdata/influxdb-client-java/pull/369): Add JDK 18 to CI pipeline
+
 ## 6.2.0 [2022-06-24]
 
 ### Features
