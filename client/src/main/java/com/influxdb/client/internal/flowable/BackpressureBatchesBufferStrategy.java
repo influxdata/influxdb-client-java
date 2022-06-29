@@ -108,10 +108,9 @@ public final class BackpressureBatchesBufferStrategy implements
             boolean callError = false;
             Deque<AbstractWriteClient.BatchWriteItem> dq = deque;
             synchronized (dq) {
-                // TODO test
-                final long[] size = {t.length()};
-                dq.forEach(batchWriteItem -> size[0] += batchWriteItem.length());
-                if (size[0] > bufferSize) {
+                AtomicLong size = new AtomicLong(t.length());
+                dq.forEach(batchWriteItem -> size.addAndGet(batchWriteItem.length()));
+                if (size.get() > bufferSize) {
                     switch (strategy) {
                         case DROP_LATEST:
                             dq.pollLast();

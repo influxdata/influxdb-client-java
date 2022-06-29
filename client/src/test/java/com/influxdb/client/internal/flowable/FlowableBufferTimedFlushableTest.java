@@ -17,7 +17,7 @@ import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
 /**
- * @author Jakub Bednar (bednar@github) (29/06/2022 12:50)
+ * @author Jakub Bednar (bednar@github) (29/06/2022 07:40)
  */
 @RunWith(JUnitPlatform.class)
 class FlowableBufferTimedFlushableTest {

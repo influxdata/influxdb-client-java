@@ -300,7 +300,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             return length;
         }
 
-        private void append(@Nullable final String lineProtocol) {
+        public void append(@Nullable final String lineProtocol) {
 
             if (lineProtocol == null) {
                 return;
@@ -404,13 +404,13 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
     /**
      * The Batch Write Item.
      */
-    public final class BatchWriteItem {
+    public static final class BatchWriteItem {
 
         private WriteParameters writeParameters;
         private BatchWriteData data;
 
-        private BatchWriteItem(@Nonnull final WriteParameters writeParameters,
-                               @Nonnull final BatchWriteData data) {
+        public BatchWriteItem(@Nonnull final WriteParameters writeParameters,
+                              @Nonnull final BatchWriteData data) {
 
             Arguments.checkNotNull(writeParameters, "writeParameters");
             Arguments.checkNotNull(data, "data");
@@ -421,6 +421,11 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
         public long length() {
             return data.length();
+        }
+
+        @Nullable
+        public String toLineProtocol() {
+            return data.toLineProtocol();
         }
     }
 
