@@ -419,6 +419,27 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(options.getConsistency()).isEqualTo(WriteConsistency.QUORUM);
     }
 
+    @Test
+    public void customClientType() throws InterruptedException {
+        mockServer.enqueue(new MockResponse());
+
+        InfluxDBClientOptions options = InfluxDBClientOptions
+                .builder()
+                .url(mockServer.url("/").toString())
+                .clientType("awesome-service")
+                .authenticateToken("my-token".toCharArray())
+                .build();
+
+        try (InfluxDBClient client = InfluxDBClientFactory.create(options)) {
+            client
+                    .getWriteApiBlocking()
+                    .writeRecord("my-bucket", "my-org", WritePrecision.NS, "record,tag=a value=1");
+
+            RecordedRequest request = mockServer.takeRequest();
+            Assertions.assertThat(request.getHeaders().get("User-Agent")).startsWith("influxdb-client-awesome-service/");
+        }
+    }
+
     private void queryAndTest(final String expected) throws InterruptedException {
         RecordedRequest request = takeRequest();
         Assertions.assertThat(request).isNotNull();

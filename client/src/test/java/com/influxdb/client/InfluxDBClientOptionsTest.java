@@ -142,4 +142,21 @@ class InfluxDBClientOptionsTest {
 
         Assertions.assertThat(options.getOkHttpClient().build().protocols()).containsExactly(Protocol.H2_PRIOR_KNOWLEDGE);
     }
+
+    @Test
+    public void customClientTypeFromConnectionString() {
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url("http://localhost:9999?token=my-token&bucket=my-bucket&org=my-org&clientType=url-service")
+                .build();
+
+        Assertions.assertThat(options.getClientType()).isEqualTo("url-service");
+    }
+
+    @Test
+    public void customClientTypeFromProperties() {
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder().loadProperties().build();
+
+        Assertions.assertThat(options.getClientType()).isEqualTo("properties-service");
+    }
 }
