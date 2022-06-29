@@ -145,7 +145,6 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
 
             s.request(Long.MAX_VALUE);
 
-            //TODO test
             flusher.subscribe(new LambdaSubscriber<>(
                     ignore -> run(),
                     Functions.ON_ERROR_MISSING,
