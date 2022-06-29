@@ -115,7 +115,7 @@ jobs:
         default: &default-influxdb-image "influxdb:latest"
       junit-tests:
         type: string
-        default: ""
+        default: "-Dfailsafe.excludes=com.influxdb.client.ITBackpressure"
     docker:
       - image: << parameters.maven-image >>
       - image: &influx-image << parameters.influxdb-image >>
@@ -226,6 +226,9 @@ workflows:
           name: jdk-8-nightly
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
       - tests-java:
+          name: client-backpressure
+          junit-tests: "-Dit.test=com.influxdb.client.ITBackpressure -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
+      - tests-java:
           name: client-benchmark
           junit-tests: "-DclientBenchmark=true -Dit.test=com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
       - deploy-snapshot:
@@ -251,7 +254,8 @@ workflows:
               only:
                 - master
     jobs:
-      - tests-java
       - tests-java:
-          name: jdk-11-beta
-          maven-image: "cimg/openjdk:11.0"
+          name: jdk-8
+      - tests-java:
+          name: client-backpressure
+          junit-tests: "-Dit.test=com.influxdb.client.ITBackpressure -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
