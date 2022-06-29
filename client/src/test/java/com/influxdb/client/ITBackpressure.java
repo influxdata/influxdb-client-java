@@ -37,7 +37,6 @@ import java.util.stream.IntStream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.LogLevel;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.AbstractWriteEvent;
@@ -53,6 +52,7 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
@@ -60,6 +60,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (24/01/2020 09:40)
  */
 @RunWith(JUnitPlatform.class)
+@EnabledIfSystemProperty(named = "clientBackpressure", matches = "true")
 class ITBackpressure extends AbstractITWrite {
 
     private static final Logger LOG = Logger.getLogger(WriteApiTest.class.getName());
@@ -297,7 +298,6 @@ class ITBackpressure extends AbstractITWrite {
                 "my-token".toCharArray(),
                 "my-org",
                 "my-bucket");
-        influxDBClient.setLogLevel(LogLevel.BASIC);
     }
 
     private static class Writer implements Runnable {

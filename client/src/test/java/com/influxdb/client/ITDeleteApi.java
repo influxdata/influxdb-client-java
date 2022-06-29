@@ -27,7 +27,6 @@ import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.List;
 
-import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.Organization;
@@ -103,8 +102,6 @@ class ITDeleteApi extends AbstractITClientTest {
 
         WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
 
-        influxDBClient.setLogLevel(LogLevel.BODY);
-
         // By DataPoint
         writeApi.writePoint(Point.measurement("h2o").addTag("location", "coyote_creek").addField("water_level", 7.0D).time(1L, WritePrecision.NS));
         writeApi.writePoint(bucket.getName(), organization.getName(), Point.measurement("h2o").addTag("location", "coyote_creek").addField("water_level", 8.0D).time(2L, WritePrecision.NS));
@@ -125,7 +122,6 @@ class ITDeleteApi extends AbstractITClientTest {
         OffsetDateTime start = OffsetDateTime.ofInstant(Instant.ofEpochSecond(0, 1), ZoneId.of("UTC"));
         OffsetDateTime stop = OffsetDateTime.ofInstant(Instant.ofEpochSecond(0, 12), ZoneId.of("UTC"));
 
-        influxDBClient.setLogLevel(LogLevel.BODY);
         deleteApi.delete(start, stop, "", bucket, organization);
 
         List<FluxTable> query2 = influxDBClient.getQueryApi().query("from(bucket:\"" + bucket.getName() + "\") |> range(start: 1970-01-01T00:00:00.000000001Z)", organization.getId());
