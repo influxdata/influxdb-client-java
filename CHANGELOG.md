@@ -1,4 +1,4 @@
-## 6.3.0 [unreleased]
+## 6.3.0 [2022-06-30]
 
 ### Features
 1. [#367](https://github.com/influxdata/influxdb-client-java/pull/367): Add HTTP status code to detail message of `InfluxException`
