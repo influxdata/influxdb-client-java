@@ -93,6 +93,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
         this.authenticateInterceptor = new AuthenticateInterceptor(options);
         this.gzipInterceptor = new GzipInterceptor();
 
+        String customClientType = options.getClientType() != null ? options.getClientType() : clientType;
         this.okHttpClient = options.getOkHttpClient()
                 //
                 // We don't need to disable the `retryOnConnectionFailure`. The retry logic
@@ -101,7 +102,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
                 // - e.g. network loopback or multiple proxies.
                 //
                 //.retryOnConnectionFailure(false)
-                .addInterceptor(new UserAgentInterceptor(clientType))
+                .addInterceptor(new UserAgentInterceptor(customClientType))
                 .addInterceptor(this.loggingInterceptor)
                 .addInterceptor(this.authenticateInterceptor)
                 .addInterceptor(this.gzipInterceptor)

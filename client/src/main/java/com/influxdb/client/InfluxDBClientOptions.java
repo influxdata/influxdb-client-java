@@ -56,6 +56,7 @@ public final class InfluxDBClientOptions {
     private static final Pattern DURATION_PATTERN = Pattern.compile("^(\\d+)([a-zA-Z]{0,2})$");
 
     private final String url;
+    private final String clientType;
     private final OkHttpClient.Builder okHttpClient;
     private final LogLevel logLevel;
 
@@ -75,6 +76,7 @@ public final class InfluxDBClientOptions {
         Arguments.checkNotNull(builder, "InfluxDBClientOptions.Builder");
 
         this.url = builder.url;
+        this.clientType = builder.clientType;
         this.okHttpClient = builder.okHttpClient;
         this.logLevel = builder.logLevel;
         this.authScheme = builder.authScheme;
@@ -112,6 +114,17 @@ public final class InfluxDBClientOptions {
     @Nonnull
     public String getUrl() {
         return url;
+    }
+
+    /**
+     * If the {@code clientType} is not specified the `java`, `kotlin` or `scala` is used depends on the type of client.
+     *
+     * @return the client type to report as a part of User-Agent to remote server
+     * @see InfluxDBClientOptions.Builder#clientType(String)
+     */
+    @Nullable
+    public String getClientType() {
+        return clientType;
     }
 
     /**
@@ -206,8 +219,8 @@ public final class InfluxDBClientOptions {
      *
      * <b>Available with InfluxDB Enterprise clusters only!</b>
      *
-     * @see InfluxDBClientOptions.Builder#consistency(WriteConsistency)
      * @return the write consistency for the point.
+     * @see InfluxDBClientOptions.Builder#consistency(WriteConsistency)
      */
     @Nullable
     public WriteConsistency getConsistency() {
@@ -242,6 +255,7 @@ public final class InfluxDBClientOptions {
     public static class Builder {
 
         private String url;
+        private String clientType;
         private OkHttpClient.Builder okHttpClient;
         private LogLevel logLevel;
 
@@ -272,6 +286,24 @@ public final class InfluxDBClientOptions {
             Arguments.checkNonEmpty(url, "url");
 
             connectionString(url);
+
+            return this;
+        }
+
+        /**
+         * Set the {@code clientType} to customize the User-Agent HTTP header.
+         * <p>
+         * If the {@code clientType} is set to "awesome-service" the User-Agent header will be:
+         * <code>influxdb-client-awesome-service/6.2.0</code>.
+         *
+         * @param clientType the client type to report as a part of User-Agent to remote server
+         * @return {@code this}
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder clientType(@Nonnull final String clientType) {
+            Arguments.checkNonEmpty(clientType, "clientType");
+
+            this.clientType = clientType;
 
             return this;
         }
@@ -454,8 +486,9 @@ public final class InfluxDBClientOptions {
          *     <li><code>connectTimeout</code> - socket timeout</li>
          *     <li><code>precision</code> - default precision for unix timestamps in the line protocol</li>
          *     <li><code>consistency</code> - specify the write consistency for the point</li>
+         *     <li><code>clientType</code> - to customize the User-Agent HTTP header</li>
          * </ul>
-         *
+         * <p>
          * Connection string example:
          * <pre>
          * http://localhost:8086?readTimeout=30000&amp;token=my-token&amp;bucket=my-bucket&amp;org=my-org
@@ -480,10 +513,11 @@ public final class InfluxDBClientOptions {
             String connectTimeout = parse.queryParameter("connectTimeout");
             String precision = parse.queryParameter("precision");
             String consistency = parse.queryParameter("consistency");
+            String clientType = parse.queryParameter("clientType");
 
             String url = parsedUrl.urlWithoutParams;
             return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout,
-                    precision, consistency);
+                    precision, consistency, clientType);
         }
 
         /**
@@ -509,6 +543,7 @@ public final class InfluxDBClientOptions {
                 String connectTimeout = properties.getProperty("influx2.connectTimeout");
                 String precision = properties.getProperty("influx2.precision");
                 String consistency = properties.getProperty("influx2.consistency");
+                String clientType = properties.getProperty("influx2.clientType");
 
                 //
                 // Default tags
@@ -525,7 +560,7 @@ public final class InfluxDBClientOptions {
                 });
 
                 return configure(url, org, bucket, token, logLevel, readTimeout, writeTimeout, connectTimeout,
-                        precision, consistency);
+                        precision, consistency, clientType);
 
             } catch (IOException e) {
                 throw new IllegalStateException(e);
@@ -566,7 +601,8 @@ public final class InfluxDBClientOptions {
                                                         @Nullable final String writeTimeout,
                                                         @Nullable final String connectTimeout,
                                                         @Nullable final String precision,
-                                                        @Nullable final String consistency) {
+                                                        @Nullable final String consistency,
+                                                        @Nullable final String clientType) {
 
             this.url = new ParsedUrl(url).urlWithoutParams;
             if (org != null) {
@@ -605,6 +641,9 @@ public final class InfluxDBClientOptions {
             }
             if (connectTimeout != null) {
                 okHttpClient.connectTimeout(toDuration(connectTimeout));
+            }
+            if (clientType != null) {
+                clientType(clientType);
             }
 
             return this;

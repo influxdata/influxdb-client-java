@@ -130,6 +130,7 @@ The following options are supported:
 | influx2.writeTimeout   | 10000 ms | write timeout                                              |
 | influx2.connectTimeout | 10000 ms | socket timeout                                             |
 | influx2.precision      | NS       | default precision for unix timestamps in the line protocol |
+| influx2.clientType     | -        | to customize the User-Agent HTTP header                    |
 
 The `influx2.readTimeout`, `influx2.writeTimeout` and `influx2.connectTimeout` supports `ms`, `s` and `m` as unit. Default is milliseconds.
 
@@ -163,16 +164,17 @@ val influxDBClient = InfluxDBClientScalaFactory
 ```
 The following options are supported:
 
-| Property name    | default    | description                                                |
-|------------------|------------|------------------------------------------------------------| 
-| org              | -          | default destination organization for writes and queries    |
-| bucket           | -          | default destination bucket for writes                      |
-| token            | -          | the token to use for the authorization                     |
-| logLevel         | NONE       | rest client verbosity level                                |
-| readTimeout      | 10000 ms   | read timeout                                               |
-| writeTimeout     | 10000 ms   | write timeout                                              |
-| connectTimeout   | 10000 ms   | socket timeout                                             |
-| precision        | NS         | default precision for unix timestamps in the line protocol |
+| Property name  | default  | description                                                |
+|----------------|----------|------------------------------------------------------------| 
+| org            | -        | default destination organization for writes and queries    |
+| bucket         | -        | default destination bucket for writes                      |
+| token          | -        | the token to use for the authorization                     |
+| logLevel       | NONE     | rest client verbosity level                                |
+| readTimeout    | 10000 ms | read timeout                                               |
+| writeTimeout   | 10000 ms | write timeout                                              |
+| connectTimeout | 10000 ms | socket timeout                                             |
+| precision      | NS       | default precision for unix timestamps in the line protocol |
+| clientType     | -        | to customize the User-Agent HTTP header                    |
 
 The `readTimeout`, `writeTimeout` and `connectTimeout` supports `ms`, `s` and `m` as unit. Default is milliseconds.
 
