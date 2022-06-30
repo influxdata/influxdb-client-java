@@ -220,6 +220,9 @@ workflows:
           name: jdk-17
           maven-image: "cimg/openjdk:17.0"
       - tests-java:
+          name: jdk-18
+          maven-image: "cimg/openjdk:18.0"
+      - tests-java:
           name: jdk-8-nightly
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
       - tests-java:
@@ -231,6 +234,7 @@ workflows:
             - jdk-8
             - jdk-11
             - jdk-17
+            - jdk-18
             - jdk-8-nightly
           filters:
             branches:
