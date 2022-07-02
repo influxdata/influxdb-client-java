@@ -89,6 +89,7 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
 
         this.options = options;
         this.loggingInterceptor = new HttpLoggingInterceptor();
+        this.loggingInterceptor.redactHeader("Authorization");
         setLogLevel(loggingInterceptor, options.getLogLevel());
         this.authenticateInterceptor = new AuthenticateInterceptor(options);
         this.gzipInterceptor = new GzipInterceptor();
@@ -103,8 +104,8 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
                 //
                 //.retryOnConnectionFailure(false)
                 .addInterceptor(new UserAgentInterceptor(customClientType))
-                .addInterceptor(this.loggingInterceptor)
                 .addInterceptor(this.authenticateInterceptor)
+                .addInterceptor(this.loggingInterceptor)
                 .addInterceptor(this.gzipInterceptor)
                 .build();
 
