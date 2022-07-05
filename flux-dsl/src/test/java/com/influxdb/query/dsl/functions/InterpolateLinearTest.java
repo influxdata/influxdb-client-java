@@ -29,47 +29,41 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-/**
- * @author Jakub Bednar (13/05/2020 15:07)
- */
 @RunWith(JUnitPlatform.class)
-class AggregateWindowTest {
+class InterpolateLinearTest {
 
     @Test
-    void aggregateWindow() {
+    void interpolateLinear() {
 
         Flux flux = Flux
                 .from("telegraf")
-                .aggregateWindow(10L, ChronoUnit.SECONDS, "mean");
+                .interpolateLinear(1L, ChronoUnit.MINUTES);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> aggregateWindow(every: 10s, fn: mean)");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("import \"interpolate\"\n" +
+                "from(bucket:\"telegraf\") |> interpolate.linear(every:1m)");
     }
 
     @Test
-    void aggregateWindowAllParameters() {
+    void interpolateLinearByParameter() {
 
         Flux flux = Flux
                 .from("telegraf")
-                .aggregateWindow()
-                .withEvery("10s")
-                .withAggregateFunction("sum")
-                .withColumn("_value")
-                .withTimeSrc("_stop")
-                .withTimeDst("_time")
-                .withOffset("1ms")
-                .withCreateEmpty(true);
+                .interpolateLinear()
+                .withEvery(5L, ChronoUnit.MINUTES);
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> aggregateWindow(every: 10s, fn: sum, column: \"_value\", timeSrc: \"_stop\", timeDst: \"_time\", offset:1ms, createEmpty:true)");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("import \"interpolate\"\n" +
+                "from(bucket:\"telegraf\") |> interpolate.linear(every:5m)");
     }
 
     @Test
-    void aggregateWindowFunction() {
+    void interpolateLinearByString() {
+
         Flux flux = Flux
                 .from("telegraf")
-                .aggregateWindow()
-                .withEvery(5L, ChronoUnit.MINUTES)
-                .withFunction("tables |> quantile(q: 0.99, column:column)");
+                .interpolateLinear()
+                .withEvery("10m6h");
 
-        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> aggregateWindow(every: 5m, fn: (column, tables=<-) => tables |> quantile(q: 0.99, column:column))");
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("import \"interpolate\"\n" +
+                "from(bucket:\"telegraf\") |> interpolate.linear(every:10m6h)");
     }
 }

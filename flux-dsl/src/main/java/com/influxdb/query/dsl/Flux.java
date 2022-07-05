@@ -25,10 +25,15 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.influxdb.query.dsl.functions.AbstractFunctionCallFlux;
+import com.influxdb.query.dsl.functions.AbstractFunctionFlux;
 import com.influxdb.query.dsl.functions.AbstractParametrizedFlux;
 import com.influxdb.query.dsl.functions.AggregateWindow;
 import com.influxdb.query.dsl.functions.ColumnsFlux;
@@ -46,6 +51,7 @@ import com.influxdb.query.dsl.functions.FirstFlux;
 import com.influxdb.query.dsl.functions.FromFlux;
 import com.influxdb.query.dsl.functions.GroupFlux;
 import com.influxdb.query.dsl.functions.IntegralFlux;
+import com.influxdb.query.dsl.functions.InterpolateLinearFlux;
 import com.influxdb.query.dsl.functions.JoinFlux;
 import com.influxdb.query.dsl.functions.KeepFlux;
 import com.influxdb.query.dsl.functions.LastFlux;
@@ -76,10 +82,12 @@ import com.influxdb.query.dsl.functions.ToIntFlux;
 import com.influxdb.query.dsl.functions.ToStringFlux;
 import com.influxdb.query.dsl.functions.ToTimeFlux;
 import com.influxdb.query.dsl.functions.ToUIntFlux;
+import com.influxdb.query.dsl.functions.TruncateTimeColumnFlux;
 import com.influxdb.query.dsl.functions.WindowFlux;
 import com.influxdb.query.dsl.functions.YieldFlux;
 import com.influxdb.query.dsl.functions.properties.FunctionsParameters;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
+import com.influxdb.query.dsl.utils.ImportUtils;
 import com.influxdb.utils.Arguments;
 
 /**
@@ -139,9 +147,10 @@ import com.influxdb.utils.Arguments;
  * @author Jakub Bednar (bednar@github) (22/06/2018 10:16)
  */
 @SuppressWarnings({"FileLength"})
-public abstract class Flux {
+public abstract class Flux implements HasImports, Expression {
 
     protected FunctionsParameters functionsParameters = FunctionsParameters.of();
+    protected Set<String> imports;
 
     /**
      * Get data from the specified database.
@@ -959,6 +968,40 @@ public abstract class Flux {
     }
 
     /**
+     * The `interpolate.linear` function inserts rows at regular intervals using linear interpolation to determine
+     * values for inserted rows.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link InterpolateLinearFlux#withEvery(long, ChronoUnit)}</li>
+     * <li>{@link InterpolateLinearFlux#withPropertyNamed(String)}</li>
+     * <li>{@link InterpolateLinearFlux#withPropertyNamed(String, String)}</li>
+     * </ul>
+     *
+     * @return {@link InterpolateLinearFlux}
+     */
+    @Nonnull
+    public final InterpolateLinearFlux interpolateLinear() {
+        return new InterpolateLinearFlux(this);
+    }
+
+    /**
+     * The `interpolate.linear` function inserts rows at regular intervals using linear interpolation to determine
+     * values for inserted rows.
+     *
+     * @param duration Time duration to use when computing the interpolation
+     * @param unit     a {@code ChronoUnit} determining how to interpret the {@code duration} parameter
+     * @return {@link InterpolateLinearFlux}
+     */
+    @Nonnull
+    public final InterpolateLinearFlux interpolateLinear(@Nonnull final Long duration, @Nonnull final ChronoUnit unit) {
+        Arguments.checkNotNull(duration, "Duration is required");
+        Arguments.checkNotNull(unit, "ChronoUnit is required");
+
+        return new InterpolateLinearFlux(this).withEvery(duration, unit);
+    }
+
+    /**
      * Returns the last result of the query.
      *
      * @return {@link LastFlux}
@@ -1371,6 +1414,29 @@ public abstract class Flux {
         Arguments.checkNotNull(unit, "ChronoUnit is required");
 
         return new RangeFlux(this).withStart(start, unit).withStop(stop, unit);
+    }
+
+    /**
+     * Filters the results by time boundaries.
+     *
+     * @param start Specifies the oldest time (Unix timestamp in seconds) to be included in the results
+     * @param stop  Specifies the exclusive newest time (Unix timestamp in seconds) to be included in the results
+     * @return {@link RangeFlux}
+     */
+    @Nonnull
+    public final RangeFlux range(final long start, final long stop) {
+        return new RangeFlux(this).withStart(start).withStop(stop);
+    }
+
+    /**
+     * Filters the results by time boundaries.
+     *
+     * @param start Specifies the oldest time (Unix timestamp in seconds) to be included in the results
+     * @return {@link RangeFlux}
+     */
+    @Nonnull
+    public final RangeFlux range(final long start) {
+        return new RangeFlux(this).withStart(start);
     }
 
     /**
@@ -2048,6 +2114,17 @@ public abstract class Flux {
     }
 
     /**
+     * Truncates all input time values in the _time to a specified unit.
+     *
+     * @param unit Unit of time to truncate to. Has to be defined.
+     * @return {@link TruncateTimeColumnFlux}
+     */
+    @Nonnull
+    public final TruncateTimeColumnFlux truncateTimeColumn(@Nonnull final ChronoUnit unit) {
+        return new TruncateTimeColumnFlux(this).withUnit(unit);
+    }
+
+    /**
      * Groups the results by a given time range.
      *
      * <h3>The parameters had to be defined by:</h3>
@@ -2300,6 +2377,56 @@ public abstract class Flux {
     }
 
     /**
+     * Creates a piped function call.
+     *
+     * <h3>Example Definition</h3>
+     * <pre>
+     * public static class MultByXFunction extends AbstractFunctionFlux&lt;MultByXFunction.MultByXFunctionCall&gt; {
+     *
+     *     public MultByXFunction() {
+     *         super("multByX",
+     *                 new FreestyleExpression("tables")
+     *                         .map("(r) =&gt; ({r with _value: r._value * x})"),
+     *                 MultByXFunctionCall::new,
+     *                 new Parameter("tables").withPipeForward(true),
+     *                 new Parameter("x"));
+     *     }
+     *
+     *     public static class MultByXFunctionCall extends AbstractFunctionCallFlux {
+     *
+     *         public MultByXFunctionCall(@Nonnull String name) {
+     *             super(name);
+     *         }
+     *
+     *         public MultByXFunctionCall withX(final Number x) {
+     *             this.withPropertyValue("x", x);
+     *             return this;
+     *         }
+     *     }
+     * }
+     * </pre>
+     * <h3>Example Usage</h3>
+     * <pre>
+     * MultByXFunction multByX = new MultByXFunction();
+     *
+     * Expressions flux = new Expressions(
+     *         multByX,
+     *         Flux.from("telegraph")
+     *                 .withPipedFunction(multByX)
+     *                 .withX(42.)
+     *                 .count()
+     * );
+     * </pre>
+     *
+     * @param fun    the function to be piped
+     * @param <CALL> the type of the invocation
+     * @return the invocation
+     */
+    public <CALL extends AbstractFunctionCallFlux> CALL withPipedFunction(final AbstractFunctionFlux<CALL> fun) {
+        return fun.invokePiped(this);
+    }
+
+    /**
      * Add named property to current function.
      *
      * <pre>
@@ -2518,13 +2645,68 @@ public abstract class Flux {
      */
     @Nonnull
     public String toString(@Nonnull final Map<String, Object> parameters) {
+        return toString(parameters, true);
+    }
 
+    @Override
+    public String toString(@Nonnull final Map<String, Object> parameters, final boolean prependImports) {
         Arguments.checkNotNull(parameters, "Parameters are required");
 
         StringBuilder builder = new StringBuilder();
 
+        if (prependImports) {
+            builder.append(ImportUtils.getImportsString(this));
+        }
+
         appendActual(parameters, builder);
 
         return builder.toString();
+    }
+
+    /**
+     * Converts this flux to a variable assignment so multiple fluxes can be used in conjunction with
+     * {@link Expressions}.
+     *
+     * @param name the name of the variable
+     * @return a variable assignment
+     * @see Expressions
+     */
+    public VariableAssignment asVariable(final String name) {
+        return new VariableAssignment(name, this);
+    }
+
+    /**
+     * @return all used imports of this flux
+     */
+    @Override
+    public Set<String> getImports() {
+        Set<String> collectedImports = new TreeSet<>();
+        collectImports(collectedImports);
+        return collectedImports;
+    }
+
+    /**
+     * Collects all imports of the flux.
+     *
+     * @param collectedImports a set to be filled by the used imports
+     */
+    public void collectImports(@Nonnull final Set<String> collectedImports) {
+        if (imports != null) {
+            collectedImports.addAll(imports);
+        }
+    }
+
+    /**
+     * Adds a new import to this flux.
+     *
+     * @param pImport the import to be added
+     * @return this
+     */
+    protected Flux addImport(final String pImport) {
+        if (imports == null) {
+            imports = new HashSet<>();
+        }
+        imports.add(pImport);
+        return this;
     }
 }

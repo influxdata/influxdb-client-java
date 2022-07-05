@@ -24,11 +24,12 @@ package com.influxdb.query.dsl.functions;
 import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.StringJoiner;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.VariableAssignment;
 import com.influxdb.utils.Arguments;
 
 /**
@@ -64,19 +65,21 @@ import com.influxdb.utils.Arguments;
  */
 public final class JoinFlux extends AbstractParametrizedFlux {
 
-    private Map<String, Flux> tables = new LinkedHashMap<>();
+    private final Map<String, Flux> tables = new LinkedHashMap<>();
+    private String assignToVariable;
 
     public JoinFlux() {
         super();
 
         // add tables: property
-        withPropertyValue("tables", (Supplier<String>) () -> {
-
-            StringJoiner tablesValue = new StringJoiner(", ", "{", "}");
-
-            tables.keySet().forEach(key -> tablesValue.add(String.format("%s:%s", key, key)));
-            return tablesValue.toString();
-        });
+        withPropertyValue("tables", (Supplier<String>) () -> tables
+                .entrySet().stream().map(e -> {
+                    String var = e.getValue() instanceof VariableAssignment
+                            ? ((VariableAssignment) e.getValue()).getVariableName()
+                            : e.getKey();
+                    return e.getKey() + ":" + var;
+                })
+                .collect(Collectors.joining(", ", "{", "}")));
     }
 
     public enum MethodType {
@@ -118,10 +121,16 @@ public final class JoinFlux extends AbstractParametrizedFlux {
                                             @Nonnull final Map<String, Object> parameters) {
 
         // add tables Flux scripts
-        tables.keySet().forEach(key -> {
-
-            operator.append(String.format("%s = %s\n", key, tables.get(key).toString(parameters)));
+        tables.forEach((key, flux) -> {
+            if (flux instanceof JoinFlux) {
+                operator.append(flux.toString(parameters)).append("\n");
+            } else if (!(flux instanceof VariableAssignment)) {
+                operator.append(key).append(" = ").append(flux.toString(parameters)).append("\n");
+            }
         });
+        if (assignToVariable != null) {
+            operator.append(assignToVariable).append(" = ");
+        }
     }
 
     /**
@@ -138,7 +147,9 @@ public final class JoinFlux extends AbstractParametrizedFlux {
         Arguments.checkNotNull(table, "Flux script to map table");
 
         tables.put(name, table);
-
+        if (table instanceof JoinFlux) {
+            ((JoinFlux) table).assignToVariable = name;
+        }
         return this;
     }
 

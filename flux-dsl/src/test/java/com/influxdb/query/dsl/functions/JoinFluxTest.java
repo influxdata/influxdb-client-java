@@ -25,6 +25,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.influxdb.query.dsl.Expressions;
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
@@ -37,7 +38,7 @@ import org.junit.runner.RunWith;
  * @author Jakub Bednar (bednar@github) (19/07/2018 12:59)
  */
 @RunWith(JUnitPlatform.class)
-class JoinFluxText {
+class JoinFluxTest {
 
     @Test
     void join() {
@@ -114,5 +115,72 @@ class JoinFluxText {
                 + "join(tables: {cpu:cpu, mem:mem}, on: [\"host\", \"production\"], method: \"right\")";
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+    }
+
+    @Test
+    void join3TablesDirectly() {
+
+        Flux b1 = Flux.from("bucket1")
+                .range(-30L, ChronoUnit.MINUTES);
+        Flux b2 = Flux.from("bucket2")
+                .range(-30L, ChronoUnit.MINUTES);
+        Flux b3 = Flux.from("bucket3")
+                .range(-30L, ChronoUnit.MINUTES);
+
+        Flux join1 = Flux
+                .join("b1", b1, "b2", b2, "_time", "left");
+
+        Flux join2 = Flux
+                .join("j1", join1, "b3", b3, "_time", "left");
+
+        String expected = "b1 = from(bucket:\"bucket1\")\n" +
+                "\t|> range(start:-30m)\n" +
+                "b2 = from(bucket:\"bucket2\")\n" +
+                "\t|> range(start:-30m)\n" +
+                "j1 = join(tables:{b1:b1, b2:b2}, on:[\"_time\"], method:\"left\")\n" +
+                "b3 = from(bucket:\"bucket3\")\n" +
+                "\t|> range(start:-30m)\n" +
+                "join(tables:{j1:j1, b3:b3}, on:[\"_time\"], method:\"left\")";
+
+        Assertions.assertThat(join2.toString()).isEqualToIgnoringWhitespace(expected);
+    }
+
+    @Test
+    void join3TablesViaVariables() {
+
+        Flux b1 = Flux.from("bucket1")
+                .range(-30L, ChronoUnit.MINUTES)
+                .asVariable("table1");
+        Flux b2 = Flux.from("bucket2")
+                .range(-30L, ChronoUnit.MINUTES)
+                .asVariable("table2");
+        Flux b3 = Flux.from("bucket3")
+                .range(-30L, ChronoUnit.MINUTES)
+                .asVariable("table3");
+
+        Flux join1 = Flux
+                .join("b1", b1, "b2", b2, "_time", "left")
+                .asVariable("join1");
+
+        Flux join2 = Flux
+                .join("j1", join1, "b3", b3, "_time", "left");
+
+        Expressions expressions = new Expressions(
+                b1,
+                b2,
+                b3,
+                join1,
+                join2
+        );
+        String expected = "table1 = from(bucket:\"bucket1\")\n" +
+                "\t|> range(start:-30m)\n" +
+                "table2 = from(bucket:\"bucket2\")\n" +
+                "\t|> range(start:-30m)\n" +
+                "table3 = from(bucket:\"bucket3\")\n" +
+                "\t|> range(start:-30m)\n" +
+                "join1 = join(tables:{b1:table1, b2:table2}, on:[\"_time\"], method:\"left\")\n" +
+                "join(tables:{j1:join1, b3:table3}, on:[\"_time\"], method:\"left\")";
+
+        Assertions.assertThat(expressions.toString()).isEqualToIgnoringWhitespace(expected);
     }
 }

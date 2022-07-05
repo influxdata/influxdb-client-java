@@ -107,6 +107,18 @@ public final class RangeFlux extends AbstractParametrizedFlux {
     }
 
     /**
+     * @param start Specifies the oldest time (Unix timestamp in seconds) to be included in the results
+     * @return this
+     */
+    @Nonnull
+    public RangeFlux withStart(final long start) {
+
+        this.withPropertyValue("start", start);
+
+        return this;
+    }
+
+    /**
      * @param stop Specifies the exclusive newest time to be included in the results
      * @return this
      */
@@ -149,4 +161,17 @@ public final class RangeFlux extends AbstractParametrizedFlux {
 
         return this;
     }
+
+    /**
+     * @param stop Specifies the exclusive newest time (Unix timestamp in seconds) to be included in the results
+     * @return this
+     */
+    @Nonnull
+    public RangeFlux withStop(final long stop) {
+
+        this.withPropertyValue("stop", stop);
+
+        return this;
+    }
+
 }

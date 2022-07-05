@@ -21,59 +21,58 @@
  */
 package com.influxdb.query.dsl.functions;
 
-import java.util.Map;
-import java.util.Set;
+import java.time.temporal.ChronoUnit;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.utils.Arguments;
 
 /**
- * Abstract base class for operators that take an upstream source of {@link Flux}.
+ * Inserts rows at regular intervals using linear interpolation to determine values for inserted rows.
  *
- * @author Jakub Bednar (bednar@github) (25/06/2018 07:29)
+ * <h3>Example</h3>
+ * <pre>
+ *         Flux flux = Flux
+ *                 .from("telegraf")
+ *                 .interpolateLinear()
+ *                 .withEvery(5L, ChronoUnit.MINUTES);
+ * </pre>
  */
-abstract class AbstractFluxWithUpstream extends Flux {
+public class InterpolateLinearFlux extends AbstractParametrizedFlux {
 
-    @Nullable
-    Flux source;
-
-    AbstractFluxWithUpstream() {
+    public InterpolateLinearFlux(@Nonnull final Flux source) {
+        super(source);
+        addImport("interpolate");
     }
 
-    AbstractFluxWithUpstream(@Nonnull final Flux source) {
-
-        Arguments.checkNotNull(source, "Source is required");
-
-        this.source = source;
-    }
-
+    @Nonnull
     @Override
-    public void appendActual(@Nonnull final Map<String, Object> parameters, @Nonnull final StringBuilder builder) {
-
-        if (source != null) {
-            source.appendActual(parameters, builder);
-        }
+    protected String operatorName() {
+        return "interpolate.linear";
     }
 
     /**
-     * Append delimiter to Flux query.
      *
-     * @param builder Flux query chain.
+     * @param duration Time duration to use when computing the interpolation
+     * @param unit The unit of the <code>duration</code>
+     * @return this
      */
-    void appendDelimiter(@Nonnull final StringBuilder builder) {
-        if (source != null) {
-            builder.append("\n");
-            builder.append("\t|> ");
-        }
+    public InterpolateLinearFlux withEvery(final long duration, final ChronoUnit unit) {
+        this.withPropertyValue("every", duration, unit);
+        return this;
     }
 
-    @Override
-    public void collectImports(@Nonnull final Set<String> collectedImports) {
-        super.collectImports(collectedImports);
-        if (source != null) {
-            source.collectImports(collectedImports);
-        }
+    /**
+     * @param every Time duration to use when computing the interpolation
+     * @return this
+     */
+    @Nonnull
+    public InterpolateLinearFlux withEvery(@Nonnull final String every) {
+
+        Arguments.checkDuration(every, "every");
+
+        this.withPropertyValue("every", every);
+
+        return this;
     }
 }

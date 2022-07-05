@@ -115,6 +115,7 @@ public final class FromFlux extends AbstractParametrizedFlux {
     public Flux withLocationNamed(@Nonnull final String name) {
         Arguments.checkNonEmpty(name, "name");
         this.options.location = String.format("timezone.location(name: \"%s\")", name);
+        addImport("timezone");
         return this;
     }
 
@@ -128,6 +129,7 @@ public final class FromFlux extends AbstractParametrizedFlux {
     public Flux withLocationFixed(@Nonnull final String offset) {
         Arguments.checkDuration(offset, "offset");
         this.options.location = String.format("timezone.fixed(offset: %s)", offset);
+        addImport("timezone");
         return this;
     }
 
@@ -135,8 +137,6 @@ public final class FromFlux extends AbstractParametrizedFlux {
     public void appendActual(@Nonnull final Map<String, Object> parameters, @Nonnull final StringBuilder builder) {
         // append timezone configuration
         if (options.location != null) {
-            builder.append("import \"timezone\"");
-            builder.append("\n");
             builder.append("option location = ");
             builder.append(options.location);
             builder.append("\n");
