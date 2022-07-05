@@ -36,6 +36,7 @@ import com.influxdb.query.dsl.functions.AbstractFunctionCallFlux;
 import com.influxdb.query.dsl.functions.AbstractFunctionFlux;
 import com.influxdb.query.dsl.functions.AbstractParametrizedFlux;
 import com.influxdb.query.dsl.functions.AggregateWindow;
+import com.influxdb.query.dsl.functions.ArrayFromFlux;
 import com.influxdb.query.dsl.functions.ColumnsFlux;
 import com.influxdb.query.dsl.functions.CountFlux;
 import com.influxdb.query.dsl.functions.CovarianceFlux;
@@ -83,6 +84,7 @@ import com.influxdb.query.dsl.functions.ToStringFlux;
 import com.influxdb.query.dsl.functions.ToTimeFlux;
 import com.influxdb.query.dsl.functions.ToUIntFlux;
 import com.influxdb.query.dsl.functions.TruncateTimeColumnFlux;
+import com.influxdb.query.dsl.functions.UnionFlux;
 import com.influxdb.query.dsl.functions.WindowFlux;
 import com.influxdb.query.dsl.functions.YieldFlux;
 import com.influxdb.query.dsl.functions.properties.FunctionsParameters;
@@ -249,6 +251,28 @@ public abstract class Flux implements HasImports, Expression {
         Arguments.checkNotNull(everyUnit, "Every ChronoUnit is required");
 
         return new AggregateWindow(this).withEvery(every, everyUnit).withAggregateFunction(namedFunction);
+    }
+
+    /**
+     * Constructs a table from an array of records.
+     *
+     * @return {@link ArrayFromFlux}
+     */
+    @Nonnull
+    public static ArrayFromFlux arrayFrom() {
+        return new ArrayFromFlux();
+    }
+
+    /**
+     * Constructs a table from an array of records.
+     *
+     * @param rows Array of records to construct a table with.
+     * @return {@link ArrayFromFlux}
+     */
+    @SafeVarargs
+    @Nonnull
+    public static ArrayFromFlux arrayFrom(@Nonnull final Map<String, Object>... rows) {
+        return arrayFrom().withRow(rows);
     }
 
     /**
@@ -1424,7 +1448,7 @@ public abstract class Flux implements HasImports, Expression {
      * @return {@link RangeFlux}
      */
     @Nonnull
-    public final RangeFlux range(final long start, final long stop) {
+    public final RangeFlux range(final Long start, final Long stop) {
         return new RangeFlux(this).withStart(start).withStop(stop);
     }
 
@@ -1435,7 +1459,7 @@ public abstract class Flux implements HasImports, Expression {
      * @return {@link RangeFlux}
      */
     @Nonnull
-    public final RangeFlux range(final long start) {
+    public final RangeFlux range(final Long start) {
         return new RangeFlux(this).withStart(start);
     }
 
@@ -2122,6 +2146,18 @@ public abstract class Flux implements HasImports, Expression {
     @Nonnull
     public final TruncateTimeColumnFlux truncateTimeColumn(@Nonnull final ChronoUnit unit) {
         return new TruncateTimeColumnFlux(this).withUnit(unit);
+    }
+
+
+    /**
+     * Merges two or more input streams into a single output stream.
+     *
+     * @param tables the tables to union
+     * @return {@link UnionFlux}
+     */
+    public static UnionFlux union(@Nonnull final Flux... tables) {
+        return new UnionFlux()
+                .withTables(tables);
     }
 
     /**

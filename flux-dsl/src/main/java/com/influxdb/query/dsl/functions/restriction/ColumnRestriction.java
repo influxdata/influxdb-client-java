@@ -134,7 +134,7 @@ public final class ColumnRestriction {
         return new ExistsRestrictions(fieldName);
     }
 
-    private final class ExistsRestrictions extends Restrictions {
+    private static final class ExistsRestrictions extends Restrictions {
         private final String fieldName;
 
         public ExistsRestrictions(@Nonnull final String fieldName) {
@@ -157,7 +157,7 @@ public final class ColumnRestriction {
         return new ContainsRestrictions(fieldName, set);
     }
 
-    private final class ContainsRestrictions extends Restrictions {
+    private static final class ContainsRestrictions extends Restrictions {
         private final String fieldName;
         private final String[] set;
 
@@ -174,7 +174,7 @@ public final class ColumnRestriction {
         }
     }
 
-    private final class OperatorRestrictions extends Restrictions {
+    private static final class OperatorRestrictions extends Restrictions {
         private final String fieldName;
         private final Object fieldValue;
         private final String operator;
@@ -194,7 +194,7 @@ public final class ColumnRestriction {
             if (fieldValue instanceof String) {
                 value = "\"" + escapeDoubleQuotes((String) fieldValue) + "\"";
             } else {
-                value = FunctionsParameters.serializeValue(fieldValue);
+                value = FunctionsParameters.serializeValue(fieldValue, false);
             }
 
             return "r[\"" + escapeDoubleQuotes(fieldName) + "\"] " + operator + " " + value;

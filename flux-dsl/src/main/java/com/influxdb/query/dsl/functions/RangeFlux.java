@@ -111,7 +111,7 @@ public final class RangeFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public RangeFlux withStart(final long start) {
+    public RangeFlux withStart(final Long start) {
 
         this.withPropertyValue("start", start);
 
@@ -167,7 +167,7 @@ public final class RangeFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public RangeFlux withStop(final long stop) {
+    public RangeFlux withStop(final Long stop) {
 
         this.withPropertyValue("stop", stop);
 

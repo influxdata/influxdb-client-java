@@ -19,16 +19,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
  * THE SOFTWARE.
  */
-package com.influxdb.query.dsl;
+package com.influxdb.query.dsl.functions;
 
-import java.util.Set;
+import java.util.Map;
+import javax.annotation.Nonnull;
 
 /**
- * Marker interface indicating existence of potential imports.
+ * Constructs a table from an array of records.
  */
-public interface HasImports {
+public final class ArrayFromFlux extends AbstractParametrizedFlux {
+
+    public ArrayFromFlux() {
+        addImport("array");
+    }
+
+    @Nonnull
+    @Override
+    protected String operatorName() {
+        return "array.from";
+    }
+
+
     /**
-     * @return the imports
+     * @param rows Array of records to construct a table with.
+     * @return {@link ArrayFromFlux}
      */
-    Set<String> getImports();
+    @Nonnull
+    @SafeVarargs
+    public final ArrayFromFlux withRow(@Nonnull final Map<String, Object>... rows) {
+        withPropertyValue("rows", rows);
+        return this;
+    }
 }

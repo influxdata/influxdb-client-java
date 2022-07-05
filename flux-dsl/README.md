@@ -4,7 +4,9 @@
 
 - [Function properties](#function-properties)
 - [Supported functions](#supported-functions)
-- [Custom function](#custom-function)
+- [Using Imports](#using-imports)
+- [Add missing functions](#add-missing-functions)
+- [Custom functions](#custom-functions)
 - [Time zones](#time-zones)
 
 ## Function properties
@@ -65,6 +67,19 @@ Flux flux = Flux.from("telegraf");
 Flux flux = Flux
     .from("telegraf", new String[]{"192.168.1.200", "192.168.1.100"})
     .last();
+```
+
+### arrayFrom
+
+Constructs a table from an array of records.
+- `rows` - Array of records to construct a table with. [array of records]
+
+```java
+Map<String, Object> record1 = new HashMap<>();
+record1.put("foo",  "bar");
+record1.put("baz",  21.2);
+
+Flux flux = Flux.arrayFrom(record1, record1);
 ```
 
 ### custom expressions
@@ -334,6 +349,15 @@ The curve is defined as function where the domain is the record times and the ra
 Flux flux = Flux
     .from("telegraf")
     .integral(1L, ChronoUnit.MINUTES);
+```
+
+### interpolateLinear
+the `interpolate.linear` function inserts rows at regular intervals using linear interpolation to determine values for inserted rows.
+- `duration` - Time duration to use when computing the interpolation. [duration]
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .interpolateLinear(1L, ChronoUnit.MINUTES);
 ```
 
 ### join
@@ -631,6 +655,16 @@ Flux flux = Flux
     .timeShift(10L, ChronoUnit.HOURS, new String[]{"_time", "custom"});
 ```
 
+### truncateTimeColumn
+Truncates all input time values in the _time to a specified unit. [[doc](http://bit.ly/flux-spec#truncateTimeColumn)].
+- `unit` - Unit of time to truncate to. Has to be defined. [duration]
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .truncateTimeColumn(ChronoUnit.SECONDS);
+```
+
+
 ### skew
 Skew of the results [[doc](http://bit.ly/flux-spec#skew)].
 - `column` - The column on which to operate. Defaults to `_value`. [string]
@@ -783,6 +817,24 @@ Flux flux = Flux
     .toUInt();
 ```
 
+### union
+
+Merges two or more input streams into a single output stream [[doc](http://bit.ly/flux-spec#union)]. 
+- `tables` - the tables to union. [array of flux]
+
+```java
+Flux flux = Flux.union(
+    Flux.from("telegraf1"),
+    Flux.from("telegraf2")
+);
+```
+
+```java
+Flux v1 = Flux.from("telegraf1").asVariable("v1");
+Flux v2 = Flux.from("telegraf1").asVariable("v2");
+Flux flux = Flux.union(v1, v2);
+```
+
 ### window
 Groups the results by a given time range [[doc](http://bit.ly/flux-spec#window)].
 - `every` - Duration of time between windows. Defaults to `period's` value. [duration] 
@@ -817,7 +869,13 @@ Flux flux = Flux
     .yield("0");
 ```
 
-## Custom function
+## Using Imports
+
+Each Flux-Class cann add required imports via the `addImport` method.
+For an example take a look at the [custom functions section](#custom-functions) below.
+
+## Add missing functions
+
 We assume that exist custom function measurement that filter measurement by their name. The `Flux` implementation looks like this: 
 
 ```flux
@@ -871,6 +929,109 @@ The Flux script:
 from(bucket:"telegraf")
     |> measurement(m: "cpu")
     |> sum()
+```
+
+## Custom functions
+
+### Custom function with a flux implementation
+
+```java
+public static class MyCustomFunction extends AbstractFunctionFlux<MyCustomFunction.MyCustomFunctionCall> {
+
+    public MyCustomFunction() {
+        super("from2",
+                new FromFlux()
+                        .withPropertyValue("bucket", "n"),
+                MyCustomFunctionCall::new,
+                new Parameter("n"));
+        addImport("foo");
+    }
+
+    public static class MyCustomFunctionCall extends AbstractFunctionCallFlux {
+
+        public MyCustomFunctionCall(@Nonnull String name) {
+            super(name);
+        }
+
+        public MyCustomFunctionCall withN(final String n) {
+            this.withPropertyValueEscaped("n", n);
+            return this;
+        }
+    }
+}
+```
+
+usage:
+
+```java
+MyCustomFunction fun = new MyCustomFunction();
+
+Expressions flux = new Expressions(
+    fun,
+    fun.invoke().withN(0)
+);
+flux.toString()
+```
+
+result:
+
+```javascript
+import "foo"
+from2 = (n) => from(bucket: n)
+from2(n:"telegraf")
+```
+
+### Defining a custom function with a freestyle expression
+
+```java
+public static class MultByXFunction extends AbstractFunctionFlux<MultByXFunction.MultByXFunctionCall> {
+
+  public MultByXFunction() {
+    super("multByX",
+            new FreestyleExpression("tables")
+                    .map("(r) => ({r with _value: r._value * x})"),
+            MultByXFunctionCall::new,
+            new Parameter("tables").withPipeForward(true),
+            new Parameter("x"));
+  }
+
+  public static class MultByXFunctionCall extends AbstractFunctionCallFlux {
+
+    public MultByXFunctionCall(@Nonnull String name) {
+      super(name);
+    }
+
+    @Nonnull
+    public MultByXFunctionCall withX(final Number x) {
+      this.withPropertyValue("x", x);
+      return this;
+    }
+  }
+}
+```
+
+usage:
+
+```java
+MultByXFunction multByX = new MultByXFunction();
+Expressions flux = new Expressions(
+    multByX,
+    Flux.from("telegraph")
+        .withPipedFunction(multByX)
+        .withX(42.)
+        .count()
+);
+flux.toString()
+```
+
+result:
+
+```javascript
+multByX = (tables=<-, x) => ()
+	|> map(fn: (r) => (r) => ({r with _value: r._value * x}))
+from(bucket:"telegraph")
+	|> multByX(x:42.0)
+	|> count()
 ```
 
 ## Time zones

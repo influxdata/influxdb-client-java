@@ -8,6 +8,8 @@
    * Improve join flux, so it can be nested [FluxDSL]
    * Add missing parameter variants for RangeFlux amd AggregateWindow [FluxDSL]
    * Add TruncateTimeColumnFlux [FluxDSL]
+   * Add ArrayFromFlux [FluxDSL]
+   * Add UnionFlux [FluxDSL]
  
 ## 6.3.0 [2022-06-30]
 
