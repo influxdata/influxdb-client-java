@@ -38,12 +38,15 @@ class ArrayFromFluxTest {
 
         Map<String, Object> record1 = new HashMap<>();
         record1.put("foo",  "bar");
-        record1.put("baz",  21.2);
+        record1.put("int",  42);
+        record1.put("double1",  6.23);
+        record1.put("double2",  6.);
+        record1.put("doubleScientific",  6.23087E8);
         Flux flux = new ArrayFromFlux()
                 .withRow(record1);
 
         Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace("import \"array\"\n" +
-                "array.from(rows:[{foo: \"bar\", baz: 21.2}])");
+                "array.from(rows:[{double2: 6.0, foo: \"bar\", double1: 6.23, doubleScientific: 623087000.0, int: 42}])");
     }
 
     @Test

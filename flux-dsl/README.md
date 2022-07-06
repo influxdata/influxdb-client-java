@@ -871,7 +871,7 @@ Flux flux = Flux
 
 ## Using Imports
 
-Each Flux-Class cann add required imports via the `addImport` method.
+Each Flux-Class can add required imports via the `addImport` method.
 For an example take a look at the [custom functions section](#custom-functions) below.
 
 ## Add missing functions

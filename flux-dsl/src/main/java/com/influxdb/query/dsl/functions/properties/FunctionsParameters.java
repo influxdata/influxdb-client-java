@@ -21,6 +21,8 @@
  */
 package com.influxdb.query.dsl.functions.properties;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -28,6 +30,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -51,11 +54,23 @@ public final class FunctionsParameters {
 
     private static final String DEFAULT_DELIMITER = ":";
     private static final String FUNCTION_DELIMITER = " => ";
+    private static final int DOUBLE_FRACTION_DIGITS = 340;
+
 
     private final Map<String, Property<?>> properties = new LinkedHashMap<>();
 
     public static String escapeDoubleQuotes(final String val) {
         return val.replace("\"", "\\\"");
+    }
+
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(
+            "0.0",
+            DecimalFormatSymbols.getInstance(Locale.ENGLISH)
+    );
+
+    static {
+        // https://stackoverflow.com/a/25307973
+        DECIMAL_FORMAT.setMaximumFractionDigits(DOUBLE_FRACTION_DIGITS);
     }
 
     private FunctionsParameters() {
@@ -82,6 +97,17 @@ public final class FunctionsParameters {
                 return '"' + escapeDoubleQuotes((String) value) + '"';
             }
             return (String) value;
+        }
+        if (value instanceof Integer || value instanceof Long) {
+            return value.toString();
+        }
+        if (value instanceof Number) {
+            String s = value.toString();
+            if (s.contains("E")) {
+                return DECIMAL_FORMAT.format(value);
+            } else {
+                return s;
+            }
         }
 
         Object serializedValue = value;
