@@ -77,13 +77,13 @@ public class Expressions implements HasImports {
     /**
      * Adds another expression to this container.
      *
-     * @param expression the expression to be added
+     * @param expressions the expressions to be added
      * @return this
      */
-    public Expressions addExpressions(@Nonnull final Expression expression) {
-        Arguments.checkNotNull(expression, "expression");
+    public Expressions addExpressions(@Nonnull final Expression... expressions) {
+        Arguments.checkNotNull(expressions, "expression");
 
-        expressions.add(expression);
+        this.expressions.addAll(Arrays.asList(expressions));
         return this;
     }
 
