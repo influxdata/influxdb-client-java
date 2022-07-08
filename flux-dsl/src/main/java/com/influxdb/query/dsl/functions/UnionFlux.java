@@ -21,59 +21,50 @@
  */
 package com.influxdb.query.dsl.functions;
 
-import java.util.Map;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.VariableAssignment;
 import com.influxdb.utils.Arguments;
 
 /**
- * Abstract base class for operators that take an upstream source of {@link Flux}.
- *
- * @author Jakub Bednar (bednar@github) (25/06/2018 07:29)
+ * Merges two or more input streams into a single output stream..
  */
-abstract class AbstractFluxWithUpstream extends Flux {
+public final class UnionFlux extends AbstractParametrizedFlux {
 
-    @Nullable
-    Flux source;
+    private final List<Flux> tables = new ArrayList<>();
 
-    AbstractFluxWithUpstream() {
+    public UnionFlux() {
+        super();
+        withPropertyValue("tables", (Supplier<String>) () -> tables
+                .stream().map(table -> table instanceof VariableAssignment
+                        ? ((VariableAssignment) table).getVariableName()
+                        : table.toString())
+                .collect(Collectors.joining(",", "[", "]")));
     }
 
-    AbstractFluxWithUpstream(@Nonnull final Flux source) {
 
-        Arguments.checkNotNull(source, "Source is required");
-
-        this.source = source;
-    }
-
+    @Nonnull
     @Override
-    public void appendActual(@Nonnull final Map<String, Object> parameters, @Nonnull final StringBuilder builder) {
-
-        if (source != null) {
-            source.appendActual(parameters, builder);
-        }
+    protected String operatorName() {
+        return "union";
     }
 
     /**
-     * Append delimiter to Flux query.
-     *
-     * @param builder Flux query chain.
+     * @param tables Flux script to union
+     * @return this
      */
-    void appendDelimiter(@Nonnull final StringBuilder builder) {
-        if (source != null) {
-            builder.append("\n");
-            builder.append("\t|> ");
-        }
+    @Nonnull
+    public UnionFlux withTables(@Nonnull final Flux... tables) {
+        Arguments.checkNotNull(tables, "tables");
+        this.tables.addAll(Arrays.asList(tables));
+        return this;
     }
 
-    @Override
-    public void collectImports(@Nonnull final Set<String> collectedImports) {
-        super.collectImports(collectedImports);
-        if (source != null) {
-            source.collectImports(collectedImports);
-        }
-    }
+
 }

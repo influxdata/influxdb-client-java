@@ -1,5 +1,16 @@
 ## 6.4.0 [unreleased]
 
+### Features
+1. [#373](https://github.com/influxdata/influxdb-client-java/pull/373):
+   * Add ability to define imports for each flux function [FluxDSL]
+   * Add ability use multiple flux expressions [FluxDSL]
+   * Add ability to define custom functions [FluxDSL]
+   * Improve join flux, so it can be nested [FluxDSL]
+   * Add missing parameter variants for RangeFlux amd AggregateWindow [FluxDSL]
+   * Add TruncateTimeColumnFlux [FluxDSL]
+   * Add ArrayFromFlux [FluxDSL]
+   * Add UnionFlux [FluxDSL]
+ 
 ## 6.3.0 [2022-06-30]
 
 ### Features

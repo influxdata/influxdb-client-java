@@ -141,4 +141,28 @@ class RangeFluxTest {
 
         Assertions.assertThat(flux.toString(parameters)).isEqualToIgnoringWhitespace(expected);
     }
+
+    @Test
+    void startTimestamp() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .range(1567029600L);
+
+        Assertions.assertThat(flux.toString())
+                .isEqualToIgnoringWhitespace("from(bucket:\"telegraf\") |> range(start: 1567029600)");
+    }
+
+    @Test
+    void startStopTimestamp() {
+
+        Flux flux = Flux
+                .from("telegraf")
+                .range(1567029600L, 1567030000L);
+
+        String expected = "from(bucket:\"telegraf\") |> "
+                + "range(start:1567029600, stop:1567030000)";
+
+        Assertions.assertThat(flux.toString()).isEqualToIgnoringWhitespace(expected);
+    }
 }

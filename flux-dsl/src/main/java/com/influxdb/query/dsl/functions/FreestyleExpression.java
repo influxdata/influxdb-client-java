@@ -22,58 +22,45 @@
 package com.influxdb.query.dsl.functions;
 
 import java.util.Map;
-import java.util.Set;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.Expression;
+import com.influxdb.query.dsl.HasImports;
+import com.influxdb.query.dsl.utils.ImportUtils;
 import com.influxdb.utils.Arguments;
 
 /**
- * Abstract base class for operators that take an upstream source of {@link Flux}.
- *
- * @author Jakub Bednar (bednar@github) (25/06/2018 07:29)
+ * An expression to encapsulate an arbitrary expression.
  */
-abstract class AbstractFluxWithUpstream extends Flux {
+public final class FreestyleExpression extends AbstractParametrizedFlux implements HasImports, Expression {
 
-    @Nullable
-    Flux source;
-
-    AbstractFluxWithUpstream() {
-    }
-
-    AbstractFluxWithUpstream(@Nonnull final Flux source) {
-
-        Arguments.checkNotNull(source, "Source is required");
-
-        this.source = source;
-    }
-
-    @Override
-    public void appendActual(@Nonnull final Map<String, Object> parameters, @Nonnull final StringBuilder builder) {
-
-        if (source != null) {
-            source.appendActual(parameters, builder);
-        }
-    }
+    private final String expression;
 
     /**
-     * Append delimiter to Flux query.
-     *
-     * @param builder Flux query chain.
+     * @param expression the string representation of th expression to encapsulate.
      */
-    void appendDelimiter(@Nonnull final StringBuilder builder) {
-        if (source != null) {
-            builder.append("\n");
-            builder.append("\t|> ");
-        }
+    public FreestyleExpression(@Nonnull final String expression) {
+
+        Arguments.checkNonEmpty(expression, "Expression");
+
+        this.expression = expression;
     }
 
     @Override
-    public void collectImports(@Nonnull final Set<String> collectedImports) {
-        super.collectImports(collectedImports);
-        if (source != null) {
-            source.collectImports(collectedImports);
+    public String toString(@Nonnull final Map<String, Object> parameters, final boolean prependImports) {
+        StringBuilder builder = new StringBuilder();
+
+        if (prependImports) {
+            builder.append(ImportUtils.getImportsString(this));
         }
+        builder.append(expression);
+
+        return builder.toString();
+    }
+
+    @Nonnull
+    @Override
+    protected String operatorName() {
+        return "";
     }
 }

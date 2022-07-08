@@ -21,6 +21,8 @@
  */
 package com.influxdb.query.dsl.functions.properties;
 
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
@@ -28,14 +30,15 @@ import java.time.temporal.ChronoUnit;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 import java.util.Map;
-import java.util.StringJoiner;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.VariableAssignment;
 import com.influxdb.utils.Arguments;
 
 /**
@@ -51,11 +54,23 @@ public final class FunctionsParameters {
 
     private static final String DEFAULT_DELIMITER = ":";
     private static final String FUNCTION_DELIMITER = " => ";
+    private static final int DOUBLE_FRACTION_DIGITS = 340;
 
-    private Map<String, Property> properties = new LinkedHashMap<>();
+
+    private final Map<String, Property<?>> properties = new LinkedHashMap<>();
 
     public static String escapeDoubleQuotes(final String val) {
         return val.replace("\"", "\\\"");
+    }
+
+    private static final DecimalFormat DECIMAL_FORMAT = new DecimalFormat(
+            "0.0",
+            DecimalFormatSymbols.getInstance(Locale.ENGLISH)
+    );
+
+    static {
+        // https://stackoverflow.com/a/25307973
+        DECIMAL_FORMAT.setMaximumFractionDigits(DOUBLE_FRACTION_DIGITS);
     }
 
     private FunctionsParameters() {
@@ -73,7 +88,27 @@ public final class FunctionsParameters {
      * @return serialized value
      */
     @Nullable
-    public static String serializeValue(@Nonnull final Object value) {
+    public static String serializeValue(
+            @Nonnull final Object value,
+            final boolean escapeStrings
+    ) {
+        if (value instanceof String) {
+            if (escapeStrings) {
+                return '"' + escapeDoubleQuotes((String) value) + '"';
+            }
+            return (String) value;
+        }
+        if (value instanceof Integer || value instanceof Long) {
+            return value.toString();
+        }
+        if (value instanceof Number) {
+            String s = value.toString();
+            if (s.contains("E")) {
+                return DECIMAL_FORMAT.format(value);
+            } else {
+                return s;
+            }
+        }
 
         Object serializedValue = value;
         if (serializedValue.getClass().isArray()) {
@@ -89,30 +124,27 @@ public final class FunctionsParameters {
                 return null;
             }
 
-            serializedValue = collection.stream()
-                    .map(host -> "\"" + escapeDoubleQuotes(host.toString()) + "\"")
+            return collection.stream()
+                    .map((v) -> serializeValue(v, true))
                     .collect(Collectors.joining(", ", "[", "]"));
         }
 
         if (serializedValue instanceof Map) {
-
-            StringJoiner joiner = new StringJoiner(", ", "{", "}");
-
-            Map map = (Map) serializedValue;
-            //noinspection unchecked
-            map.keySet().forEach(key -> {
-                joiner.add(String.format("%s: \"%s\"", key, escapeDoubleQuotes(map.get(key).toString())));
-            });
-
-            serializedValue = joiner;
+            return ((Map<?, ?>) serializedValue).entrySet().stream()
+                    .map(entry -> entry.getKey() + ": " + serializeValue(entry.getValue(), true))
+                    .collect(Collectors.joining(", ", "{", "}"));
         }
 
         if (serializedValue instanceof Instant) {
-            serializedValue = DATE_FORMATTER.format((Instant) value);
+            return DATE_FORMATTER.format((Instant) value);
         }
 
         if (serializedValue instanceof Supplier) {
-            return serializeValue(((Supplier) serializedValue).get());
+            return serializeValue(((Supplier<?>) serializedValue).get(), escapeStrings);
+        }
+
+        if (serializedValue instanceof VariableAssignment) {
+            return ((VariableAssignment) serializedValue).getVariableName();
         }
 
         return serializedValue.toString();
@@ -141,7 +173,7 @@ public final class FunctionsParameters {
         Arguments.checkNonEmpty(functionName, "functionName");
         Arguments.checkNonEmpty(namedProperty, "Named property");
 
-        put(functionName, new NamedProperty(namedProperty, FUNCTION_DELIMITER));
+        put(functionName, new NamedProperty<>(namedProperty, FUNCTION_DELIMITER));
     }
 
     /**
@@ -179,10 +211,10 @@ public final class FunctionsParameters {
             return;
         }
 
-        put(functionName, new Property() {
+        put(functionName, new Property<Object>() {
             @Nonnull
             @Override
-            public Object value(@Nonnull final Map namedProperties) {
+            public Object value(@Nonnull final Map<String, Object> namedProperties) {
                 return function;
             }
 
@@ -237,7 +269,7 @@ public final class FunctionsParameters {
     @Nullable
     public String get(@Nonnull final String key, @Nonnull final Map<String, Object> namedProperties) {
 
-        Property property = properties.get(key);
+        Property<?> property = properties.get(key);
         if (property == null) {
             return null;
         }
@@ -248,10 +280,10 @@ public final class FunctionsParameters {
         }
 
         // array to collection
-        return serializeValue(value);
+        return serializeValue(value, false);
     }
 
-    private void put(@Nonnull final String name, @Nullable final Property property) {
+    private void put(@Nonnull final String name, @Nullable final Property<?> property) {
 
         if (property == null) {
             return;
@@ -263,7 +295,7 @@ public final class FunctionsParameters {
     @Nonnull
     public String getDelimiter(@Nonnull final String key) {
 
-        Property property = properties.get(key);
+        Property<?> property = properties.get(key);
         if (property == null) {
             return DEFAULT_DELIMITER;
         }
@@ -287,7 +319,7 @@ public final class FunctionsParameters {
         String delimiter();
     }
 
-    private final class NamedProperty<T> implements Property<T> {
+    private static final class NamedProperty<T> implements Property<T> {
 
         private final String parameterName;
         private final String delimiter;
@@ -325,7 +357,7 @@ public final class FunctionsParameters {
         }
     }
 
-    private final class StringProperty extends AbstractProperty<String> {
+    private static final class StringProperty extends AbstractProperty<String> {
 
         private final String value;
 
@@ -345,7 +377,7 @@ public final class FunctionsParameters {
         }
     }
 
-    private abstract class AbstractProperty<T> implements Property<T> {
+    private abstract static class AbstractProperty<T> implements Property<T> {
 
         /**
          * @return For value property it is ": ", but for function it is "=&gt;".

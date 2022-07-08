@@ -195,4 +195,34 @@ public final class AggregateWindow extends AbstractParametrizedFlux {
 
         return this;
     }
+
+    /**
+     * @param amount The offset of windows.
+     * @param unit   a {@code ChronoUnit} determining how to interpret the {@code amount}.
+     * @return this
+     */
+    @Nonnull
+    public AggregateWindow withOffset(@Nonnull final Long amount, @Nonnull final ChronoUnit unit) {
+
+        Arguments.checkNotNull(amount, "amount");
+        Arguments.checkNotNull(unit, "unit");
+
+        this.withPropertyValue("offset", amount, unit);
+
+        return this;
+    }
+
+    /**
+     * @param offset The offset of windows.
+     * @return this
+     */
+    @Nonnull
+    public AggregateWindow withOffset(@Nonnull final String offset) {
+
+        Arguments.checkDuration(offset, "offset");
+
+        this.withPropertyValue("offset", offset);
+
+        return this;
+    }
 }

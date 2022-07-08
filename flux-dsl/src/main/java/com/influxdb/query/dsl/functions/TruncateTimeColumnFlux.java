@@ -21,59 +21,50 @@
  */
 package com.influxdb.query.dsl.functions;
 
-import java.util.Map;
-import java.util.Set;
+import java.time.temporal.ChronoUnit;
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.utils.Arguments;
 
 /**
- * Abstract base class for operators that take an upstream source of {@link Flux}.
+ * Truncates all input time values in the _time to a specified unit..
  *
- * @author Jakub Bednar (bednar@github) (25/06/2018 07:29)
+ * <h3>Options</h3>
+ * <ul>
+ * <li><b>unit</b> - Unit of time to truncate to. [unit].</li>
+ * </ul>
+ *
+ * <h3>Example</h3>
+ * <pre>
+ * Flux flux = Flux
+ *     .from("telegraf")
+ *     .truncateTimeColumn("s");
+ * </pre>
+ *
  */
-abstract class AbstractFluxWithUpstream extends Flux {
+public final class TruncateTimeColumnFlux extends AbstractParametrizedFlux {
 
-    @Nullable
-    Flux source;
-
-    AbstractFluxWithUpstream() {
+    public TruncateTimeColumnFlux(@Nonnull final Flux source) {
+        super(source);
     }
 
-    AbstractFluxWithUpstream(@Nonnull final Flux source) {
-
-        Arguments.checkNotNull(source, "Source is required");
-
-        this.source = source;
-    }
-
+    @Nonnull
     @Override
-    public void appendActual(@Nonnull final Map<String, Object> parameters, @Nonnull final StringBuilder builder) {
-
-        if (source != null) {
-            source.appendActual(parameters, builder);
-        }
+    protected String operatorName() {
+        return "truncateTimeColumn";
     }
 
     /**
-     * Append delimiter to Flux query.
-     *
-     * @param builder Flux query chain.
+     * @param unit Unit of time to truncate to. Has to be defined.
+     * @return this
      */
-    void appendDelimiter(@Nonnull final StringBuilder builder) {
-        if (source != null) {
-            builder.append("\n");
-            builder.append("\t|> ");
-        }
-    }
+    @Nonnull
+    public TruncateTimeColumnFlux withUnit(@Nonnull final ChronoUnit unit) {
+        Arguments.checkNotNull(unit, "unit");
 
-    @Override
-    public void collectImports(@Nonnull final Set<String> collectedImports) {
-        super.collectImports(collectedImports);
-        if (source != null) {
-            source.collectImports(collectedImports);
-        }
+        withPropertyValue("unit", 1L, unit);
+
+        return this;
     }
 }
