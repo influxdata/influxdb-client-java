@@ -253,6 +253,20 @@ Flux flux = Flux
     .from("telegraf")
     .duplicate("host", "server");
 ```
+
+### fill
+
+Replaces all null values in input tables with a non-null value [[doc](http://bit.ly/flux-spec#fill)].
+- `column` - The column to fill. Defaults to `_value`. [string]
+- `value` The constant value to use in place of nulls. The type must match the type of the valueColumn. [object]
+- `usePrevious` If set, then assign the value set in the previous non-null row. Cannot be used with value. [boolean]
+
+```java
+Flux flux = Flux
+    .from("telegraf")
+    .fill(0.0);
+```
+
 ### filter
 
 Filters the results using an expression [[doc](http://bit.ly/flux-spec#filter)].
