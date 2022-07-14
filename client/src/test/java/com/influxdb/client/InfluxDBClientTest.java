@@ -24,7 +24,11 @@ package com.influxdb.client;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
+import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import com.influxdb.LogLevel;
@@ -438,6 +442,34 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
             RecordedRequest request = mockServer.takeRequest();
             Assertions.assertThat(request.getHeaders().get("User-Agent")).startsWith("influxdb-client-awesome-service/");
         }
+    }
+
+    @Test
+    public void redactedAuthorizationHeader() {
+
+        mockServer.enqueue(new MockResponse());
+
+        MockLogHandler handler = new MockLogHandler();
+
+        final Logger logger = Logger.getLogger("okhttp3.OkHttpClient");
+        logger.addHandler(handler);
+
+        try (InfluxDBClient client = InfluxDBClientFactory.create(mockServer.url("/").toString(), "my-token".toCharArray())) {
+            client.setLogLevel(LogLevel.HEADERS);
+            client
+                    .getWriteApiBlocking()
+                    .writeRecord("my-bucket", "my-org", WritePrecision.NS, "m2m,tag=a field=1");
+        }
+
+        List<LogRecord> records = handler.getRecords(Level.INFO);
+
+        LogRecord authorizationLog = records
+                .stream()
+                .filter(it -> it.getMessage().startsWith("Authorization: "))
+                .findFirst()
+                .get();
+
+        Assertions.assertThat(authorizationLog.getMessage()).isEqualTo("Authorization: ██");
     }
 
     private void queryAndTest(final String expected) throws InterruptedException {
