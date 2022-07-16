@@ -47,6 +47,7 @@ import com.influxdb.query.dsl.functions.DistinctFlux;
 import com.influxdb.query.dsl.functions.DropFlux;
 import com.influxdb.query.dsl.functions.DuplicateFlux;
 import com.influxdb.query.dsl.functions.ExpressionFlux;
+import com.influxdb.query.dsl.functions.FillFlux;
 import com.influxdb.query.dsl.functions.FilterFlux;
 import com.influxdb.query.dsl.functions.FirstFlux;
 import com.influxdb.query.dsl.functions.FromFlux;
@@ -813,6 +814,34 @@ public abstract class Flux implements HasImports, Expression {
     @Nonnull
     public final DuplicateFlux duplicate(@Nonnull final String column, @Nonnull final String as) {
         return new DuplicateFlux(this).withColumn(column).withAs(as);
+    }
+
+    /**
+     * Replaces all null values in input tables with a non-null value.
+     *
+     * <h3>The parameters had to be defined by:</h3>
+     * <ul>
+     * <li>{@link FillFlux#withUsePrevious(Boolean)}</li>
+     * <li>{@link FillFlux#withColumn(String)}</li>
+     * <li>{@link FillFlux#withValue(Object)}</li>
+     * </ul>
+     *
+     * @return {@link FillFlux}
+     */
+    @Nonnull
+    public final FillFlux fill() {
+        return new FillFlux(this);
+    }
+
+    /**
+     * Replaces all null values in input tables with a non-null value.
+     *
+     * @param value The constant value to use in place of nulls. The type must match the type of the valueColumn.
+     * @return {@link FillFlux}
+     */
+    @Nonnull
+    public final FillFlux fill(@Nonnull final Object value) {
+        return new FillFlux(this).withValue(value);
     }
 
     /**

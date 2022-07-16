@@ -10,7 +10,8 @@
    * Add TruncateTimeColumnFlux [FluxDSL]
    * Add ArrayFromFlux [FluxDSL]
    * Add UnionFlux [FluxDSL]
-
+1. [376](https://github.com/influxdata/influxdb-client-java/pull/376) Add FillFlux [FluxDSL]
+ 
 ### Bug Fixes
 1. [#372](https://github.com/influxdata/influxdb-client-java/pull/372): Redact the `Authorization` HTTP header from log
 
