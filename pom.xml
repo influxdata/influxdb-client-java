@@ -124,7 +124,7 @@
         <kotlin.version>1.6.20</kotlin.version>
         <karaf.version>4.3.6</karaf.version>
         <junit-jupiter.version>5.8.2</junit-jupiter.version>
-        <kotlin-coroutines.version>1.6.0</kotlin-coroutines.version>
+        <kotlin-coroutines.version>1.4.3</kotlin-coroutines.version>
     </properties>
 
     <dependencies>

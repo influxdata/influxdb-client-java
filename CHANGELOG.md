@@ -20,7 +20,7 @@
 1. [#???](https://github.com/influxdata/influxdb-client-java/pull/???): Update dependencies:
 
 #### Build:
-    - kotlinx-coroutines-core-jvm to 1.6.0
+    - kotlinx-coroutines-core to 1.4.3
 
 #### Maven Plugin:
     - dokka-maven-plugin to 1.7.10
