@@ -17,7 +17,7 @@
 1. [#372](https://github.com/influxdata/influxdb-client-java/pull/372): Redact the `Authorization` HTTP header from log
 
 ### Dependencies
-1. [#???](https://github.com/influxdata/influxdb-client-java/pull/???): Update dependencies:
+1. [#377](https://github.com/influxdata/influxdb-client-java/pull/377): Update dependencies:
 
 #### Build:
     - kotlinx-coroutines-core to 1.4.3
