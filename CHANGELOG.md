@@ -16,6 +16,15 @@
 1. [#358](https://github.com/influxdata/influxdb-client-java/pull/358): Missing backpressure for asynchronous non-blocking API
 1. [#372](https://github.com/influxdata/influxdb-client-java/pull/372): Redact the `Authorization` HTTP header from log
 
+### Dependencies
+1. [#???](https://github.com/influxdata/influxdb-client-java/pull/???): Update dependencies:
+
+#### Build:
+    - kotlinx-coroutines-core-jvm to 1.6.0
+
+#### Maven Plugin:
+    - dokka-maven-plugin to 1.7.10
+
 ## 6.3.0 [2022-06-30]
 
 ### Features
