@@ -33,12 +33,12 @@ import com.influxdb.client.domain.RuleStatusLevel;
 import com.influxdb.client.domain.SlackNotificationEndpoint;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
+import com.influxdb.test.MockServerExtension;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
@@ -54,21 +54,17 @@ import org.junit.runner.RunWith;
 @RunWith(JUnitPlatform.class)
 class ITMonitoringAlerting extends AbstractITClientTest {
 
-    private MockWebServer mockServer;
+    private MockServerExtension mockServerExtension;
 
     @BeforeEach
     void startSlackServer() {
-        mockServer = new MockWebServer();
-        try {
-            mockServer.start();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        mockServerExtension = new MockServerExtension();
+        mockServerExtension.start();
     }
 
     @AfterEach
     void stopSlackServer() throws IOException {
-        mockServer.shutdown();
+        mockServerExtension.shutdown();
     }
 
     @Test
@@ -106,7 +102,7 @@ class ITMonitoringAlerting extends AbstractITClientTest {
         //
         // Create Slack Notification endpoint
         //
-        String url = "http://" + getHostNetwork() + ":" + mockServer.getPort();
+        String url = "http://" + getHostNetwork() + ":" + mockServerExtension.server.getPort();
         SlackNotificationEndpoint endpoint = notificationEndpointsApi.createSlackEndpoint(generateName("Slack Endpoint"), url, org.getId());
 
         //
@@ -127,7 +123,7 @@ class ITMonitoringAlerting extends AbstractITClientTest {
 
         influxDBClient.getWriteApiBlocking().writePoint("my-bucket", "my-org", measurement);
 
-        RecordedRequest request = mockServer.takeRequest(30, TimeUnit.SECONDS);
+        RecordedRequest request = mockServerExtension.server.takeRequest(30, TimeUnit.SECONDS);
         Assertions.assertThat(request).isNotNull();
 
         JsonObject json = new JsonParser().parse(request.getBody().readUtf8()).getAsJsonObject();

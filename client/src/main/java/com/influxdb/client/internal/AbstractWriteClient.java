@@ -38,6 +38,8 @@ import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteOptions;
 import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.internal.flowable.BackpressureBatchesBufferStrategy;
+import com.influxdb.client.internal.flowable.FlowableBufferTimedFlushable;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.WriteParameters;
@@ -56,7 +58,9 @@ import io.reactivex.rxjava3.core.Maybe;
 import io.reactivex.rxjava3.core.Notification;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.core.Single;
 import io.reactivex.rxjava3.functions.Function;
+import io.reactivex.rxjava3.internal.util.ArrayListSupplier;
 import io.reactivex.rxjava3.processors.PublishProcessor;
 import io.reactivex.rxjava3.subjects.PublishSubject;
 import org.reactivestreams.Publisher;
@@ -78,13 +82,12 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
     protected final InfluxDBClientOptions options;
 
     private final PublishProcessor<BatchWriteItem> processor;
-    private final PublishProcessor<Flowable<BatchWriteItem>> flushPublisher;
+    private final PublishProcessor<Boolean> flushPublisher;
     private final PublishSubject<AbstractWriteEvent> eventPublisher;
 
     protected final MeasurementMapper measurementMapper = new MeasurementMapper();
     private final WriteService service;
     private final Collection<AutoCloseable> autoCloseables;
-    private final PublishProcessor<Object> tempBoundary;
 
     private AtomicBoolean finished = new AtomicBoolean(false);
 
@@ -103,10 +106,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
         this.flushPublisher = PublishProcessor.create();
         this.eventPublisher = PublishSubject.create();
-        this.tempBoundary = PublishProcessor.create();
         this.processor = PublishProcessor.create();
-
-        PublishProcessor<Flowable<BatchWriteItem>> tempBoundary = PublishProcessor.create();
 
         processor
                 //
@@ -114,67 +114,59 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 //
                 .onBackpressureBuffer(
                         writeOptions.getBufferLimit(),
-                        () -> publish(new BackpressureEvent()),
+                        () -> publish(new BackpressureEvent(BackpressureEvent.BackpressureReason.FAST_EMITTING)),
                         writeOptions.getBackpressureStrategy())
                 //
-                // Batching
+                // Group by Bucket, Org, Precision, Consistency
                 //
-                .publish(connectedSource -> {
+                .groupBy(it -> it.writeParameters)
+                .flatMap(group -> group
+                        //
+                        // Use Buffer to create Batch Items
+                        //
+                        .compose(source ->
+                                new FlowableBufferTimedFlushable<>(
+                                        source,
+                                        flushPublisher,
+                                        writeOptions.getFlushInterval(),
+                                        TimeUnit.MILLISECONDS,
+                                        writeOptions.getBatchSize(), processorScheduler,
+                                        ArrayListSupplier.asSupplier()
+                                ))
+                        //
+                        // Collect Batch items into one Write Item
+                        //
+                        .map(batchItems -> {
+                            BatchWriteDataGrouped batch = new BatchWriteDataGrouped(group.getKey());
 
-                    return connectedSource
-                            .window(tempBoundary)
-                            .mergeWith(Flowable.defer(() -> {
-                                connectedSource
-                                        // Buffering
-                                        .window(writeOptions.getFlushInterval(),
-                                                TimeUnit.MILLISECONDS,
-                                                processorScheduler,
-                                                writeOptions.getBatchSize(),
-                                                true)
-                                        // Flushing
-                                        .mergeWith(flushPublisher)
-                                        // Generate window
-                                        .subscribe(tempBoundary);
-                                return Flowable.empty();
-                            }));
-                })
-                //
-                // Group by key - same bucket, same org
-                //
-                .concatMap(it -> it.groupBy(batchWrite -> batchWrite.writeParameters))
-                //
-                // Create Write Point = bucket, org, ... + data
-                //
-                .concatMapSingle(grouped -> grouped
-                        .map(it -> {
-                            try {
-                                String lineProtocol = it.data.toLineProtocol();
-                                if (lineProtocol == null) {
-                                    return "";
+                            for (BatchWriteItem item : batchItems) {
+                                try {
+                                    batch.append(item.data.toLineProtocol());
+                                } catch (Exception e) {
+                                    publish(new WriteErrorEvent(e));
                                 }
-                                return lineProtocol;
-                            } catch (Exception e) {
-                                publish(new WriteErrorEvent(e));
-                                return "";
                             }
+
+                            return new BatchWriteItem(batch.group, batch);
                         })
-                        .filter(it -> it != null && !it.isEmpty())
-                        .collect(StringBuilder::new, (sb, x) -> {
-                            if (sb.length() > 0) {
-                                sb.append("\n");
-                            }
-                            sb.append(x);
-                        })
-                        .map(StringBuilder::toString)
-                        .map(it -> new BatchWriteItem(grouped.getKey(), new BatchWriteDataRecord(it))))
+                )
+                .filter(batch -> batch.length() > 0)
                 //
-                // Jitter interval
+                // Add backpressure to GroupBy. For more info see:
+                //      https://github.com/ReactiveX/RxJava/wiki/What's-different-in-3.0#backpressure-in-groupby
                 //
-                .compose(jitter(processorScheduler, writeOptions))
+                .flatMap(Flowable::just, Integer.MAX_VALUE)
                 //
-                // To WritePoints "request creator"
+                // Add backpressure strategy to cover outage of the server
                 //
-                .concatMapMaybe(new ToWritePointsMaybe(processorScheduler))
+                .lift(new BackpressureBatchesBufferStrategy(
+                        writeOptions.getBufferLimit(),
+                        () -> publish(new BackpressureEvent(BackpressureEvent.BackpressureReason.TOO_MUCH_BATCHES)),
+                        writeOptions.getBackpressureStrategy()))
+                //
+                // Use concat to process batches one by one
+                //
+                .concatMapMaybe(new ToWritePointsMaybe(processorScheduler, writeOptions))
                 .doFinally(() -> finished.set(true))
                 .subscribe(responseNotification -> {
 
@@ -195,7 +187,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
     }
 
     public void flush() {
-        flushPublisher.offer(Flowable.empty());
+        flushPublisher.offer(true);
     }
 
     public void close() {
@@ -207,7 +199,6 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         processor.onComplete();
 
         flushPublisher.onComplete();
-        tempBoundary.onComplete();
         eventPublisher.onComplete();
 
         waitToCondition(() -> finished.get(), DEFAULT_WAIT);
@@ -220,12 +211,10 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             throw new InfluxException(CLOSED_EXCEPTION);
         }
 
-        stream.subscribe(
-                dataPoint -> {
-                    WritePrecision precision = dataPoint.point.getPrecision();
-                    write(writeParameters.copy(precision, options), Flowable.just(dataPoint));
-                },
-                throwable -> publish(new WriteErrorEvent(throwable)));
+        Flowable<BatchWriteItem> flowable = Flowable.fromPublisher(stream)
+                .map(it -> new BatchWriteItem(writeParameters.copy(it.point.getPrecision(), options), it));
+
+        write(flowable);
     }
 
     public void write(@Nonnull final WriteParameters writeParameters,
@@ -238,9 +227,18 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             throw new InfluxException(CLOSED_EXCEPTION);
         }
 
-        Flowable.fromPublisher(stream)
-                .map(it -> new BatchWriteItem(writeParameters, it))
-                .subscribe(processor::onNext, throwable -> publish(new WriteErrorEvent(throwable)));
+        Flowable<BatchWriteItem> flowable = Flowable.fromPublisher(stream)
+                .map(it -> new BatchWriteItem(writeParameters, it));
+
+        write(flowable);
+    }
+
+    private void write(@Nonnull final Flowable<BatchWriteItem> stream) {
+        if (processor.hasComplete()) {
+            throw new InfluxException(CLOSED_EXCEPTION);
+        }
+
+        stream.subscribe(processor::onNext, throwable -> publish(new WriteErrorEvent(throwable)));
     }
 
     private <T extends AbstractWriteEvent> void publish(@Nonnull final T event) {
@@ -255,6 +253,9 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
         @Nullable
         String toLineProtocol();
+
+        @Nonnull
+        Long length();
     }
 
     public static final class BatchWriteDataRecord implements BatchWriteData {
@@ -269,6 +270,47 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
         @Override
         public String toLineProtocol() {
             return record;
+        }
+
+        @Nonnull
+        @Override
+        public Long length() {
+            return 1L;
+        }
+    }
+
+    public static final class BatchWriteDataGrouped implements BatchWriteData {
+
+        private final WriteParameters group;
+        private final StringBuilder sb = new StringBuilder();
+        private Long length = 0L;
+
+        public BatchWriteDataGrouped(@Nonnull final WriteParameters group) {
+            this.group = group;
+        }
+
+        @Override
+        public String toLineProtocol() {
+            return sb.toString();
+        }
+
+        @Nonnull
+        @Override
+        public Long length() {
+            return length;
+        }
+
+        public void append(@Nullable final String lineProtocol) {
+
+            if (lineProtocol == null) {
+                return;
+            }
+
+            if (sb.length() > 0) {
+                sb.append("\n");
+            }
+            sb.append(lineProtocol);
+            length++;
         }
     }
 
@@ -308,6 +350,12 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
             return point.toLineProtocol(options.getPointSettings(), precision);
         }
+
+        @Nonnull
+        @Override
+        public Long length() {
+            return 1L;
+        }
     }
 
     public static final class BatchWriteDataMeasurement implements BatchWriteData {
@@ -345,18 +393,24 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
             return point.toLineProtocol(options.getPointSettings());
         }
+
+        @Nonnull
+        @Override
+        public Long length() {
+            return 1L;
+        }
     }
 
     /**
      * The Batch Write Item.
      */
-    final class BatchWriteItem {
+    public static final class BatchWriteItem {
 
         private WriteParameters writeParameters;
         private BatchWriteData data;
 
-        private BatchWriteItem(@Nonnull final WriteParameters writeParameters,
-                               @Nonnull final BatchWriteData data) {
+        public BatchWriteItem(@Nonnull final WriteParameters writeParameters,
+                              @Nonnull final BatchWriteData data) {
 
             Arguments.checkNotNull(writeParameters, "writeParameters");
             Arguments.checkNotNull(data, "data");
@@ -364,15 +418,27 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             this.writeParameters = writeParameters;
             this.data = data;
         }
+
+        public long length() {
+            return data.length();
+        }
+
+        @Nullable
+        public String toLineProtocol() {
+            return data.toLineProtocol();
+        }
     }
 
     @SuppressWarnings("rawtypes")
     private final class ToWritePointsMaybe implements Function<BatchWriteItem, Maybe<Notification<Response>>> {
 
         private final Scheduler retryScheduler;
+        private final WriteApi.RetryOptions retryOptions;
 
-        private ToWritePointsMaybe(@Nonnull final Scheduler retryScheduler) {
+        private ToWritePointsMaybe(@Nonnull final Scheduler retryScheduler,
+                                   @Nonnull final WriteApi.RetryOptions retryOptions) {
             this.retryScheduler = retryScheduler;
+            this.retryOptions = retryOptions;
         }
 
         @Override
@@ -390,11 +456,27 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             WritePrecision precision = batchWrite.writeParameters.precisionSafe(options);
             WriteConsistency consistency = batchWrite.writeParameters.consistencySafe(options);
 
-            Maybe<Response<Void>> requestSource = service
-                    .postWriteRx(organization, bucket, content, null,
-                            "identity", "text/plain; charset=utf-8", null,
-                            "application/json", null, precision, consistency)
-                    .toMaybe();
+            Single<Response<Void>> postWriteRx = service
+                    .postWriteRx(organization, bucket, content, null, "identity", "text/plain; charset=utf-8",
+                            null, "application/json", null, precision, consistency);
+
+
+            Maybe<Response<Void>> requestSource;
+
+            //
+            // source with jitter
+            //
+            if (retryOptions.getJitterInterval() > 0) {
+                int delay = RetryAttempt.jitterDelay(retryOptions.getJitterInterval());
+
+                LOG.log(Level.FINEST, "Generated Jitter dynamic delay: {0}", delay);
+
+                requestSource = Maybe
+                        .timer(delay, TimeUnit.MILLISECONDS, retryScheduler)
+                        .flatMap(it -> postWriteRx.toMaybe());
+            } else {
+                requestSource = postWriteRx.toMaybe();
+            }
 
             return requestSource
                     //
@@ -417,7 +499,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                     // maxRetryTime timeout
                     //
                     .timeout(writeOptions.getMaxRetryTime(), TimeUnit.MILLISECONDS, retryScheduler,
-                        Maybe.error(new TimeoutException("Max retry time exceeded.")))
+                            Maybe.error(new TimeoutException("Max retry time exceeded.")))
                     //
                     // Map response to Notification => possibility to consume error as event
                     //
