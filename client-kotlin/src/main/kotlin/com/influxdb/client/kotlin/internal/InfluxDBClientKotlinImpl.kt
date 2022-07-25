@@ -44,6 +44,7 @@ internal class InfluxDBClientKotlinImpl(options: InfluxDBClientOptions) : Abstra
         return WriteKotlinApiImpl(retrofit.create(WriteService::class.java), options)
     }
 
+    @Deprecated("This method is obsolete. Use `ping()` or `version()`", replaceWith = ReplaceWith("ping()"))
     override fun health(): HealthCheck {
         return health(healthService.getHealth(null))
     }
