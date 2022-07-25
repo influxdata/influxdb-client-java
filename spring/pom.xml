@@ -72,9 +72,9 @@
   </scm>
 
     <properties>
-        <micrometer.version>1.8.4</micrometer.version>
-        <spring-boot.version>2.6.6</spring-boot.version>
-        <spring.version>5.3.18</spring.version>
+        <micrometer.version>1.9.2</micrometer.version>
+        <spring-boot.version>2.7.2</spring-boot.version>
+        <spring.version>5.3.22</spring.version>
     </properties>
 
     <build>

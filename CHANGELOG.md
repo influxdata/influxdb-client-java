@@ -23,8 +23,11 @@
     - kotlin-stdlib to 1.7.10
     - kotlinx-coroutines-core to 1.6.4
     - lombok to 1.18.24
+    - micrometer-registry-influx to 1.9.2
     - rxjava to 3.1.5 
     - scala-collection-compat_2.12 to 2.8.0
+    - spring to 5.3.22
+    - spring-boot to 2.7.2
 
 #### Maven Plugin:
     - maven-bundle-plugin to 5.1.7

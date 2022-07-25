@@ -729,12 +729,4 @@
         </pluginRepository>
     </pluginRepositories>
 
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>spring-plugins</id>-->
-<!--            <name>Spring Plugins Repository</name>-->
-<!--            <url>https://repo.spring.io/plugins-release/</url>-->
-<!--        </repository>-->
-<!--    </repositories>-->
-
 </project>
