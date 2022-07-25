@@ -323,7 +323,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.1.0</version>
+                <version>3.0.0-M3</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -727,5 +727,13 @@
             <url>https://jcenter.bintray.com/</url>
         </pluginRepository>
     </pluginRepositories>
+
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>spring-plugins</id>-->
+<!--            <name>Spring Plugins Repository</name>-->
+<!--            <url>https://repo.spring.io/plugins-release/</url>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
 </project>
