@@ -13,6 +13,7 @@
 1. [#376](https://github.com/influxdata/influxdb-client-java/pull/376) Add FillFlux [FluxDSL]
  
 ### Bug Fixes
+1. [#358](https://github.com/influxdata/influxdb-client-java/pull/358): Missing backpressure for asynchronous non-blocking API
 1. [#372](https://github.com/influxdata/influxdb-client-java/pull/372): Redact the `Authorization` HTTP header from log
 
 ## 6.3.0 [2022-06-30]
@@ -21,9 +22,6 @@
 1. [#367](https://github.com/influxdata/influxdb-client-java/pull/367): Add HTTP status code to detail message of `InfluxException`
 1. [#367](https://github.com/influxdata/influxdb-client-java/pull/367): Add `GatewayTimeoutException` for HTTP status code 504
 1. [#371](https://github.com/influxdata/influxdb-client-java/pull/371): Add possibility to customize the `User-Agent` HTTP header
-
-### Bug Fixes
-1. [#358](https://github.com/influxdata/influxdb-client-java/pull/358): Missing backpressure for asynchronous non-blocking API
 
 ### CI
 1. [#369](https://github.com/influxdata/influxdb-client-java/pull/369): Add JDK 18 to CI pipeline
