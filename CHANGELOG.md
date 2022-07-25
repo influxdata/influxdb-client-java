@@ -20,6 +20,7 @@
 1. [#377](https://github.com/influxdata/influxdb-client-java/pull/377): Update dependencies:
 
 #### Build:
+    - kotlin-stdlib to 1.7.10
     - kotlinx-coroutines-core to 1.4.3
 
 #### Maven Plugin:
@@ -36,6 +37,7 @@
     - dokka-maven-plugin to 1.7.10
     - jacoco-maven-plugin to 0.8.8
     - karaf-maven-plugin to 4.4.1
+    - kotlin-maven-plugin to 1.7.10
     - license-maven-plugin to 4.1
     - nexus-staging-maven-plugin to 1.6.13
     - scalatest-maven-plugin to 2.1.0
