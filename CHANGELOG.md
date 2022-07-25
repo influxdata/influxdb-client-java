@@ -35,9 +35,12 @@
     - maven-bundle-plugin to 5.1.7
     - maven-checkstyle-plugin to 3.1.2
     - maven-compiler-plugin to 3.10.1
+    - maven-enforcer-plugin to 3.1.0
+    - maven-deploy-plugin to 3.0.0
+    - maven-install-plugin to 3.0.1
     - maven-jar-plugin to 3.2.2
     - maven-javadoc-plugin to 3.4.0
-    - maven-project-info-reports-plugin to 3.2.2
+    - maven-project-info-reports-plugin to 3.4.0
     - maven-site-plugin to 3.12.0
     - build-helper-maven-plugin to 3.3.0
     - dokka-maven-plugin to 1.7.10

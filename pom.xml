@@ -324,7 +324,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.0.0-M3</version>
+                <version>3.1.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -368,7 +368,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-deploy-plugin</artifactId>
-                    <version>2.8.2</version>
+                    <version>3.0.0</version>
                 </plugin>
 
                 <plugin>
@@ -391,7 +391,7 @@
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-install-plugin</artifactId>
-                    <version>2.5.2</version>
+                    <version>3.0.1</version>
                 </plugin>
 
             </plugins>
@@ -404,7 +404,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.2.2</version>
+                <version>3.4.0</version>
                 <configuration>
                     <dependencyDetailsEnabled>true</dependencyDetailsEnabled>
                 </configuration>
@@ -724,5 +724,13 @@
             </build>
         </profile>
     </profiles>
+
+    <repositories>
+        <repository>
+            <id>spring-bundle-releases</id>
+            <name>Spring External Bundle Releases</name>
+            <url>https://repository.springsource.com/maven/bundles/external</url>
+        </repository>
+    </repositories>
 
 </project>
