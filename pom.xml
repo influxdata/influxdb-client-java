@@ -109,8 +109,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
         <dependency.retrofit.version>2.9.0</dependency.retrofit.version>
-        <dependency.okhttp3.version>4.9.3</dependency.okhttp3.version>
-        <dependency.com.squareup.okio>2.10.0</dependency.com.squareup.okio>
+        <dependency.okhttp3.version>4.10.0</dependency.okhttp3.version>
+        <dependency.com.squareup.okio>3.2.0</dependency.com.squareup.okio>
         <dependency.gson.version>2.9.0</dependency.gson.version>
         <dependency.io.reactivex.rxjava3>3.1.5</dependency.io.reactivex.rxjava3>
 
@@ -551,6 +551,10 @@
                     <exclusion>
                         <groupId>io.reactivex.rxjava3</groupId>
                         <artifactId>rxjava</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>org.reactivestreams</groupId>
+                        <artifactId>reactive-streams</artifactId>
                     </exclusion>
                 </exclusions>
             </dependency>
