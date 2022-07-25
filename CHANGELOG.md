@@ -44,6 +44,10 @@
     - scoverage-maven-plugin to 1.4.11
     - versions-maven-plugin to 2.11.0
 
+#### Test:
+    - assertj-core to 3.23.1
+    - mockito to 4.6.1
+
 ## 6.3.0 [2022-06-30]
 
 ### Features
