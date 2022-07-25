@@ -1,7 +1,7 @@
 ## 6.4.0 [unreleased]
 
 ### Features
-1. [#373](https://github.com/influxdata/influxdb-client-java/pull/373):
+1. [#373](https://github.com/influxdata/influxdb-client-java/pull/373): Improve `FluxDSL`:
    * Add ability to define imports for each flux function [FluxDSL]
    * Add ability use multiple flux expressions [FluxDSL]
    * Add ability to define custom functions [FluxDSL]
@@ -10,7 +10,7 @@
    * Add TruncateTimeColumnFlux [FluxDSL]
    * Add ArrayFromFlux [FluxDSL]
    * Add UnionFlux [FluxDSL]
-1. [376](https://github.com/influxdata/influxdb-client-java/pull/376) Add FillFlux [FluxDSL]
+1. [#376](https://github.com/influxdata/influxdb-client-java/pull/376) Add FillFlux [FluxDSL]
  
 ### Bug Fixes
 1. [#372](https://github.com/influxdata/influxdb-client-java/pull/372): Redact the `Authorization` HTTP header from log
