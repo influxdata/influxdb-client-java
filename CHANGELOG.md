@@ -22,6 +22,9 @@
 #### Build:
     - kotlin-stdlib to 1.7.10
     - kotlinx-coroutines-core to 1.4.3
+    - lombok to 1.18.24
+    - rxjava to 3.1.5 
+    - scala-collection-compat_2.12 to 2.8.0
 
 #### Maven Plugin:
     - maven-bundle-plugin to 5.1.7
@@ -47,6 +50,8 @@
 #### Test:
     - assertj-core to 3.23.1
     - mockito to 4.6.1
+    - scalatest_2.12 to 3.2.12
+    - scalatest_2.13 to 3.2.12
 
 ## 6.3.0 [2022-06-30]
 
