@@ -119,7 +119,7 @@
         <plugin.checkstyle.version>3.1.2</plugin.checkstyle.version>
         <plugin.jacoco.version>0.8.8</plugin.jacoco.version>
         <plugin.site.version>3.12.0</plugin.site.version>
-        <plugin.scala.version>3.4.4</plugin.scala.version>
+        <plugin.scala.version>4.7.1</plugin.scala.version>
 
         <kotlin.version>1.7.10</kotlin.version>
         <karaf.version>4.4.1</karaf.version>

@@ -40,6 +40,7 @@
     - kotlin-maven-plugin to 1.7.10
     - license-maven-plugin to 4.1
     - nexus-staging-maven-plugin to 1.6.13
+    - scala-maven-plugin to 4.7.1
     - scalatest-maven-plugin to 2.1.0
     - scala-maven-plugin to 3.4.4
     - scoverage-maven-plugin to 1.4.11
