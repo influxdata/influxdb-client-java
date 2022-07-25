@@ -728,6 +728,11 @@
     <repositories>
         <repository>
             <id>spring-bundle-releases</id>
+            <name>Spring Bundle Releases</name>
+            <url>https://repository.springsource.com/maven/bundles/release</url>
+        </repository>
+        <repository>
+            <id>spring-bundle-external</id>
             <name>Spring External Bundle Releases</name>
             <url>https://repository.springsource.com/maven/bundles/external</url>
         </repository>
