@@ -36,6 +36,7 @@
     - dokka-maven-plugin to 1.7.10
     - jacoco-maven-plugin to 0.8.8
     - karaf-maven-plugin to 4.4.1
+    - license-maven-plugin to 4.1
     - nexus-staging-maven-plugin to 1.6.13
     - scalatest-maven-plugin to 2.1.0
     - scala-maven-plugin to 3.4.4
