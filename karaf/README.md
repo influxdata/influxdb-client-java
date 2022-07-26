@@ -11,8 +11,8 @@
 
 The Apache Karaf feature definition modules supporting InfluxDB 2.x:
 
-| Module | Description                                                      |
-| --- |------------------------------------------------------------------|
+| Module             | Description                                                      |
+|--------------------|------------------------------------------------------------------|
 | **karaf-features** | Apache Karaf feature definition (XML) artifact for InfluxDB 2.x. |
 | **karaf-kar**      | KAraf aRchive (KAR) artifact containing client for InfluxDB 2.x. |
 | **karaf-assembly** | Apache Karaf (sample) distribution having InfluxDB 2.x client.   |
