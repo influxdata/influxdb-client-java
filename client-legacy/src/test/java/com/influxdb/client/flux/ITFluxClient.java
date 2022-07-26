@@ -37,6 +37,7 @@ import com.influxdb.query.FluxTable;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
@@ -144,6 +145,8 @@ class ITFluxClient extends AbstractITFluxClient {
     }
 
     @Test
+    //https://github.com/influxdata/flux/issues/2505
+    @DisabledIfSystemProperty(named = "os.arch", matches = "aarch64")
     void query() {
 
         String flux = FROM_FLUX_DATABASE + "\n"
@@ -187,6 +190,8 @@ class ITFluxClient extends AbstractITFluxClient {
     }
 
     @Test
+    //https://github.com/influxdata/flux/issues/2505
+    @DisabledIfSystemProperty(named = "os.arch", matches = "aarch64")
     void callback() {
 
         countDownLatch = new CountDownLatch(3);
