@@ -10,9 +10,9 @@
 
 ## Spring Boot Compatibility
 
-:warning: The client version `6.0.0` upgrades the `OkHttp` library to version `4.9.3`. The version `3.12.x` is no longer supported - [okhttp#requirements](https://github.com/square/okhttp#requirements).
+:warning: The client version `6.4.0` upgrades the `OkHttp` library to version `4.10.0`. The version `3.12.x` is no longer supported - [okhttp#requirements](https://github.com/square/okhttp#requirements).
 
-The `spring-boot` supports the `OkHttp:4.9.3` from the version `2.7.0.M2` - [spring-boot/OkHttp 4.9.3](https://github.com/spring-projects/spring-boot/commit/fc8f55fbf44bd54e8e09de5858f8dbedb21fa9a5).
+The `spring-boot` supports the `OkHttp:4.10.0` from the version `3.0.0-M4` - [spring-boot/OkHttp 4.10,0](https://github.com/spring-projects/spring-boot/commit/6cb1a958a5d43a2fffb7e7635e3be9c0ee15f3b1).
 For the older version of `spring-boot` you have to configure Spring Boot's `okhttp3.version` property:
 
 ```xml
