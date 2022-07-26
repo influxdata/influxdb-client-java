@@ -1,4 +1,19 @@
 ## 6.4.0 [unreleased]
+  
+### Release Notice
+
+#### Spring
+
+:warning: The client upgrades the `OkHttp` library to version `4.10.0`. 
+
+The `spring-boot` supports the `OkHttp:4.10.0` from the version `3.0.0-M4` - [spring-boot/OkHttp 4.10,0](https://github.com/spring-projects/spring-boot/commit/6cb1a958a5d43a2fffb7e7635e3be9c0ee15f3b1).
+For the older version of `spring-boot` you have to configure Spring Boot's `okhttp3.version` property:
+
+```xml
+<properties>
+    <okhttp3.version>4.10.0</okhttp3.version>
+</properties>
+```
 
 ### Features
 1. [#373](https://github.com/influxdata/influxdb-client-java/pull/373): Improve `FluxDSL`:

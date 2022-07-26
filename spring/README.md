@@ -17,7 +17,7 @@ For the older version of `spring-boot` you have to configure Spring Boot's `okht
 
 ```xml
 <properties>
-    <okhttp3.version>4.9.3</okhttp3.version>
+    <okhttp3.version>4.10.0</okhttp3.version>
 </properties>
 ```
 
