@@ -36,8 +36,6 @@
     - maven-checkstyle-plugin to 3.1.2
     - maven-compiler-plugin to 3.10.1
     - maven-enforcer-plugin to 3.1.0
-    - maven-deploy-plugin to 3.0.0
-    - maven-install-plugin to 3.0.1
     - maven-jar-plugin to 3.2.2
     - maven-javadoc-plugin to 3.4.0
     - maven-project-info-reports-plugin to 3.4.0
