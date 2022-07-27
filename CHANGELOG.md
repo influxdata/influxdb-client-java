@@ -42,6 +42,7 @@ For the older version of `spring-boot` you have to configure Spring Boot's `okht
     - okhttp3 to 4.10.0
     - okio to 3.2.0
     - rxjava to 3.1.5 
+    - scala-library_2 to 2.12.16
     - scala-collection-compat_2.12 to 2.8.0
     - spring to 5.3.22
     - spring-boot to 2.7.2
