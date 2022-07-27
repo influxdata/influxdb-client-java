@@ -168,6 +168,23 @@ jobs:
           name: "Check dependency rules"
           command: mvn enforcer:enforce -Drules=banDuplicatePomDependencyVersions,dependencyConvergence
 
+  check-generate-site:
+    parameters:
+      maven-image:
+        type: string
+        default: *default-maven-image
+    docker:
+      - image: << parameters.maven-image >>
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restoring Maven Cache
+          keys:
+            - maven-cache_v3-<< parameters.maven-image >>-
+      - run:
+          name: "Check generate site"
+          command: mvn clean site site:stage -DskipTests
+
   deploy-snapshot:
     docker:
       - image: *default-maven-image
@@ -211,6 +228,7 @@ workflows:
   build:
     jobs:
       - check-dependencies
+      - check-generate-site
       - tests-java:
           name: jdk-8
       - tests-java:
@@ -234,6 +252,7 @@ workflows:
       - deploy-snapshot:
           requires:
             - check-dependencies
+            - check-generate-site
             - jdk-8
             - jdk-11
             - jdk-17

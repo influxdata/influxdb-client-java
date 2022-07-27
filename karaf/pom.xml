@@ -70,8 +70,20 @@
         <tag>HEAD</tag>
     </scm>
 
+    <properties>
+        <!-- Try to enable `maven-enforcer-plugin` after update -->
+        <karaf.version>4.4.1</karaf.version>
+    </properties>
+
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>com.mycila</groupId>
                 <artifactId>license-maven-plugin</artifactId>

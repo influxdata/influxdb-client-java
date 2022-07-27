@@ -1,4 +1,19 @@
 ## 6.4.0 [unreleased]
+  
+### Release Notice
+
+#### Spring
+
+:warning: The client upgrades the `OkHttp` library to version `4.10.0`. 
+
+The `spring-boot` supports the `OkHttp:4.10.0` from the version `3.0.0-M4` - [spring-boot/OkHttp 4.10,0](https://github.com/spring-projects/spring-boot/commit/6cb1a958a5d43a2fffb7e7635e3be9c0ee15f3b1).
+For the older version of `spring-boot` you have to configure Spring Boot's `okhttp3.version` property:
+
+```xml
+<properties>
+    <okhttp3.version>4.10.0</okhttp3.version>
+</properties>
+```
 
 ### Features
 1. [#373](https://github.com/influxdata/influxdb-client-java/pull/373): Improve `FluxDSL`:
@@ -15,6 +30,49 @@
 ### Bug Fixes
 1. [#358](https://github.com/influxdata/influxdb-client-java/pull/358): Missing backpressure for asynchronous non-blocking API
 1. [#372](https://github.com/influxdata/influxdb-client-java/pull/372): Redact the `Authorization` HTTP header from log
+
+### Dependencies
+1. [#377](https://github.com/influxdata/influxdb-client-java/pull/377): Update dependencies:
+
+#### Build:
+    - kotlin-stdlib to 1.7.10
+    - kotlinx-coroutines-core to 1.6.4
+    - lombok to 1.18.24
+    - micrometer-registry-influx to 1.9.2
+    - okhttp3 to 4.10.0
+    - okio to 3.2.0
+    - rxjava to 3.1.5 
+    - scala-collection-compat_2.12 to 2.8.0
+    - spring to 5.3.22
+    - spring-boot to 2.7.2
+
+#### Maven Plugin:
+    - maven-bundle-plugin to 5.1.7
+    - maven-checkstyle-plugin to 3.1.2
+    - maven-compiler-plugin to 3.10.1
+    - maven-enforcer-plugin to 3.1.0
+    - maven-jar-plugin to 3.2.2
+    - maven-javadoc-plugin to 3.4.0
+    - maven-project-info-reports-plugin to 3.4.0
+    - maven-site-plugin to 3.12.0
+    - build-helper-maven-plugin to 3.3.0
+    - dokka-maven-plugin to 1.7.10
+    - jacoco-maven-plugin to 0.8.8
+    - karaf-maven-plugin to 4.4.1
+    - kotlin-maven-plugin to 1.7.10
+    - license-maven-plugin to 4.1
+    - nexus-staging-maven-plugin to 1.6.13
+    - scala-maven-plugin to 4.7.1
+    - scalatest-maven-plugin to 2.1.0
+    - scala-maven-plugin to 3.4.4
+    - scoverage-maven-plugin to 1.4.11
+    - versions-maven-plugin to 2.11.0
+
+#### Test:
+    - assertj-core to 3.23.1
+    - mockito to 4.6.1
+    - scalatest_2.12 to 3.2.12
+    - scalatest_2.13 to 3.2.12
 
 ## 6.3.0 [2022-06-30]
 
