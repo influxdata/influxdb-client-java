@@ -73,6 +73,8 @@ For the older version of `spring-boot` you have to configure Spring Boot's `okht
 
 #### Test:
     - assertj-core to 3.23.1
+    - junit-jupiter-engine to 5.9.0
+    - junit-platform-runner to 1.9.0
     - mockito to 4.6.1
     - scalatest_2.12 to 3.2.12
     - scalatest_2.13 to 3.2.12
