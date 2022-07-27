@@ -245,10 +245,10 @@ workflows:
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
       - tests-java:
           name: client-backpressure
-          junit-tests: "-DclientBackpressure=true -Dit.test=com.influxdb.client.ITBackpressure -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
+          junit-tests: "-DclientBackpressure=true -Dit.test=com.influxdb.client.ITBackpressure -Dsurefire.failIfNoSpecifiedTests=false -Dit.failIfNoSpecifiedTests=false -Dtest=ignore -DwildcardSuites=ignore"
       - tests-java:
           name: client-benchmark
-          junit-tests: "-DclientBenchmark=true -Dit.test=com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
+          junit-tests: "-DclientBenchmark=true -Dit.test=com.influxdb.client.ITBenchmarkTest -Dsurefire.failIfNoSpecifiedTests=false -Dit.failIfNoSpecifiedTests=false -Dtest=ignore -DwildcardSuites=ignore"
       - deploy-snapshot:
           requires:
             - check-dependencies
@@ -275,4 +275,4 @@ workflows:
           name: jdk-8
       - tests-java:
           name: client-backpressure
-          junit-tests: "-DclientBackpressure=true -Dit.test=com.influxdb.client.ITBackpressure -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
+          junit-tests: "-DclientBackpressure=true -Dit.test=com.influxdb.client.ITBackpressure -Dsurefire.failIfNoSpecifiedTests=false -Dit.failIfNoSpecifiedTests=false -Dtest=ignore -DwildcardSuites=ignore"
