@@ -55,6 +55,7 @@ For the older version of `spring-boot` you have to configure Spring Boot's `okht
     - maven-javadoc-plugin to 3.4.0
     - maven-project-info-reports-plugin to 3.4.0
     - maven-site-plugin to 3.12.0
+    - maven-surefire-plugin to 3.0.0-M7
     - build-helper-maven-plugin to 3.3.0
     - dokka-maven-plugin to 1.7.10
     - jacoco-maven-plugin to 0.8.8
