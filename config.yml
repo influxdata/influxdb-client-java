@@ -168,6 +168,23 @@ jobs:
           name: "Check dependency rules"
           command: mvn enforcer:enforce -Drules=banDuplicatePomDependencyVersions,dependencyConvergence
 
+  check-generate-site:
+    parameters:
+      maven-image:
+        type: string
+        default: *default-maven-image
+    docker:
+      - image: << parameters.maven-image >>
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restoring Maven Cache
+          keys:
+            - maven-cache_v3-<< parameters.maven-image >>-
+      - run:
+          name: "Check generate site"
+          command: mvn clean site site:stage -DskipTests
+
   deploy-snapshot:
     docker:
       - image: *default-maven-image
@@ -211,6 +228,7 @@ workflows:
   build:
     jobs:
       - check-dependencies
+      - check-generate-site
       - tests-java:
           name: jdk-8
       - tests-java:
@@ -226,11 +244,15 @@ workflows:
           name: jdk-8-nightly
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
       - tests-java:
+          name: client-backpressure
+          junit-tests: "-DclientBackpressure=true -Dit.test=com.influxdb.client.ITBackpressure -Dsurefire.failIfNoSpecifiedTests=false -Dit.failIfNoSpecifiedTests=false -Dtest=ignore -DwildcardSuites=ignore"
+      - tests-java:
           name: client-benchmark
-          junit-tests: "-DclientBenchmark=true -Dit.test=com.influxdb.client.ITBenchmarkTest -DfailIfNoTests=false -Dtest=ignore -DwildcardSuites=ignore"
+          junit-tests: "-DclientBenchmark=true -Dit.test=com.influxdb.client.ITBenchmarkTest -Dsurefire.failIfNoSpecifiedTests=false -Dit.failIfNoSpecifiedTests=false -Dtest=ignore -DwildcardSuites=ignore"
       - deploy-snapshot:
           requires:
             - check-dependencies
+            - check-generate-site
             - jdk-8
             - jdk-11
             - jdk-17
@@ -249,7 +271,8 @@ workflows:
               only:
                 - master
     jobs:
-      - tests-java
       - tests-java:
-          name: jdk-11-beta
-          maven-image: "cimg/openjdk:11.0"
+          name: jdk-8
+      - tests-java:
+          name: client-backpressure
+          junit-tests: "-DclientBackpressure=true -Dit.test=com.influxdb.client.ITBackpressure -Dsurefire.failIfNoSpecifiedTests=false -Dit.failIfNoSpecifiedTests=false -Dtest=ignore -DwildcardSuites=ignore"

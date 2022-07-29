@@ -1,6 +1,7 @@
 com.influxdb.client
 com.influxdb.client.domain
 com.influxdb.client.internal
+com.influxdb.client.internal.flowable
 com.influxdb.client.service
 com.influxdb.client.write
 com.influxdb.client.write.events

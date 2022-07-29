@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2022 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 55,
+      <title>File: 69,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -47,6 +47,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.ExpressionFlux.java">com/influxdb/query/dsl/functions/ExpressionFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.AbstractFunctionFlux.java">com/influxdb/query/dsl/functions/AbstractFunctionFlux.java</a>
                 </td>
                 <td>
                   0
@@ -158,6 +172,34 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.FreestyleExpression.java">com/influxdb/query/dsl/functions/FreestyleExpression.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.InterpolateLinearFlux.java">com/influxdb/query/dsl/functions/InterpolateLinearFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.RangeFlux.java">com/influxdb/query/dsl/functions/RangeFlux.java</a>
                 </td>
                 <td>
@@ -173,6 +215,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.properties.FunctionsParameters.java">com/influxdb/query/dsl/functions/properties/FunctionsParameters.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.HasImports.java">com/influxdb/query/dsl/HasImports.java</a>
                 </td>
                 <td>
                   0
@@ -214,6 +270,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.UnionFlux.java">com/influxdb/query/dsl/functions/UnionFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.DuplicateFlux.java">com/influxdb/query/dsl/functions/DuplicateFlux.java</a>
                 </td>
                 <td>
@@ -242,6 +312,34 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.IsVariableAssignment.java">com/influxdb/query/dsl/IsVariableAssignment.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.FillFlux.java">com/influxdb/query/dsl/functions/FillFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.LastFlux.java">com/influxdb/query/dsl/functions/LastFlux.java</a>
                 </td>
                 <td>
@@ -256,7 +354,35 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.utils.ImportUtils.java">com/influxdb/query/dsl/utils/ImportUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.FirstFlux.java">com/influxdb/query/dsl/functions/FirstFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.ArrayFromFlux.java">com/influxdb/query/dsl/functions/ArrayFromFlux.java</a>
                 </td>
                 <td>
                   0
@@ -299,6 +425,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.Flux.java">com/influxdb/query/dsl/Flux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.VariableAssignment.java">com/influxdb/query/dsl/VariableAssignment.java</a>
                 </td>
                 <td>
                   0
@@ -355,6 +495,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.AggregateWindow.java">com/influxdb/query/dsl/functions/AggregateWindow.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.Expressions.java">com/influxdb/query/dsl/Expressions.java</a>
                 </td>
                 <td>
                   0
@@ -606,6 +760,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.Expression.java">com/influxdb/query/dsl/Expression.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.ColumnsFlux.java">com/influxdb/query/dsl/functions/ColumnsFlux.java</a>
                 </td>
                 <td>
@@ -635,6 +803,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.LimitFlux.java">com/influxdb/query/dsl/functions/LimitFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.AbstractFunctionCallFlux.java">com/influxdb/query/dsl/functions/AbstractFunctionCallFlux.java</a>
                 </td>
                 <td>
                   0
@@ -761,6 +943,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.PercentileFlux.java">com/influxdb/query/dsl/functions/PercentileFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/tree/master/flux-dsl/checkstyle.html#com.influxdb.query.dsl.functions.TruncateTimeColumnFlux.java">com/influxdb/query/dsl/functions/TruncateTimeColumnFlux.java</a>
                 </td>
                 <td>
                   0

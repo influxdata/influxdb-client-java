@@ -22,7 +22,7 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" id="codegrid">
-            <pre style='font-size: 12pt; font-family: courier, monospace;'>1 <span style=''>/**
+            <pre style='font-size: 12pt; font-family: courier, monospace;'>1 <span style=''>/*
 </span>2 <span style=''> * The MIT License
 </span>3 <span style=''> *
 </span>4 <span style=''> * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -248,6 +248,7 @@
         <th>Pos</th>
         <th>Tree</th>
         <th>Symbol</th>
+        <th>Tests</th>
         <th>Code</th>
       </tr><tr>
         <td>
@@ -257,15 +258,18 @@
           122
         </td>
         <td>
-          3023
+          3022
           -
-          3080
+          3079
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.collection.SeqFactory.Delegate.apply
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord](new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record))
@@ -278,15 +282,18 @@
           121
         </td>
         <td>
-          3027
+          3026
           -
-          3079
+          3078
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord.&lt;init&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record)
@@ -299,15 +306,18 @@
           123
         </td>
         <td>
-          3102
+          3101
           -
-          3142
+          3141
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.writeHttp(precision, bucket, org, batch)
@@ -320,15 +330,18 @@
           125
         </td>
         <td>
-          3168
+          3167
           -
-          3178
+          3177
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Keep.right
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
@@ -341,15 +354,18 @@
           124
         </td>
         <td>
-          3157
+          3156
           -
-          3166
+          3165
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Sink.head
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Sink.head[akka.Done]
@@ -362,15 +378,18 @@
           126
         </td>
         <td>
-          2989
+          2988
           -
-          3179
+          3178
         </td>
         <td>
           Apply
         </td>
         <td>
           akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Flow.apply[String].map[Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord]](((record: String) =&gt; scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord](new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record)))).map[akka.Done](((batch: Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord]) =&gt; WriteScalaApiImpl.this.writeHttp(precision, bucket, org, batch))).toMat[scala.concurrent.Future[akka.Done], scala.concurrent.Future[akka.Done]](akka.stream.scaladsl.Sink.head[akka.Done])(akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]])
@@ -383,15 +402,18 @@
           128
         </td>
         <td>
-          4198
+          4197
           -
-          4253
+          4252
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.writeRecords
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.writeRecords(WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org))
@@ -404,15 +426,18 @@
           127
         </td>
         <td>
-          4211
+          4210
           -
-          4252
+          4251
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.toWriteParameters
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org)
@@ -425,15 +450,18 @@
           130
         </td>
         <td>
-          4667
+          4666
           -
-          4742
+          4741
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.collection.IterableOps.map
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           records.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord](((record: String) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record)))
@@ -446,15 +474,18 @@
           129
         </td>
         <td>
-          4689
+          4688
           -
-          4741
+          4740
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord.&lt;init&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record)
@@ -467,15 +498,18 @@
           131
         </td>
         <td>
-          4764
+          4763
           -
-          4792
+          4791
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.writeHttp(parameters, batch)
@@ -488,15 +522,18 @@
           134
         </td>
         <td>
-          4627
+          4626
           -
-          4829
+          4828
         </td>
         <td>
           Apply
         </td>
         <td>
           akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Flow.apply[Seq[String]].map[Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord]](((records: Seq[String]) =&gt; records.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord](((record: String) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord(record))))).map[akka.Done](((batch: Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord]) =&gt; WriteScalaApiImpl.this.writeHttp(parameters, batch))).toMat[scala.concurrent.Future[akka.Done], scala.concurrent.Future[akka.Done]](akka.stream.scaladsl.Sink.head[akka.Done])(akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]])
@@ -509,15 +546,18 @@
           133
         </td>
         <td>
-          4818
+          4817
           -
-          4828
+          4827
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Keep.right
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
@@ -530,15 +570,18 @@
           132
         </td>
         <td>
-          4807
+          4806
           -
-          4816
+          4815
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Sink.head
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Sink.head[akka.Done]
@@ -551,15 +594,18 @@
           137
         </td>
         <td>
-          5637
+          5636
           -
-          5696
+          5695
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint.&lt;init&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options)
@@ -572,15 +618,18 @@
           136
         </td>
         <td>
-          5688
+          5687
           -
-          5695
+          5694
         </td>
         <td>
           Select
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.options
@@ -593,15 +642,18 @@
           139
         </td>
         <td>
-          5612
+          5611
           -
-          5698
+          5697
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.Tuple2.apply
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.Tuple2.apply[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint]](point.getPrecision(), scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options)))
@@ -614,15 +666,18 @@
           138
         </td>
         <td>
-          5633
+          5632
           -
-          5697
+          5696
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.collection.SeqFactory.Delegate.apply
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options))
@@ -635,15 +690,18 @@
           135
         </td>
         <td>
-          5613
+          5612
           -
-          5631
+          5630
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.write.Point.getPrecision
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           point.getPrecision()
@@ -656,15 +714,18 @@
           140
         </td>
         <td>
-          5735
+          5734
           -
-          5743
+          5742
         </td>
         <td>
           Select
         </td>
         <td>
           scala.Tuple2._1
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           batch._1
@@ -677,15 +738,18 @@
           142
         </td>
         <td>
-          5759
+          5758
           -
-          5767
+          5766
         </td>
         <td>
           Select
         </td>
         <td>
           scala.Tuple2._2
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           batch._2
@@ -698,15 +762,18 @@
           141
         </td>
         <td>
-          5730
+          5729
           -
-          5744
+          5743
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.Some.apply
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.Some.apply[com.influxdb.client.domain.WritePrecision](batch._1)
@@ -719,15 +786,18 @@
           143
         </td>
         <td>
-          5720
+          5719
           -
-          5768
+          5767
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.writeHttp(scala.Some.apply[com.influxdb.client.domain.WritePrecision](batch._1), bucket, org, batch._2)
@@ -740,15 +810,18 @@
           146
         </td>
         <td>
-          5580
+          5579
           -
-          5805
+          5804
         </td>
         <td>
           Apply
         </td>
         <td>
           akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Flow.apply[com.influxdb.client.write.Point].map[(com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])](((point: com.influxdb.client.write.Point) =&gt; scala.Tuple2.apply[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint]](point.getPrecision(), scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options))))).map[akka.Done](((batch: (com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])) =&gt; WriteScalaApiImpl.this.writeHttp(scala.Some.apply[com.influxdb.client.domain.WritePrecision](batch._1), bucket, org, batch._2))).toMat[scala.concurrent.Future[akka.Done], scala.concurrent.Future[akka.Done]](akka.stream.scaladsl.Sink.head[akka.Done])(akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]])
@@ -761,15 +834,18 @@
           145
         </td>
         <td>
-          5794
+          5793
           -
-          5804
+          5803
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Keep.right
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
@@ -782,15 +858,18 @@
           144
         </td>
         <td>
-          5783
+          5782
           -
-          5792
+          5791
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Sink.head
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Sink.head[akka.Done]
@@ -803,15 +882,18 @@
           149
         </td>
         <td>
-          6615
+          6614
           -
-          6615
+          6614
         </td>
         <td>
           TypeApply
         </td>
         <td>
           scala.&lt;:&lt;.refl
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.this.&lt;:&lt;.refl[Null]
@@ -824,15 +906,18 @@
           151
         </td>
         <td>
-          6623
+          6622
           -
-          6627
+          6626
         </td>
         <td>
           Literal
         </td>
         <td>
           &lt;nosymbol&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           null
@@ -845,15 +930,18 @@
           154
         </td>
         <td>
-          6564
+          6563
           -
-          6635
+          6634
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.writePoints
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.writePoints(new com.influxdb.client.write.WriteParameters(bucket.orNull[String](scala.this.&lt;:&lt;.refl[Null]), org.orNull[String](scala.this.&lt;:&lt;.refl[Null]), null, null))
@@ -866,15 +954,18 @@
           148
         </td>
         <td>
-          6596
+          6595
           -
-          6609
+          6608
         </td>
         <td>
           ApplyToImplicitArgs
         </td>
         <td>
           scala.Option.orNull
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           bucket.orNull[String](scala.this.&lt;:&lt;.refl[Null])
@@ -887,15 +978,18 @@
           147
         </td>
         <td>
-          6603
+          6602
           -
-          6603
+          6602
         </td>
         <td>
           TypeApply
         </td>
         <td>
           scala.&lt;:&lt;.refl
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.this.&lt;:&lt;.refl[Null]
@@ -908,15 +1002,18 @@
           150
         </td>
         <td>
-          6611
+          6610
           -
-          6621
+          6620
         </td>
         <td>
           ApplyToImplicitArgs
         </td>
         <td>
           scala.Option.orNull
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           org.orNull[String](scala.this.&lt;:&lt;.refl[Null])
@@ -929,15 +1026,18 @@
           153
         </td>
         <td>
-          6576
+          6575
           -
-          6634
+          6633
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.write.WriteParameters.&lt;init&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           new com.influxdb.client.write.WriteParameters(bucket.orNull[String](scala.this.&lt;:&lt;.refl[Null]), org.orNull[String](scala.this.&lt;:&lt;.refl[Null]), null, null)
@@ -950,15 +1050,18 @@
           152
         </td>
         <td>
-          6629
+          6628
           -
-          6633
+          6632
         </td>
         <td>
           Literal
         </td>
         <td>
           &lt;nosymbol&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           null
@@ -971,15 +1074,18 @@
           155
         </td>
         <td>
-          7072
+          7071
           -
-          7113
+          7112
         </td>
         <td>
           TypeApply
         </td>
         <td>
           scala.collection.immutable.ListMap.empty
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.collection.immutable.ListMap.empty[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point]]
@@ -992,15 +1098,18 @@
           158
         </td>
         <td>
-          7146
+          7145
           -
-          7228
+          7227
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.collection.immutable.ListMap.updated
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           map.updated[Seq[com.influxdb.client.write.Point]](point.getPrecision(), {
@@ -1016,15 +1125,18 @@
           157
         </td>
         <td>
-          7184
+          7183
           -
-          7227
+          7226
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.collection.SeqOps.+:
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           map.getOrElse[Seq[com.influxdb.client.write.Point]](point.getPrecision(), scala.`package`.Seq.apply[Nothing]()).+:[com.influxdb.client.write.Point](rassoc$1)
@@ -1037,15 +1149,18 @@
           156
         </td>
         <td>
-          7158
+          7157
           -
-          7176
+          7175
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.write.Point.getPrecision
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           point.getPrecision()
@@ -1058,15 +1173,18 @@
           159
         </td>
         <td>
-          7054
+          7053
           -
-          7251
+          7250
         </td>
         <td>
           Select
         </td>
         <td>
           scala.collection.immutable.List.reverse
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           records.foldRight[scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]](scala.collection.immutable.ListMap.empty[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point]])(((x0$1: com.influxdb.client.write.Point, x1$1: scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]) =&gt; scala.Tuple2.apply[com.influxdb.client.write.Point, scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]](x0$1, x1$1) match {
@@ -1084,15 +1202,18 @@
           164
         </td>
         <td>
-          7296
+          7295
           -
-          7390
+          7389
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.Tuple2.apply
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.Tuple2.apply[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint]](group._1, group._2.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](((point: com.influxdb.client.write.Point) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options))))
@@ -1105,15 +1226,18 @@
           160
         </td>
         <td>
-          7297
+          7296
           -
-          7305
+          7304
         </td>
         <td>
           Select
         </td>
         <td>
           scala.Tuple2._1
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           group._1
@@ -1126,15 +1250,18 @@
           163
         </td>
         <td>
-          7307
+          7306
           -
-          7389
+          7388
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.collection.IterableOps.map
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           group._2.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](((point: com.influxdb.client.write.Point) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options)))
@@ -1147,15 +1274,18 @@
           165
         </td>
         <td>
-          7275
+          7274
           -
-          7391
+          7390
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.collection.immutable.List.map
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           grouped.map[(com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])](((group: (com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point])) =&gt; scala.Tuple2.apply[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint]](group._1, group._2.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint](((point: com.influxdb.client.write.Point) =&gt; new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options))))))
@@ -1168,15 +1298,18 @@
           162
         </td>
         <td>
-          7329
+          7328
           -
-          7388
+          7387
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint.&lt;init&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           new com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint(point, WriteScalaApiImpl.this.options)
@@ -1189,15 +1322,18 @@
           161
         </td>
         <td>
-          7380
+          7379
           -
-          7387
+          7386
         </td>
         <td>
           Select
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.options
@@ -1210,15 +1346,18 @@
           167
         </td>
         <td>
-          7476
+          7475
           -
-          7483
+          7482
         </td>
         <td>
           Select
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.options
@@ -1231,15 +1370,18 @@
           166
         </td>
         <td>
-          7466
+          7465
           -
-          7474
+          7473
         </td>
         <td>
           Select
         </td>
         <td>
           scala.Tuple2._1
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           batch._1
@@ -1252,15 +1394,18 @@
           169
         </td>
         <td>
-          7486
+          7485
           -
-          7494
+          7493
         </td>
         <td>
           Select
         </td>
         <td>
           scala.Tuple2._2
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           batch._2
@@ -1273,15 +1418,18 @@
           168
         </td>
         <td>
-          7450
+          7449
           -
-          7484
+          7483
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.write.WriteParameters.copy
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           parameters.copy(batch._1, WriteScalaApiImpl.this.options)
@@ -1294,15 +1442,18 @@
           171
         </td>
         <td>
-          7415
+          7414
           -
-          7496
+          7495
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.collection.immutable.List.foreach
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           batches.foreach[akka.Done](((batch: (com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint])) =&gt; WriteScalaApiImpl.this.writeHttp(parameters.copy(batch._1, WriteScalaApiImpl.this.options), batch._2)))
@@ -1315,15 +1466,18 @@
           170
         </td>
         <td>
-          7440
+          7439
           -
-          7495
+          7494
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.writeHttp(parameters.copy(batch._1, WriteScalaApiImpl.this.options), batch._2)
@@ -1336,15 +1490,18 @@
           172
         </td>
         <td>
-          7514
+          7513
           -
-          7525
+          7524
         </td>
         <td>
           Apply
         </td>
         <td>
           akka.Done.done
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.Done.done()
@@ -1357,15 +1514,18 @@
           173
         </td>
         <td>
-          7540
+          7539
           -
-          7549
+          7548
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Sink.head
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Sink.head[akka.Done]
@@ -1378,15 +1538,18 @@
           175
         </td>
         <td>
-          6964
+          6963
           -
-          7562
+          7561
         </td>
         <td>
           Apply
         </td>
         <td>
           akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Flow.apply[Seq[com.influxdb.client.write.Point]].map[List[(com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point])]](((records: Seq[com.influxdb.client.write.Point]) =&gt; records.foldRight[scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]](scala.collection.immutable.ListMap.empty[com.influxdb.client.domain.WritePrecision, Seq[com.influxdb.client.write.Point]])(((x0$1: com.influxdb.client.write.Point, x1$1: scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]) =&gt; scala.Tuple2.apply[com.influxdb.client.write.Point, scala.collection.immutable.ListMap[com.influxdb.client.domain.WritePrecision,Seq[com.influxdb.client.write.Point]]](x0$1, x1$1) match {
@@ -1404,15 +1567,18 @@
           174
         </td>
         <td>
-          7551
+          7550
           -
-          7561
+          7560
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Keep.right
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
@@ -1425,15 +1591,18 @@
           176
         </td>
         <td>
-          8698
+          8697
           -
-          8739
+          8738
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.toWriteParameters
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org)
@@ -1446,15 +1615,18 @@
           178
         </td>
         <td>
-          8784
+          8783
           -
-          8817
+          8816
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.write.WriteParameters.precisionSafe
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           parameters.precisionSafe(WriteScalaApiImpl.this.options)
@@ -1467,15 +1639,18 @@
           180
         </td>
         <td>
-          8748
+          8747
           -
-          8819
+          8818
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.collection.SeqFactory.Delegate.apply
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.`package`.Seq.apply[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement](WriteScalaApiImpl.this.toMeasurementBatch[M](measurement, parameters.precisionSafe(WriteScalaApiImpl.this.options)))
@@ -1488,15 +1663,18 @@
           177
         </td>
         <td>
-          8809
+          8808
           -
-          8816
+          8815
         </td>
         <td>
           Select
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.options
@@ -1509,15 +1687,18 @@
           179
         </td>
         <td>
-          8752
+          8751
           -
-          8818
+          8817
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.AbstractWriteBlockingClient.toMeasurementBatch
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.toMeasurementBatch[M](measurement, parameters.precisionSafe(WriteScalaApiImpl.this.options))
@@ -1530,15 +1711,18 @@
           181
         </td>
         <td>
-          8849
+          8848
           -
-          8889
+          8888
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.writeHttp(precision, bucket, org, batch)
@@ -1551,15 +1735,18 @@
           182
         </td>
         <td>
-          8904
+          8903
           -
-          8913
+          8912
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Sink.head
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Sink.head[akka.Done]
@@ -1572,15 +1759,18 @@
           184
         </td>
         <td>
-          8637
+          8636
           -
-          8926
+          8925
         </td>
         <td>
           Apply
         </td>
         <td>
           akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Flow.apply[M].map[Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement]](((measurement: M) =&gt; {
@@ -1596,15 +1786,18 @@
           183
         </td>
         <td>
-          8915
+          8914
           -
-          8925
+          8924
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Keep.right
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
@@ -1617,15 +1810,18 @@
           185
         </td>
         <td>
-          10029
+          10028
           -
-          10070
+          10069
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.toWriteParameters
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org)
@@ -1638,15 +1834,18 @@
           186
         </td>
         <td>
-          10011
+          10010
           -
-          10071
+          10070
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.writeMeasurements
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.writeMeasurements[M](WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org))
@@ -1659,15 +1858,18 @@
           187
         </td>
         <td>
-          10572
+          10571
           -
-          10579
+          10578
         </td>
         <td>
           Select
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.options
@@ -1680,15 +1882,18 @@
           190
         </td>
         <td>
-          10498
+          10497
           -
-          10582
+          10581
         </td>
         <td>
           Apply
         </td>
         <td>
           scala.collection.IterableOps.map
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           records.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement](((record: M) =&gt; WriteScalaApiImpl.this.toMeasurementBatch[M](record, parameters.precisionSafe(WriteScalaApiImpl.this.options))))
@@ -1701,15 +1906,18 @@
           189
         </td>
         <td>
-          10520
+          10519
           -
-          10581
+          10580
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.AbstractWriteBlockingClient.toMeasurementBatch
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.toMeasurementBatch[M](record, parameters.precisionSafe(WriteScalaApiImpl.this.options))
@@ -1722,15 +1930,18 @@
           188
         </td>
         <td>
-          10547
+          10546
           -
-          10580
+          10579
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.write.WriteParameters.precisionSafe
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           parameters.precisionSafe(WriteScalaApiImpl.this.options)
@@ -1743,15 +1954,18 @@
           191
         </td>
         <td>
-          10604
+          10603
           -
-          10632
+          10631
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.writeHttp(parameters, batch)
@@ -1764,15 +1978,18 @@
           194
         </td>
         <td>
-          10463
+          10462
           -
-          10669
+          10668
         </td>
         <td>
           Apply
         </td>
         <td>
           akka.stream.scaladsl.Flow.toMat
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Flow.apply[Seq[M]].map[Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement]](((records: Seq[M]) =&gt; records.map[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement](((record: M) =&gt; WriteScalaApiImpl.this.toMeasurementBatch[M](record, parameters.precisionSafe(WriteScalaApiImpl.this.options)))))).map[akka.Done](((batch: Seq[com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement]) =&gt; WriteScalaApiImpl.this.writeHttp(parameters, batch))).toMat[scala.concurrent.Future[akka.Done], scala.concurrent.Future[akka.Done]](akka.stream.scaladsl.Sink.head[akka.Done])(akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]])
@@ -1785,15 +2002,18 @@
           193
         </td>
         <td>
-          10658
+          10657
           -
-          10668
+          10667
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Keep.right
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Keep.right[Any, scala.concurrent.Future[akka.Done]]
@@ -1806,15 +2026,18 @@
           192
         </td>
         <td>
-          10647
+          10646
           -
-          10656
+          10655
         </td>
         <td>
           TypeApply
         </td>
         <td>
           akka.stream.scaladsl.Sink.head
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.stream.scaladsl.Sink.head[akka.Done]
@@ -1827,15 +2050,18 @@
           196
         </td>
         <td>
-          10841
+          10840
           -
-          10900
+          10899
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.writeHttp
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.writeHttp(WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org), batch)
@@ -1848,15 +2074,18 @@
           195
         </td>
         <td>
-          10851
+          10850
           -
-          10892
+          10891
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.toWriteParameters
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.toWriteParameters(precision, bucket, org)
@@ -1869,15 +2098,18 @@
           198
         </td>
         <td>
-          11021
+          11020
           -
-          11068
+          11067
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.AbstractWriteBlockingClient.write
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.write(parameters, scala.jdk.CollectionConverters.SeqHasAsJava[com.influxdb.client.internal.AbstractWriteClient.BatchWriteData](batch.toList).asJava.stream())
@@ -1890,15 +2122,18 @@
           197
         </td>
         <td>
-          11039
+          11038
           -
-          11067
+          11066
         </td>
         <td>
           Apply
         </td>
         <td>
           java.util.Collection.stream
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.jdk.CollectionConverters.SeqHasAsJava[com.influxdb.client.internal.AbstractWriteClient.BatchWriteData](batch.toList).asJava.stream()
@@ -1911,15 +2146,18 @@
           199
         </td>
         <td>
-          11073
+          11072
           -
-          11084
+          11083
         </td>
         <td>
           Apply
         </td>
         <td>
           akka.Done.done
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           akka.Done.done()
@@ -1932,15 +2170,18 @@
           200
         </td>
         <td>
-          11271
+          11270
           -
-          11271
+          11270
         </td>
         <td>
           TypeApply
         </td>
         <td>
           scala.&lt;:&lt;.refl
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.this.&lt;:&lt;.refl[Null]
@@ -1953,15 +2194,18 @@
           202
         </td>
         <td>
-          11283
+          11282
           -
-          11283
+          11282
         </td>
         <td>
           TypeApply
         </td>
         <td>
           scala.&lt;:&lt;.refl
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.this.&lt;:&lt;.refl[Null]
@@ -1974,15 +2218,18 @@
           205
         </td>
         <td>
-          11291
+          11290
           -
-          11307
+          11306
         </td>
         <td>
           ApplyToImplicitArgs
         </td>
         <td>
           scala.Option.orNull
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           precision.orNull[com.influxdb.client.domain.WritePrecision](scala.this.&lt;:&lt;.refl[Null])
@@ -1995,15 +2242,18 @@
           207
         </td>
         <td>
-          11244
+          11243
           -
-          11314
+          11313
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.write.WriteParameters.&lt;init&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           new com.influxdb.client.write.WriteParameters(bucket.orNull[String](scala.this.&lt;:&lt;.refl[Null]), org.orNull[String](scala.this.&lt;:&lt;.refl[Null]), precision.orNull[com.influxdb.client.domain.WritePrecision](scala.this.&lt;:&lt;.refl[Null]), null)
@@ -2016,15 +2266,18 @@
           201
         </td>
         <td>
-          11264
+          11263
           -
-          11277
+          11276
         </td>
         <td>
           ApplyToImplicitArgs
         </td>
         <td>
           scala.Option.orNull
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           bucket.orNull[String](scala.this.&lt;:&lt;.refl[Null])
@@ -2037,15 +2290,18 @@
           204
         </td>
         <td>
-          11301
+          11300
           -
-          11301
+          11300
         </td>
         <td>
           TypeApply
         </td>
         <td>
           scala.&lt;:&lt;.refl
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.this.&lt;:&lt;.refl[Null]
@@ -2058,15 +2314,18 @@
           203
         </td>
         <td>
-          11279
+          11278
           -
-          11289
+          11288
         </td>
         <td>
           ApplyToImplicitArgs
         </td>
         <td>
           scala.Option.orNull
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           org.orNull[String](scala.this.&lt;:&lt;.refl[Null])
@@ -2079,15 +2338,18 @@
           206
         </td>
         <td>
-          11309
+          11308
           -
-          11313
+          11312
         </td>
         <td>
           Literal
         </td>
         <td>
           &lt;nosymbol&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           null
@@ -2100,15 +2362,18 @@
           209
         </td>
         <td>
-          11319
+          11318
           -
-          11344
+          11343
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.write.WriteParameters.check
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           parameters.check(WriteScalaApiImpl.this.options)
@@ -2121,15 +2386,18 @@
           208
         </td>
         <td>
-          11336
+          11335
           -
-          11343
+          11342
         </td>
         <td>
           Select
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.options
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           WriteScalaApiImpl.this.options

@@ -22,7 +22,7 @@
         </ul>
         <div class="tab-content">
           <div class="tab-pane active" id="codegrid">
-            <pre style='font-size: 12pt; font-family: courier, monospace;'>1 <span style=''>/**
+            <pre style='font-size: 12pt; font-family: courier, monospace;'>1 <span style=''>/*
 </span>2 <span style=''> * The MIT License
 </span>3 <span style=''> *
 </span>4 <span style=''> * Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -151,6 +151,7 @@
         <th>Pos</th>
         <th>Tree</th>
         <th>Symbol</th>
+        <th>Tests</th>
         <th>Code</th>
       </tr><tr>
         <td>
@@ -160,15 +161,18 @@
           14
         </td>
         <td>
-          1938
+          1937
           -
-          1945
+          1944
         </td>
         <td>
           Select
         </td>
         <td>
           com.influxdb.client.scala.internal.InfluxDBClientScalaImpl.options
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.options
@@ -181,15 +185,18 @@
           13
         </td>
         <td>
-          1898
+          1897
           -
-          1936
+          1935
         </td>
         <td>
           Apply
         </td>
         <td>
           retrofit2.Retrofit.create
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.retrofit.create[com.influxdb.client.service.QueryService](classOf[com.influxdb.client.service.QueryService])
@@ -202,15 +209,18 @@
           15
         </td>
         <td>
-          1876
+          1875
           -
-          1946
+          1945
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.QueryScalaApiImpl.&lt;init&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           new QueryScalaApiImpl(InfluxDBClientScalaImpl.this.retrofit.create[com.influxdb.client.service.QueryService](classOf[com.influxdb.client.service.QueryService]), InfluxDBClientScalaImpl.this.options)
@@ -223,15 +233,18 @@
           17
         </td>
         <td>
-          2167
+          2166
           -
-          2174
+          2173
         </td>
         <td>
           Select
         </td>
         <td>
           com.influxdb.client.scala.internal.InfluxDBClientScalaImpl.options
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.options
@@ -244,15 +257,18 @@
           16
         </td>
         <td>
-          2127
+          2126
           -
-          2165
+          2164
         </td>
         <td>
           Apply
         </td>
         <td>
           retrofit2.Retrofit.create
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.retrofit.create[com.influxdb.client.service.WriteService](classOf[com.influxdb.client.service.WriteService])
@@ -265,15 +281,18 @@
           18
         </td>
         <td>
-          2105
+          2104
           -
-          2175
+          2174
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.scala.internal.WriteScalaApiImpl.&lt;init&gt;
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           new WriteScalaApiImpl(InfluxDBClientScalaImpl.this.retrofit.create[com.influxdb.client.service.WriteService](classOf[com.influxdb.client.service.WriteService]), InfluxDBClientScalaImpl.this.options)
@@ -286,15 +305,18 @@
           20
         </td>
         <td>
-          2302
+          2301
           -
-          2339
+          2338
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.AbstractInfluxDBClient.health
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.health(InfluxDBClientScalaImpl.this.healthService.getHealth(null))
@@ -307,15 +329,18 @@
           19
         </td>
         <td>
-          2309
+          2308
           -
-          2338
+          2337
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.service.HealthService.getHealth
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.healthService.getHealth(null)
@@ -328,15 +353,18 @@
           23
         </td>
         <td>
-          2493
+          2492
           -
-          2518
+          2517
         </td>
         <td>
           ApplyImplicitView
         </td>
         <td>
           scala.Predef.Boolean2boolean
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           scala.Predef.Boolean2boolean(InfluxDBClientScalaImpl.this.ping(InfluxDBClientScalaImpl.this.pingService.getPing()))
@@ -349,15 +377,18 @@
           22
         </td>
         <td>
-          2493
+          2492
           -
-          2518
+          2517
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.internal.AbstractRestClient.ping
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.ping(InfluxDBClientScalaImpl.this.pingService.getPing())
@@ -370,15 +401,18 @@
           21
         </td>
         <td>
-          2498
+          2497
           -
-          2517
+          2516
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.service.PingService.getPing
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.pingService.getPing()
@@ -391,15 +425,18 @@
           25
         </td>
         <td>
-          2681
+          2680
           -
-          2709
+          2708
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.internal.AbstractRestClient.version
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.version(InfluxDBClientScalaImpl.this.pingService.getPing())
@@ -412,15 +449,18 @@
           24
         </td>
         <td>
-          2689
+          2688
           -
-          2708
+          2707
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.service.PingService.getPing
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.pingService.getPing()
@@ -433,15 +473,18 @@
           26
         </td>
         <td>
-          2933
+          2932
           -
-          2951
+          2950
         </td>
         <td>
           Select
         </td>
         <td>
           com.influxdb.client.internal.AbstractInfluxDBClient.loggingInterceptor
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.loggingInterceptor
@@ -454,15 +497,18 @@
           27
         </td>
         <td>
-          2921
+          2920
           -
-          2952
+          2951
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.internal.AbstractRestClient.getLogLevel
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.getLogLevel(InfluxDBClientScalaImpl.this.loggingInterceptor)
@@ -475,15 +521,18 @@
           29
         </td>
         <td>
-          3247
+          3246
           -
-          3288
+          3287
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.internal.AbstractRestClient.setLogLevel
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.setLogLevel(InfluxDBClientScalaImpl.this.loggingInterceptor, logLevel)
@@ -496,15 +545,18 @@
           28
         </td>
         <td>
-          3259
+          3258
           -
-          3277
+          3276
         </td>
         <td>
           Select
         </td>
         <td>
           com.influxdb.client.internal.AbstractInfluxDBClient.loggingInterceptor
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.loggingInterceptor
@@ -517,15 +569,18 @@
           30
         </td>
         <td>
-          3603
+          3602
           -
-          3631
+          3630
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.GzipInterceptor.enableGzip
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.gzipInterceptor.enableGzip()
@@ -538,15 +593,18 @@
           31
         </td>
         <td>
-          3862
+          3861
           -
-          3891
+          3890
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.GzipInterceptor.disableGzip
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.gzipInterceptor.disableGzip()
@@ -559,15 +617,18 @@
           32
         </td>
         <td>
-          4070
+          4069
           -
-          4099
+          4098
         </td>
         <td>
           Apply
         </td>
         <td>
           com.influxdb.client.internal.GzipInterceptor.isEnabledGzip
+        </td>
+        <td>
+          
         </td>
         <td style="background: #F0ADAD">
           InfluxDBClientScalaImpl.this.gzipInterceptor.isEnabledGzip()

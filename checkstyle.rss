@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2018 - 2022 InfluxData, Inc.</copyright>
     <item>
-      <title>File: 178,
+      <title>File: 193,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -102,49 +102,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.DifferenceFlux.java">com/influxdb/query/dsl/functions/DifferenceFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.restriction.ColumnRestriction.java">com/influxdb/query/dsl/functions/restriction/ColumnRestriction.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.JoinFlux.java">com/influxdb/query/dsl/functions/JoinFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.ProxyAuthenticationRequiredException.java">com/influxdb/exceptions/ProxyAuthenticationRequiredException.java</a>
                 </td>
                 <td>
                   0
@@ -186,20 +144,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.DeleteApiImpl.java">com/influxdb/client/internal/DeleteApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.GatewayTimeoutException.java">com/influxdb/exceptions/GatewayTimeoutException.java</a>
                 </td>
                 <td>
@@ -214,7 +158,21 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.BackpressureEvent.java">com/influxdb/client/write/events/BackpressureEvent.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.FreestyleExpression.java">com/influxdb/query/dsl/functions/FreestyleExpression.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.InterpolateLinearFlux.java">com/influxdb/query/dsl/functions/InterpolateLinearFlux.java</a>
                 </td>
                 <td>
                   0
@@ -242,91 +200,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.flux.FluxConnectionOptions.java">com/influxdb/client/flux/FluxConnectionOptions.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.DuplicateFlux.java">com/influxdb/query/dsl/functions/DuplicateFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.SetFlux.java">com/influxdb/query/dsl/functions/SetFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.flux.internal.FluxApiImpl.java">com/influxdb/client/flux/internal/FluxApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.FindOptions.java">com/influxdb/client/FindOptions.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.FluxRecord.java">com/influxdb/query/FluxRecord.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.TasksQuery.java">com/influxdb/client/TasksQuery.java</a>
                 </td>
                 <td>
                   0
@@ -354,6 +228,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.FillFlux.java">com/influxdb/query/dsl/functions/FillFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.LastFlux.java">com/influxdb/query/dsl/functions/LastFlux.java</a>
                 </td>
                 <td>
@@ -368,49 +256,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.internal.AbstractQueryApi.java">com/influxdb/internal/AbstractQueryApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.LabelsApiImpl.java">com/influxdb/client/internal/LabelsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.reactive.WriteOptionsReactive.java">com/influxdb/client/reactive/WriteOptionsReactive.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.annotations.Column.java">com/influxdb/annotations/Column.java</a>
                 </td>
                 <td>
                   0
@@ -439,34 +285,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.InvokableScriptsApi.java">com/influxdb/client/InvokableScriptsApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.internal.FluxResultMapper.java">com/influxdb/query/internal/FluxResultMapper.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.reactive.internal.InfluxDBClientReactiveImpl.java">com/influxdb/client/reactive/internal/InfluxDBClientReactiveImpl.java</a>
                 </td>
                 <td>
                   0
@@ -522,77 +340,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.AbstractFluxWithUpstream.java">com/influxdb/query/dsl/functions/AbstractFluxWithUpstream.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.MapFlux.java">com/influxdb/query/dsl/functions/MapFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.InternalServerErrorException.java">com/influxdb/exceptions/InternalServerErrorException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.NotFoundException.java">com/influxdb/exceptions/NotFoundException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.osgi.LineProtocolWriter.java">com/influxdb/client/osgi/LineProtocolWriter.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.annotations.Measurement.java">com/influxdb/annotations/Measurement.java</a>
                 </td>
                 <td>
                   0
@@ -620,49 +368,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.SourcesApi.java">com/influxdb/client/SourcesApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.AggregateWindow.java">com/influxdb/query/dsl/functions/AggregateWindow.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.BadGatewayException.java">com/influxdb/exceptions/BadGatewayException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.TasksApiImpl.java">com/influxdb/client/internal/TasksApiImpl.java</a>
                 </td>
                 <td>
                   0
@@ -704,90 +410,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.WriteParameters.java">com/influxdb/client/write/WriteParameters.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.RequestEntityTooLargeException.java">com/influxdb/exceptions/RequestEntityTooLargeException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.FluxTable.java">com/influxdb/query/FluxTable.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.ScraperTargetsApiImpl.java">com/influxdb/client/internal/ScraperTargetsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.CountFlux.java">com/influxdb/query/dsl/functions/CountFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.NotificationEndpointsApiImpl.java">com/influxdb/client/internal/NotificationEndpointsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.SourcesApiImpl.java">com/influxdb/client/internal/SourcesApiImpl.java</a>
                 </td>
                 <td>
@@ -802,77 +424,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.InvokableScriptsApiImpl.java">com/influxdb/client/internal/InvokableScriptsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.DashboardsApi.java">com/influxdb/client/DashboardsApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.WriteRetriableErrorEvent.java">com/influxdb/client/write/events/WriteRetriableErrorEvent.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.SkewFlux.java">com/influxdb/query/dsl/functions/SkewFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.SpreadFlux.java">com/influxdb/query/dsl/functions/SpreadFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.Cancellable.java">com/influxdb/Cancellable.java</a>
                 </td>
                 <td>
                   0
@@ -928,63 +480,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.PivotFlux.java">com/influxdb/query/dsl/functions/PivotFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.BucketsQuery.java">com/influxdb/client/BucketsQuery.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.UnprocessableEntityException.java">com/influxdb/exceptions/UnprocessableEntityException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.AuthenticateInterceptor.java">com/influxdb/client/internal/AuthenticateInterceptor.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.InfluxDBClientFactory.java">com/influxdb/client/InfluxDBClientFactory.java</a>
                 </td>
                 <td>
                   0
@@ -1012,77 +508,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.ChecksApiImpl.java">com/influxdb/client/internal/ChecksApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.reactive.internal.WriteReactiveApiImpl.java">com/influxdb/client/reactive/internal/WriteReactiveApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.spring.influx.InfluxDB2AutoConfiguration.java">com/influxdb/spring/influx/InfluxDB2AutoConfiguration.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.osgi.PointWriter.java">com/influxdb/client/osgi/PointWriter.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.MeasurementMapper.java">com/influxdb/client/internal/MeasurementMapper.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ToDurationFlux.java">com/influxdb/query/dsl/functions/ToDurationFlux.java</a>
                 </td>
                 <td>
                   0
@@ -1110,63 +536,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.NotificationRulesApiImpl.java">com/influxdb/client/internal/NotificationRulesApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.QueryApiImpl.java">com/influxdb/client/internal/QueryApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.WriteApi.java">com/influxdb/client/WriteApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ToBoolFlux.java">com/influxdb/query/dsl/functions/ToBoolFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.IntegralFlux.java">com/influxdb/query/dsl/functions/IntegralFlux.java</a>
                 </td>
                 <td>
                   0
@@ -1194,35 +564,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.ForbiddenException.java">com/influxdb/exceptions/ForbiddenException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.WriteSuccessEvent.java">com/influxdb/client/write/events/WriteSuccessEvent.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.OrganizationsApi.java">com/influxdb/client/OrganizationsApi.java</a>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.TruncateTimeColumnFlux.java">com/influxdb/query/dsl/functions/TruncateTimeColumnFlux.java</a>
                 </td>
                 <td>
                   0
@@ -1265,62 +607,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.internal.AbstractRestClient.java">com/influxdb/internal/AbstractRestClient.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.PaymentRequiredException.java">com/influxdb/exceptions/PaymentRequiredException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.AbstractWriteClient.java">com/influxdb/client/internal/AbstractWriteClient.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.OrganizationsApiImpl.java">com/influxdb/client/internal/OrganizationsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.exceptions.FluxQueryException.java">com/influxdb/query/exceptions/FluxQueryException.java</a>
                 </td>
                 <td>
                   0
@@ -1418,35 +704,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.reactive.internal.QueryReactiveApiImpl.java">com/influxdb/client/reactive/internal/QueryReactiveApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.InfluxException.java">com/influxdb/exceptions/InfluxException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.NotificationEndpointsApi.java">com/influxdb/client/NotificationEndpointsApi.java</a>
                 </td>
                 <td>
                   0
@@ -1516,35 +774,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.KeepFlux.java">com/influxdb/query/dsl/functions/KeepFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.flux.FluxClientFactory.java">com/influxdb/client/flux/FluxClientFactory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.YieldFlux.java">com/influxdb/query/dsl/functions/YieldFlux.java</a>
                 </td>
                 <td>
                   0
@@ -1614,20 +844,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.DerivativeFlux.java">com/influxdb/query/dsl/functions/DerivativeFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ReduceFlux.java">com/influxdb/query/dsl/functions/ReduceFlux.java</a>
                 </td>
                 <td>
@@ -1670,20 +886,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.FirstFlux.java">com/influxdb/query/dsl/functions/FirstFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.FromFlux.java">com/influxdb/query/dsl/functions/FromFlux.java</a>
                 </td>
                 <td>
@@ -1698,77 +900,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.WindowFlux.java">com/influxdb/query/dsl/functions/WindowFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.Flux.java">com/influxdb/query/dsl/Flux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.reactive.InfluxDBClientReactiveFactory.java">com/influxdb/client/reactive/InfluxDBClientReactiveFactory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.spring.health.InfluxDB2HealthIndicator.java">com/influxdb/spring/health/InfluxDB2HealthIndicator.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.NotImplementedException.java">com/influxdb/exceptions/NotImplementedException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.TelegrafsApiImpl.java">com/influxdb/client/internal/TelegrafsApiImpl.java</a>
                 </td>
                 <td>
                   0
@@ -1852,6 +984,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.Expressions.java">com/influxdb/query/dsl/Expressions.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.UsersApiImpl.java">com/influxdb/client/internal/UsersApiImpl.java</a>
                 </td>
                 <td>
@@ -1894,6 +1040,1392 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.AbstractParametrizedFlux.java">com/influxdb/query/dsl/functions/AbstractParametrizedFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.test.MockServerExtension.java">com/influxdb/test/MockServerExtension.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.ChecksApi.java">com/influxdb/client/ChecksApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.LabelsApi.java">com/influxdb/client/LabelsApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ToIntFlux.java">com/influxdb/query/dsl/functions/ToIntFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.UsersApi.java">com/influxdb/client/UsersApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.WriteApiBlockingImpl.java">com/influxdb/client/internal/WriteApiBlockingImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.InfluxDBClientOptions.java">com/influxdb/client/InfluxDBClientOptions.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.MinFlux.java">com/influxdb/query/dsl/functions/MinFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.CumulativeSumFlux.java">com/influxdb/query/dsl/functions/CumulativeSumFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.WriteErrorEvent.java">com/influxdb/client/write/events/WriteErrorEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.AbstractWriteEvent.java">com/influxdb/client/write/events/AbstractWriteEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ColumnsFlux.java">com/influxdb/query/dsl/functions/ColumnsFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.NotificationRulesApi.java">com/influxdb/client/NotificationRulesApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.LimitFlux.java">com/influxdb/query/dsl/functions/LimitFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.MeanFlux.java">com/influxdb/query/dsl/functions/MeanFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.GroupFlux.java">com/influxdb/query/dsl/functions/GroupFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.DashboardsApiImpl.java">com/influxdb/client/internal/DashboardsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.WriteOptions.java">com/influxdb/client/WriteOptions.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.PercentileFlux.java">com/influxdb/query/dsl/functions/PercentileFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.InvokableScriptsQuery.java">com/influxdb/client/InvokableScriptsQuery.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.BucketsApiImpl.java">com/influxdb/client/internal/BucketsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.BucketsApi.java">com/influxdb/client/BucketsApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.internal.UserAgentInterceptor.java">com/influxdb/internal/UserAgentInterceptor.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.AbstractFunctionFlux.java">com/influxdb/query/dsl/functions/AbstractFunctionFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.DifferenceFlux.java">com/influxdb/query/dsl/functions/DifferenceFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.restriction.ColumnRestriction.java">com/influxdb/query/dsl/functions/restriction/ColumnRestriction.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.ProxyAuthenticationRequiredException.java">com/influxdb/exceptions/ProxyAuthenticationRequiredException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.DeleteApiImpl.java">com/influxdb/client/internal/DeleteApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.BackpressureEvent.java">com/influxdb/client/write/events/BackpressureEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.flux.FluxConnectionOptions.java">com/influxdb/client/flux/FluxConnectionOptions.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.UnionFlux.java">com/influxdb/query/dsl/functions/UnionFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.DuplicateFlux.java">com/influxdb/query/dsl/functions/DuplicateFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.SetFlux.java">com/influxdb/query/dsl/functions/SetFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.flux.internal.FluxApiImpl.java">com/influxdb/client/flux/internal/FluxApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.FindOptions.java">com/influxdb/client/FindOptions.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.IsVariableAssignment.java">com/influxdb/query/dsl/IsVariableAssignment.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.TasksQuery.java">com/influxdb/client/TasksQuery.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.internal.AbstractQueryApi.java">com/influxdb/internal/AbstractQueryApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.LabelsApiImpl.java">com/influxdb/client/internal/LabelsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.utils.ImportUtils.java">com/influxdb/query/dsl/utils/ImportUtils.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.annotations.Column.java">com/influxdb/annotations/Column.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ArrayFromFlux.java">com/influxdb/query/dsl/functions/ArrayFromFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.internal.FluxResultMapper.java">com/influxdb/query/internal/FluxResultMapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.reactive.internal.InfluxDBClientReactiveImpl.java">com/influxdb/client/reactive/internal/InfluxDBClientReactiveImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.VariableAssignment.java">com/influxdb/query/dsl/VariableAssignment.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.AbstractFluxWithUpstream.java">com/influxdb/query/dsl/functions/AbstractFluxWithUpstream.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.InternalServerErrorException.java">com/influxdb/exceptions/InternalServerErrorException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.NotFoundException.java">com/influxdb/exceptions/NotFoundException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.osgi.LineProtocolWriter.java">com/influxdb/client/osgi/LineProtocolWriter.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.annotations.Measurement.java">com/influxdb/annotations/Measurement.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.SourcesApi.java">com/influxdb/client/SourcesApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.AggregateWindow.java">com/influxdb/query/dsl/functions/AggregateWindow.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.TasksApiImpl.java">com/influxdb/client/internal/TasksApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.WriteParameters.java">com/influxdb/client/write/WriteParameters.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.RequestEntityTooLargeException.java">com/influxdb/exceptions/RequestEntityTooLargeException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.FluxTable.java">com/influxdb/query/FluxTable.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.ScraperTargetsApiImpl.java">com/influxdb/client/internal/ScraperTargetsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.CountFlux.java">com/influxdb/query/dsl/functions/CountFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.NotificationEndpointsApiImpl.java">com/influxdb/client/internal/NotificationEndpointsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.InvokableScriptsApiImpl.java">com/influxdb/client/internal/InvokableScriptsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.WriteRetriableErrorEvent.java">com/influxdb/client/write/events/WriteRetriableErrorEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.SkewFlux.java">com/influxdb/query/dsl/functions/SkewFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.SpreadFlux.java">com/influxdb/query/dsl/functions/SpreadFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.Cancellable.java">com/influxdb/Cancellable.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.PivotFlux.java">com/influxdb/query/dsl/functions/PivotFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.Expression.java">com/influxdb/query/dsl/Expression.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.BucketsQuery.java">com/influxdb/client/BucketsQuery.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.UnprocessableEntityException.java">com/influxdb/exceptions/UnprocessableEntityException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.InfluxDBClientFactory.java">com/influxdb/client/InfluxDBClientFactory.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.ChecksApiImpl.java">com/influxdb/client/internal/ChecksApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.reactive.internal.WriteReactiveApiImpl.java">com/influxdb/client/reactive/internal/WriteReactiveApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.spring.influx.InfluxDB2AutoConfiguration.java">com/influxdb/spring/influx/InfluxDB2AutoConfiguration.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.AbstractFunctionCallFlux.java">com/influxdb/query/dsl/functions/AbstractFunctionCallFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.MeasurementMapper.java">com/influxdb/client/internal/MeasurementMapper.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ToDurationFlux.java">com/influxdb/query/dsl/functions/ToDurationFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.NotificationRulesApiImpl.java">com/influxdb/client/internal/NotificationRulesApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.QueryApiImpl.java">com/influxdb/client/internal/QueryApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ToBoolFlux.java">com/influxdb/query/dsl/functions/ToBoolFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.IntegralFlux.java">com/influxdb/query/dsl/functions/IntegralFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.ForbiddenException.java">com/influxdb/exceptions/ForbiddenException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.WriteSuccessEvent.java">com/influxdb/client/write/events/WriteSuccessEvent.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.OrganizationsApi.java">com/influxdb/client/OrganizationsApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.PaymentRequiredException.java">com/influxdb/exceptions/PaymentRequiredException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.AbstractWriteClient.java">com/influxdb/client/internal/AbstractWriteClient.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.OrganizationsApiImpl.java">com/influxdb/client/internal/OrganizationsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.exceptions.FluxQueryException.java">com/influxdb/query/exceptions/FluxQueryException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.reactive.internal.QueryReactiveApiImpl.java">com/influxdb/client/reactive/internal/QueryReactiveApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.NotificationEndpointsApi.java">com/influxdb/client/NotificationEndpointsApi.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.KeepFlux.java">com/influxdb/query/dsl/functions/KeepFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.YieldFlux.java">com/influxdb/query/dsl/functions/YieldFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.HasImports.java">com/influxdb/query/dsl/HasImports.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.DerivativeFlux.java">com/influxdb/query/dsl/functions/DerivativeFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.FirstFlux.java">com/influxdb/query/dsl/functions/FirstFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.WindowFlux.java">com/influxdb/query/dsl/functions/WindowFlux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.Flux.java">com/influxdb/query/dsl/Flux.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.spring.health.InfluxDB2HealthIndicator.java">com/influxdb/spring/health/InfluxDB2HealthIndicator.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.NotImplementedException.java">com/influxdb/exceptions/NotImplementedException.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.TelegrafsApiImpl.java">com/influxdb/client/internal/TelegrafsApiImpl.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.NotAcceptableException.java">com/influxdb/exceptions/NotAcceptableException.java</a>
                 </td>
                 <td>
@@ -1909,20 +2441,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.test.AbstractMockServerTest.java">com/influxdb/test/AbstractMockServerTest.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.AbstractParametrizedFlux.java">com/influxdb/query/dsl/functions/AbstractParametrizedFlux.java</a>
                 </td>
                 <td>
                   0
@@ -2006,35 +2524,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.ChecksApi.java">com/influxdb/client/ChecksApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.SortFlux.java">com/influxdb/query/dsl/functions/SortFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.LabelsApi.java">com/influxdb/client/LabelsApi.java</a>
                 </td>
                 <td>
                   0
@@ -2062,35 +2552,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ToIntFlux.java">com/influxdb/query/dsl/functions/ToIntFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.exceptions.MethodNotAllowedException.java">com/influxdb/exceptions/MethodNotAllowedException.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.UsersApi.java">com/influxdb/client/UsersApi.java</a>
                 </td>
                 <td>
                   0
@@ -2118,49 +2580,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.WriteApiBlockingImpl.java">com/influxdb/client/internal/WriteApiBlockingImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.InfluxDBClientOptions.java">com/influxdb/client/InfluxDBClientOptions.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.SumFlux.java">com/influxdb/query/dsl/functions/SumFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.MinFlux.java">com/influxdb/query/dsl/functions/MinFlux.java</a>
                 </td>
                 <td>
                   0
@@ -2188,77 +2608,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.CumulativeSumFlux.java">com/influxdb/query/dsl/functions/CumulativeSumFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.WriteErrorEvent.java">com/influxdb/client/write/events/WriteErrorEvent.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.write.events.AbstractWriteEvent.java">com/influxdb/client/write/events/AbstractWriteEvent.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.VariablesApi.java">com/influxdb/client/VariablesApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.ColumnsFlux.java">com/influxdb/query/dsl/functions/ColumnsFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.NotificationRulesApi.java">com/influxdb/client/NotificationRulesApi.java</a>
                 </td>
                 <td>
                   0
@@ -2286,49 +2636,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.LimitFlux.java">com/influxdb/query/dsl/functions/LimitFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.MeanFlux.java">com/influxdb/query/dsl/functions/MeanFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.OrganizationsQuery.java">com/influxdb/client/OrganizationsQuery.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.GroupFlux.java">com/influxdb/query/dsl/functions/GroupFlux.java</a>
                 </td>
                 <td>
                   0
@@ -2384,20 +2692,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.DashboardsApiImpl.java">com/influxdb/client/internal/DashboardsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.GzipInterceptor.java">com/influxdb/client/internal/GzipInterceptor.java</a>
                 </td>
                 <td>
@@ -2440,91 +2734,7 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.WriteOptions.java">com/influxdb/client/WriteOptions.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.query.dsl.functions.PercentileFlux.java">com/influxdb/query/dsl/functions/PercentileFlux.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.InvokableScriptsQuery.java">com/influxdb/client/InvokableScriptsQuery.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.reactive.InfluxDBClientReactive.java">com/influxdb/client/reactive/InfluxDBClientReactive.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.internal.BucketsApiImpl.java">com/influxdb/client/internal/BucketsApiImpl.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.client.BucketsApi.java">com/influxdb/client/BucketsApi.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/influxdata/influxdb-client-java/checkstyle.html#com.influxdb.internal.UserAgentInterceptor.java">com/influxdb/internal/UserAgentInterceptor.java</a>
                 </td>
                 <td>
                   0

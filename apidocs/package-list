@@ -5,6 +5,7 @@ com.influxdb.client.domain
 com.influxdb.client.flux
 com.influxdb.client.flux.internal
 com.influxdb.client.internal
+com.influxdb.client.internal.flowable
 com.influxdb.client.osgi
 com.influxdb.client.reactive
 com.influxdb.client.reactive.internal
@@ -19,6 +20,7 @@ com.influxdb.query.dsl
 com.influxdb.query.dsl.functions
 com.influxdb.query.dsl.functions.properties
 com.influxdb.query.dsl.functions.restriction
+com.influxdb.query.dsl.utils
 com.influxdb.query.exceptions
 com.influxdb.query.internal
 com.influxdb.spring.health

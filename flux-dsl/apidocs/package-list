@@ -2,3 +2,4 @@ com.influxdb.query.dsl
 com.influxdb.query.dsl.functions
 com.influxdb.query.dsl.functions.properties
 com.influxdb.query.dsl.functions.restriction
+com.influxdb.query.dsl.utils
