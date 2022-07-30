@@ -1,5 +1,11 @@
 ## 6.5.0 [unreleased]
 
+### Dependencies
+Update dependencies:
+
+#### Build:
+  - [#389](https://github.com/influxdata/influxdb-client-java/pull/389): `scala-collection-compat_2.12` to `2.8.1`
+
 ## 6.4.0 [2022-07-29]
   
 ### Release Notice
