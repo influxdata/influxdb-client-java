@@ -21,7 +21,6 @@
  */
 package com.influxdb.query.dsl.functions;
 
-import java.util.Collection;
 import javax.annotation.Nonnull;
 
 import com.influxdb.query.dsl.Flux;
