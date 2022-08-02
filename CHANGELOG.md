@@ -1,5 +1,8 @@
 ## 6.5.0 [unreleased]
 
+### Features
+1. [#366](https://github.com/influxdata/influxdb-client-java/pull/356): Added an endpoint to query with InfluxQL (v1) for more info see [README.md](./client).
+
 ### Dependencies
 Update dependencies:
 

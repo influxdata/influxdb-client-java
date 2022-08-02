@@ -34,6 +34,7 @@ import com.influxdb.client.DashboardsApi;
 import com.influxdb.client.DeleteApi;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.InfluxQLQueryApi;
 import com.influxdb.client.InvokableScriptsApi;
 import com.influxdb.client.LabelsApi;
 import com.influxdb.client.NotificationEndpointsApi;
@@ -59,6 +60,7 @@ import com.influxdb.client.service.BucketsService;
 import com.influxdb.client.service.ChecksService;
 import com.influxdb.client.service.DashboardsService;
 import com.influxdb.client.service.DeleteService;
+import com.influxdb.client.service.InfluxQLQueryService;
 import com.influxdb.client.service.InvokableScriptsService;
 import com.influxdb.client.service.LabelsService;
 import com.influxdb.client.service.NotificationEndpointsService;
@@ -245,6 +247,12 @@ public final class InfluxDBClientImpl extends AbstractInfluxDBClient implements 
     @Override
     public InvokableScriptsApi getInvokableScriptsApi() {
         return new InvokableScriptsApiImpl(retrofit.create(InvokableScriptsService.class));
+    }
+
+    @Nonnull
+    @Override
+    public InfluxQLQueryApi getInfluxQLQueryApi() {
+        return new InfluxQLQueryApiImpl(getService(InfluxQLQueryService.class));
     }
 
     @Nonnull

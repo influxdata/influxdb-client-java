@@ -5,6 +5,13 @@ This directory contains Java, Kotlin and Scala examples.
 ## Java
 - [WriteDataEverySecond.java](src/main/java/example/WriteDataEverySecond.java) - Write data every second 
 - [ParameterizedQuery.java](src/main/java/example/ParameterizedQuery.java) - How to use Parameterized Queries
+- [InfluxQLExample.java](src/main/java/example/InfluxQLExample.java) - How to use queries with the old influxQL dialect
+
+    The `InfluxQL` can be used with `/query compatibility` endpoint which uses the **database** and **retention policy**
+    specified in the query request to map the request to an InfluxDB bucket.
+    For more information, see:
+    - [/query 1.x compatibility API](https://docs.influxdata.com/influxdb/latest/reference/api/influxdb-1x/query/)
+    - [Database and retention policy mapping](https://docs.influxdata.com/influxdb/latest/reference/api/influxdb-1x/dbrp/)
 
 ### Others
 - [InvokableScripts.java](src/main/java/example/InvokableScripts.java) - How to use Invokable scripts Cloud API to create custom endpoints that query data

@@ -8,6 +8,7 @@ The reference Java client that allows query, write and management (bucket, organ
  
 - [Querying data using Flux language](#queries)
   - [Parameterized Queries](#parameterized-queries)
+- [Querying data using InfluxQL](#influxql-queries)
 - [Writing data using](#writes)
     - [Line Protocol](#by-lineprotocol) 
     - [Data Point](#by-data-point) 
@@ -408,6 +409,73 @@ public class ParameterizedQuery {
 
         }
     }
+}
+```
+
+### InfluxQL Queries
+
+The `InfluxQL` can be used with `/query compatibility` endpoint which uses the **database** and **retention policy** specified in the query request to map the request to an InfluxDB bucket.
+For more information, see: .
+
+- [/query 1.x compatibility API](https://docs.influxdata.com/influxdb/latest/reference/api/influxdb-1x/query/)
+- [Database and retention policy mapping](https://docs.influxdata.com/influxdb/latest/reference/api/influxdb-1x/dbrp/)
+
+This is an example of how to use this library to run a query with influxQL:
+
+```java
+package example;
+
+import java.math.BigDecimal;
+import java.time.Instant;
+
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.InfluxQLQueryApi;
+import com.influxdb.client.domain.InfluxQLQuery;
+import com.influxdb.query.InfluxQLQueryResult;
+
+public class InfluxQLExample {
+
+  private static char[] token = "my-token".toCharArray();
+  private static String org = "my-org";
+
+  private static String database = "my-org";
+
+  public static void main(final String[] args) {
+
+    try (InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org)) {
+
+      //
+      // Query data
+      //
+      String influxQL = "SELECT FIRST(\"free\") FROM \"influxql\"";
+
+      InfluxQLQueryApi queryApi = influxDBClient.getInfluxQLQueryApi();
+
+      // send request
+      InfluxQLQueryResult result = queryApi.query(new InfluxQLQuery(influxQL, database).setPrecision(InfluxQLQuery.InfluxQLPrecision.SECONDS),
+              (columnName, rawValue, resultIndex, seriesName) -> {
+                // convert columns
+                switch (columnName) {
+                  case "time":
+                    return Instant.ofEpochSecond(Long.parseLong(rawValue));
+                  case "first":
+                    return new BigDecimal(rawValue);
+                  default:
+                    throw new IllegalArgumentException("unexpected column " + columnName);
+                }
+              });
+
+      for (InfluxQLQueryResult.Result resultResult : result.getResults()) {
+        for (InfluxQLQueryResult.Series series : resultResult.getSeries()) {
+          for (InfluxQLQueryResult.Series.Record record : series.getValues()) {
+            System.out.println(record.getValueByKey("time") + ": " + record.getValueByKey("first"));
+          }
+        }
+      }
+
+    }
+  }
 }
 ```
 
