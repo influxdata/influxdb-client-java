@@ -258,7 +258,7 @@ public interface InfluxDBClient extends AutoCloseable {
      * <strong>{@link InfluxQLQuery#getDatabase() database}</strong> and
      * <strong>{@link InfluxQLQuery#getRetentionPolicy() retention policy}</strong> specified in the query request to
      * map the request to an InfluxDB bucket.
-     * <br/>
+     * <br>
      * For more information, see:
      * <ul>
      *     <li>
