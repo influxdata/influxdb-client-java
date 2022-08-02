@@ -31,6 +31,7 @@ import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.Check;
 import com.influxdb.client.domain.Dashboard;
 import com.influxdb.client.domain.HealthCheck;
+import com.influxdb.client.domain.InfluxQLQuery;
 import com.influxdb.client.domain.Label;
 import com.influxdb.client.domain.NotificationEndpoint;
 import com.influxdb.client.domain.NotificationRules;
@@ -251,6 +252,31 @@ public interface InfluxDBClient extends AutoCloseable {
      */
     @Nonnull
     InvokableScriptsApi getInvokableScriptsApi();
+
+    /**
+     * The <code>InfluxQL</code> can be used with <code>/query compatibility</code> endpoint which uses the
+     * <strong>{@link InfluxQLQuery#getDatabase() database}</strong> and
+     * <strong>{@link InfluxQLQuery#getRetentionPolicy() retention policy}</strong> specified in the query request to
+     * map the request to an InfluxDB bucket.
+     * <br/>
+     * For more information, see:
+     * <ul>
+     *     <li>
+     *         <a href="https://docs.influxdata.com/influxdb/latest/reference/api/influxdb-1x/query/">
+     *             /query 1.x compatibility API
+     *         </a>
+     *     </li>
+     *     <li>
+     *         <a href="https://docs.influxdata.com/influxdb/latest/reference/api/influxdb-1x/dbrp/">
+     *             Database and retention policy mapping
+     *         </a>
+     *     </li>
+     * </ul>
+     *
+     * @return InfluxQLQuery API instance
+     */
+    @Nonnull
+    InfluxQLQueryApi getInfluxQLQueryApi();
 
     /**
      * Create an implementation of the API endpoints defined by the {@code service} interface.

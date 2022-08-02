@@ -71,6 +71,7 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
 
     };
     protected static final String DEFAULT_DIALECT;
+
     static {
         Map<String, Object> dialect = new HashMap<>();
         dialect.put("header", true);
@@ -107,7 +108,7 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
 
         if (dialect != null && !dialect.isEmpty()) {
             JsonElement dialectJson = new Gson().fromJson(dialect, JsonElement.class);
-            json.add("dialect",  dialectJson);
+            json.add("dialect", dialectJson);
         }
 
         return createBody(json.toString());
@@ -156,11 +157,11 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
         return new RawIterator(queryCall, ERROR_CONSUMER);
     }
 
-    private void query(@Nonnull final Call<ResponseBody> query,
-                       @Nonnull final BiConsumer<Cancellable, BufferedSource> consumer,
-                       @Nonnull final Consumer<? super Throwable> onError,
-                       @Nonnull final Runnable onComplete,
-                       @Nonnull final Boolean asynchronously) {
+    protected void query(@Nonnull final Call<ResponseBody> query,
+                         @Nonnull final BiConsumer<Cancellable, BufferedSource> consumer,
+                         @Nonnull final Consumer<? super Throwable> onError,
+                         @Nonnull final Runnable onComplete,
+                         @Nonnull final Boolean asynchronously) {
 
         Arguments.checkNotNull(query, "query");
         Arguments.checkNotNull(consumer, "consumer");
@@ -262,7 +263,7 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
         }
     }
 
-    private class DefaultCancellable implements Cancellable {
+    private static class DefaultCancellable implements Cancellable {
 
         private volatile boolean wasCancelled = false;
 

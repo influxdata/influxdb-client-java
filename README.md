@@ -36,6 +36,7 @@ This section contains links to the client library documentation.
 
 - InfluxDB 2.x client
     - Querying data using the Flux language
+    - Querying data using the InfluxQL
     - Writing data using
         - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
         - [Data Point](https://github.com/influxdata/influxdb-client-java/blob/master/client/src/main/java/org/influxdata/client/write/Point.java#L46) 
