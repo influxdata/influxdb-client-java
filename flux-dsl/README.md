@@ -519,26 +519,26 @@ Flux flux = Flux
     .min();
 ```
 
-### percentile
-Percentile is both an aggregate operation and a selector operation depending on selected options. 
-In the aggregate methods, it outputs the value that represents the specified percentile of the non null record as a float [[doc](http://bit.ly/flux-spec#percentile-aggregate)].
-- `columns` - specifies a list of columns to aggregate. Defaults to `_value`. [array of strings]
-- `percentile` - value between 0 and 1 indicating the desired percentile. [float]
-- `method` - percentile provides 3 methods for computation:
-    - `estimate_tdigest` - an aggregate result that uses a tdigest data structure to compute an accurate percentile estimate on large data sources.
-    - `exact_mean` - an aggregate result that takes the average of the two points closest to the percentile value.
-    - `exact_selector` - Percentile
+### quantile
+quantile is both an aggregate operation and a selector operation depending on selected options. 
+In the aggregate methods, it outputs the value that represents the specified quantile of the non null record as a float [[doc](http://bit.ly/flux-spec#quantile-aggregate)].
+- `column` - specifies a column to aggregate. Defaults to `_value`. [array of strings]
+- `quantile` - value between 0 and 1 indicating the desired quantile. [float]
+- `method` - quantile provides 3 methods for computation:
+    - `estimate_tdigest` - an aggregate result that uses a tdigest data structure to compute an accurate quantile estimate on large data sources.
+    - `exact_mean` - an aggregate result that takes the average of the two points closest to the quantile value.
+    - `exact_selector` - Quantile
 - `compression` - Compression indicates how many centroids to use when compressing the dataset. A larger number produces a more accurate result at the cost of increased memory requirements. Defaults to `1000`. [float]
 ```java
 Flux flux = Flux
     .from("telegraf")
-    .percentile(0.80F);
+    .quantile(0.80F);
 
 Flux flux = Flux
     .from("telegraf")
-    .percentile()
-        .withColumns(new String[]{"value2"})
-        .withPercentile(0.75F)
+    .quantile()
+        .withColumn("value2")
+        .withQuantile(0.75F)
         .withMethod(MethodType.EXACT_MEAN)
         .withCompression(2_000F);
 ```

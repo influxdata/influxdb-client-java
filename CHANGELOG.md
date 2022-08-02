@@ -1,7 +1,15 @@
 ## 6.5.0 [unreleased]
 
+### Breaking Changes
+
+#### FluxDSL
+The `percentile()` function renamed to `quantile()`.
+
 ### Features
 1. [#366](https://github.com/influxdata/influxdb-client-java/pull/356): Added an endpoint to query with InfluxQL (v1) for more info see [README.md](./client).
+
+### Bug Fixes
+1. [#390](https://github.com/influxdata/influxdb-client-java/pull/390): Rename `percentile()` function renamed to `quantile()` [FluxDSL]
 
 ### Dependencies
 Update dependencies:

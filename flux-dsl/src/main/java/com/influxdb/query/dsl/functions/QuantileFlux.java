@@ -21,22 +21,21 @@
  */
 package com.influxdb.query.dsl.functions;
 
-import java.util.Collection;
 import javax.annotation.Nonnull;
 
 import com.influxdb.query.dsl.Flux;
 import com.influxdb.utils.Arguments;
 
 /**
- * Percentile is both an aggregate operation and a selector operation depending on selected options.
- * In the aggregate methods, it outputs the value that represents the specified percentile of the non null record
+ * Quantile is both an aggregate operation and a selector operation depending on selected options.
+ * In the aggregate methods, it outputs the value that represents the specified quantile of the non null record
  * as a float.
- * <a href="http://bit.ly/flux-spec#percentile-aggregate">See SPEC</a>.
+ * <a href="http://bit.ly/flux-spec#quantile-aggregate">See SPEC</a>.
  *
  * <h3>Options</h3>
  * <ul>
- *     <li><b>columns</b> - specifies a list of columns to aggregate. Defaults to <i>_value</i>. [array of strings]</li>
- *     <li><b>percentile</b> - value between 0 and 1 indicating the desired percentile. [float]</li>
+ *     <li><b>column</b> - column to aggregate. Defaults to <i>_value</i>. [string]</li>
+ *     <li><b>quantile</b> - value between 0 and 1 indicating the desired quantile. [float]</li>
  *     <li><b>method</b> - method to aggregate</li>
  *     <li><b>compression</b> - Compression indicates how many centroids to use when compressing the dataset.
  *     A larger number produces a more accurate result at the cost of increased memory requirements.
@@ -48,29 +47,28 @@ import com.influxdb.utils.Arguments;
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")
- *     .percentile(0.80F);
+ *     .quantile(0.80F);
  *
  * Flux flux = Flux
  *     .from("telegraf")
- *     .percentile()
- *         .withColumns(new String[]{"value2"})
- *         .withPercentile(0.75F)
+ *     .quantile()
+ *         .withQuantile(0.75F)
  *         .withMethod(MethodType.EXACT_MEAN)
  *         .withCompression(2_000F);
  * </pre>
  *
  * @author Jakub Bednar (10/10/2018 11:34)
  */
-public final class PercentileFlux extends AbstractParametrizedFlux {
+public final class QuantileFlux extends AbstractParametrizedFlux {
 
-    public PercentileFlux(@Nonnull final Flux source) {
+    public QuantileFlux(@Nonnull final Flux source) {
         super(source);
     }
 
     @Nonnull
     @Override
     protected String operatorName() {
-        return "percentile";
+        return "quantile";
     }
 
     /**
@@ -79,13 +77,13 @@ public final class PercentileFlux extends AbstractParametrizedFlux {
     public enum MethodType {
 
         /**
-         * An aggregate result that uses a tdigest data structure to compute an accurate percentile estimate
+         * An aggregate result that uses a tdigest data structure to compute an accurate quantile estimate
          * on large data sources.
          */
         ESTIMATE_TDIGEST,
 
         /**
-         * An aggregate result that takes the average of the two points closest to the percentile value.
+         * An aggregate result that takes the average of the two points closest to the quantile value.
          */
         EXACT_MEAN,
 
@@ -93,43 +91,29 @@ public final class PercentileFlux extends AbstractParametrizedFlux {
     }
 
     /**
-     * @param columns specifies a list of columns to aggregate
+     * @param column The column to aggregate. Defaults to "_value".
      * @return this
      */
     @Nonnull
-    public PercentileFlux withColumns(@Nonnull final String[] columns) {
+    public QuantileFlux withColumn(@Nonnull final String column) {
 
-        Arguments.checkNotNull(columns, "columns");
+        Arguments.checkNonEmpty(column, "column");
 
-        this.withPropertyValue("columns", columns);
+        this.withPropertyValueEscaped("column", column);
 
         return this;
     }
 
     /**
-     * @param columns specifies a list of columns to aggregate
+     * @param quantile value between 0 and 1 indicating the desired quantile
      * @return this
      */
     @Nonnull
-    public PercentileFlux withColumns(@Nonnull final Collection<String> columns) {
+    public QuantileFlux withQuantile(@Nonnull final Float quantile) {
 
-        Arguments.checkNotNull(columns, "columns");
+        Arguments.checkNotNull(quantile, "quantile");
 
-        this.withPropertyValue("columns", columns);
-
-        return this;
-    }
-
-    /**
-     * @param percentile value between 0 and 1 indicating the desired percentile
-     * @return this
-     */
-    @Nonnull
-    public PercentileFlux withPercentile(@Nonnull final Float percentile) {
-
-        Arguments.checkNotNull(percentile, "percentile");
-
-        this.withPropertyValue("percentile", percentile);
+        this.withPropertyValue("q", quantile);
 
         return this;
     }
@@ -139,7 +123,7 @@ public final class PercentileFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public PercentileFlux withCompression(@Nonnull final Float compression) {
+    public QuantileFlux withCompression(@Nonnull final Float compression) {
 
         Arguments.checkNotNull(compression, "compression");
 
@@ -153,7 +137,7 @@ public final class PercentileFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public PercentileFlux withMethod(@Nonnull final String method) {
+    public QuantileFlux withMethod(@Nonnull final String method) {
 
         Arguments.checkNotNull(method, "method");
 
@@ -167,7 +151,7 @@ public final class PercentileFlux extends AbstractParametrizedFlux {
      * @return this
      */
     @Nonnull
-    public PercentileFlux withMethod(@Nonnull final MethodType method) {
+    public QuantileFlux withMethod(@Nonnull final MethodType method) {
 
         Arguments.checkNotNull(method, "method");
 
