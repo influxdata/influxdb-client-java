@@ -6,6 +6,9 @@ Update dependencies:
 #### Build:
   - [#389](https://github.com/influxdata/influxdb-client-java/pull/389): `scala-collection-compat_2.12` to `2.8.1`
 
+#### Maven Plugin:
+  - [#391](https://github.com/influxdata/influxdb-client-java/pull/391): `maven-bundle-plugin` to `5.1.8`
+
 ## 6.4.0 [2022-07-29]
   
 ### Release Notice
