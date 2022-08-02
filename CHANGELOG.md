@@ -5,6 +5,7 @@ Update dependencies:
 
 #### Build:
   - [#389](https://github.com/influxdata/influxdb-client-java/pull/389): `scala-collection-compat_2.12` to `2.8.1`
+  - [#392](https://github.com/influxdata/influxdb-client-java/pull/392): `gson` to `2.9.1`
 
 ## 6.4.0 [2022-07-29]
   
