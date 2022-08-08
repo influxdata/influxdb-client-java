@@ -32,6 +32,7 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.DbrPsService;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.InfluxQLQueryResult;
+
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
 import org.junit.jupiter.api.BeforeEach;
@@ -39,7 +40,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.platform.runner.JUnitPlatform;
 import org.junit.runner.RunWith;
 
-import static org.assertj.core.api.InstanceOfAssertFactories.*;
+import static org.assertj.core.api.InstanceOfAssertFactories.BIG_DECIMAL;
+import static org.assertj.core.api.InstanceOfAssertFactories.INSTANT;
+import static org.assertj.core.api.InstanceOfAssertFactories.list;
 
 @RunWith(JUnitPlatform.class)
 class ITInfluxQLQueryApi extends AbstractITClientTest {
@@ -76,10 +79,9 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 	void testShowDatabases() {
 		InfluxQLQueryResult result = influxQLQueryApi.query(new InfluxQLQuery("SHOW DATABASES", DATABASE_NAME));
 		assertSingleSeriesRecords(result)
-				.hasSize(1)
-				.first()
-				.extracting(record -> record.getValueByKey("name"))
-				.isEqualTo(DATABASE_NAME);
+				.map(record -> record.getValueByKey("name"))
+				// internal buckets are also available by DBRP mapping
+				.contains(DATABASE_NAME);
 	}
 
 
