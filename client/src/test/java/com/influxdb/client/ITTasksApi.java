@@ -157,7 +157,7 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(task.getStatus()).isEqualTo(TaskStatusType.ACTIVE);
         Assertions.assertThat(task.getEvery()).isEqualTo("1h");
         Assertions.assertThat(task.getCron()).isNull();
-        Assertions.assertThat(task.getFlux()).endsWith(TASK_FLUX);
+        Assertions.assertThat(task.getFlux()).startsWith(TASK_FLUX);
     }
 
     @Test
@@ -174,7 +174,7 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThat(task.getStatus()).isEqualTo(TaskStatusType.ACTIVE);
         Assertions.assertThat(task.getCron()).isEqualTo("0 2 * * *");
         Assertions.assertThat(task.getEvery()).isNull();
-        Assertions.assertThat(task.getFlux()).endsWith(TASK_FLUX);
+        Assertions.assertThat(task.getFlux()).startsWith(TASK_FLUX);
         Assertions.assertThat(task.getLinks()).isNotNull();
         Assertions.assertThat(task.getLinks().getLogs()).isEqualTo("/api/v2/tasks/" + task.getId() + "/logs");
         Assertions.assertThat(task.getLinks().getMembers()).isEqualTo("/api/v2/tasks/" + task.getId() + "/members");
@@ -341,10 +341,10 @@ class ITTasksApi extends AbstractITClientTest {
         String taskName = generateName("it task");
         Task cronTask = tasksApi.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization);
 
-        String flux = "option task = {\n"
+        String flux = TASK_FLUX + "\n\noption task = {\n"
                 + "    name: \"" + taskName + "\",\n"
                 + "    every: 3m\n"
-                + "}\n\n" + TASK_FLUX;
+                + "}";
 
         cronTask.setCron(null);
         cronTask.setEvery("3m");
@@ -772,6 +772,27 @@ class ITTasksApi extends AbstractITClientTest {
         Assertions.assertThatThrownBy(() -> tasksApi.cloneTask("020f755c3c082000"))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("HTTP status code: 404; Message: failed to find task: task not found");
+    }
+
+    @Test
+    void createTaskWithMoreFrom() {
+        String name = generateName("it task");
+
+        String flux = "procTotal = from(bucket: \"example-bucket\")\n"
+                + "    |> range(start: -5m)\n"
+                + "    |> filter(fn: (r) => r._measurement == \"processes\" and r._field == \"total\")"
+                + "\n\n"
+                + "procTotal";
+        Task task = tasksApi.createTaskCron(name, flux, "0 2 * * *", organization);
+
+        Assertions.assertThat(task).isNotNull();
+        Assertions.assertThat(task.getId()).isNotBlank();
+        Assertions.assertThat(task.getName()).isEqualTo(name);
+        Assertions.assertThat(task.getOrgID()).isEqualTo(organization.getId());
+        Assertions.assertThat(task.getStatus()).isEqualTo(TaskStatusType.ACTIVE);
+        Assertions.assertThat(task.getCron()).isEqualTo("0 2 * * *");
+        Assertions.assertThat(task.getEvery()).isNull();
+        Assertions.assertThat(task.getFlux()).startsWith(flux);
     }
 
     @Nonnull

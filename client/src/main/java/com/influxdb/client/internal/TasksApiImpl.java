@@ -722,10 +722,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
             repetition += "\"" + cron + "\"";
         }
 
-        int fromBegin = flux.indexOf("from");
-        String fluxWithOptions = flux.substring(0, fromBegin)
-                + String.format("option task = {name: \"%s\", %s}\n\n", name, repetition)
-                + flux.substring(fromBegin);
+        String fluxWithOptions = String.format("%s\n\noption task = {name: \"%s\", %s}", flux, name, repetition);
 
         task.setFlux(fluxWithOptions);
 
