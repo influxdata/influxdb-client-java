@@ -24,6 +24,9 @@ Update dependencies:
   - [#395](https://github.com/influxdata/influxdb-client-java/pull/395): `maven-site-plugin` to `3.12.1`
   - [#399](https://github.com/influxdata/influxdb-client-java/pull/399): `maven-project-info-reports-plugin` to `3.4.1`
 
+#### Test:
+  - [#400](https://github.com/influxdata/influxdb-client-java/pull/400): `mockito` to `4.7.0`
+
 ## 6.4.0 [2022-07-29]
   
 ### Release Notice
