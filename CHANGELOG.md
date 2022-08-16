@@ -22,6 +22,7 @@ Update dependencies:
 #### Maven Plugin:
   - [#391](https://github.com/influxdata/influxdb-client-java/pull/391): `maven-bundle-plugin` to `5.1.8`
   - [#395](https://github.com/influxdata/influxdb-client-java/pull/395): `maven-site-plugin` to `3.12.1`
+  - [#399](https://github.com/influxdata/influxdb-client-java/pull/399): `maven-project-info-reports-plugin` to `3.4.1`
 
 ## 6.4.0 [2022-07-29]
   
