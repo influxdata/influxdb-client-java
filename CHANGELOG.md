@@ -10,6 +10,7 @@ The `percentile()` function renamed to `quantile()`.
 
 ### Bug Fixes
 1. [#390](https://github.com/influxdata/influxdb-client-java/pull/390): Rename `percentile()` function renamed to `quantile()` [FluxDSL]
+1. [#398](https://github.com/influxdata/influxdb-client-java/pull/398): Append `task option` at the end of script
 
 ### Dependencies
 Update dependencies:
