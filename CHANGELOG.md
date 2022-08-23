@@ -27,6 +27,9 @@ Update dependencies:
   - [#399](https://github.com/influxdata/influxdb-client-java/pull/399): `maven-project-info-reports-plugin` to `3.4.1`
   - [#401](https://github.com/influxdata/influxdb-client-java/pull/401): `maven-javadoc-plugin` to `3.4.1`
 
+#### Provided:
+  - [#403](https://github.com/influxdata/influxdb-client-java/pull/403): `slf4j-api` to `2.0.0`
+
 #### Test:
   - [#400](https://github.com/influxdata/influxdb-client-java/pull/400): `mockito` to `4.7.0`
 
