@@ -26,6 +26,7 @@ Update dependencies:
   - [#395](https://github.com/influxdata/influxdb-client-java/pull/395): `maven-site-plugin` to `3.12.1`
   - [#399](https://github.com/influxdata/influxdb-client-java/pull/399): `maven-project-info-reports-plugin` to `3.4.1`
   - [#401](https://github.com/influxdata/influxdb-client-java/pull/401): `maven-javadoc-plugin` to `3.4.1`
+  - [#404](https://github.com/influxdata/influxdb-client-java/pull/404): `maven-checkstyle-plugin` to `3.2.0`
 
 #### Provided:
   - [#403](https://github.com/influxdata/influxdb-client-java/pull/403): `slf4j-api` to `2.0.0`
