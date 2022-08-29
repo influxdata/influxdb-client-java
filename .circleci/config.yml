@@ -49,7 +49,7 @@ commands:
       - run:
           name: "Running tests"
           command: |
-            mvn -B -U clean install -Dmaven.javadoc.skip=true -Dmaven.dokka.skip=true -Dbuild.env=CI << parameters.junit-tests >>
+            mvn -B -U clean install -Dbuild.env=CI << parameters.junit-tests >>
       - save_cache:
           name: Saving Maven Cache
           key: *cache-key
