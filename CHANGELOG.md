@@ -1,5 +1,8 @@
 ## 6.6.0 [unreleased]
 
+### Documentation
+1. [#406](https://github.com/influxdata/influxdb-client-java/pull/406): Fix compatibility of the `doclint` between JDK 8 and JDK 18
+
 ## 6.5.0 [2022-08-29]
 
 ### Breaking Changes
