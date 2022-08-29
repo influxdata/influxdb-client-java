@@ -1,4 +1,4 @@
-## 6.5.0 [unreleased]
+## 6.5.0 [2022-08-29]
 
 ### Breaking Changes
 
