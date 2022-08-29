@@ -31,7 +31,8 @@ import com.influxdb.utils.Arguments;
  * Filters the results using an expression.
  * <a href="http://bit.ly/flux-spec#filter">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  * <b>fn</b> - Function to when filtering the records. The function must accept a single parameter
@@ -40,7 +41,8 @@ import com.influxdb.utils.Arguments;
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  *  Restrictions restriction = Restrictions.and(
  *          Restrictions.measurement().equal("mem"),

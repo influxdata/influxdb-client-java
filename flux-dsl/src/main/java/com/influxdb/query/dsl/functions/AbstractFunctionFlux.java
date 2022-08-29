@@ -45,7 +45,8 @@ import static com.influxdb.query.dsl.functions.properties.FunctionsParameters.es
  * The function definition describes the implementation of a function.
  * A concrete call to this function can be created via the {@link #invoke()} method.
  *
- * <h3>Example Definition</h3>
+ * <p>
+ * <b>Example Definition</b>
  * <pre>
  * public static class MyCustomFunction extends AbstractFunctionFlux&lt;MyCustomFunction.MyCustomFunctionCall&gt; {
  *
@@ -71,7 +72,8 @@ import static com.influxdb.query.dsl.functions.properties.FunctionsParameters.es
  *     }
  * }
  * </pre>
- * <h3>Example Usage</h3>
+ * <p>
+ * <b>Example Usage</b>
  * <pre>
  * MyCustomFunction fun = new MyCustomFunction();
  *

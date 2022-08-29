@@ -36,7 +36,8 @@ import com.influxdb.utils.Arguments;
  * Join two time series together on time and the list of <i>on</i> keys.
  * <a href="http://bit.ly/flux-spec#join">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>tables</b> - Map of tables to join. Currently only two tables are allowed. [map of tables]</li>
  * <li><b>on</b> - List of tag keys that when equal produces a result set. [array of strings]</li>
@@ -44,7 +45,8 @@ import com.influxdb.utils.Arguments;
  * <b>method</b> - An optional parameter that specifies the type of join to be performed. </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux cpu = Flux.from("telegraf")
  *     .filter(Restrictions.and(Restrictions.measurement().equal("cpu"), Restrictions.field().equal("usage_user")))

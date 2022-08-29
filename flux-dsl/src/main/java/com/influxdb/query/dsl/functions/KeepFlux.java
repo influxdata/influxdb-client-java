@@ -32,7 +32,8 @@ import com.influxdb.utils.Arguments;
  * Only columns in the group key that are also specified in keep will be kept in the resulting group key.
  * <a href="http://bit.ly/flux-spec#keep">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  * <b>columns</b> - The list of columns that should be included in the resulting table.
@@ -44,7 +45,8 @@ import com.influxdb.utils.Arguments;
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

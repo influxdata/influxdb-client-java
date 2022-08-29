@@ -32,7 +32,8 @@ import com.influxdb.utils.Arguments;
  * Groups the results by a given time range.
  * <a href="http://bit.ly/flux-spec#window">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>every</b> - Duration of time between windows. Defaults to <i>period's</i> value. [duration]
  * <li><b>period</b> - Duration of the windowed partition. Defaults to <i>every's</i> value. [duration]
@@ -44,7 +45,8 @@ import com.influxdb.utils.Arguments;
  * <li><b>stopColumn</b> - Name of the column containing the window stop time. Defaults to <i>_stop</i>. [string]
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

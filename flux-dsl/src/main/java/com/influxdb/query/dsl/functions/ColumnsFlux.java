@@ -30,7 +30,8 @@ import com.influxdb.utils.Arguments;
  * The columns() function lists the column labels of input tables.
  * <a href="http://bit.ly/flux-spec#columns">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  *     <b>column</b> -
@@ -38,7 +39,8 @@ import com.influxdb.utils.Arguments;
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

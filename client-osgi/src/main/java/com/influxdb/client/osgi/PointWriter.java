@@ -72,9 +72,10 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
  *
  * <p>One of <i>point</i> or <i>points</i> must be set.</p>
  *
- * <p>Measurement name is defined by OSGi event topic if {@link Map} type is used: measure name is fragment after the
- * last slash (<tt>/</tt>) character. For example: <b>weather</b> measure is written if event topic is
- * <tt>influxdb/point/weather</tt> (in this case OSGi event filter must be changed, i.e. <tt>influxdb/point/*</tt>).</p>
+ * <p>Measurement name is defined by OSGi event topic if {@link Map} type is used: measure name is fragment after
+ * the last slash (<code>/</code>) character. For example: <b>weather</b> measure is written
+ * if event topic is <code>influxdb/point/weather</code> (in this case OSGi event filter must be changed,
+ * i.e. <code>influxdb/point/*</code>).</p>
  *
  * <p>Structured data can be decorated with host name, host address or timestamp (by configuration).</p>
  */
@@ -148,9 +149,9 @@ public class PointWriter implements EventHandler {
         String[] event_topics() default {DEFAULT_EVENT_TOPIC};
 
         /**
-         * OSGi target filter for InfluxDB connection, i.e. <tt>(alias=test)</tt>. The following properties are
-         * copied from {@link InfluxDBConnector}: <tt>organization</tt>, <tt>bucket</tt>, <tt>database</tt>,
-         * <tt>url</tt>, <tt>alias</tt>.
+         * OSGi target filter for InfluxDB connection, i.e. <code>(alias=test)</code>. The following properties are
+         * copied from {@link InfluxDBConnector}: <code>organization</code>, <code>bucket</code>, <code>database</code>,
+         * <code>url</code>, <code>alias</code>.
          */
         @AttributeDefinition(required = false, name = "InfluxDB client target",
                 description = "OSGi target filter of InfluxDB client service")
@@ -179,7 +180,8 @@ public class PointWriter implements EventHandler {
         boolean timestamp_add() default false;
 
         /**
-         * Precision used if adding timestamp, values: <tt>s</tt>, <tt>ms</tt>, <tt>us</tt>, <tt>ns</tt>.
+         * Precision used if adding timestamp, values: <code>s</code>, <code>ms</code>, <code>us</code>,
+         * <code>ns</code>.
          */
         @AttributeDefinition(required = false, name = "Precision",
                 description = "Precision used if adding timestamp")

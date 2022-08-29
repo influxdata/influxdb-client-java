@@ -32,12 +32,14 @@ import com.influxdb.utils.Arguments;
  * The output table schema will be the same as the input table.
  * <a href="http://bit.ly/flux-spec#cumulative-sum">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>columns</b> - a list of columns on which to operate [array of strings]</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

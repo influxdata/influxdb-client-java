@@ -30,12 +30,14 @@ import com.influxdb.utils.Arguments;
  * Returns the mean of the within the results.
  * <a href="http://bit.ly/flux-spec#mean">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>column</b> - The column to use to compute the mean [string]. Default to <i>_value</i>.
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

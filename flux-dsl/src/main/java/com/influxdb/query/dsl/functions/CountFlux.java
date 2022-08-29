@@ -29,12 +29,14 @@ import com.influxdb.utils.Arguments;
 /**
  * Counts the number of results. <a href="http://bit.ly/flux-spec#count">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>column</b> - The column to aggregate [string]. Default to <i>_value</i>.</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *      .from("telegraf")

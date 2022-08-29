@@ -30,7 +30,8 @@ import com.influxdb.utils.Arguments;
  * Applies a function to each row of the table.
  * <a href="http://bit.ly/flux-spec#map">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  * <b>fn</b> - The function to apply to each row.
@@ -38,7 +39,8 @@ import com.influxdb.utils.Arguments;
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Restrictions restriction = Restrictions.and(
  *     Restrictions.measurement().equal("cpu"),

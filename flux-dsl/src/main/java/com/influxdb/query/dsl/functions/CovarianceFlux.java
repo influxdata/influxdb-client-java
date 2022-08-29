@@ -31,7 +31,8 @@ import com.influxdb.utils.Arguments;
  * Covariance is an aggregate operation. Covariance computes the covariance between two columns.
  * <a href="http://bit.ly/flux-spec#covariance">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  * <b>columns</b> - List of columns on which to compute the covariance.
@@ -44,7 +45,8 @@ import com.influxdb.utils.Arguments;
  * <li><b>valueDst</b> - The column into which the result will be placed. Defaults to <i>_value`</i> [string].</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

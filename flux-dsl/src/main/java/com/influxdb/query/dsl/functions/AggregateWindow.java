@@ -31,7 +31,8 @@ import com.influxdb.utils.Arguments;
  * Applies an aggregate or selector function (any function with a column parameter) to fixed windows of time.
  * <a href="http://bit.ly/flux-spec#aggregateWindow">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  *     <li><b>every</b> - The duration of windows. [duration]</li>
  *     <li><b>fn</b> - The aggregate function used in the operation. [function]</li>
@@ -46,7 +47,8 @@ import com.influxdb.utils.Arguments;
  *     Defaults to <i>true</i>. [boolean]</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

@@ -29,7 +29,8 @@ import com.influxdb.query.dsl.Flux;
  * Convert a value to a string.
  * <a href="http://bit.ly/flux-spec#tostring">See SPEC</a>.
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  *  Flux flux = Flux
  *     .from("telegraf")

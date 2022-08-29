@@ -30,7 +30,8 @@ import com.influxdb.utils.Arguments;
  * Reduce aggregates records in each table according to the reducer.
  * <a href="http://bit.ly/flux-spec#reduce">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  * <b>fn</b> -
@@ -39,7 +40,8 @@ import com.influxdb.utils.Arguments;
  * <li><b>identity</b> - an initial value to use when creating a reducer ['a]</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Restrictions restriction = Restrictions.and(
  *     Restrictions.measurement().equal("cpu"),

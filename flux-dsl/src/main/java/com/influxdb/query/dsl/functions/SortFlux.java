@@ -31,7 +31,8 @@ import com.influxdb.utils.Arguments;
  * Sorts the results by the specified columns Default sort is ascending.
  * <a href="http://bit.ly/flux-spec#sort">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  * <b>columns</b> - List of columns used to sort; precedence from left to right.
@@ -40,7 +41,8 @@ import com.influxdb.utils.Arguments;
  * <li><b>desc</b> - Sort results descending. Default false [bool]</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

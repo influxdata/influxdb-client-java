@@ -30,7 +30,8 @@ import com.influxdb.query.dsl.utils.ImportUtils;
 /**
  * Base class defining a function invocation.
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  *  public static class MyCustomFunctionCall extends AbstractFunctionCallFlux {
  *     public MyCustomFunctionCall(@Nonnull String name) {

@@ -30,13 +30,15 @@ import com.influxdb.utils.Arguments;
  * Assigns a static value to each record.
  * <a href="http://bit.ly/flux-spec#set">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>key</b> - Label for the column to set [string].</li>
  * <li><b>value</b> - Value for the column to set [string]</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

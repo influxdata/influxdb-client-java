@@ -32,12 +32,14 @@ import com.influxdb.utils.Arguments;
  * The curve is defined as function where the domain is the record times and the range is the record values.
  * <a href="http://bit.ly/flux-spec#integral">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>unit</b> - Time duration to use when computing the integral [duration]</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

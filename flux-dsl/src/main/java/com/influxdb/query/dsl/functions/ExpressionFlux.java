@@ -30,7 +30,8 @@ import com.influxdb.utils.Arguments;
 /**
  * The custom Flux expression.
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  *     Flux.from("telegraf")
  *          .expression("map(fn: (r) =&gt; r._value * r._value)")

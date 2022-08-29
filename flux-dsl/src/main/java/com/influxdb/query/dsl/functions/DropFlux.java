@@ -31,7 +31,8 @@ import com.influxdb.utils.Arguments;
  * Drop will exclude specified columns from a table.
  * <a href="http://bit.ly/flux-spec#drop">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  * <b>columns</b> - The list of columns which should be excluded from the resulting table.
@@ -43,7 +44,8 @@ import com.influxdb.utils.Arguments;
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

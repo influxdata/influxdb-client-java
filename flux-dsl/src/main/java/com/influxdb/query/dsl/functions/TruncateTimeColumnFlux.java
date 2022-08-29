@@ -30,12 +30,14 @@ import com.influxdb.utils.Arguments;
 /**
  * Truncates all input time values in the _time to a specified unit..
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>unit</b> - Unit of time to truncate to. [unit].</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

@@ -29,7 +29,8 @@ import com.influxdb.query.dsl.Flux;
  * Sample values from a table.
  * <a href="http://bit.ly/flux-spec#sample">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>n</b> - Sample every Nth element [int]</li>
  * <li>
@@ -38,7 +39,8 @@ import com.influxdb.query.dsl.Flux;
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux.from("telegraf")
  *     .filter(and(measurement().equal("cpu"), field().equal("usage_system")))

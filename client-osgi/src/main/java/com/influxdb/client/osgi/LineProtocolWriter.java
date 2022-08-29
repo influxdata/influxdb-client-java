@@ -53,8 +53,8 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
  * <ul>
  *     <li><i>record</i> ({@link String}): value must be a single line protocol record</li>
  *     <li><i>records</i> ({@link List}): value must be a list of line protocol records</li>
- *     <li><i>precision</i> ({@link String}, optional): write precision, values: <tt>s</tt>, <tt>ms</tt>, <tt>us</tt>,
- *         <tt>ns</tt>, default: <tt>ns</tt></li>
+ *     <li><i>precision</i> ({@link String}, optional): write precision, values: <code>s</code>, <code>ms</code>,
+ *         <code>us</code>, <code>ns</code>, default: <code>ns</code></li>
  *     <li><i>organization</i> ({@link String}, optional): used to override InfluxDB organization of
  *         {@link LineProtocolWriter} service (by event).</li>
  *     <li><i>bucket</i> ({@link String}, optional): used to override InfluxDB bucket of
@@ -114,9 +114,9 @@ public class LineProtocolWriter implements EventHandler {
         String[] event_topics() default {DEFAULT_EVENT_TOPIC};
 
         /**
-         * OSGi target filter for InfluxDB connection, i.e. <tt>(alias=test)</tt>. The following properties are
-         * copied from {@link InfluxDBConnector}: <tt>organization</tt>, <tt>bucket</tt>, <tt>database</tt>,
-         * <tt>url</tt>, <tt>alias</tt>.
+         * OSGi target filter for InfluxDB connection, i.e. <code>(alias=test)</code>. The following properties are
+         * copied from {@link InfluxDBConnector}: <code>organization</code>, <code>bucket</code>, <code>database</code>,
+         * <code>url</code>, <code>alias</code>.
          */
         @AttributeDefinition(required = false, name = "InfluxDB client target",
                 description = "OSGi target filter of InfluxDB client service")

@@ -64,8 +64,8 @@ public interface InfluxQLQueryApi {
      * Executes an InfluxQL query against the legacy endpoint.
      * The value extractor is called for each resulting column to convert the string value returned by query into a
      * custom type.
-     *
-     * <h3>Example</h3>
+     * <p>
+     * <b>Example:</b>
      * <pre>
      * InfluxQLQueryResult result = influxQLQueryApi.query(
      *             new InfluxQLQuery("SELECT FIRST(\"free\") FROM \"influxql\"", DATABASE_NAME)
