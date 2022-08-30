@@ -1,5 +1,11 @@
 ## 6.6.0 [unreleased]
 
+### Dependencies
+Update dependencies:
+
+#### Build:
+  - [#408](https://github.com/influxdata/influxdb-client-java/pull/408): `logback-classic` to `1.3.0`
+
 ## 6.5.0 [2022-08-29]
 
 ### Breaking Changes
