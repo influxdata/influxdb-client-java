@@ -30,14 +30,16 @@ import com.influxdb.utils.Arguments;
  * Distinct produces the unique values for a given column.
  * <a href="http://bit.ly/flux-spec#distinct">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  * <b>column</b> - The column on which to track unique values [string]
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

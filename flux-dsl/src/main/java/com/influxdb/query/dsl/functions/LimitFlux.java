@@ -30,13 +30,15 @@ import com.influxdb.utils.Arguments;
  * Restricts the number of rows returned in the results.
  * <a href="http://bit.ly/flux-spec#limit">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>n</b> - The maximum number of records to output [int].</li>
  * <li><b>offset</b> - The number of records to skip per table [int]. Default to <i>0</i>.</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

@@ -32,7 +32,8 @@ import com.influxdb.utils.Arguments;
  * the column name in the group key will be updated.
  * <a href="http://bit.ly/flux-spec#rename">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  * <b>columns</b> - The map of columns to rename and their corresponding new names. Cannot be used with <i>fn</i>.
@@ -44,7 +45,8 @@ import com.influxdb.utils.Arguments;
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Map&lt;String, String&gt; map = new HashMap&lt;&gt;();
  * map.put("host", "server");

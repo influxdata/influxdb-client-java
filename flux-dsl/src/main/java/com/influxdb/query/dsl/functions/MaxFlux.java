@@ -30,12 +30,14 @@ import com.influxdb.utils.Arguments;
  * Returns the max value within the results.
  * <a href="http://bit.ly/flux-spec#max">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>column</b> - The column to use to calculate the maximum value [string]. Default is <i>_value</i>.
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

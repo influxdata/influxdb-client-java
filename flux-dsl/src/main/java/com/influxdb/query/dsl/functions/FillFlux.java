@@ -30,7 +30,8 @@ import com.influxdb.utils.Arguments;
  * Replaces all null values in input tables with a non-null value.
  * <a href="http://bit.ly/flux-spec#fill">See SPEC</a>.
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

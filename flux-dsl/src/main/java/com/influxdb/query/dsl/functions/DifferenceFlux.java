@@ -31,7 +31,8 @@ import com.influxdb.utils.Arguments;
  * Difference computes the difference between subsequent non null records.
  * <a href="http://bit.ly/flux-spec#difference">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li>
  * <b>nonNegative</b> - Indicates if the derivative is allowed to be negative.
@@ -44,7 +45,8 @@ import com.influxdb.utils.Arguments;
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

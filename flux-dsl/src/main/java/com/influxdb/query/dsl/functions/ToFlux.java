@@ -31,7 +31,8 @@ import com.influxdb.utils.Arguments;
  * The To operation takes data from a stream and writes it to a bucket.
  * <a href="http://bit.ly/flux-spec#to">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  *     <li><b>bucket</b> - The bucket to which data will be written. [string]</li>
  *     <li><b>bucketID</b> - The bucket to which data will be written. [string]</li>
@@ -44,7 +45,8 @@ import com.influxdb.utils.Arguments;
  *     <li><b>fieldFn</b> - Function that takes a record from the input table and returns an object.</li>
  * </ul>
  *
- * <h3>Examples</h3>
+ * <p>
+ * <b>Examples</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

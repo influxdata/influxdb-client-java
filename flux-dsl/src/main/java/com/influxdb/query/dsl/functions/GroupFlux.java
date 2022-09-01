@@ -31,13 +31,15 @@ import com.influxdb.utils.Arguments;
  * Groups results by a user-specified set of tags.
  * <a href="http://bit.ly/flux-spec#group">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>columns</b> - List of columns used to calculate the new group key. Default <i>[]</i> [array of strings]</li>
  * <li><b>mode</b> -  The grouping mode, can be one of <i>by</i> or <i>except</i>. The default is <i>by</i> [string].
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux.from("telegraf")
  *     .range(-30L, ChronoUnit.MINUTES)

@@ -32,7 +32,8 @@ import com.influxdb.utils.Arguments;
  * as a float.
  * <a href="http://bit.ly/flux-spec#quantile-aggregate">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  *     <li><b>column</b> - column to aggregate. Defaults to <i>_value</i>. [string]</li>
  *     <li><b>quantile</b> - value between 0 and 1 indicating the desired quantile. [float]</li>
@@ -43,7 +44,8 @@ import com.influxdb.utils.Arguments;
  *     [float]</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

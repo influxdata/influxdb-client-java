@@ -37,8 +37,8 @@ import com.influxdb.utils.Arguments;
 
 /**
  * A container holding a list of {@link Expression}s.
- *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * VariableAssignment a = Flux.from("test1").asVariable("a");
  * VariableAssignment b = Flux.from("test2").asVariable("b");

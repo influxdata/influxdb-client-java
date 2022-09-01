@@ -32,7 +32,8 @@ import com.influxdb.utils.Arguments;
  * Filters the results by time boundaries.
  * <a href="http://bit.ly/flux-spec#range">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>start</b> - Specifies the oldest time to be included in the results [duration or timestamp]</li>
  * <li>
@@ -41,7 +42,8 @@ import com.influxdb.utils.Arguments;
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

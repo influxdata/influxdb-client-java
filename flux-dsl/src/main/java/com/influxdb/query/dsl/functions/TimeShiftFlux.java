@@ -32,14 +32,16 @@ import com.influxdb.utils.Arguments;
  * Shift add a fixed duration to time columns.
  * <a href="http://bit.ly/flux-spec#timeshift">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>duration</b> - The amount to add to each time value [duration]</li>
  * <li><b>columns</b> - The list of all columns that should be shifted.
  * Defaults `["_start", "_stop", "_time"]` [array of strings].</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

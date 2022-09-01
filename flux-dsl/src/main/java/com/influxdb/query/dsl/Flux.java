@@ -98,7 +98,8 @@ import com.influxdb.utils.Arguments;
  * <br>
  * <a href="http://bit.ly/flux-spec">Flux Specification</a>
  *
- * <h3>The functions:</h3>
+ * <p>
+ * <b>The functions:</b>
  * <ul>
  * <li>{@link AggregateWindow}</li>
  * <li>{@link FromFlux}</li>
@@ -205,7 +206,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Applies an aggregate or selector function to fixed windows of time.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link AggregateWindow#withEvery(Long, ChronoUnit)}</li>
      * <li>{@link AggregateWindow#withEvery(String)}</li>
@@ -226,7 +228,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Applies an aggregate or selector function to fixed windows of time.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link AggregateWindow#withEvery(Long, ChronoUnit)}</li>
      * <li>{@link AggregateWindow#withEvery(String)}</li>
@@ -279,7 +282,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Join two time series together on time and the list of tags.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link JoinFlux#withTable(String, Flux)}</li>
      * <li>{@link JoinFlux#withOn(String)}</li>
@@ -327,7 +331,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * It will return a table containing only columns that are specified.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link KeepFlux#withColumns(String[])}</li>
      * <li>{@link KeepFlux#withFunction(String)}</li>
@@ -423,7 +428,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Covariance computes the covariance between two columns.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link CovarianceFlux#withColumns(String[])}</li>
      * <li>{@link CovarianceFlux#withColumns(Collection)}</li>
@@ -546,7 +552,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Computes a running sum for non null records in the table.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link CumulativeSumFlux#withColumns(String[])}</li>
      * <li>{@link CumulativeSumFlux#withColumns(Collection)}</li>
@@ -587,7 +594,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Computes the time based difference between subsequent non null records.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link DerivativeFlux#withUnit(Long, ChronoUnit)}</li>
      * <li>{@link DerivativeFlux#withNonNegative(boolean)}</li>
@@ -620,7 +628,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Difference computes the difference between subsequent non null records.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link DifferenceFlux#withNonNegative(boolean)}</li>
      * <li>{@link DifferenceFlux#withColumns(String[])}</li>
@@ -697,7 +706,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Distinct produces the unique values for a given column.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link DistinctFlux#withColumn(String)}</li>
      * <li>{@link DistinctFlux#withPropertyNamed(String)}</li>
@@ -726,7 +736,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Drop will exclude specified columns from a table.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link DropFlux#withColumns(String[])}</li>
      * <li>{@link DropFlux#withFunction(String)}</li>
@@ -779,7 +790,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Duplicate will duplicate a specified column in a table.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link DuplicateFlux#withAs(String)}</li>
      * <li>{@link DuplicateFlux#withColumn(String)} (String)}</li>
@@ -798,7 +810,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Duplicate will duplicate a specified column in a table.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link DuplicateFlux#withAs(String)}</li>
      * <li>{@link DuplicateFlux#withColumn(String)} (String)}</li>
@@ -819,7 +832,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Replaces all null values in input tables with a non-null value.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link FillFlux#withUsePrevious(Boolean)}</li>
      * <li>{@link FillFlux#withColumn(String)}</li>
@@ -847,7 +861,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Returns the first result of the query.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link FilterFlux#withRestrictions(Restrictions)}</li>
      * <li>{@link FilterFlux#withPropertyNamed(String)}</li>
@@ -889,7 +904,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Groups results by a user-specified set of tags.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link GroupFlux#withBy(String[])}</li>
      * <li>{@link GroupFlux#withBy(Collection)}</li>
@@ -989,7 +1005,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * For each aggregate column, it outputs the area under the curve of non null records.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link IntegralFlux#withUnit(Long, ChronoUnit)}</li>
      * <li>{@link IntegralFlux#withPropertyNamed(String)}</li>
@@ -1024,7 +1041,8 @@ public abstract class Flux implements HasImports, Expression {
      * The `interpolate.linear` function inserts rows at regular intervals using linear interpolation to determine
      * values for inserted rows.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link InterpolateLinearFlux#withEvery(long, ChronoUnit)}</li>
      * <li>{@link InterpolateLinearFlux#withPropertyNamed(String)}</li>
@@ -1079,7 +1097,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Restricts the number of rows returned in the results.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link LimitFlux#withN(int)}</li>
      * <li>{@link LimitFlux#withPropertyNamed(String)}</li>
@@ -1123,7 +1142,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Applies a function to each row of the table.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link MapFlux#withFunction(String)}</li>
      * <li>{@link MapFlux#withPropertyNamed(String)}</li>
@@ -1216,7 +1236,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Quantile is both an aggregate operation and a selector operation depending on selected options.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link QuantileFlux#withColumn(String)}</li>
      * <li>{@link QuantileFlux#withQuantile(Float)}</li>
@@ -1311,7 +1332,8 @@ public abstract class Flux implements HasImports, Expression {
      * Pivot collects values stored vertically (column-wise) in a table
      * and aligns them horizontally (row-wise) into logical sets.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link PivotFlux#withRowKey(String[])}</li>
      * <li>{@link PivotFlux#withRowKey(Collection)}</li>
@@ -1367,7 +1389,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Filters the results by time boundaries.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link RangeFlux#withStart(Instant)}</li>
      * <li>{@link RangeFlux#withStart(Long, ChronoUnit)}</li>
@@ -1472,7 +1495,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Reduce aggregates records in each table according to the reducer.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link ReduceFlux#withFunction(String)} </li>
      * <li>{@link ReduceFlux#withIdentity(String)}</li>
@@ -1498,7 +1522,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Rename will rename specified columns in a table.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link RenameFlux#withColumns(Map)} </li>
      * <li>{@link RenameFlux#withFunction(String)}</li>
@@ -1540,7 +1565,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Sample values from a table.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link SampleFlux#withN(int)}</li>
      * <li>{@link SampleFlux#withPos(int)}</li>
@@ -1592,7 +1618,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Assigns a static value to each record.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link SetFlux#withKeyValue(String, String)}</li>
      * <li>{@link SetFlux#withPropertyNamed(String)}</li>
@@ -1622,7 +1649,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Shift add a fixed duration to time columns.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link TimeShiftFlux#withDuration(Long, ChronoUnit)}</li>
      * <li>{@link TimeShiftFlux#withColumns(String[])}</li>
@@ -1851,7 +1879,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Caps the number of records in output tables.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link TailFlux#withN(int)}</li>
      * <li>{@link TailFlux#withPropertyNamed(String)}</li>
@@ -1895,7 +1924,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * To operation takes data from a stream and writes it to a bucket.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link ToFlux#withBucket(String)}</li>
      * <li>{@link ToFlux#withBucketID(String)}</li>
@@ -2169,7 +2199,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Groups the results by a given time range.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link WindowFlux#withEvery(Long, ChronoUnit)}</li>
      * <li>{@link WindowFlux#withPeriod(Long, ChronoUnit)}</li>
@@ -2351,7 +2382,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Yield a query results to yielded results.
      *
-     * <h3>The parameters had to be defined by:</h3>
+     * <p>
+     * <b>The parameters had to be defined by:</b>
      * <ul>
      * <li>{@link YieldFlux#withName(String)}</li>
      * <li>{@link YieldFlux#withPropertyNamed(String)}</li>
@@ -2421,7 +2453,8 @@ public abstract class Flux implements HasImports, Expression {
     /**
      * Creates a piped function call.
      *
-     * <h3>Example Definition</h3>
+     * <p>
+     * <b>Example Definition</b>
      * <pre>
      * public static class MultByXFunction extends AbstractFunctionFlux&lt;MultByXFunction.MultByXFunctionCall&gt; {
      *
@@ -2447,7 +2480,8 @@ public abstract class Flux implements HasImports, Expression {
      *     }
      * }
      * </pre>
-     * <h3>Example Usage</h3>
+     * <p>
+     * <b>Example Usage</b>
      * <pre>
      * MultByXFunction multByX = new MultByXFunction();
      *

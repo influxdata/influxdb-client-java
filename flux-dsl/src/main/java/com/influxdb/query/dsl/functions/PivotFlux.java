@@ -32,7 +32,8 @@ import com.influxdb.utils.Arguments;
  * into logical sets.
  * <a href="http://bit.ly/flux-spec#pivot">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>rowKey</b> - List of columns used to uniquely identify a row for the output. [array of strings]</li>
  * <li><b>columnKey</b> -
@@ -41,7 +42,8 @@ import com.influxdb.utils.Arguments;
  * </li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux.from("telegraf")
  *     .pivot()

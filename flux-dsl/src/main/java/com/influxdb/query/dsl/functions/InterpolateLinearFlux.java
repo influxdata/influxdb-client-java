@@ -30,7 +30,8 @@ import com.influxdb.utils.Arguments;
 /**
  * Inserts rows at regular intervals using linear interpolation to determine values for inserted rows.
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  *         Flux flux = Flux
  *                 .from("telegraf")

@@ -30,8 +30,8 @@ import com.influxdb.query.dsl.utils.ImportUtils;
 
 /**
  * Hold the variable name and expression of an assignment.
- *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * VariableAssignment a = Flux.from("test1").asVariable("a");
  * VariableAssignment b = Flux.from("test2").asVariable("b");

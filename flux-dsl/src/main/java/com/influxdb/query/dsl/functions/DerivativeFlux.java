@@ -32,7 +32,8 @@ import com.influxdb.utils.Arguments;
  * Computes the time based difference between subsequent non null records.
  * <a href="http://bit.ly/flux-spec#derivative">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>unit</b> - The time duration to use for the result [duration]</li>
  * <li><b>nonNegative</b> - Indicates if the derivative is allowed to be negative [boolean].</li>
@@ -40,7 +41,8 @@ import com.influxdb.utils.Arguments;
  * <li><b>timeColumn</b> - The source column for the time values. Defaults to `_time` [string].</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

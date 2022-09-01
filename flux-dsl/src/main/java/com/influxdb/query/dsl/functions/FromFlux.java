@@ -32,13 +32,15 @@ import com.influxdb.utils.Arguments;
  * From produces a stream of tables from the specified bucket.
  * <a href="http://bit.ly/flux-spec#from">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>bucket</b> - The name of the bucket to query [string]</li>
  * <li><b>hosts</b> - array of strings from(bucket:"telegraf", hosts:["host1", "host2"])</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux.from("telegraf");
  *

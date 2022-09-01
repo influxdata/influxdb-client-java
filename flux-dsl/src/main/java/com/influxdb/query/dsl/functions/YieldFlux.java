@@ -30,12 +30,14 @@ import com.influxdb.utils.Arguments;
  * Yield a query results to yielded results.
  * <a href="http://bit.ly/flux-spec#yield">See SPEC</a>.
  *
- * <h3>Options</h3>
+ * <p>
+ * <b>Options</b>
  * <ul>
  * <li><b>name</b> - The unique name to give to yielded results [string].</li>
  * </ul>
  *
- * <h3>Example</h3>
+ * <p>
+ * <b>Example</b>
  * <pre>
  * Flux flux = Flux
  *     .from("telegraf")

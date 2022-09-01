@@ -50,8 +50,8 @@ import org.osgi.service.metatype.annotations.ObjectClassDefinition;
  *     <li>InfluxDB V2 client is created (by username and password) otherwise.</li>
  * </ol>
  *
- * <p>The following connector properties are added to InfluxDB client too: <tt>organization</tt>, <tt>bucket</tt>,
- * <tt>database</tt>, <tt>url</tt> and <tt>alias</tt>.</p>
+ * <p>The following connector properties are added to InfluxDB client too: <code>organization</code>,
+ * <code>bucket</code>, <code>database</code>, <code>url</code> and <code>alias</code>.</p>
  */
 @Component(immediate = true, configurationPolicy = ConfigurationPolicy.REQUIRE, service = InfluxDBConnector.class)
 @Designate(ocd = InfluxDBConnector.Config.class)
@@ -77,7 +77,7 @@ public class InfluxDBConnector {
         String alias();
 
         /**
-         * InfluxDB URL, i.e. <tt>http://localhost:8086</tt>
+         * InfluxDB URL, i.e. <code>http://localhost:8086</code>
          */
         @AttributeDefinition(name = "InfluxDB URL")
         String url();
