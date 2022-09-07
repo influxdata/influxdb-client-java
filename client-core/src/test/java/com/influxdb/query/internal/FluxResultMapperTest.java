@@ -114,6 +114,36 @@ class FluxResultMapperTest {
         Assertions.assertThat(bean.value).isEqualByComparingTo(new BigDecimal(20));
     }
 
+    @Test
+    public void numberConversion() {
+
+        FluxRecord record = new FluxRecord(0);
+
+        record.getValues().put("fieldLong", 55);
+        record.getValues().put("fieldDouble", 55);
+        record.getValues().put("fieldInt", 55);
+        NumberFields bean = mapper.toPOJO(record, NumberFields.class);
+        Assertions.assertThat(bean.fieldLong).isEqualTo(55L);
+        Assertions.assertThat(bean.fieldDouble).isEqualTo(55.0);
+        Assertions.assertThat(bean.fieldInt).isEqualTo(55);
+
+        record.getValues().put("fieldLong", 55.0);
+        record.getValues().put("fieldDouble", 55.0);
+        record.getValues().put("fieldInt", 55.0);
+        bean = mapper.toPOJO(record, NumberFields.class);
+        Assertions.assertThat(bean.fieldLong).isEqualTo(55L);
+        Assertions.assertThat(bean.fieldDouble).isEqualTo(55.0);
+        Assertions.assertThat(bean.fieldInt).isEqualTo(55);
+
+        record.getValues().put("fieldLong", 55L);
+        record.getValues().put("fieldDouble", 55L);
+        record.getValues().put("fieldInt", 55L);
+        bean = mapper.toPOJO(record, NumberFields.class);
+        Assertions.assertThat(bean.fieldLong).isEqualTo(55L);
+        Assertions.assertThat(bean.fieldDouble).isEqualTo(55.0);
+        Assertions.assertThat(bean.fieldInt).isEqualTo(55);
+    }
+
     public static class BigDecimalBean {
         @Column(name = "value1")
         BigDecimal value1;
@@ -165,5 +195,14 @@ class FluxResultMapperTest {
 
         @Column(name = "value")
         BigDecimal value;
+    }
+
+    public static class NumberFields {
+        @Column
+        private Long fieldLong;
+        @Column
+        private Double fieldDouble;
+        @Column
+        private Double fieldInt;
     }
 }

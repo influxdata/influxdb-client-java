@@ -129,16 +129,16 @@ public class FluxResultMapper {
             }
 
             //convert primitives
-            if (double.class.isAssignableFrom(fieldType)) {
-                field.setDouble(object, toDoubleValue(value));
+            if (double.class.isAssignableFrom(fieldType) || Double.class.isAssignableFrom(fieldType)) {
+                field.set(object, toDoubleValue(value));
                 return;
             }
-            if (long.class.isAssignableFrom(fieldType)) {
-                field.setLong(object, toLongValue(value));
+            if (long.class.isAssignableFrom(fieldType) || Long.class.isAssignableFrom(fieldType)) {
+                field.set(object, toLongValue(value));
                 return;
             }
-            if (int.class.isAssignableFrom(fieldType)) {
-                field.setInt(object, toIntValue(value));
+            if (int.class.isAssignableFrom(fieldType) || Integer.class.isAssignableFrom(fieldType)) {
+                field.set(object, toIntValue(value));
                 return;
             }
             if (boolean.class.isAssignableFrom(fieldType)) {
@@ -172,7 +172,7 @@ public class FluxResultMapper {
             return (double) value;
         }
 
-        return (Double) value;
+        return ((Number) value).doubleValue();
     }
 
     private long toLongValue(final Object value) {
@@ -181,7 +181,7 @@ public class FluxResultMapper {
             return (long) value;
         }
 
-        return ((Double) value).longValue();
+        return ((Number) value).longValue();
     }
 
     private int toIntValue(final Object value) {
@@ -190,7 +190,7 @@ public class FluxResultMapper {
             return (int) value;
         }
 
-        return ((Double) value).intValue();
+        return ((Number) value).intValue();
     }
 
     private BigDecimal toBigDecimalValue(final Object value) {
