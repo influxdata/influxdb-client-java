@@ -6,6 +6,9 @@
 ### Dependencies
 Update dependencies:
 
+#### Maven Plugin:
+  - [#413](https://github.com/influxdata/influxdb-client-java/pull/413): `versions-maven-plugin` to `2.12.0`
+
 #### Test:
   - [#408](https://github.com/influxdata/influxdb-client-java/pull/408): `logback-classic` to `1.3.0`
 
