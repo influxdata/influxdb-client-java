@@ -6,6 +6,9 @@
 ### Dependencies
 Update dependencies:
 
+#### Build:
+  - [#412](https://github.com/influxdata/influxdb-client-java/pull/412): `akka` to `2.6.20`
+  
 #### Test:
   - [#408](https://github.com/influxdata/influxdb-client-java/pull/408): `logback-classic` to `1.3.0`
 
