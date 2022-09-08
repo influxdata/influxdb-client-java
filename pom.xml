@@ -637,12 +637,6 @@
                 <version>${junit-jupiter.version}</version>
             </dependency>
 
-<!--            <dependency>-->
-<!--                <groupId>org.junit.platform</groupId>-->
-<!--                <artifactId>junit-platform-runner</artifactId>-->
-<!--                <version>1.9.0</version>-->
-<!--            </dependency>-->
-
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest</artifactId>

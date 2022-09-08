@@ -57,7 +57,6 @@ import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
 /**
  * @author Jakub Bednar (24/01/2020 09:40)
  */
-
 @EnabledIfSystemProperty(named = "clientBackpressure", matches = "true")
 class ITBackpressure extends AbstractITWrite {
 
