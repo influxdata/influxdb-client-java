@@ -203,6 +203,6 @@ class FluxResultMapperTest {
         @Column
         private Double fieldDouble;
         @Column
-        private Double fieldInt;
+        private Integer fieldInt;
     }
 }
