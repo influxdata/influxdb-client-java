@@ -54,13 +54,10 @@ import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (21/09/2018 11:36)
  */
-@RunWith(JUnitPlatform.class)
 class WriteApiTest extends AbstractInfluxDBClientTest {
 
     private WriteApi writeApi;

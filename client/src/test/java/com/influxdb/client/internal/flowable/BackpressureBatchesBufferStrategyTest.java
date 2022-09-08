@@ -13,15 +13,12 @@ import io.reactivex.rxjava3.subscribers.DefaultSubscriber;
 import io.reactivex.rxjava3.subscribers.TestSubscriber;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import static io.reactivex.rxjava3.core.BackpressureOverflowStrategy.DROP_OLDEST;
 
 /**
  * @author Jakub Bednar (bednar@github) (29/06/2022 07:54)
  */
-@RunWith(JUnitPlatform.class)
 class BackpressureBatchesBufferStrategyTest {
 
     @Test

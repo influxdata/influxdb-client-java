@@ -27,12 +27,10 @@ import javax.annotation.Nonnull;
 import com.influxdb.query.dsl.functions.AbstractFunctionCallFlux;
 import com.influxdb.query.dsl.functions.AbstractFunctionFlux;
 import com.influxdb.query.dsl.functions.FreestyleExpression;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
-@RunWith(JUnitPlatform.class)
 public class AbstractFunctionFluxTest {
 
     @Test

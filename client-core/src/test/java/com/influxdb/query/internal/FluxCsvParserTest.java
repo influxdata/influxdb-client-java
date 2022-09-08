@@ -44,15 +44,12 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * @author Jakub Bednar (bednar@github) (16/07/2018 12:26)
  */
-@RunWith(JUnitPlatform.class)
 class FluxCsvParserTest {
 
     private static final Logger LOG = Logger.getLogger(FluxCsvParserTest.class.getName());

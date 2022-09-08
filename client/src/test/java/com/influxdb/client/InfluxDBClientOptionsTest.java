@@ -30,13 +30,10 @@ import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 10:38)
  */
-@RunWith(JUnitPlatform.class)
 class InfluxDBClientOptionsTest {
 
     @Test

@@ -40,13 +40,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (27/03/2019 09:46)
  */
-@RunWith(JUnitPlatform.class)
 class ITVariablesApi extends AbstractITClientTest {
 
     private VariablesApi variablesApi;

@@ -36,13 +36,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (03/16/2022 08:28)
  */
-@RunWith(JUnitPlatform.class)
 class QueryReactiveApiTest extends AbstractMockServerTest {
 
     private InfluxDBClientReactive influxDBClient;

@@ -33,13 +33,10 @@ import com.influxdb.client.write.WriteParameters;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (12/11/2020 10:25)
  */
-@RunWith(JUnitPlatform.class)
 class WriteApiBlockingTest extends AbstractInfluxDBClientTest {
 
     @Test

@@ -38,13 +38,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (22/01/2019 08:23)
  */
-@RunWith(JUnitPlatform.class)
 class ITScraperTargetsApi extends AbstractITClientTest {
 
     private ScraperTargetsApi scraperTargetsApi;

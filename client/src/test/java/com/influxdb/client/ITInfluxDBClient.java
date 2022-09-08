@@ -26,7 +26,6 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 
-import com.influxdb.LogLevel;
 import com.influxdb.client.domain.HealthCheck;
 import com.influxdb.client.domain.OnboardingRequest;
 import com.influxdb.client.domain.OnboardingResponse;
@@ -41,13 +40,10 @@ import com.influxdb.query.FluxTable;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:37)
  */
-@RunWith(JUnitPlatform.class)
 class ITInfluxDBClient extends AbstractITClientTest {
 
     @Test

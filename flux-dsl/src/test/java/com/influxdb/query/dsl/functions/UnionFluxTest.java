@@ -23,15 +23,13 @@ package com.influxdb.query.dsl.functions;
 
 import com.influxdb.query.dsl.Expressions;
 import com.influxdb.query.dsl.Flux;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (29/06/2018 10:03)
  */
-@RunWith(JUnitPlatform.class)
 class UnionFluxTest {
 
     @Test

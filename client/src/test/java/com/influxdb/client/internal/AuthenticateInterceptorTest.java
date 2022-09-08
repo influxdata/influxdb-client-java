@@ -37,13 +37,10 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (12/10/2018 12:50)
  */
-@RunWith(JUnitPlatform.class)
 class AuthenticateInterceptorTest extends AbstractMockServerTest {
 
     private String influxDB_URL;

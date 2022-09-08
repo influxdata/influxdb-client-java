@@ -25,13 +25,10 @@ import io.reactivex.rxjava3.core.BackpressureOverflowStrategy;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (21/09/2018 10:35)
  */
-@RunWith(JUnitPlatform.class)
 class WriteOptionsTest {
 
     @Test

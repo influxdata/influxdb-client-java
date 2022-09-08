@@ -46,8 +46,6 @@ import kotlinx.coroutines.channels.toList
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.platform.runner.JUnitPlatform
-import org.junit.runner.RunWith
 import java.net.ConnectException
 import java.time.Instant
 import java.util.*
@@ -55,7 +53,6 @@ import java.util.*
 /**
  * @author Jakub Bednar (bednar@github) (31/10/2018 07:16)
  */
-@RunWith(JUnitPlatform::class)
 internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
     private lateinit var bucket: Bucket

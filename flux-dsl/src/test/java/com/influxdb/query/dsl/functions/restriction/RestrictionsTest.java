@@ -21,19 +21,17 @@
  */
 package com.influxdb.query.dsl.functions.restriction;
 
-import com.influxdb.query.dsl.Flux;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
-
 import java.util.HashMap;
 import java.util.Map;
+
+import com.influxdb.query.dsl.Flux;
+
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * @author Jakub Bednar (bednar@github) (09/10/2018 10:33)
  */
-@RunWith(JUnitPlatform.class)
 class RestrictionsTest {
 
     @Test
