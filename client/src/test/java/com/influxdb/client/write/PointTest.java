@@ -294,6 +294,19 @@ class PointTest {
     }
 
     @Test
+    void timeGetTime() {
+
+        Instant time = Instant.parse("2022-06-12T10:26:03.800123456Z");
+
+        Point point = Point.measurement("h2o")
+                .addTag("location", "europe")
+                .addField("level", 2)
+                .time(time, WritePrecision.NS);
+
+        Assertions.assertThat(point.getTime()).isEqualTo(BigInteger.valueOf(1655029563800123456L));
+    }
+
+    @Test
     void defaultTags() {
 
         Point point = Point.measurement("h2o")
