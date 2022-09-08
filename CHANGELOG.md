@@ -7,7 +7,7 @@
 Update dependencies:
 
 #### Build:
-  - [#412](https://github.com/influxdata/influxdb-client-java/pull/412): `akka` to `2.6.20`
+  - [#412](https://github.com/influxdata/influxdb-client-java/pull/412), [#416](https://github.com/influxdata/influxdb-client-java/pull/416): `akka` to `2.6.20`
   
 #### Maven Plugin:
   - [#413](https://github.com/influxdata/influxdb-client-java/pull/413): `versions-maven-plugin` to `2.12.0`
