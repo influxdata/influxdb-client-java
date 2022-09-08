@@ -1,5 +1,8 @@
 ## 6.6.0 [unreleased]
 
+### Features
+1. [#419](https://github.com/influxdata/influxdb-client-java/pull/419): Add possibility to get time from `Point` data structure
+
 ### Documentation
 1. [#406](https://github.com/influxdata/influxdb-client-java/pull/406): Fix compatibility of the `doclint` between JDK 8 and JDK 18
 
