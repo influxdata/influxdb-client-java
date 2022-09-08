@@ -14,6 +14,7 @@ Update dependencies:
 
 #### Test:
   - [#408](https://github.com/influxdata/influxdb-client-java/pull/408): `logback-classic` to `1.3.0`
+  - [#417](https://github.com/influxdata/influxdb-client-java/pull/417): `mockito` to `4.8.0`
 
 ## 6.5.0 [2022-08-29]
 
