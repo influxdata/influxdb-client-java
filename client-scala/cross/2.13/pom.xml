@@ -73,7 +73,7 @@
 
   <properties>
     <scoverage-maven-plugin.version>1.4.11</scoverage-maven-plugin.version>
-    <scala.version>2.12.17</scala.version>
+    <scala.version>2.13.8</scala.version>
     <akka.version>2.6.20</akka.version>
   </properties>
 
