@@ -13,6 +13,9 @@ Update dependencies:
 #### Maven Plugin:
   - [#413](https://github.com/influxdata/influxdb-client-java/pull/413): `versions-maven-plugin` to `2.12.0`
 
+#### Provided:
+  - [#424](https://github.com/influxdata/influxdb-client-java/pull/424): `slf4j-api` to `2.0.1`
+
 #### Test:
   - [#408](https://github.com/influxdata/influxdb-client-java/pull/408): `logback-classic` to `1.3.0`
   - [#417](https://github.com/influxdata/influxdb-client-java/pull/417): `mockito` to `4.8.0`
