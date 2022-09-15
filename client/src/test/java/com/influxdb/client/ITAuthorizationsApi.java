@@ -39,13 +39,10 @@ import com.influxdb.exceptions.NotFoundException;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (17/09/2018 12:02)
  */
-@RunWith(JUnitPlatform.class)
 class ITAuthorizationsApi extends AbstractITClientTest {
 
     private static final Logger LOG = Logger.getLogger(ITAuthorizationsApi.class.getName());

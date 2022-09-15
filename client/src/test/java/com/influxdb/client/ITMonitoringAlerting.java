@@ -45,13 +45,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (25/09/2019 09:41)
  */
-@RunWith(JUnitPlatform.class)
 class ITMonitoringAlerting extends AbstractITClientTest {
 
     private MockServerExtension mockServerExtension;

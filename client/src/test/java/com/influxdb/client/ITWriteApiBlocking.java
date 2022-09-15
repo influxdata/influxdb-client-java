@@ -34,13 +34,10 @@ import com.influxdb.query.FluxTable;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (16/07/2019 07:13)
  */
-@RunWith(JUnitPlatform.class)
 class ITWriteApiBlocking extends AbstractITWrite {
 
     @Test

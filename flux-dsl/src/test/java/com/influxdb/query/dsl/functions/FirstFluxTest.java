@@ -21,19 +21,14 @@
  */
 package com.influxdb.query.dsl.functions;
 
-import java.util.HashMap;
-
 import com.influxdb.query.dsl.Flux;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (25/06/2018 09:40)
  */
-@RunWith(JUnitPlatform.class)
 class FirstFluxTest {
 
     @Test

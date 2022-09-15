@@ -29,14 +29,11 @@ import com.influxdb.test.AbstractTest;
 import okhttp3.OkHttpClient;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import retrofit2.Retrofit;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:21)
  */
-@RunWith(JUnitPlatform.class)
 class InfluxDBClientReactiveFactoryTest extends AbstractTest {
 
     @Test

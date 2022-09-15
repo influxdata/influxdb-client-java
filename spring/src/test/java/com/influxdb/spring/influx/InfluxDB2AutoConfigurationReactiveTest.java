@@ -26,8 +26,6 @@ import com.influxdb.client.reactive.InfluxDBClientReactive;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 
@@ -36,7 +34,6 @@ import org.springframework.boot.test.context.runner.ApplicationContextRunner;
  *
  * @author Jakub Bednar (bednar@github) (07/05/2019 12:59)
  */
-@RunWith(JUnitPlatform.class)
 class InfluxDB2AutoConfigurationReactiveTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

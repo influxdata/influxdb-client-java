@@ -49,13 +49,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (25/09/2018 13:39)
  */
-@RunWith(JUnitPlatform.class)
 class ITWriteQueryApi extends AbstractITClientTest {
 
     private static final Logger LOG = Logger.getLogger(ITWriteQueryApi.class.getName());

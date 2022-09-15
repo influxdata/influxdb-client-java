@@ -24,8 +24,6 @@ package com.influxdb.spring.health;
 import com.influxdb.client.InfluxDBClient;
 
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.springframework.boot.actuate.autoconfigure.health.HealthContributorAutoConfiguration;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
@@ -40,7 +38,6 @@ import static org.mockito.Mockito.mock;
  *
  * @author Jakub Bednar (bednar@github) (07/05/2019 14:59)
  */
-@RunWith(JUnitPlatform.class)
 class InfluxDB2HealthIndicatorAutoConfigurationTest {
 
     private final ApplicationContextRunner contextRunner = new ApplicationContextRunner()

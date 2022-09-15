@@ -23,6 +23,10 @@ Update dependencies:
 #### Test:
   - [#422](https://github.com/influxdata/influxdb-client-java/pull/422): `logback-classic` to `1.3.1`
   - [#417](https://github.com/influxdata/influxdb-client-java/pull/417): `mockito` to `4.8.0`
+               
+Remove dependencies:
+#### Test:
+  - [#418](https://github.com/influxdata/influxdb-client-java/pull/418): `junit-platform-runner`
 
 ## 6.5.0 [2022-08-29]
 

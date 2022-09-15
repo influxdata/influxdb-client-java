@@ -28,18 +28,16 @@ import java.time.Instant;
 import com.influxdb.client.benchmark.BenchmarkOptions;
 import com.influxdb.client.benchmark.ClientBenchmark;
 import com.influxdb.client.domain.Bucket;
+
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * Client benchmark test
  */
-@RunWith(JUnitPlatform.class)
 class ITBenchmarkTest extends AbstractITClientTest {
 
     private BucketsApi bucketsApi;

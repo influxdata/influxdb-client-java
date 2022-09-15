@@ -26,22 +26,20 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.google.gson.Gson;
 import com.influxdb.client.domain.Dialect;
 import com.influxdb.client.domain.Query;
-import static com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 
+import com.google.gson.Gson;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
+
+import static com.influxdb.client.internal.AbstractInfluxDBClient.DEFAULT_DIALECT;
 
 /**
  * @author Jakub Bednar (bednar@github) (07/05/2019 09:17)
  */
-@RunWith(JUnitPlatform.class)
 class QueryApiTest extends AbstractInfluxDBClientTest {
 
     @Test

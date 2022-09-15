@@ -26,10 +26,7 @@ import com.influxdb.LogLevel;
 import okhttp3.OkHttpClient;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
-@RunWith(JUnitPlatform.class)
 class TestConnectionString extends AbstractITFluxClient {
     @Test
     void connectionStringTest() {

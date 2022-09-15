@@ -29,14 +29,11 @@ import okhttp3.OkHttpClient
 import org.assertj.core.api.Assertions
 import org.assertj.core.api.AssertionsForClassTypes
 import org.junit.jupiter.api.Test
-import org.junit.platform.runner.JUnitPlatform
-import org.junit.runner.RunWith
 import retrofit2.Retrofit
 
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 08:32)
  */
-@RunWith(JUnitPlatform::class)
 class InfluxDBClientKotlinFactoryTest : AbstractTest() {
 
     @Test

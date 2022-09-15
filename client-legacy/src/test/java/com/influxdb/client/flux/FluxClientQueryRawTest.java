@@ -33,13 +33,10 @@ import com.influxdb.exceptions.InfluxException;
 import okhttp3.mockwebserver.MockResponse;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (03/08/2018 12:14)
  */
-@RunWith(JUnitPlatform.class)
 class FluxClientQueryRawTest extends AbstractFluxClientTest {
 
     @Test

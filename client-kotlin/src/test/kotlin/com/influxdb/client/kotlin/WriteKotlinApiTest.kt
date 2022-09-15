@@ -29,7 +29,6 @@ import com.influxdb.exceptions.UnauthorizedException
 import com.influxdb.test.AbstractMockServerTest
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import okhttp3.mockwebserver.RecordedRequest
@@ -37,15 +36,12 @@ import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
-import org.junit.platform.runner.JUnitPlatform
-import org.junit.runner.RunWith
 import java.time.Instant
 import java.util.concurrent.TimeUnit
 
 /**
  * @author Jakub Bednar (20/04/2021 13:58)
  */
-@RunWith(JUnitPlatform::class)
 class WriteKotlinApiTest : AbstractMockServerTest() {
 
     private lateinit var client: InfluxDBClientKotlin

@@ -38,13 +38,10 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledIfSystemProperty;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (31/07/2018 09:30)
  */
-@RunWith(JUnitPlatform.class)
 class ITFluxClient extends AbstractITFluxClient {
 
     private static final Logger LOG = Logger.getLogger(ITFluxClient.class.getName());

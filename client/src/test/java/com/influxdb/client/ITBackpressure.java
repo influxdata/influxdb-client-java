@@ -53,13 +53,10 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.EnabledIfSystemProperty;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (24/01/2020 09:40)
  */
-@RunWith(JUnitPlatform.class)
 @EnabledIfSystemProperty(named = "clientBackpressure", matches = "true")
 class ITBackpressure extends AbstractITWrite {
 

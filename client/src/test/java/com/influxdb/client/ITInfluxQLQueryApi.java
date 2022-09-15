@@ -37,14 +37,11 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 import static org.assertj.core.api.InstanceOfAssertFactories.BIG_DECIMAL;
 import static org.assertj.core.api.InstanceOfAssertFactories.INSTANT;
 import static org.assertj.core.api.InstanceOfAssertFactories.list;
 
-@RunWith(JUnitPlatform.class)
 class ITInfluxQLQueryApi extends AbstractITClientTest {
 
 	private static final String DATABASE_NAME = "my-database";

@@ -29,13 +29,10 @@ import com.influxdb.utils.Arguments;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (02/07/2018 13:55)
  */
-@RunWith(JUnitPlatform.class)
 class CustomFunction {
 
     @Test

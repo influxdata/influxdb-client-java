@@ -41,23 +41,18 @@ import com.influxdb.client.write.Point;
 import com.influxdb.exceptions.BadRequestException;
 import com.influxdb.query.FluxRecord;
 
-
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
-
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 import org.reactivestreams.Publisher;
 
 /**
  * @author Jakub Bednar (bednar@github) (22/11/2018 06:59)
  */
-@RunWith(JUnitPlatform.class)
 class ITWriteQueryReactiveApi extends AbstractITInfluxDBClientTest {
 
     private WriteReactiveApi writeClient;

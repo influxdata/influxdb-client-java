@@ -26,14 +26,11 @@ import com.influxdb.client.domain.HealthCheck
 import com.influxdb.exceptions.InfluxException
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import org.junit.platform.runner.JUnitPlatform
-import org.junit.runner.RunWith
 
 
 /**
  * @author Jakub Bednar (bednar@github) (30/10/2018 09:19)
  */
-@RunWith(JUnitPlatform::class)
 internal class ITInfluxDBClientKotlin : AbstractITInfluxDBClientKotlin() {
 
     @Test

@@ -28,13 +28,10 @@ import com.influxdb.query.dsl.functions.restriction.Restrictions;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (29/06/2018 07:37)
  */
-@RunWith(JUnitPlatform.class)
 class SampleFluxTest {
 
     @Test

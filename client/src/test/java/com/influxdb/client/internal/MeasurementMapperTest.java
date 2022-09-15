@@ -31,13 +31,10 @@ import com.influxdb.client.write.Point;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.platform.runner.JUnitPlatform;
-import org.junit.runner.RunWith;
 
 /**
  * @author Jakub Bednar (bednar@github) (15/10/2018 13:36)
  */
-@RunWith(JUnitPlatform.class)
 class MeasurementMapperTest {
 
     private MeasurementMapper mapper;
