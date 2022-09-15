@@ -254,6 +254,14 @@ public final class Point {
     }
 
     /**
+     * @return the data point timestamp
+     */
+    @Nullable
+    public Number getTime() {
+        return time;
+    }
+
+    /**
      * @return the data point precision
      */
     @Nonnull
