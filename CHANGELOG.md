@@ -23,6 +23,7 @@ Update dependencies:
 #### Test:
   - [#422](https://github.com/influxdata/influxdb-client-java/pull/422): `logback-classic` to `1.3.1`
   - [#417](https://github.com/influxdata/influxdb-client-java/pull/417): `mockito` to `4.8.0`
+  - [#425](https://github.com/influxdata/influxdb-client-java/pull/425): `spring-test` to `5.3.23`
                
 Remove dependencies:
 #### Test:
