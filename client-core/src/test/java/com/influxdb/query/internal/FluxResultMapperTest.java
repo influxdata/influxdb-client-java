@@ -252,10 +252,8 @@ class FluxResultMapperTest {
         private Integer fieldInt;
         @Column
         private Float fieldFloat;
-        
         @Column
         private Short fieldShort;
-
         @Column
         private BigDecimal fieldBigDecimal;
     }
