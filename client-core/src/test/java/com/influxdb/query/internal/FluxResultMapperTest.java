@@ -122,26 +122,72 @@ class FluxResultMapperTest {
         record.getValues().put("fieldLong", 55);
         record.getValues().put("fieldDouble", 55);
         record.getValues().put("fieldInt", 55);
+        record.getValues().put("fieldFloat", 55);
+        record.getValues().put("fieldShort", 55);
+        record.getValues().put("fieldBigDecimal", 55);
         NumberFields bean = mapper.toPOJO(record, NumberFields.class);
         Assertions.assertThat(bean.fieldLong).isEqualTo(55L);
         Assertions.assertThat(bean.fieldDouble).isEqualTo(55.0);
         Assertions.assertThat(bean.fieldInt).isEqualTo(55);
+        Assertions.assertThat(bean.fieldFloat).isEqualTo(55F);
+        Assertions.assertThat(bean.fieldShort).isEqualTo((short) 55);
+        Assertions.assertThat(bean.fieldBigDecimal).isEqualByComparingTo(BigDecimal.valueOf(55));
 
         record.getValues().put("fieldLong", 55.0);
         record.getValues().put("fieldDouble", 55.0);
         record.getValues().put("fieldInt", 55.0);
+        record.getValues().put("fieldFloat", 55.0);
+        record.getValues().put("fieldShort", 55.0);
+        record.getValues().put("fieldBigDecimal", 55.0);
         bean = mapper.toPOJO(record, NumberFields.class);
         Assertions.assertThat(bean.fieldLong).isEqualTo(55L);
         Assertions.assertThat(bean.fieldDouble).isEqualTo(55.0);
         Assertions.assertThat(bean.fieldInt).isEqualTo(55);
+        Assertions.assertThat(bean.fieldFloat).isEqualTo(55F);
+        Assertions.assertThat(bean.fieldShort).isEqualTo((short) 55);
+        Assertions.assertThat(bean.fieldBigDecimal).isEqualByComparingTo(BigDecimal.valueOf(55));
 
         record.getValues().put("fieldLong", 55L);
         record.getValues().put("fieldDouble", 55L);
         record.getValues().put("fieldInt", 55L);
+        record.getValues().put("fieldFloat", 55L);
+        record.getValues().put("fieldShort", 55L);
+        record.getValues().put("fieldBigDecimal", 55L);
         bean = mapper.toPOJO(record, NumberFields.class);
         Assertions.assertThat(bean.fieldLong).isEqualTo(55L);
         Assertions.assertThat(bean.fieldDouble).isEqualTo(55.0);
         Assertions.assertThat(bean.fieldInt).isEqualTo(55);
+        Assertions.assertThat(bean.fieldFloat).isEqualTo(55F);
+        Assertions.assertThat(bean.fieldShort).isEqualTo((short) 55);
+        Assertions.assertThat(bean.fieldBigDecimal).isEqualByComparingTo(BigDecimal.valueOf(55));
+
+        record.getValues().put("fieldLong", 55F);
+        record.getValues().put("fieldDouble", 55F);
+        record.getValues().put("fieldInt", 55F);
+        record.getValues().put("fieldFloat", 55F);
+        record.getValues().put("fieldShort", 55f);
+        record.getValues().put("fieldBigDecimal", 55f);
+        bean = mapper.toPOJO(record, NumberFields.class);
+        Assertions.assertThat(bean.fieldLong).isEqualTo(55L);
+        Assertions.assertThat(bean.fieldDouble).isEqualTo(55.0);
+        Assertions.assertThat(bean.fieldInt).isEqualTo(55);
+        Assertions.assertThat(bean.fieldFloat).isEqualTo(55F);
+        Assertions.assertThat(bean.fieldShort).isEqualTo((short) 55);
+        Assertions.assertThat(bean.fieldBigDecimal).isEqualByComparingTo(BigDecimal.valueOf(55));
+
+        record.getValues().put("fieldLong", (short) 55);
+        record.getValues().put("fieldDouble", (short) 55);
+        record.getValues().put("fieldInt", (short) 55);
+        record.getValues().put("fieldFloat", (short) 55);
+        record.getValues().put("fieldShort", (short) 55);
+        record.getValues().put("fieldBigDecimal", (short) 55);
+        bean = mapper.toPOJO(record, NumberFields.class);
+        Assertions.assertThat(bean.fieldLong).isEqualTo(55L);
+        Assertions.assertThat(bean.fieldDouble).isEqualTo(55.0);
+        Assertions.assertThat(bean.fieldInt).isEqualTo(55);
+        Assertions.assertThat(bean.fieldFloat).isEqualTo(55F);
+        Assertions.assertThat(bean.fieldShort).isEqualTo((short) 55);
+        Assertions.assertThat(bean.fieldBigDecimal).isEqualByComparingTo(BigDecimal.valueOf(55));
     }
 
     public static class BigDecimalBean {
@@ -204,5 +250,13 @@ class FluxResultMapperTest {
         private Double fieldDouble;
         @Column
         private Integer fieldInt;
+        @Column
+        private Float fieldFloat;
+        
+        @Column
+        private Short fieldShort;
+
+        @Column
+        private BigDecimal fieldBigDecimal;
     }
 }

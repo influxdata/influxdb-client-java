@@ -141,6 +141,14 @@ public class FluxResultMapper {
                 field.set(object, toIntValue(value));
                 return;
             }
+            if (float.class.isAssignableFrom(fieldType) || Float.class.isAssignableFrom(fieldType)) {
+                field.set(object, toFloatValue(value));
+                return;
+            }
+            if (short.class.isAssignableFrom(fieldType) || Short.class.isAssignableFrom(fieldType)) {
+                field.set(object, toShortValue(value));
+                return;
+            }
             if (boolean.class.isAssignableFrom(fieldType)) {
                 field.setBoolean(object, Boolean.valueOf(String.valueOf(value)));
                 return;
@@ -193,6 +201,24 @@ public class FluxResultMapper {
         return ((Number) value).intValue();
     }
 
+    private float toFloatValue(final Object value) {
+
+        if (float.class.isAssignableFrom(value.getClass()) || Float.class.isAssignableFrom(value.getClass())) {
+            return (float) value;
+        }
+
+        return ((Number) value).floatValue();
+    }
+
+    private short toShortValue(final Object value) {
+
+        if (short.class.isAssignableFrom(value.getClass()) || Short.class.isAssignableFrom(value.getClass())) {
+            return (short) value;
+        }
+
+        return ((Number) value).shortValue();
+    }
+
     private BigDecimal toBigDecimalValue(final Object value) {
         if (String.class.isAssignableFrom(value.getClass())) {
             return new BigDecimal((String) value);
@@ -208,6 +234,14 @@ public class FluxResultMapper {
 
         if (long.class.isAssignableFrom(value.getClass()) || Long.class.isAssignableFrom(value.getClass())) {
             return BigDecimal.valueOf((long) value);
+        }
+
+        if (float.class.isAssignableFrom(value.getClass()) || Float.class.isAssignableFrom(value.getClass())) {
+            return BigDecimal.valueOf((float) value);
+        }
+
+        if (short.class.isAssignableFrom(value.getClass()) || Short.class.isAssignableFrom(value.getClass())) {
+            return BigDecimal.valueOf((short) value);
         }
 
         String message = String.format("Cannot cast %s [%s] to %s.",
