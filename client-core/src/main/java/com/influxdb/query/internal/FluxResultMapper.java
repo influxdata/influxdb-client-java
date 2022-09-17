@@ -129,16 +129,24 @@ public class FluxResultMapper {
             }
 
             //convert primitives
-            if (double.class.isAssignableFrom(fieldType)) {
-                field.setDouble(object, toDoubleValue(value));
+            if (double.class.isAssignableFrom(fieldType) || Double.class.isAssignableFrom(fieldType)) {
+                field.set(object, toDoubleValue(value));
                 return;
             }
-            if (long.class.isAssignableFrom(fieldType)) {
-                field.setLong(object, toLongValue(value));
+            if (long.class.isAssignableFrom(fieldType) || Long.class.isAssignableFrom(fieldType)) {
+                field.set(object, toLongValue(value));
                 return;
             }
-            if (int.class.isAssignableFrom(fieldType)) {
-                field.setInt(object, toIntValue(value));
+            if (int.class.isAssignableFrom(fieldType) || Integer.class.isAssignableFrom(fieldType)) {
+                field.set(object, toIntValue(value));
+                return;
+            }
+            if (float.class.isAssignableFrom(fieldType) || Float.class.isAssignableFrom(fieldType)) {
+                field.set(object, toFloatValue(value));
+                return;
+            }
+            if (short.class.isAssignableFrom(fieldType) || Short.class.isAssignableFrom(fieldType)) {
+                field.set(object, toShortValue(value));
                 return;
             }
             if (boolean.class.isAssignableFrom(fieldType)) {
@@ -172,7 +180,7 @@ public class FluxResultMapper {
             return (double) value;
         }
 
-        return (Double) value;
+        return ((Number) value).doubleValue();
     }
 
     private long toLongValue(final Object value) {
@@ -181,7 +189,7 @@ public class FluxResultMapper {
             return (long) value;
         }
 
-        return ((Double) value).longValue();
+        return ((Number) value).longValue();
     }
 
     private int toIntValue(final Object value) {
@@ -190,7 +198,25 @@ public class FluxResultMapper {
             return (int) value;
         }
 
-        return ((Double) value).intValue();
+        return ((Number) value).intValue();
+    }
+
+    private float toFloatValue(final Object value) {
+
+        if (float.class.isAssignableFrom(value.getClass()) || Float.class.isAssignableFrom(value.getClass())) {
+            return (float) value;
+        }
+
+        return ((Number) value).floatValue();
+    }
+
+    private short toShortValue(final Object value) {
+
+        if (short.class.isAssignableFrom(value.getClass()) || Short.class.isAssignableFrom(value.getClass())) {
+            return (short) value;
+        }
+
+        return ((Number) value).shortValue();
     }
 
     private BigDecimal toBigDecimalValue(final Object value) {
@@ -208,6 +234,14 @@ public class FluxResultMapper {
 
         if (long.class.isAssignableFrom(value.getClass()) || Long.class.isAssignableFrom(value.getClass())) {
             return BigDecimal.valueOf((long) value);
+        }
+
+        if (float.class.isAssignableFrom(value.getClass()) || Float.class.isAssignableFrom(value.getClass())) {
+            return BigDecimal.valueOf((float) value);
+        }
+
+        if (short.class.isAssignableFrom(value.getClass()) || Short.class.isAssignableFrom(value.getClass())) {
+            return BigDecimal.valueOf((short) value);
         }
 
         String message = String.format("Cannot cast %s [%s] to %s.",
