@@ -19,6 +19,7 @@ Update dependencies:
   
 #### Maven Plugin:
   - [#413](https://github.com/influxdata/influxdb-client-java/pull/413): `versions-maven-plugin` to `2.12.0`
+  - [#426](https://github.com/influxdata/influxdb-client-java/pull/426): `maven-jar-plugin` to `3.3.0`
 
 #### Provided:
   - [#424](https://github.com/influxdata/influxdb-client-java/pull/424): `slf4j-api` to `2.0.1`
