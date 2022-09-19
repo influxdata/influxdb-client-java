@@ -685,7 +685,12 @@ class ITTasksApi extends AbstractITClientTest {
 
         List<Run> runs = tasksApi.getRuns(task);
 
-        Assertions.assertThatThrownBy(() -> tasksApi.cancelRun(runs.get(0)))
+        Run run = runs.stream()
+                .filter(it -> it.getStatus().equals(Run.StatusEnum.SUCCESS))
+                .findFirst()
+                .get();
+
+        Assertions.assertThatThrownBy(() -> tasksApi.cancelRun(run))
                 .isInstanceOf(NotFoundException.class)
                 .hasMessage("HTTP status code: 404; Message: failed to cancel run: run not found");
     }
