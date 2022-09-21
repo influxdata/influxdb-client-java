@@ -22,7 +22,7 @@ Update dependencies:
   - [#426](https://github.com/influxdata/influxdb-client-java/pull/426): `maven-jar-plugin` to `3.3.0`
 
 #### Provided:
-  - [#424](https://github.com/influxdata/influxdb-client-java/pull/424): `slf4j-api` to `2.0.1`
+  - [#428](https://github.com/influxdata/influxdb-client-java/pull/428): `slf4j-api` to `2.0.2`
 
 #### Test:
   - [#422](https://github.com/influxdata/influxdb-client-java/pull/422): `logback-classic` to `1.3.1`
