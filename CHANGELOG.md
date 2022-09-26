@@ -16,6 +16,7 @@ Update dependencies:
   - [#412](https://github.com/influxdata/influxdb-client-java/pull/412), [#416](https://github.com/influxdata/influxdb-client-java/pull/416): `akka` to `2.6.20`
   - [#420](https://github.com/influxdata/influxdb-client-java/pull/420): `micrometer-registry-influx` to `1.9.4`
   - [#423](https://github.com/influxdata/influxdb-client-java/pull/423): `scala-library` to `2.12.17`
+  - [#430](https://github.com/influxdata/influxdb-client-java/pull/430): `spring-boot` to `2.7.4`
   
 #### Maven Plugin:
   - [#413](https://github.com/influxdata/influxdb-client-java/pull/413): `versions-maven-plugin` to `2.12.0`
