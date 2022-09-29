@@ -28,7 +28,7 @@ SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 # Generate Site
 cd "${SCRIPT_PATH}"/..
-mvn clean site site:stage -DskipTests
+mvn site site:stage -DskipTests
 # Copy Kotlin doc
 cp -R "${SCRIPT_PATH}"/../client-kotlin/target/dokka/ "${SCRIPT_PATH}"/../target/staging/influxdb-client-kotlin/dokka/
 
@@ -40,7 +40,7 @@ cp -R "${SCRIPT_PATH}"/../target/staging/ "${HOME}"/site
 echo "Clone: gh-pages"
 cd "${HOME}"
 rm -rf "${HOME}"/gh-pages
-git clone --branch=gh-pages git@github.com:influxdata/influxdb-client-java.git "${HOME}"/gh-pages
+git clone --depth 1 --branch=gh-pages git@github.com:influxdata/influxdb-client-java.git "${HOME}"/gh-pages
 
 echo "Copy site"
 # Push Site
@@ -51,7 +51,8 @@ cp -Rf "${HOME}"/site/* ./
 ls
 
 echo "Copy CircleCI"
-cp -R "${SCRIPT_PATH}"/../.circleci/ "${HOME}"/gh-pages/
+mkdir "${HOME}"/gh-pages/.circleci/ || true
+cp "${SCRIPT_PATH}"/../.circleci/config.yml "${HOME}"/gh-pages/.circleci/config.yml
 
 
 echo "Commit"
