@@ -24,7 +24,7 @@ Update dependencies:
   - [#432](https://github.com/influxdata/influxdb-client-java/pull/432): `scala-maven-plugin` to `4.7.2`
 
 #### Provided:
-  - [#428](https://github.com/influxdata/influxdb-client-java/pull/428): `slf4j-api` to `2.0.2`
+  - [#431](https://github.com/influxdata/influxdb-client-java/pull/431): `slf4j-api` to `2.0.3`
 
 #### Test:
   - [#422](https://github.com/influxdata/influxdb-client-java/pull/422): `logback-classic` to `1.3.1`
