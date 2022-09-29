@@ -1,4 +1,4 @@
-## 6.6.0 [unreleased]
+## 6.6.0 [2022-09-29]
 
 ### Features
 1. [#419](https://github.com/influxdata/influxdb-client-java/pull/419): Add possibility to get time from `Point` data structure
