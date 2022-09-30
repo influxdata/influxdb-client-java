@@ -121,7 +121,7 @@
         <plugin.site.version>3.12.1</plugin.site.version>
         <plugin.scala.version>4.7.2</plugin.scala.version>
 
-        <kotlin.version>1.7.10</kotlin.version>
+        <kotlin.version>1.7.20</kotlin.version>
         <junit-jupiter.version>5.9.1</junit-jupiter.version>
         <kotlin-coroutines.version>1.6.4</kotlin-coroutines.version>
         <mockito.version>4.8.0</mockito.version>
