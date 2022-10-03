@@ -5,6 +5,7 @@ Update dependencies:
 
 #### Build:
   - [#434](https://github.com/influxdata/influxdb-client-java/pull/434): `kotlin` to `1.7.20`
+  - [#436](https://github.com/influxdata/influxdb-client-java/pull/436): `scala-library` to `2.13.9`
 
 ## 6.6.0 [2022-09-29]
 
