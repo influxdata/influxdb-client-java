@@ -27,11 +27,7 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -276,7 +272,11 @@ public class FluxCsvParser {
 
             String strValue = csvRecord.get(fluxColumn.getIndex() + 1);
 
-            record.getValues().put(columnName, toValue(strValue, fluxColumn));
+            Object value = toValue(strValue, fluxColumn);
+
+            record.getValues().put(columnName, value);
+
+            record.getRow().add(value);
         }
         return record;
     }
@@ -397,6 +397,15 @@ public class FluxCsvParser {
 
             String columnName = columnNames.get(i);
             fluxColumn.setLabel(columnName);
+        }
+
+        HashSet<Object> seen=new HashSet<>();
+        columnNames.removeIf(seen::add);
+
+        if (!columnNames.isEmpty()){
+            System.out.printf("The response contains columns with duplicated names: %s)%n", columnNames);
+            System.out.println("You should use the \"FluxRecord.getRow()\"to access your data instead of " +
+                    "\"FluxRecord.getValues()\".");
         }
     }
 
