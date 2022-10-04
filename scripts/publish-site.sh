@@ -22,40 +22,43 @@
 
 #!/usr/bin/env bash
 
+# mvn site site:stage -DskipTests
+#
+# docker run -it --rm \
+#       -v "${PWD}":/code \
+#       -v ~/.ssh:/root/.ssh \
+#       -v ~/.gitconfig:/root/.gitconfig \
+#       -w /code \
+#       bitnami/git /code/scripts/publish-site.sh
+
 set -e
 
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
-# Generate Site
-cd "${SCRIPT_PATH}"/..
-mvn site site:stage -DskipTests
-# Copy Kotlin doc
-cp -R "${SCRIPT_PATH}"/../client-kotlin/target/dokka/ "${SCRIPT_PATH}"/../target/staging/influxdb-client-kotlin/dokka/
-
-# Copy site
-rm -rf "${HOME}"/site/*
-cp -R "${SCRIPT_PATH}"/../target/staging/ "${HOME}"/site
-
-# Clone GitHub pages
-echo "Clone: gh-pages"
-cd "${HOME}"
+echo
+echo "Clone GitHub pages ..."
+echo
 rm -rf "${HOME}"/gh-pages
 git clone --depth 1 --branch=gh-pages git@github.com:influxdata/influxdb-client-java.git "${HOME}"/gh-pages
 
-echo "Copy site"
-# Push Site
+echo
+echo "Copy generated site to ${HOME}/gh-pages ..."
+echo
+# remove current content
 rm -rf "${HOME}"/gh-pages/*
-cd "${HOME}"/gh-pages
-ls
-cp -Rf "${HOME}"/site/* ./
-ls
+cp -R "${SCRIPT_PATH}"/../client-kotlin/target/dokka/ "${SCRIPT_PATH}"/../target/staging/influxdb-client-kotlin/dokka/
+cp -Rf  --verbose "${SCRIPT_PATH}"/../target/staging/* "${HOME}"/gh-pages
 
+echo
 echo "Copy CircleCI"
+echo
 mkdir "${HOME}"/gh-pages/.circleci/ || true
 cp "${SCRIPT_PATH}"/../.circleci/config.yml "${HOME}"/gh-pages/.circleci/config.yml
 
-
-echo "Commit"
+echo
+echo "Push generated site to GitHub ..."
+echo
+cd "${HOME}"/gh-pages
 git add -f .
 git commit -m "Pushed the latest Maven site to GitHub pages [skip CI]"
 git push -fq origin gh-pages > /dev/null
