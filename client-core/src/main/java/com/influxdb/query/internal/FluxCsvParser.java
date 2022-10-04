@@ -404,7 +404,7 @@ public class FluxCsvParser {
 
         if (!columnNames.isEmpty()){
             System.out.printf("The response contains columns with duplicated names: %s)%n", columnNames);
-            System.out.println("You should use the \"FluxRecord.getRow()\"to access your data instead of " +
+            System.out.println("You should use the \"FluxRecord.getRow()\" to access your data instead of " +
                     "\"FluxRecord.getValues()\".");
         }
     }
