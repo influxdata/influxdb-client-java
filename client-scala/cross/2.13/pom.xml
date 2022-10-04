@@ -72,8 +72,7 @@
   </scm>
 
   <properties>
-    <scoverage-maven-plugin.version>1.4.11</scoverage-maven-plugin.version>
-    <scala.version>2.13.8</scala.version>
+    <scala.version>2.13.9</scala.version>
     <akka.version>2.6.20</akka.version>
   </properties>
 
@@ -131,25 +130,6 @@
       </plugin>
 
       <plugin>
-        <groupId>org.scoverage</groupId>
-        <artifactId>scoverage-maven-plugin</artifactId>
-        <version>${scoverage-maven-plugin.version}</version>
-        <configuration>
-          <scalaVersion>${scala.version}</scalaVersion>
-          <!-- other parameters -->
-        </configuration>
-        <executions>
-          <execution>
-            <id>report</id>
-            <phase>test</phase>
-            <goals>
-              <goal>report</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-
-      <plugin>
         <groupId>com.mycila</groupId>
         <artifactId>license-maven-plugin</artifactId>
         <configuration>
@@ -174,18 +154,6 @@
         <groupId>net.alchim31.maven</groupId>
         <artifactId>scala-maven-plugin</artifactId>
         <version>${plugin.scala.version}</version>
-      </plugin>
-      <plugin>
-        <groupId>org.scoverage</groupId>
-        <artifactId>scoverage-maven-plugin</artifactId>
-        <version>${scoverage-maven-plugin.version}</version>
-        <reportSets>
-          <reportSet>
-            <reports>
-              <report>report</report>
-            </reports>
-          </reportSet>
-        </reportSets>
       </plugin>
     </plugins>
   </reporting>
