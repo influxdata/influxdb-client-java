@@ -23,7 +23,11 @@ package com.influxdb.query;
 
 import java.io.Serializable;
 import java.time.Instant;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
+import java.util.ArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -47,7 +51,7 @@ public final class FluxRecord implements Serializable {
      */
     private LinkedHashMap<String, Object> values = new LinkedHashMap<>();
 
-    private List<Object> row = new ArrayList<>();
+    private ArrayList<Object> row = new ArrayList<>();
 
     public FluxRecord(@Nonnull final Integer table) {
 
@@ -124,7 +128,7 @@ public final class FluxRecord implements Serializable {
      * @return record's columns
      */
     @Nonnull
-    public List<Object> getRow() {
+    public ArrayList<Object> getRow() {
         return row;
     }
 
@@ -175,7 +179,7 @@ public final class FluxRecord implements Serializable {
         }
         final FluxRecord that = (FluxRecord) o;
         return Objects.equals(table, that.table)
-            && Objects.equals(values, that.values);
+                && Objects.equals(values, that.values);
     }
 
     @Override
