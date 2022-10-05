@@ -24,10 +24,10 @@ package com.influxdb.query;
 import java.io.Serializable;
 import java.time.Instant;
 import java.util.LinkedHashMap;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
-import java.util.ArrayList;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
