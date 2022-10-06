@@ -39,45 +39,43 @@ public class RecordRowExample {
         final String org = "my-org";
         final String bucket = "my-bucket";
 
-        InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket);
+        try (InfluxDBClient client = InfluxDBClientFactory.create("http://localhost:9999", token, org, bucket)) {
+            //
+            // Prepare Data
+            //
+            WriteApiBlocking writeApi = client.getWriteApiBlocking();
+            for (int i = 1; i <= 5; i++)
+                writeApi.writeRecord(WritePrecision.NS, String.format("point,table=my-table result=%d", i));
 
-        //
-        // Prepare Data
-        //
-        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
-        for (int i = 1; i <= 5; i++)
-            writeApi.writeRecord(WritePrecision.NS, String.format("point,table=my-table result=%d", i));
+            //
+            // Query data
+            //
+            String fluxQuery = String.format("from(bucket: \"%s\")\n", bucket)
+                    + " |> range(start: -1m)"
+                    + " |> filter(fn: (r) => (r[\"_measurement\"] == \"point\"))"
+                    + " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
 
-        //
-        // Query data
-        //
-        String fluxQuery = String.format("from(bucket: \"%s\")\n", bucket)
-                + " |> range(start: -1m)"
-                + " |> filter(fn: (r) => (r[\"_measurement\"] == \"point\"))"
-                + " |> pivot(rowKey:[\"_time\"], columnKey: [\"_field\"], valueColumn: \"_value\")";
+            QueryApi queryApi = client.getQueryApi();
 
-        QueryApi queryApi = influxDBClient.getQueryApi();
+            //
+            // Query data
+            //
+            List<FluxTable> tables = queryApi.query(fluxQuery);
+            System.out.println("--------------------------------- FluxRecord.getValues() --------------------------------");
+            for (FluxTable fluxTable : tables) {
+                List<FluxRecord> records = fluxTable.getRecords();
+                for (FluxRecord fluxRecord : records) {
+                    System.out.println(fluxRecord.getValues());
+                }
+            }
 
-        //
-        // Query data
-        //
-        List<FluxTable> tables = queryApi.query(fluxQuery);
-        System.out.println("--------------------------------- FluxRecord.getValues() --------------------------------");
-        for (FluxTable fluxTable : tables) {
-            List<FluxRecord> records = fluxTable.getRecords();
-            for (FluxRecord fluxRecord : records) {
-                System.out.println(fluxRecord.getValues());
+            System.out.println("---------------------------------- FluxRecord.getRow() ----------------------------------");
+            for (FluxTable fluxTable : tables) {
+                List<FluxRecord> records = fluxTable.getRecords();
+                for (FluxRecord fluxRecord : records) {
+                    System.out.println(fluxRecord.getRow());
+                }
             }
         }
-
-        System.out.println("---------------------------------- FluxRecord.getRow() ----------------------------------");
-        for (FluxTable fluxTable : tables) {
-            List<FluxRecord> records = fluxTable.getRecords();
-            for (FluxRecord fluxRecord : records) {
-                System.out.println(fluxRecord.getRow());
-            }
-        }
-
-        influxDBClient.close();
     }
 }

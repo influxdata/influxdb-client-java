@@ -25,6 +25,7 @@ import java.io.Serializable;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -51,7 +52,7 @@ public final class FluxRecord implements Serializable {
      */
     private LinkedHashMap<String, Object> values = new LinkedHashMap<>();
 
-    private ArrayList<Object> row = new ArrayList<>();
+    private List<Object> row = new ArrayList<>();
 
     public FluxRecord(@Nonnull final Integer table) {
 
@@ -128,7 +129,7 @@ public final class FluxRecord implements Serializable {
      * @return record's columns
      */
     @Nonnull
-    public ArrayList<Object> getRow() {
+    public List<Object> getRow() {
         return row;
     }
 
