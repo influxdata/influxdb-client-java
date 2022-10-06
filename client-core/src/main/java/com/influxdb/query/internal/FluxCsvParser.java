@@ -33,6 +33,7 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -404,11 +405,13 @@ public class FluxCsvParser {
             fluxColumn.setLabel(columnName);
         }
 
-        HashSet<Object> seen = new HashSet<>();
-        columnNames.removeIf(seen::add);
+        Set<String> items = new HashSet<>();
+        Set<String> duplicates = columnNames.stream()
+                .filter(n -> !items.add(n))
+                .collect(Collectors.toSet());
 
-        if (!columnNames.isEmpty()) {
-            System.out.printf("The response contains columns with duplicated names: %s)%n", columnNames);
+        if (!duplicates.isEmpty()) {
+            System.out.printf("The response contains columns with duplicated names: %s)%n", duplicates);
             System.out.println("You should use the \"FluxRecord.getRow()\" to access your data instead of "
                     + "\"FluxRecord.getValues()\".");
         }
