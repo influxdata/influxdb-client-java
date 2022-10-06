@@ -23,7 +23,9 @@ package com.influxdb.query;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -49,6 +51,8 @@ public final class FluxRecord implements Serializable {
      * The record's values.
      */
     private LinkedHashMap<String, Object> values = new LinkedHashMap<>();
+
+    private List<Object> row = new ArrayList<>();
 
     public FluxRecord(@Nonnull final Integer table) {
 
@@ -122,6 +126,14 @@ public final class FluxRecord implements Serializable {
     }
 
     /**
+     * @return record's columns
+     */
+    @Nonnull
+    public List<Object> getRow() {
+        return row;
+    }
+
+    /**
      * Get FluxRecord value by index.
      *
      * @param index of value in CSV response
@@ -168,7 +180,7 @@ public final class FluxRecord implements Serializable {
         }
         final FluxRecord that = (FluxRecord) o;
         return Objects.equals(table, that.table)
-            && Objects.equals(values, that.values);
+                && Objects.equals(values, that.values);
     }
 
     @Override

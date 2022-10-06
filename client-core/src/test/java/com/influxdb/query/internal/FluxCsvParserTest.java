@@ -655,6 +655,25 @@ class FluxCsvParserTest {
         Assertions.assertThat(tables.get(0).getRecords().get(11).getValueByKey("le")).isEqualTo(Double.NEGATIVE_INFINITY);
     }
 
+    @Test
+    public void parseDuplicateColumnNames() throws IOException {
+        String data = "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,dateTime:RFC3339,string,string,double\n" +
+                "#group,false,false,true,true,false,true,true,false\n" +
+                "#default,_result,,,,,,,\n" +
+                " ,result,table,_start,_stop,_time,_measurement,location,result\n" +
+                ",,0,2022-09-13T06:14:40.469404272Z,2022-09-13T06:24:40.469404272Z,2022-09-13T06:24:33.746Z,my_measurement,Prague,25.3\n" +
+                ",,0,2022-09-13T06:14:40.469404272Z,2022-09-13T06:24:40.469404272Z,2022-09-13T06:24:39.299Z,my_measurement,Prague,25.3\n" +
+                ",,0,2022-09-13T06:14:40.469404272Z,2022-09-13T06:24:40.469404272Z,2022-09-13T06:24:40.454Z,my_measurement,Prague,25.3\n";
+
+        List<FluxTable> tables = parseFluxResponse(data);
+        Assertions.assertThat(tables).hasSize(1);
+        Assertions.assertThat(tables.get(0).getRecords()).hasSize(3);
+        Assertions.assertThat(tables.get(0).getColumns()).hasSize(8);
+        Assertions.assertThat(tables.get(0).getRecords().get(0).getValues().size()).isEqualTo(7);
+        Assertions.assertThat(tables.get(0).getRecords().get(0).getRow().size()).isEqualTo(8);
+        Assertions.assertThat(tables.get(0).getRecords().get(0).getRow().get(7)).isEqualTo(25.3);
+    }
+
     @Nonnull
     private List<FluxTable> parseFluxResponse(@Nonnull final String data) throws IOException {
 

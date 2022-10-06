@@ -16,6 +16,8 @@ This directory contains Java, Kotlin and Scala examples.
 ### Others
 - [InvokableScripts.java](src/main/java/example/InvokableScripts.java) - How to use Invokable scripts Cloud API to create custom endpoints that query data
 - [InfluxDBEnterpriseExample.java](src/main/java/example/InfluxDBEnterpriseExample.java) - How to use `consistency` parameter for InfluxDB Enterprise
+- [RecordRowExample.java](src/main/java/example/RecordRowExample.java) - How to use `FluxRecord.getRow()` (List) instead of `FluxRecord.getValues()` (Map),
+  in case of duplicity column names
 
 ## Kotlin
 
