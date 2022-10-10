@@ -267,8 +267,7 @@ workflows:
 
   nightly:
     when:
-      and:
-        - equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
+      equal: [ scheduled_pipeline, << pipeline.trigger_source >> ]
     jobs:
       - tests-java:
           name: jdk-8
