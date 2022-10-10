@@ -11,7 +11,7 @@ Update dependencies:
   - [#436](https://github.com/influxdata/influxdb-client-java/pull/436): `scala-library` to `2.13.9`
 
 #### Test:
-  - [#437](https://github.com/influxdata/influxdb-client-java/pull/437): `logback-classic` to `1.3.3`
+  - [#440](https://github.com/influxdata/influxdb-client-java/pull/440): `logback-classic` to `1.3.4`
 
 ## 6.6.0 [2022-09-29]
 
