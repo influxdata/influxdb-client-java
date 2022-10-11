@@ -65,7 +65,7 @@ class RetryAttemptTest {
 
         retry = new RetryAttempt(new ConnectException("Failed to connect to localhost/127.0.0.1:59368"), 1, DEFAULT);
         Assertions.assertThat(retry.isRetry()).isTrue();
-        Assertions.assertThat(retry.getRetryInterval()).isGreaterThan(5_000L);
+        Assertions.assertThat(retry.getRetryInterval()).isGreaterThanOrEqualTo(5_000L);
         Assertions.assertThat(retry.getRetryInterval()).isLessThan(10_000L);
 
         retry = new RetryAttempt(new ProtocolException(), 1, DEFAULT);
