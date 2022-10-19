@@ -185,7 +185,7 @@ public class JSON {
                 default:
                     String date = in.nextString();
                     if (date.endsWith("+0000")) {
-                        date = date.substring(0, date.length()-5) + "Z";
+                        date = date.substring(0, date.length() - 5) + "Z";
                     }
                     return OffsetDateTime.parse(date, formatter);
             }
@@ -370,6 +370,7 @@ public class JSON {
         }
 
         private class InnerDiscriminatorAdapter<R> extends TypeAdapter<R> {
+            private final Gson gson;
             private final TypeAdapter<JsonElement> jsonAdapter;
             private final Map<String, TypeAdapter<?>> cachedSubtypesReadAdapters;
             private final Map<Class<?>, TypeAdapter<?>> cachedSubtypesWriteAdapters;
@@ -377,6 +378,7 @@ public class JSON {
             InnerDiscriminatorAdapter(@Nonnull final Gson gson) {
                 Arguments.checkNotNull(gson, "gson");
 
+                this.gson = gson;
                 this.jsonAdapter = gson.getAdapter(JsonElement.class);
                 this.cachedSubtypesReadAdapters = new LinkedHashMap<>();
                 this.cachedSubtypesWriteAdapters = new LinkedHashMap<>();
@@ -403,7 +405,7 @@ public class JSON {
                 String discriminator = discriminatorJson.getAsString();
                 TypeAdapter<R> adapter = (TypeAdapter<R>) cachedSubtypesReadAdapters.get(discriminator);
                 if (adapter == null) {
-                    String msg = String.format("Cannot create Java subtype with discriminator: '%s' for '%s'. "
+                    String msg = String.format("Cannot find model: '%s' for discriminator: '%s'. "
                             + "The discriminator wasn't registered.", discriminator, DiscriminatorAdapter.this.type);
                     throw new JsonParseException(msg);
                 }
@@ -416,8 +418,9 @@ public class JSON {
                 TypeAdapter<R> adapter = (TypeAdapter<R>) cachedSubtypesWriteAdapters.get(outputType);
 
                 if (adapter == null) {
-                    String msg = "Cannot write '%s' to JSON. The discriminator wasn't registered.";
-                    throw new JsonParseException(String.format(msg, outputType.getName()));
+                    adapter = (TypeAdapter<R>) gson.getDelegateAdapter(DiscriminatorAdapter.this,
+                            TypeToken.get(outputType));
+                    cachedSubtypesWriteAdapters.put(type, adapter);
                 }
 
                 jsonAdapter.write(out, adapter.toJsonTree(value).getAsJsonObject());
