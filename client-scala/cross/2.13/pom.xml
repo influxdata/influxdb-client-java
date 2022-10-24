@@ -73,7 +73,7 @@
 
   <properties>
     <scala.version>2.13.9</scala.version>
-    <akka.version>2.6.20</akka.version>
+    <akka.version>2.7.0</akka.version>
   </properties>
 
   <build>
