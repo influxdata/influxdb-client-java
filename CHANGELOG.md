@@ -17,6 +17,7 @@ Update dependencies:
 
 #### Maven Plugin:
   - [#445](https://github.com/influxdata/influxdb-client-java/pull/445): `dokka-maven-plugin` to `1.7.20`
+  - [#450](https://github.com/influxdata/influxdb-client-java/pull/450): `versions-maven-plugin` to `2.13.0`
 
 #### Test:
   - [#440](https://github.com/influxdata/influxdb-client-java/pull/440): `logback-classic` to `1.3.4`
