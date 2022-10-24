@@ -72,7 +72,7 @@
 
     <properties>
         <!-- Try to enable `maven-enforcer-plugin` after update -->
-        <karaf.version>4.4.1</karaf.version>
+        <karaf.version>4.4.2</karaf.version>
     </properties>
 
     <build>
