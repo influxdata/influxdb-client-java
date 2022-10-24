@@ -13,6 +13,7 @@ Update dependencies:
   - [#434](https://github.com/influxdata/influxdb-client-java/pull/434): `kotlin` to `1.7.20`
   - [#436](https://github.com/influxdata/influxdb-client-java/pull/436): `scala-library` to `2.13.9`
   - [#443](https://github.com/influxdata/influxdb-client-java/pull/443): `micrometer-registry-influx` to `1.9.5`
+  - [#451](https://github.com/influxdata/influxdb-client-java/pull/451): `karaf` to `4.4.2`
 
 #### Maven Plugin:
   - [#445](https://github.com/influxdata/influxdb-client-java/pull/445): `dokka-maven-plugin` to `1.7.20`
