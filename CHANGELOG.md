@@ -20,6 +20,7 @@ Update dependencies:
 #### Test:
   - [#440](https://github.com/influxdata/influxdb-client-java/pull/440): `logback-classic` to `1.3.4`
   - [#444](https://github.com/influxdata/influxdb-client-java/pull/444): `scalatest-maven-plugin` to `2.2.0`
+  - [#452](https://github.com/influxdata/influxdb-client-java/pull/452): `mockito` to `4.8.1`
 
 ## 6.6.0 [2022-09-29]
 
