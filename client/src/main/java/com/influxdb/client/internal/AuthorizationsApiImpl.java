@@ -30,6 +30,7 @@ import javax.annotation.Nullable;
 import com.influxdb.client.AuthorizationsApi;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.AuthorizationPostRequest;
+import com.influxdb.client.domain.AuthorizationUpdateRequest;
 import com.influxdb.client.domain.Authorizations;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Permission;
@@ -96,6 +97,15 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
                 .permissions(authorization.getPermissions())
                 .description(authorization.getDescription());
 
+        return createAuthorization(request);
+    }
+
+    @Override
+    @Nonnull
+    public Authorization createAuthorization(@Nonnull final AuthorizationPostRequest request) {
+
+        Arguments.checkNotNull(request, "AuthorizationPostRequest is required");
+
         Call<Authorization> call = service.postAuthorizations(request, null);
 
         return execute(call);
@@ -160,8 +170,18 @@ final class AuthorizationsApiImpl extends AbstractRestClient implements Authoriz
 
         Arguments.checkNotNull(authorization, "Authorization is required");
 
-        Call<Authorization> authorizationCall = service
-                .patchAuthorizationsID(authorization.getId(), authorization, null);
+        return updateAuthorization(authorization.getId(), authorization);
+    }
+
+    @Override
+    @Nonnull
+    public Authorization updateAuthorization(@Nonnull final String authorizationID,
+                                             @Nonnull final AuthorizationUpdateRequest request) {
+
+        Arguments.checkNonEmpty(authorizationID, "authorizationID");
+        Arguments.checkNotNull(authorizationID, "AuthorizationUpdateRequest");
+
+        Call<Authorization> authorizationCall = service.patchAuthorizationsID(authorizationID, request, null);
 
         return execute(authorizationCall);
     }
