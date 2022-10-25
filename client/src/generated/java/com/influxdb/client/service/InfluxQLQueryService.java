@@ -15,10 +15,11 @@ public interface InfluxQLQueryService {
      * @param zapTraceSpan    OpenTracing span context (optional)
      * @return response in csv format
      */
-    @Headers({"Accept:application/csv", "Content-Type:application/vnd.influxql"})
+    @Headers({"Accept:application/csv", "Content-Type:application/x-www-form-urlencoded"})
+    @FormUrlEncoded
     @POST("query")
     Call<ResponseBody> query(
-            @Body String query,
+            @Field("q") String query,
             @Nonnull @Query("db") String db,
             @Query("rp") String retentionPolicy,
             @Query("epoch") String epoch,
