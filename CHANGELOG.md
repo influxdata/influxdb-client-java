@@ -2,6 +2,7 @@
 
 ### Features
 1. [#439](https://github.com/influxdata/influxdb-client-java/pull/439): Add `FluxRecord.getRow()` which stores response data in a list
+1. [#457](https://github.com/influxdata/influxdb-client-java/pull/457): Add possibility to use `AuthorizationPostRequest` and `AuthorizationUpdateRequest` in `AuthorizationApi`
 
 ### Dependencies
 
