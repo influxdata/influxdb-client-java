@@ -52,7 +52,7 @@ cp -Rf  --verbose "${SCRIPT_PATH}"/../target/staging/* "${HOME}"/gh-pages
 echo
 echo "Copy CircleCI"
 echo
-mkdir "${HOME}"/gh-pages/.circleci/ || true
+mkdir -p "${HOME}"/gh-pages/.circleci/
 cp "${SCRIPT_PATH}"/../.circleci/config.yml "${HOME}"/gh-pages/.circleci/config.yml
 
 echo
