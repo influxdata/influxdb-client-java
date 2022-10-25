@@ -27,6 +27,8 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
 import com.influxdb.client.domain.Authorization;
+import com.influxdb.client.domain.AuthorizationPostRequest;
+import com.influxdb.client.domain.AuthorizationUpdateRequest;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Permission;
 import com.influxdb.client.domain.User;
@@ -71,6 +73,21 @@ public interface AuthorizationsApi {
                                       @Nonnull final List<Permission> permissions);
 
     /**
+     * Create an authorization.
+     *
+     * <p>
+     * Use this method to create an authorization, which generates an API token with permissions to `read` or `write`
+     * to a specific resource or `type` of resource. The response contains the new authorization
+     * with the generated API token.
+     * </p>
+     *
+     * @param request The authorization to create.
+     * @return Newly created authorization
+     */
+    @Nonnull
+    Authorization createAuthorization(@Nonnull final AuthorizationPostRequest request);
+
+    /**
      * Updates the status of the authorization. Useful for setting an authorization to inactive or active.
      *
      * @param authorization the authorization with updated status
@@ -78,6 +95,17 @@ public interface AuthorizationsApi {
      */
     @Nonnull
     Authorization updateAuthorization(@Nonnull final Authorization authorization);
+
+    /**
+     * Update an authorization to be active or inactive.
+     *
+     * @param authorizationID The ID of the authorization to update.
+     * @param request         Authorization to update
+     * @return The active or inactive authorization
+     */
+    @Nonnull
+    Authorization updateAuthorization(@Nonnull final String authorizationID,
+                                      @Nonnull final AuthorizationUpdateRequest request);
 
     /**
      * Delete an authorization.

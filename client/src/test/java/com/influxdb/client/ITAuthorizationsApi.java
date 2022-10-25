@@ -22,6 +22,7 @@
 package com.influxdb.client;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
@@ -29,6 +30,8 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
 import com.influxdb.client.domain.Authorization;
+import com.influxdb.client.domain.AuthorizationPostRequest;
+import com.influxdb.client.domain.AuthorizationUpdateRequest;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.Organization;
 import com.influxdb.client.domain.Permission;
@@ -201,6 +204,34 @@ class ITAuthorizationsApi extends AbstractITClientTest {
     }
 
     @Test
+    void createAuthorizationRequest() {
+
+        PermissionResource checks = new PermissionResource();
+        checks.setOrgID(organization.getId());
+        checks.setType(PermissionResource.TYPE_CHECKS);
+
+        Permission read = new Permission();
+        read.setResource(checks);
+        read.setAction(Permission.ActionEnum.READ);
+
+        Permission write = new Permission();
+        write.setResource(checks);
+        write.setAction(Permission.ActionEnum.WRITE);
+
+        AuthorizationPostRequest request = new AuthorizationPostRequest();
+        request
+                .orgID(organization.getId())
+                .permissions(Arrays.asList(read, write))
+                .description("Created by AuthorizationPostRequest");
+
+        Authorization authorization = authorizationsApi.createAuthorization(request);
+
+        Assertions.assertThat(authorization.getPermissions()).hasSize(2);
+        Assertions.assertThat(authorization.getDescription()).isEqualTo("Created by AuthorizationPostRequest");
+        Assertions.assertThat(authorization.getToken()).isNotBlank();
+    }
+
+    @Test
     void findAuthorizationsByID() {
 
         Authorization authorization = authorizationsApi.createAuthorization(organization, newPermissions());
@@ -302,6 +333,29 @@ class ITAuthorizationsApi extends AbstractITClientTest {
         authorization = authorizationsApi.updateAuthorization(authorization);
 
         Assertions.assertThat(authorization.getStatus()).isEqualTo(Authorization.StatusEnum.ACTIVE);
+    }
+
+    @Test
+    void updateAuthorizationRequest() {
+
+        PermissionResource user = new PermissionResource();
+        user.setOrgID(organization.getId());
+        user.setType(PermissionResource.TYPE_USERS);
+
+        Permission read = new Permission();
+        read.setAction(Permission.ActionEnum.READ);
+        read.setResource(user);
+
+        Authorization authorization = authorizationsApi.createAuthorization(organization, Collections.singletonList(read));
+        Assertions.assertThat(authorization.getStatus()).isEqualTo(Authorization.StatusEnum.ACTIVE);
+
+        AuthorizationUpdateRequest request = new AuthorizationUpdateRequest()
+                .status(AuthorizationUpdateRequest.StatusEnum.INACTIVE)
+                .description("Updated description");
+        authorization = authorizationsApi.updateAuthorization(authorization.getId(), request);
+
+        Assertions.assertThat(authorization.getStatus()).isEqualTo(Authorization.StatusEnum.INACTIVE);
+        Assertions.assertThat(authorization.getDescription()).isEqualTo("Updated description");
     }
 
     @Test
