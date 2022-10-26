@@ -7,8 +7,10 @@
 ### Bug Fixes
 1. [#459](https://github.com/influxdata/influxdb-client-java/pull/459): Fix support for InfluxDB 1.8.x in InfluxQLQueryAPI
 
-### Dependencies
+### CI
+1. [#460](https://github.com/influxdata/influxdb-client-java/pull/460): Check dependency licenses
 
+### Dependencies
 1. [#446](https://github.com/influxdata/influxdb-client-java/pull/446): Remove `gson-fire`
 
 Update dependencies:
