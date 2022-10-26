@@ -133,6 +133,29 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 				});
 	}
 
+	@Test
+	void testInfluxDB18() {
+		// create database
+		String db = "testing_database";
+		influxDBQuery("CREATE DATABASE " + db, db);
+
+		// connect to InfluxDB 1.8
+		influxDBClient.close();
+		influxDBClient = InfluxDBClientFactory.createV1(getInfluxDbUrl(), "username", "password".toCharArray(),
+				db, "autogen");
+		influxQLQueryApi = influxDBClient.getInfluxQLQueryApi();
+
+		// test query to InfluxDB 1.8
+		InfluxQLQueryResult result = influxQLQueryApi.query(new InfluxQLQuery("SHOW DATABASES", db));
+		assertSingleSeriesRecords(result)
+				.map(record -> record.getValueByKey("name"))
+				.contains(db);
+
+
+		// drop database
+		influxDBQuery("DROP DATABASE " + db, db);
+	}
+
 	private ListAssert<InfluxQLQueryResult.Series.Record> assertSingleSeriesRecords(InfluxQLQueryResult result) {
 		return Assertions.assertThat(result)
 				.extracting(InfluxQLQueryResult::getResults, list(InfluxQLQueryResult.Result.class))
