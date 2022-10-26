@@ -240,6 +240,48 @@
                     <properties>
                         <organizationName>${project.organization.name}</organizationName>
                     </properties>
+                    <dependencyPolicies>
+                        <dependencyPolicy>
+                            <type>LICENSE_NAME</type>
+                            <rule>APPROVE</rule>
+                            <value>The MIT License (MIT)</value>
+                        </dependencyPolicy>
+                        <dependencyPolicy>
+                            <type>LICENSE_NAME</type>
+                            <rule>APPROVE</rule>
+                            <value>The MIT License</value>
+                        </dependencyPolicy>
+                        <dependencyPolicy>
+                            <type>LICENSE_NAME</type>
+                            <rule>APPROVE</rule>
+                            <value>Apache-2.0</value>
+                        </dependencyPolicy>
+                        <dependencyPolicy>
+                            <type>LICENSE_URL</type>
+                            <rule>APPROVE</rule>
+                            <value>http://www.apache.org/licenses/LICENSE-2.0.txt</value>
+                        </dependencyPolicy>
+                        <dependencyPolicy>
+                            <type>LICENSE_URL</type>
+                            <rule>APPROVE</rule>
+                            <value>https://www.apache.org/licenses/LICENSE-2.0.txt</value>
+                        </dependencyPolicy>
+                        <dependencyPolicy>
+                            <type>LICENSE_URL</type>
+                            <rule>APPROVE</rule>
+                            <value>https://www.apache.org/licenses/LICENSE-2.0</value>
+                        </dependencyPolicy>
+                        <dependencyPolicy>
+                            <type>LICENSE_URL</type>
+                            <rule>APPROVE</rule>
+                            <value>http://opensource.org/licenses/BSD-3-Clause</value>
+                        </dependencyPolicy>
+                        <dependencyPolicy>
+                            <type>LICENSE_URL</type>
+                            <rule>APPROVE</rule>
+                            <value>https://www.eclipse.org/legal/epl-v20.html</value>
+                        </dependencyPolicy>
+                    </dependencyPolicies>
                 </configuration>
                 <executions>
                     <execution>
@@ -375,7 +417,7 @@
                 <plugin>
                     <groupId>com.mycila</groupId>
                     <artifactId>license-maven-plugin</artifactId>
-                    <version>4.1</version>
+                    <version>4.2.rc2</version>
                 </plugin>
 
                 <plugin>
