@@ -72,6 +72,25 @@ class WriteScalaApiTest extends AnyFunSuite with Matchers with BeforeAndAfter wi
     request.getRequestUrl.queryParameter("precision") should be("ns")
   }
 
+  test("write record as stream") {
+
+    utils.serverMockResponse()
+
+    val source = Source(List("m2m,tag=a value=1i 1", "m2m,tag=a value=2i 2"))
+    val sink = client.getWriteScalaApi.writeRecord()
+    val materialized = source.toMat(sink)(Keep.right)
+
+    Await.ready(materialized.run(), Duration.Inf)
+
+    utils.getRequestCount should be(2)
+    val request = utils.serverTakeRequest()
+    // check request
+    request.getBody.readUtf8() should be("m2m,tag=a value=1i 1")
+    request.getRequestUrl.queryParameter("bucket") should be("my-bucket")
+    request.getRequestUrl.queryParameter("org") should be("my-org")
+    request.getRequestUrl.queryParameter("precision") should be("ns")
+  }
+
   test("write records") {
 
     utils.serverMockResponse()
@@ -134,6 +153,37 @@ class WriteScalaApiTest extends AnyFunSuite with Matchers with BeforeAndAfter wi
     Await.ready(materialized.run(), Duration.Inf)
 
     utils.getRequestCount should be(1)
+    val request = utils.serverTakeRequest()
+    // check request
+    request.getBody.readUtf8() should be("h2o,location=europe level=1i 1")
+    request.getRequestUrl.queryParameter("bucket") should be("my-bucket")
+    request.getRequestUrl.queryParameter("org") should be("my-org")
+    request.getRequestUrl.queryParameter("precision") should be("ns")
+  }
+
+  test("write point as stream") {
+
+    utils.serverMockResponse()
+
+    val point = Point
+      .measurement("h2o")
+      .addTag("location", "europe")
+      .addField("level", 1)
+      .time(1L, WritePrecision.NS)
+
+    val point2 = Point
+      .measurement("h2o")
+      .addTag("location", "europe")
+      .addField("level", 2)
+      .time(2L, WritePrecision.NS)
+
+    val source = Source(List(point, point2))
+    val sink = client.getWriteScalaApi.writePoint()
+    val materialized = source.toMat(sink)(Keep.right)
+
+    Await.ready(materialized.run(), Duration.Inf)
+
+    utils.getRequestCount should be(2)
     val request = utils.serverTakeRequest()
     // check request
     request.getBody.readUtf8() should be("h2o,location=europe level=1i 1")
