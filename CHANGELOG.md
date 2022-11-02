@@ -21,6 +21,7 @@ Update dependencies:
   - [#443](https://github.com/influxdata/influxdb-client-java/pull/443): `micrometer-registry-influx` to `1.9.5`
   - [#451](https://github.com/influxdata/influxdb-client-java/pull/451): `karaf` to `4.4.2`
   - [#449](https://github.com/influxdata/influxdb-client-java/pull/449): `spring-boot` to `2.7.5`
+  - [#462](https://github.com/influxdata/influxdb-client-java/pull/462): `gson` to `2.10`
 
 #### Maven Plugin:
   - [#445](https://github.com/influxdata/influxdb-client-java/pull/445): `dokka-maven-plugin` to `1.7.20`
