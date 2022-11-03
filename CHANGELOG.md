@@ -1,4 +1,4 @@
-## 6.7.0 [unreleased]
+## 6.7.0 [2022-11-03]
 
 ### Features
 1. [#439](https://github.com/influxdata/influxdb-client-java/pull/439): Add `FluxRecord.getRow()` which stores response data in a list
