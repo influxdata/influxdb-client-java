@@ -6,10 +6,18 @@
     <link href="../../../images/logo-icon.svg" rel="icon" type="image/svg">
     <script>var pathToRoot = "../../../";</script>
     <script>const storage = localStorage.getItem("dokka-dark-mode")
-const savedDarkMode = storage ? JSON.parse(storage) : false
-if(savedDarkMode === true){
-    document.getElementsByTagName("html")[0].classList.add("theme-dark")
-}</script>
+    if (storage == null) {
+        const osDarkSchemePreferred = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
+        if (osDarkSchemePreferred === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    } else {
+        const savedDarkMode = JSON.parse(storage)
+        if(savedDarkMode === true) {
+            document.getElementsByTagName("html")[0].classList.add("theme-dark")
+        }
+    }
+    </script>
 <script type="text/javascript" src="../../../scripts/sourceset_dependencies.js" async="async"></script>
 <link href="../../../styles/style.css" rel="Stylesheet">
 <link href="../../../styles/jetbrains-mono.css" rel="Stylesheet">
@@ -21,6 +29,7 @@ if(savedDarkMode === true){
 <script type="text/javascript" src="../../../scripts/platform-content-handler.js" async="async"></script>
 <script type="text/javascript" src="../../../scripts/main.js" defer="defer"></script>
 <script type="text/javascript" src="../../../scripts/prism.js" async="async"></script>
+<script type="text/javascript" src="../../../scripts/symbol-parameters-wrapper_deferred.js" defer="defer"></script>
 </head>
 <body>
 <div class="navigation-wrapper" id="navigation-wrapper">
@@ -43,24 +52,11 @@ if(savedDarkMode === true){
     </div>
     <div id="main">
 <div class="main-content" id="content" pageIds="influxdb-client-kotlin::com.influxdb.client.kotlin/InfluxDBClientKotlin/setLogLevel/#com.influxdb.LogLevel/PointingToDeclaration//-65159142">
-  <div class="breadcrumbs"><a href="../../../index.html">influxdb-client-kotlin</a><span class="delimiter">/</span><a href="../index.html">com.influxdb.client.kotlin</a><span class="delimiter">/</span><a href="index.html">InfluxDBClientKotlin</a><span class="delimiter">/</span><a href="set-log-level.html">setLogLevel</a></div>
+  <div class="breadcrumbs"><a href="../../../index.html">influxdb-client-kotlin</a><span class="delimiter">/</span><a href="../index.html">com.influxdb.client.kotlin</a><span class="delimiter">/</span><a href="index.html">InfluxDBClientKotlin</a><span class="delimiter">/</span><span class="current">setLogLevel</span></div>
   <div class="cover ">
     <h1 class="cover"><span>set</span><wbr></wbr><span>Log</span><wbr></wbr><span><span>Level</span></span></h1>
   </div>
-  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-depenent-content" data-active="" data-togglable="influxdb-client-kotlin/JVM"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-log-level.html"><span class="token function">setLogLevel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logLevel<span class="token operator">: </span><span data-unresolved-link="com.influxdb/LogLevel///PointingToDeclaration/">LogLevel</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InfluxDBClientKotlin</a><span class="top-right-position"><span class="copy-icon"></span><div class="copy-popup-wrapper popup-to-left"><span class="copy-popup-icon"></span><span>Content copied to clipboard</span></div></span></div><p class="paragraph">Sets the log level for the request and response information.</p><h4 class="">Return</h4><p class="paragraph">the <a href="index.html">InfluxDBClientKotlin</a> instance to be able to use it in a fluent manner.</p><h2 class="">Parameters</h2><div data-togglable="Parameters"><div class="table" data-togglable="Parameters"><div class="table-row" data-filterable-current="influxdb-client-kotlin/JVM" data-filterable-set="influxdb-client-kotlin/JVM"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><span>log</span><wbr></wbr><span><span>Level</span></span></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">the log level to set.</p></div></div></div></div></div></div></div></div></div>
-  <h2 class="">Sources</h2>
-  <div class="table" data-togglable="Sources"><a data-name="1720775867%2FSource%2F-65159142" anchor-label="https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin/src/main/kotlin/com/influxdb/client/kotlin/InfluxDBClientKotlin.kt#L81" id="1720775867%2FSource%2F-65159142" data-filterable-set="influxdb-client-kotlin/JVM"></a>
-    <div class="table-row" data-filterable-current="influxdb-client-kotlin/JVM" data-filterable-set="influxdb-client-kotlin/JVM">
-      <div class="main-subrow keyValue ">
-        <div class=""><span class="inline-flex">
-            <div><a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin/src/main/kotlin/com/influxdb/client/kotlin/InfluxDBClientKotlin.kt#L81">JVM source</a></div>
-<span class="anchor-wrapper"><span class="anchor-icon" pointing-to="1720775867%2FSource%2F-65159142"></span>
-              <div class="copy-popup-wrapper "><span class="copy-popup-icon"></span><span>Link copied to clipboard</span></div>
-            </span></span></div>
-        <div></div>
-      </div>
-    </div>
-  </div>
+  <div class="platform-hinted " data-platform-hinted="data-platform-hinted"><div class="content sourceset-dependent-content" data-active="" data-togglable="influxdb-client-kotlin/JVM"><div class="symbol monospace"><span class="token keyword">abstract </span><span class="token keyword"></span><span class="token keyword">fun </span><a href="set-log-level.html"><span class="token function">setLogLevel</span></a><span class="token punctuation">(</span><span class="parameters "><span class="parameter ">logLevel<span class="token operator">: </span><span data-unresolved-link="com.influxdb/LogLevel///PointingToDeclaration/">LogLevel</span></span></span><span class="token punctuation">)</span><span class="token operator">: </span><a href="index.html">InfluxDBClientKotlin</a><span class="clearfix"><span class="floating-right">(<a href="https://github.com/influxdata/influxdb-client-java/tree/master/client-kotlin/src/main/kotlin/com/influxdb/client/kotlin/InfluxDBClientKotlin.kt#L81">source</a>)</span></span></div><p class="paragraph">Sets the log level for the request and response information.</p><span class="kdoc-tag"><h4 class="">Return</h4><p class="paragraph">the <a href="index.html">InfluxDBClientKotlin</a> instance to be able to use it in a fluent manner.</p></span><h4 class="">Parameters</h4><div data-togglable="Parameters"><div class="table" data-togglable="Parameters"><div class="table-row" data-filterable-current="influxdb-client-kotlin/JVM" data-filterable-set="influxdb-client-kotlin/JVM"><div class="main-subrow keyValue WithExtraAttributes"><div class=""><span class="inline-flex"><div><u><span>log</span><wbr></wbr><span><span>Level</span></span></u></div></span></div><div><div class="title"><div data-togglable="Parameters"><p class="paragraph">the log level to set.</p></div></div></div></div></div></div></div></div></div>
 </div>
       <div class="footer">
         <span class="go-to-top-icon"><a href="#content" id="go-to-top-link"></a></span><span>© 2022 Copyright</span><span

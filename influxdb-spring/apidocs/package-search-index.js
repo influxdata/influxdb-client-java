@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.influxdb.spring.health"},{"l":"com.influxdb.spring.influx"}];updateSearchResults();
