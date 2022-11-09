@@ -1,5 +1,12 @@
 ## 6.8.0 [unreleased]
 
+### Dependencies
+
+Update dependencies:
+
+#### Build:
+ - [#464](https://github.com/influxdata/influxdb-client-java/pull/464): `micrometer-registry-influx` to `1.10.0`
+
 ## 6.7.0 [2022-11-03]
 
 ### Features
