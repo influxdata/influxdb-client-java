@@ -8,6 +8,9 @@ Update dependencies:
  - [#464](https://github.com/influxdata/influxdb-client-java/pull/464): `micrometer-registry-influx` to `1.10.0`
  - [#466](https://github.com/influxdata/influxdb-client-java/pull/466): `kotlin` to `1.7.21`
 
+#### Test:
+ - [#467](https://github.com/influxdata/influxdb-client-java/pull/467): `mockito` to `4.9.0`
+
 ## 6.7.0 [2022-11-03]
 
 ### Features
