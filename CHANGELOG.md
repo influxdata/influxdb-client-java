@@ -6,6 +6,7 @@ Update dependencies:
 
 #### Build:
  - [#464](https://github.com/influxdata/influxdb-client-java/pull/464): `micrometer-registry-influx` to `1.10.0`
+ - [#466](https://github.com/influxdata/influxdb-client-java/pull/466): `kotlin` to `1.7.21`
 
 ## 6.7.0 [2022-11-03]
 
