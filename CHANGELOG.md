@@ -1,5 +1,8 @@
 ## 6.8.0 [unreleased]
 
+### Bug Fixes
+1. [#470](https://github.com/influxdata/influxdb-client-java/pull/470): Move auto-configuration registration to `AutoConfiguration.imports` [spring]
+
 ### Dependencies
 
 Update dependencies:
