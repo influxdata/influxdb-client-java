@@ -1,12 +1,18 @@
 ## 6.8.0 [unreleased]
 
+### Bug Fixes
+1. [#470](https://github.com/influxdata/influxdb-client-java/pull/470): Move auto-configuration registration to `AutoConfiguration.imports` [spring]
+
 ### Dependencies
 
 Update dependencies:
 
 #### Build:
  - [#473](https://github.com/influxdata/influxdb-client-java/pull/473): `micrometer-registry-influx` to `1.10.2`
- - [#466](https://github.com/influxdata/influxdb-client-java/pull/466): `kotlin` to `1.7.21`
+ - [#477](https://github.com/influxdata/influxdb-client-java/pull/477): `kotlin` to `1.7.22`
+
+#### Provided:
+ - [#478](https://github.com/influxdata/influxdb-client-java/pull/478): `slf4j-api` to `2.0.5`
 
 #### Test:
  - [#467](https://github.com/influxdata/influxdb-client-java/pull/467): `mockito` to `4.9.0`

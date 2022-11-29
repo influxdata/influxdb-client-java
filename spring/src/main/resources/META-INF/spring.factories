@@ -1,4 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.influxdb.spring.health.InfluxDB2HealthIndicatorAutoConfiguration,\
-com.influxdb.spring.influx.InfluxDB2AutoConfiguration,\
-com.influxdb.spring.influx.InfluxDB2AutoConfigurationReactive
