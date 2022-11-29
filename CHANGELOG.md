@@ -10,7 +10,7 @@ Update dependencies:
 #### Build:
  - [#473](https://github.com/influxdata/influxdb-client-java/pull/473): `micrometer-registry-influx` to `1.10.2`
  - [#477](https://github.com/influxdata/influxdb-client-java/pull/477): `kotlin` to `1.7.22`
- - [#476](https://github.com/influxdata/influxdb-client-java/pull/476): `scala-collection-compat_2.12` to `2.8.1`
+ - [#476](https://github.com/influxdata/influxdb-client-java/pull/476): `scala-collection-compat_2.12` to `2.9.0`
 
 #### Provided:
  - [#478](https://github.com/influxdata/influxdb-client-java/pull/478): `slf4j-api` to `2.0.5`
