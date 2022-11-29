@@ -11,6 +11,9 @@ Update dependencies:
  - [#464](https://github.com/influxdata/influxdb-client-java/pull/464): `micrometer-registry-influx` to `1.10.0`
  - [#466](https://github.com/influxdata/influxdb-client-java/pull/466): `kotlin` to `1.7.21`
 
+#### Provided:
+ - [#478](https://github.com/influxdata/influxdb-client-java/pull/478): `slf4j-api` to `2.0.5`
+
 #### Test:
  - [#467](https://github.com/influxdata/influxdb-client-java/pull/467): `mockito` to `4.9.0`
 
