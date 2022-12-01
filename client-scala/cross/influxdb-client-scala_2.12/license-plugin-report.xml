@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="CHECK" timestamp="1669899804032">
+    <module artifactId="influxdb-client-scala_2.12" groupId="com.influxdb" version="6.8.0-SNAPSHOT"/>
+    <files>
+        <file path="pom.xml" result="PRESENT"/>
+        <file path="src/main/scala/com/influxdb/client/scala/InfluxDBClientScala.scala" result="PRESENT"/>
+        <file path="src/main/scala/com/influxdb/client/scala/InfluxDBClientScalaFactory.scala" result="PRESENT"/>
+        <file path="src/main/scala/com/influxdb/client/scala/QueryScalaApi.scala" result="PRESENT"/>
+        <file path="src/main/scala/com/influxdb/client/scala/WriteScalaApi.scala" result="PRESENT"/>
+        <file path="src/main/scala/com/influxdb/client/scala/internal/InfluxDBClientScalaImpl.scala" result="PRESENT"/>
+        <file path="src/main/scala/com/influxdb/client/scala/internal/QueryScalaApiImpl.scala" result="PRESENT"/>
+        <file path="src/main/scala/com/influxdb/client/scala/internal/WriteScalaApiImpl.scala" result="PRESENT"/>
+        <file path="src/test/resources/influx2.properties" result="PRESENT"/>
+        <file path="src/test/scala/com/influxdb/client/scala/AbstractITQueryScalaApi.scala" result="PRESENT"/>
+        <file path="src/test/scala/com/influxdb/client/scala/ITInfluxDBClientScala.scala" result="PRESENT"/>
+        <file path="src/test/scala/com/influxdb/client/scala/ITQueryScalaApiQuery.scala" result="PRESENT"/>
+        <file path="src/test/scala/com/influxdb/client/scala/InfluxDBClientScalaFactoryTest.scala" result="PRESENT"/>
+        <file path="src/test/scala/com/influxdb/client/scala/InfluxDBClientScalaTest.scala" result="PRESENT"/>
+        <file path="src/test/scala/com/influxdb/client/scala/InfluxDBUtils.scala" result="PRESENT"/>
+        <file path="src/test/scala/com/influxdb/client/scala/WriteScalaApiTest.scala" result="PRESENT"/>
+    </files>
+</licensePluginReport>

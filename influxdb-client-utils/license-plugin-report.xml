@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="CHECK" timestamp="1669899745123">
+    <module artifactId="influxdb-client-utils" groupId="com.influxdb" version="6.8.0-SNAPSHOT"/>
+    <files>
+        <file path="pom.xml" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/utils/Arguments.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/utils/ArgumentsDurationTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/utils/ArgumentsTest.java" result="PRESENT"/>
+    </files>
+</licensePluginReport>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="CHECK" timestamp="1669899845030">
+    <module artifactId="examples" groupId="com.influxdb" version="6.8.0-SNAPSHOT"/>
+    <files>
+        <file path="pom.xml" result="PRESENT"/>
+        <file path="src/main/java/example/AsynchronousQuery.java" result="PRESENT"/>
+        <file path="src/main/java/example/AsynchronousQueryPojo.java" result="PRESENT"/>
+        <file path="src/main/java/example/Cpu.java" result="PRESENT"/>
+        <file path="src/main/java/example/DeleteData.java" result="PRESENT"/>
+        <file path="src/main/java/example/FluxClientFactoryExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/FluxClientPojoExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/FluxClientSimpleExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/FluxDslExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/FluxExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/FluxRawExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/InfluxDB18Example.java" result="PRESENT"/>
+        <file path="src/main/java/example/InfluxDB2Example.java" result="PRESENT"/>
+        <file path="src/main/java/example/InfluxDB2ManagementExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/InfluxDB2ReactiveExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/InfluxDB2ReactiveExampleDSL.java" result="PRESENT"/>
+        <file path="src/main/java/example/InfluxDB2ReactiveExamplePojo.java" result="PRESENT"/>
+        <file path="src/main/java/example/InfluxDB2ReactiveExampleRaw.java" result="PRESENT"/>
+        <file path="src/main/java/example/InfluxDB2ReactiveExampleWriteEveryTenSeconds.java" result="PRESENT"/>
+        <file path="src/main/java/example/InfluxDBEnterpriseExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/InfluxQLExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/InvokableScripts.java" result="PRESENT"/>
+        <file path="src/main/java/example/KotlinQuery.kt" result="PRESENT"/>
+        <file path="src/main/java/example/KotlinQueryDSL.kt" result="PRESENT"/>
+        <file path="src/main/java/example/KotlinQueryRaw.kt" result="PRESENT"/>
+        <file path="src/main/java/example/KotlinWriteApi.kt" result="PRESENT"/>
+        <file path="src/main/java/example/KotlinWriteBatchingByFlow.kt" result="PRESENT"/>
+        <file path="src/main/java/example/ParameterizedQuery.java" result="PRESENT"/>
+        <file path="src/main/java/example/PlatformExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/RawQuery.java" result="PRESENT"/>
+        <file path="src/main/java/example/RawQueryAsynchronous.java" result="PRESENT"/>
+        <file path="src/main/java/example/RecordRowExample.java" result="PRESENT"/>
+        <file path="src/main/java/example/ScalaQuery.scala" result="PRESENT"/>
+        <file path="src/main/java/example/ScalaQueryDSL.scala" result="PRESENT"/>
+        <file path="src/main/java/example/ScalaQueryRaw.scala" result="PRESENT"/>
+        <file path="src/main/java/example/ScalaWriteApi.scala" result="PRESENT"/>
+        <file path="src/main/java/example/SynchronousQuery.java" result="PRESENT"/>
+        <file path="src/main/java/example/SynchronousQueryDSL.java" result="PRESENT"/>
+        <file path="src/main/java/example/SynchronousQueryPojo.java" result="PRESENT"/>
+        <file path="src/main/java/example/WriteDataBlocking.java" result="PRESENT"/>
+        <file path="src/main/java/example/WriteDataEverySecond.java" result="PRESENT"/>
+        <file path="src/main/java/example/WriteDataPoint.java" result="PRESENT"/>
+        <file path="src/main/java/example/WriteLineProtocol.java" result="PRESENT"/>
+        <file path="src/main/java/example/WritePojo.java" result="PRESENT"/>
+    </files>
+</licensePluginReport>

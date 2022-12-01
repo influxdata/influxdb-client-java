@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="CHECK" timestamp="1669899743074">
+    <module artifactId="influxdb-client" groupId="com.influxdb" version="6.8.0-SNAPSHOT"/>
+    <files>
+        <file path=".circleci/config.yml" result="PRESENT"/>
+        <file path=".github/dependabot.yml" result="PRESENT"/>
+        <file path="client-scala/src/main/scala/com/influxdb/client/scala/InfluxDBClientScala.scala" result="PRESENT"/>
+        <file path="client-scala/src/main/scala/com/influxdb/client/scala/InfluxDBClientScalaFactory.scala" result="PRESENT"/>
+        <file path="client-scala/src/main/scala/com/influxdb/client/scala/QueryScalaApi.scala" result="PRESENT"/>
+        <file path="client-scala/src/main/scala/com/influxdb/client/scala/WriteScalaApi.scala" result="PRESENT"/>
+        <file path="client-scala/src/main/scala/com/influxdb/client/scala/internal/InfluxDBClientScalaImpl.scala" result="PRESENT"/>
+        <file path="client-scala/src/main/scala/com/influxdb/client/scala/internal/QueryScalaApiImpl.scala" result="PRESENT"/>
+        <file path="client-scala/src/main/scala/com/influxdb/client/scala/internal/WriteScalaApiImpl.scala" result="PRESENT"/>
+        <file path="client-scala/src/test/resources/influx2.properties" result="PRESENT"/>
+        <file path="client-scala/src/test/scala/com/influxdb/client/scala/AbstractITQueryScalaApi.scala" result="PRESENT"/>
+        <file path="client-scala/src/test/scala/com/influxdb/client/scala/ITInfluxDBClientScala.scala" result="PRESENT"/>
+        <file path="client-scala/src/test/scala/com/influxdb/client/scala/ITQueryScalaApiQuery.scala" result="PRESENT"/>
+        <file path="client-scala/src/test/scala/com/influxdb/client/scala/InfluxDBClientScalaFactoryTest.scala" result="PRESENT"/>
+        <file path="client-scala/src/test/scala/com/influxdb/client/scala/InfluxDBClientScalaTest.scala" result="PRESENT"/>
+        <file path="client-scala/src/test/scala/com/influxdb/client/scala/InfluxDBUtils.scala" result="PRESENT"/>
+        <file path="client-scala/src/test/scala/com/influxdb/client/scala/WriteScalaApiTest.scala" result="PRESENT"/>
+        <file path="pom.xml" result="PRESENT"/>
+        <file path="scripts/checkstyle.xml" result="PRESENT"/>
+        <file path="scripts/deploy-settings.xml" result="PRESENT"/>
+        <file path="scripts/deploy-snapshot.sh" result="PRESENT"/>
+        <file path="scripts/generate-sources.sh" result="PRESENT"/>
+        <file path="scripts/influxdb-onboarding.sh" result="PRESENT"/>
+        <file path="scripts/influxdb-restart.sh" result="PRESENT"/>
+        <file path="scripts/influxdb.conf" result="PRESENT"/>
+        <file path="scripts/logging.properties" result="PRESENT"/>
+        <file path="scripts/maven-version-rules.xml" result="PRESENT"/>
+        <file path="scripts/publish-site.sh" result="PRESENT"/>
+        <file path="scripts/release.sh" result="PRESENT"/>
+        <file path="scripts/site/site.xml" result="PRESENT"/>
+    </files>
+</licensePluginReport>
