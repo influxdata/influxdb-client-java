@@ -223,9 +223,9 @@ public final class WriteParameters {
     @Override
     @SuppressWarnings("MagicNumber")
     public int hashCode() {
-        int result = bucket.hashCode();
-        result = 31 * result + org.hashCode();
-        result = 31 * result + precision.hashCode();
+        int result = bucket != null ? bucket.hashCode() : 0;
+        result = 31 * result + (org != null ? org.hashCode() : 0);
+        result = 31 * result + (precision != null ? precision.hashCode() : 0);
         result = 31 * result + (consistency != null ? consistency.hashCode() : 0);
         return result;
     }

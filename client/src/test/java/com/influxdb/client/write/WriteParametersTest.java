@@ -109,4 +109,12 @@ class WriteParametersTest {
         Assertions.assertThat(parameters.precisionSafe(options)).isEqualTo(WritePrecision.NS);
         Assertions.assertThat(parameters.consistencySafe(options)).isEqualTo(WriteConsistency.ONE);
     }
+
+    @Test
+    void npe() {
+        WriteParameters parameters = new WriteParameters(null, null, null, null);
+
+        Assertions.assertThat(parameters.hashCode()).isNotNull();
+        Assertions.assertThat(parameters).isEqualTo(parameters);
+    }
 }
