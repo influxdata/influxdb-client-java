@@ -2,7 +2,7 @@
 
 ### Bug Fixes
 1. [#470](https://github.com/influxdata/influxdb-client-java/pull/470): Move auto-configuration registration to `AutoConfiguration.imports` [spring]
-1. [#483](https://github.com/influxdata/influxdb-client-java/pull/483): Fix potential NPE for `WriteParameters#hashCode`
+1. [#483](https://github.com/influxdata/influxdb-client-java/pull/483): Fix of potential NPE for `WriteParameters#hashCode`
 
 ### Dependencies
 
