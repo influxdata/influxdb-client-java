@@ -12,6 +12,9 @@ Update dependencies:
  - [#477](https://github.com/influxdata/influxdb-client-java/pull/477): `kotlin` to `1.7.22`
  - [#476](https://github.com/influxdata/influxdb-client-java/pull/476): `scala-collection-compat_2.12` to `2.9.0`
 
+#### Maven Plugin:
+ - [#479](https://github.com/influxdata/influxdb-client-java/pull/479): `scala-maven-plugin` to `4.8.0`
+
 #### Provided:
  - [#478](https://github.com/influxdata/influxdb-client-java/pull/478): `slf4j-api` to `2.0.5`
 
