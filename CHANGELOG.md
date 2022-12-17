@@ -4,6 +4,9 @@
 1. [#470](https://github.com/influxdata/influxdb-client-java/pull/470): Move auto-configuration registration to `AutoConfiguration.imports` [spring]
 1. [#483](https://github.com/influxdata/influxdb-client-java/pull/483): Fix of potential NPE for `WriteParameters#hashCode`
 
+### CI
+1. [#484](https://github.com/influxdata/influxdb-client-java/pull/4884): Add JDK 19 to CI pipeline
+
 ### Dependencies
 
 Update dependencies:
