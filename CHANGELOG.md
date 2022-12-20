@@ -20,7 +20,7 @@ Update dependencies:
  - [#479](https://github.com/influxdata/influxdb-client-java/pull/479): `scala-maven-plugin` to `4.8.0`
 
 #### Provided:
- - [#478](https://github.com/influxdata/influxdb-client-java/pull/478): `slf4j-api` to `2.0.5`
+ - [#487](https://github.com/influxdata/influxdb-client-java/pull/487): `slf4j-api` to `2.0.6`
 
 #### Test:
  - [#467](https://github.com/influxdata/influxdb-client-java/pull/467): `mockito` to `4.9.0`
