@@ -15,6 +15,7 @@ Update dependencies:
  - [#473](https://github.com/influxdata/influxdb-client-java/pull/473): `micrometer-registry-influx` to `1.10.2`
  - [#477](https://github.com/influxdata/influxdb-client-java/pull/477): `kotlin` to `1.7.22`
  - [#476](https://github.com/influxdata/influxdb-client-java/pull/476): `scala-collection-compat_2.12` to `2.9.0`
+ - [#488](https://github.com/influxdata/influxdb-client-java/pull/488): `versions-maven-plugin` to `2.14.1`
 
 #### Maven Plugin:
  - [#479](https://github.com/influxdata/influxdb-client-java/pull/479): `scala-maven-plugin` to `4.8.0`
