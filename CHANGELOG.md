@@ -22,6 +22,7 @@ Update dependencies:
 
 #### Provided:
  - [#487](https://github.com/influxdata/influxdb-client-java/pull/487): `slf4j-api` to `2.0.6`
+ - [#490](https://github.com/influxdata/influxdb-client-java/pull/490): `org.osgi.service.component.annotations` to `1.5.1`
 
 #### Test:
  - [#485](https://github.com/influxdata/influxdb-client-java/pull/485): `mockito` to `4.10.0`
