@@ -70,8 +70,9 @@ public class FluxResultMapper {
                     Map<String, Object> recordValues = record.getValues();
 
                     String col = null;
-
-                    if (recordValues.containsKey(columnName)) {
+                    if (recordValues.containsKey("_field") && recordValues.get("_field").equals(columnName)) {
+                        col = "_value";
+                    } else if (recordValues.containsKey(columnName)) {
                         col = columnName;
                     } else if (recordValues.containsKey("_" + columnName)) {
                         col = "_" + columnName;
