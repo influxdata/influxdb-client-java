@@ -115,7 +115,7 @@
         <dependency.io.reactivex.rxjava3>3.1.5</dependency.io.reactivex.rxjava3>
 
         <plugin.surefire.version>3.0.0-M8</plugin.surefire.version>
-        <plugin.javadoc.version>3.4.1</plugin.javadoc.version>
+        <plugin.javadoc.version>3.5.0</plugin.javadoc.version>
         <plugin.checkstyle.version>3.2.0</plugin.checkstyle.version>
         <plugin.jacoco.version>0.8.8</plugin.jacoco.version>
         <plugin.site.version>3.12.1</plugin.site.version>
