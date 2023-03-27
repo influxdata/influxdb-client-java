@@ -443,7 +443,6 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
         @Override
         public Maybe<Notification<Response>> apply(final BatchWriteItem batchWrite) {
-
             String content = batchWrite.data.toLineProtocol();
 
             if (content == null || content.isEmpty()) {
@@ -457,7 +456,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
             WriteConsistency consistency = batchWrite.writeParameters.consistencySafe(options);
 
             Single<Response<Void>> postWriteRx = service
-                    .postWriteRx(organization, bucket, content, null, "identity", "text/plain; charset=utf-8",
+                    .postWriteRx(organization, bucket, content, null, null, "text/plain; charset=utf-8",
                             null, "application/json", null, precision, consistency);
 
 

@@ -84,7 +84,7 @@ public abstract class AbstractWriteBlockingClient extends AbstractRestClient {
                 new Object[]{organization, bucket, precision});
 
         Call<Void> voidCall = service.postWrite(organization, bucket, lineProtocol, null,
-                "identity", "text/plain; charset=utf-8", null,
+                null, "text/plain; charset=utf-8", null,
                 "application/json", null, precision, consistency);
 
         execute(voidCall);
