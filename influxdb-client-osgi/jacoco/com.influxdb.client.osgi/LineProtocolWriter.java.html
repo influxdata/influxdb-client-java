@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LineProtocolWriter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The OSGi InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.osgi</a> &gt; <span class="el_source">LineProtocolWriter.java</span></div><h1>LineProtocolWriter.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.osgi;
+
+import java.math.BigInteger;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.internal.NanosecondConverter;
+
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.AttributeType;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+
+/**
+ * OSGi event handler writing InfluxDB line protocol records.
+ *
+ * &lt;p&gt;Service is used to write RAW (line protocol) event data to InfluxDB. OSGi event topic
+ * {@link LineProtocolWriter#DEFAULT_EVENT_TOPIC} used by default. The following OSGi event properties are
+ * supported:&lt;/p&gt;
+ *
+ * &lt;ul&gt;
+ *     &lt;li&gt;&lt;i&gt;record&lt;/i&gt; ({@link String}): value must be a single line protocol record&lt;/li&gt;
+ *     &lt;li&gt;&lt;i&gt;records&lt;/i&gt; ({@link List}): value must be a list of line protocol records&lt;/li&gt;
+ *     &lt;li&gt;&lt;i&gt;precision&lt;/i&gt; ({@link String}, optional): write precision, values: &lt;code&gt;s&lt;/code&gt;, &lt;code&gt;ms&lt;/code&gt;,
+ *         &lt;code&gt;us&lt;/code&gt;, &lt;code&gt;ns&lt;/code&gt;, default: &lt;code&gt;ns&lt;/code&gt;&lt;/li&gt;
+ *     &lt;li&gt;&lt;i&gt;organization&lt;/i&gt; ({@link String}, optional): used to override InfluxDB organization of
+ *         {@link LineProtocolWriter} service (by event).&lt;/li&gt;
+ *     &lt;li&gt;&lt;i&gt;bucket&lt;/i&gt; ({@link String}, optional): used to override InfluxDB bucket of
+ *         {@link LineProtocolWriter} service (by event).&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;One of &lt;i&gt;record&lt;/i&gt; or &lt;i&gt;records&lt;/i&gt; must be set.&lt;/p&gt;
+ *
+ * &lt;p&gt;Timestamp is appended to the line protocol record if it is enabled by configuration option (in that case records
+ * must not contain timestamp data!). Value is read from OSGi event (property {@link EventConstants#TIMESTAMP}) or
+ * {@link System#currentTimeMillis()} is set if property not found.&lt;/p&gt;
+ */
+@Component(immediate = true, configurationPolicy = ConfigurationPolicy.REQUIRE, property = {
+        EventConstants.EVENT_TOPIC + &quot;=&quot; + LineProtocolWriter.DEFAULT_EVENT_TOPIC
+})
+<span class="fc" id="L73">public class LineProtocolWriter implements EventHandler {</span>
+
+    /**
+     * Default OSGi event topic.
+     */
+    public static final String DEFAULT_EVENT_TOPIC = &quot;influxdb/lineprotocol&quot;;
+
+    /**
+     * OSGi event property name used to write single line protocol record.
+     */
+    public static final String RECORD = &quot;record&quot;;
+    /**
+     * OSGi event property name used to write list of line protocol records.
+     */
+    public static final String RECORDS = &quot;records&quot;;
+    /**
+     * OSGi event property name to set precision.
+     */
+    public static final String PRECISION = &quot;precision&quot;;
+
+    /**
+     * OSGi event property name to override InfluxDB organization.
+     */
+    public static final String ORGANIZATION = &quot;organization&quot;;
+    /**
+     * OSGi event property name to override InfluxDB bucket.
+     */
+    public static final String BUCKET = &quot;bucket&quot;;
+
+    /**
+     * Configuration for Line Protocol Writer.
+     */
+    @ObjectClassDefinition(name = &quot;InfluxDB Line Protocol Writer&quot;,
+            description = &quot;Event handler writing line protocol record(s) to InfluxDB&quot;)
+    public @interface Config {
+
+        /**
+         * OSGi event handler topic(s).
+         */
+        @AttributeDefinition(name = &quot;Topics&quot;,
+                description = &quot;OSGi event topics&quot;)
+        String[] event_topics() default {DEFAULT_EVENT_TOPIC};
+
+        /**
+         * OSGi target filter for InfluxDB connection, i.e. &lt;code&gt;(alias=test)&lt;/code&gt;. The following properties are
+         * copied from {@link InfluxDBConnector}: &lt;code&gt;organization&lt;/code&gt;, &lt;code&gt;bucket&lt;/code&gt;, &lt;code&gt;database&lt;/code&gt;,
+         * &lt;code&gt;url&lt;/code&gt;, &lt;code&gt;alias&lt;/code&gt;.
+         */
+        @AttributeDefinition(required = false, name = &quot;InfluxDB client target&quot;,
+                description = &quot;OSGi target filter of InfluxDB client service&quot;)
+        String client_target();
+
+        /**
+         * Current timestamp is appended to line protocol record(s) is enabled.
+         */
+        @AttributeDefinition(required = false, name = &quot;Append timestamp&quot;,
+                description = &quot;Append timestamp to line protocol record(s)&quot;, type = AttributeType.BOOLEAN)
+        boolean timestamp_append() default false;
+
+        /**
+         * InfluxDB organization to write data (overriding organization of {@link InfluxDBClient}).
+         */
+        @AttributeDefinition(required = false, name = &quot;Organization&quot;,
+                description = &quot;InfluxDB organization to write&quot;)
+        String organization();
+
+        /**
+         * InfluxDB bucket to write data (overriding bucket of {@link InfluxDBClient}).
+         */
+        @AttributeDefinition(required = false, name = &quot;Bucket&quot;,
+                description = &quot;InfluxDB bucket to write&quot;)
+        String bucket();
+    }
+
+    @Reference(policyOption = ReferencePolicyOption.GREEDY)
+    InfluxDBClient client;
+
+    Config config;
+
+    /**
+     * Start or reconfigure OSGi component.
+     *
+     * @param config configuration
+     */
+    @Activate
+    @Modified
+    void start(final Config config) {
+<span class="fc" id="L160">        this.config = config;</span>
+<span class="fc" id="L161">    }</span>
+
+    /**
+     * Write line protocol record from OSGi event.
+     *
+     * @param event OSGI event containing data
+     */
+    @Override
+    public void handleEvent(final Event event) {
+<span class="fc" id="L170">        String organization = (String) event.getProperty(ORGANIZATION);</span>
+<span class="fc bfc" id="L171" title="All 2 branches covered.">        if (organization == null) {</span>
+<span class="fc" id="L172">            organization = config.organization();</span>
+        }
+<span class="fc" id="L174">        String bucket = (String) event.getProperty(BUCKET);</span>
+<span class="fc bfc" id="L175" title="All 2 branches covered.">        if (bucket == null) {</span>
+<span class="fc" id="L176">            bucket = config.bucket();</span>
+        }
+
+<span class="fc" id="L179">        final WritePrecision writePrecision = getPrecision(event);</span>
+<span class="fc" id="L180">        final WriteApiBlocking writeApi = client.getWriteApiBlocking();</span>
+
+<span class="fc" id="L182">        final String record = (String) event.getProperty(RECORD);</span>
+<span class="fc" id="L183">        final List&lt;String&gt; records = (List&lt;String&gt;) event.getProperty(RECORDS);</span>
+<span class="fc" id="L184">        final BigInteger timestamp = calculateTimestamp(event, writePrecision);</span>
+<span class="fc bfc" id="L185" title="All 2 branches covered.">        if (record != null) {</span>
+<span class="fc bfc" id="L186" title="All 2 branches covered.">            final String recordToWrite = timestamp != null ? record + &quot; &quot; + timestamp : record;</span>
+<span class="fc bfc" id="L187" title="All 4 branches covered.">            if (organization != null &amp;&amp; bucket != null) {</span>
+<span class="fc" id="L188">                writeApi.writeRecord(bucket, organization, writePrecision, recordToWrite);</span>
+            } else {
+<span class="fc" id="L190">                writeApi.writeRecord(writePrecision, recordToWrite);</span>
+            }
+<span class="fc bfc" id="L192" title="All 2 branches covered.">        } else if (records != null) {</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">            final List&lt;String&gt; recordsToWrite = timestamp != null</span>
+<span class="fc" id="L194">                    ? records.stream().map(r -&gt; r + &quot; &quot; + timestamp).collect(Collectors.toList())</span>
+<span class="fc" id="L195">                    : records;</span>
+<span class="fc bfc" id="L196" title="All 4 branches covered.">            if (organization != null &amp;&amp; bucket != null) {</span>
+<span class="fc" id="L197">                writeApi.writeRecords(bucket, organization, writePrecision, recordsToWrite);</span>
+            } else {
+<span class="fc" id="L199">                writeApi.writeRecords(writePrecision, recordsToWrite);</span>
+            }
+<span class="fc" id="L201">        } else {</span>
+<span class="fc" id="L202">            throw new IllegalArgumentException(&quot;Missing line protocol record(s)&quot;);</span>
+        }
+<span class="fc" id="L204">    }</span>
+
+    private WritePrecision getPrecision(final Event event) {
+<span class="fc" id="L207">        final Object precision = event.getProperty(PRECISION);</span>
+        final WritePrecision writePrecision;
+<span class="fc bfc" id="L209" title="All 2 branches covered.">        if (precision instanceof String) {</span>
+<span class="fc" id="L210">            writePrecision = WritePrecision.fromValue((String) precision);</span>
+<span class="fc bfc" id="L211" title="All 2 branches covered.">            if (writePrecision == null) {</span>
+<span class="fc" id="L212">                throw new IllegalArgumentException(&quot;Unsupported precision&quot;);</span>
+            }
+<span class="fc bfc" id="L214" title="All 2 branches covered.">        } else if (precision instanceof WritePrecision) {</span>
+<span class="fc" id="L215">            writePrecision = (WritePrecision) precision;</span>
+        } else {
+<span class="fc" id="L217">            writePrecision = WritePrecision.NS;</span>
+        }
+
+<span class="fc" id="L220">        return writePrecision;</span>
+    }
+
+    private BigInteger calculateTimestamp(final Event event, final WritePrecision precision) {
+<span class="fc bfc" id="L224" title="All 2 branches covered.">        if (config.timestamp_append()) {</span>
+<span class="fc" id="L225">            final Long timestamp = (Long) event.getProperty(EventConstants.TIMESTAMP);</span>
+<span class="fc bfc" id="L226" title="All 2 branches covered.">            if (timestamp != null) {</span>
+<span class="fc" id="L227">                return NanosecondConverter.convert(timestamp, precision);</span>
+            } else {
+<span class="fc" id="L229">                return NanosecondConverter.currentTimestamp(precision);</span>
+            }
+        } else {
+<span class="fc" id="L232">            return null;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

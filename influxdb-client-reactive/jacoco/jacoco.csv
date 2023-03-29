@@ -1,0 +1,9 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+The RxJava InfluxDB 2.x Client,com.influxdb.client.reactive,WriteReactiveApi.Success,0,3,0,0,0,1,0,1,0,1
+The RxJava InfluxDB 2.x Client,com.influxdb.client.reactive,InfluxDBClientReactiveFactory,0,59,0,0,0,24,0,7,0,7
+The RxJava InfluxDB 2.x Client,com.influxdb.client.reactive,WriteOptionsReactive.Builder,0,116,0,0,0,38,0,11,0,11
+The RxJava InfluxDB 2.x Client,com.influxdb.client.reactive,WriteOptionsReactive,0,77,0,0,0,23,0,12,0,12
+The RxJava InfluxDB 2.x Client,com.influxdb.client.reactive.internal,QueryReactiveApiImpl.new FluxCsvParser.FluxResponseConsumer() {...},22,0,2,0,6,0,4,0,3,0
+The RxJava InfluxDB 2.x Client,com.influxdb.client.reactive.internal,QueryReactiveApiImpl,340,135,3,1,66,32,28,11,26,11
+The RxJava InfluxDB 2.x Client,com.influxdb.client.reactive.internal,InfluxDBClientReactiveImpl,32,42,0,0,8,7,6,5,6,5
+The RxJava InfluxDB 2.x Client,com.influxdb.client.reactive.internal,WriteReactiveApiImpl,201,397,3,11,32,90,11,26,8,22

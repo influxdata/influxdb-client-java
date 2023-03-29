@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InfluxDBClientScalaFactory.scala</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Scala InfluxDB 2.x Client [Scala 2.13]</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.scala</a> &gt; <span class="el_source">InfluxDBClientScalaFactory.scala</span></div><h1>InfluxDBClientScalaFactory.scala</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.scala
+
+import com.influxdb.client.InfluxDBClientOptions
+import com.influxdb.client.scala.internal.InfluxDBClientScalaImpl
+import com.influxdb.utils.Arguments
+
+import javax.annotation.Nonnull
+
+/**
+ * The Factory that creates an instance of a Flux client.
+ * 
+ * @author Jakub Bednar (bednar@github) (05/11/2018 10:10)
+ */
+<span class="fc" id="L35">object InfluxDBClientScalaFactory {</span>
+
+
+  /**
+   * Create an instance of the InfluxDB 2.x client that is configured via `influx2.properties`.
+   * The `influx2.properties` has to be located on classpath.
+   *
+   * @return client
+   */
+  @Nonnull def create(): InfluxDBClientScala = {
+
+<span class="fc" id="L46">    val options = InfluxDBClientOptions.builder()</span>
+      .loadProperties()
+      .build()
+
+<span class="fc" id="L50">    create(options)</span>
+  }
+
+  /**
+   * Create an instance of the InfluxDB 2.x client.
+   *
+   * The url could be a connection string with various configurations. For more info
+   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+   *
+   * @param connectionString connection string with various configurations.
+   * @return client
+   */
+  @Nonnull def create(connectionString: String): InfluxDBClientScala = {
+
+<span class="fc" id="L64">    val options = InfluxDBClientOptions.builder()</span>
+<span class="fc" id="L65">      .url(connectionString)</span>
+      .build()
+
+<span class="fc" id="L68">    create(options)</span>
+  }
+
+  /**
+   * Create an instance of the InfluxDB 2.x reactive client.
+   *
+   * The ''username/password'' auth is based on
+   * [[http://bit.ly/http-basic-auth HTTP &quot;Basic&quot; authentication]]. The authorization expires when the
+   * [[http://bit.ly/session-length time-to-live (TTL)]] (default 60 minutes) is reached
+   * and client produces [[com.influxdb.exceptions.UnauthorizedException]].
+   *
+   * The url could be a connection string with various configurations. For more info
+   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+   *
+   * @param url      the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
+   * @param username the username to use in the basic auth
+   * @param password the password to use in the basic auth
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String, username: String, password: Array[Char]): InfluxDBClientScala = {
+
+<span class="nc" id="L90">    val options = InfluxDBClientOptions.builder()</span>
+<span class="nc" id="L91">      .url(url)</span>
+<span class="nc" id="L92">      .authenticate(username, password)</span>
+      .build()
+
+<span class="nc" id="L95">    create(options)</span>
+  }
+
+  /**
+   * Create an instance of the InfluxDB 2.x reactive client.
+   *
+   * The url could be a connection string with various configurations. For more info
+   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+   *
+   * @param url   the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
+   * @param token the token to use for the authorization
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String, token: Array[Char]): InfluxDBClientScala = {
+
+<span class="fc" id="L111">    create(url, token, null)</span>
+  }
+
+  /**
+   * Create an instance of the InfluxDB 2.x reactive client.
+   *
+   * The url could be a connection string with various configurations. For more info
+   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+   *
+   * @param url   the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
+   * @param token the token to use for the authorization
+   * @param org      the name of an organization
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String, token: Array[Char], org: String): InfluxDBClientScala = {
+
+<span class="fc" id="L128">    create(url, token, org, null)</span>
+  }
+
+  /**
+   * Create an instance of the InfluxDB 2.x reactive client.
+   *
+   * The url could be a connection string with various configurations. For more info
+   * see: [[InfluxDBClientOptions.Builder#connectionString(connectionString:java.lang.String)]].
+   *
+   * @param url   the url the url to connect to InfluxDB (required). Example: http://localhost:8086?readTimeout=5000
+   * @param token the token to use for the authorization
+   * @param org      the name of an organization
+   * @param bucket   the name of a bucket
+   * @return client
+   * @see [[InfluxDBClientOptions.Builder]]
+   */
+  @Nonnull def create(url: String, token: Array[Char], org: String, bucket: String): InfluxDBClientScala = {
+
+<span class="fc" id="L146">    val options = InfluxDBClientOptions.builder()</span>
+<span class="fc" id="L147">      .url(url)</span>
+<span class="fc" id="L148">      .authenticateToken(token)</span>
+<span class="fc" id="L149">      .org(org)</span>
+<span class="fc" id="L150">      .bucket(bucket)</span>
+      .build()
+
+<span class="fc" id="L153">    create(options)</span>
+  }
+
+  /**
+   * Create an instance of the InfluxDB 2.x reactive client.
+   *
+   * @param options the connection configuration
+   * @return client
+   */
+  @Nonnull def create(@Nonnull options: InfluxDBClientOptions): InfluxDBClientScala = {
+
+<span class="fc" id="L164">    Arguments.checkNotNull(options, &quot;InfluxDBClientOptions&quot;)</span>
+
+<span class="fc" id="L166">    new InfluxDBClientScalaImpl(options)</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ColumnRestriction.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux DSL</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.query.dsl.functions.restriction</a> &gt; <span class="el_source">ColumnRestriction.java</span></div><h1>ColumnRestriction.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.query.dsl.functions.restriction;
+
+import java.util.Arrays;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+
+import com.influxdb.query.dsl.functions.properties.FunctionsParameters;
+import com.influxdb.utils.Arguments;
+
+import static com.influxdb.query.dsl.functions.properties.FunctionsParameters.escapeDoubleQuotes;
+
+/**
+ * The column restrictions.
+ *
+ * @author Jakub Bednar (bednar@github) (28/06/2018 13:04)
+ */
+public final class ColumnRestriction {
+
+    private final String fieldName;
+
+<span class="nc" id="L42">    ColumnRestriction(@Nonnull final String recordColumn) {</span>
+
+<span class="nc" id="L44">        Arguments.checkNonEmpty(recordColumn, &quot;Record column&quot;);</span>
+
+<span class="nc" id="L46">        this.fieldName = recordColumn;</span>
+<span class="nc" id="L47">    }</span>
+
+    /**
+     * Is column of record &quot;equal&quot; than {@code value}?
+     *
+     * @param value the value to compare
+     * @return restriction
+     */
+    @Nonnull
+    public Restrictions equal(@Nonnull final Object value) {
+<span class="nc" id="L57">        return custom(value, &quot;==&quot;);</span>
+    }
+
+    /**
+     * Is column of record &quot;not equal&quot; than {@code value}?
+     *
+     * @param value the value to compare
+     * @return restriction
+     */
+    @Nonnull
+    public Restrictions notEqual(@Nonnull final Object value) {
+<span class="nc" id="L68">        return custom(value, &quot;!=&quot;);</span>
+    }
+
+    /**
+     * Is column of record &quot;less&quot; than {@code value}?
+     *
+     * @param value the value to compare
+     * @return restriction
+     */
+    @Nonnull
+    public Restrictions less(@Nonnull final Object value) {
+<span class="nc" id="L79">        return custom(value, &quot;&lt;&quot;);</span>
+    }
+
+    /**
+     * Is column of record &quot;greater&quot; than {@code value}?
+     *
+     * @param value the value to compare
+     * @return restriction
+     */
+    @Nonnull
+    public Restrictions greater(@Nonnull final Object value) {
+<span class="nc" id="L90">        return custom(value, &quot;&gt;&quot;);</span>
+    }
+
+    /**
+     * Is column of record &quot;less or equal&quot; than {@code value}?
+     *
+     * @param value the value to compare
+     * @return restriction
+     */
+    @Nonnull
+    public Restrictions lessOrEqual(@Nonnull final Object value) {
+<span class="nc" id="L101">        return custom(value, &quot;&lt;=&quot;);</span>
+    }
+
+    /**
+     * Is column of record &quot;greater or equal&quot; than {@code value}?
+     *
+     * @param value the value to compare
+     * @return restriction
+     */
+    @Nonnull
+    public Restrictions greaterOrEqual(@Nonnull final Object value) {
+<span class="nc" id="L112">        return custom(value, &quot;&gt;=&quot;);</span>
+    }
+
+    /**
+     * Is column of record &quot;{@code operator}&quot; than {@code value}?
+     *
+     * @param value    the value to compare
+     * @param operator the restriction operator
+     * @return restriction
+     */
+    @Nonnull
+    public Restrictions custom(@Nonnull final Object value, @Nonnull final String operator) {
+<span class="nc" id="L124">        return new OperatorRestrictions(fieldName, value, operator);</span>
+    }
+
+    /**
+     * Check if an record contains a key or if that key’s value is null.
+     *
+     * @return restriction
+     */
+    @Nonnull
+    public Restrictions exists() {
+<span class="nc" id="L134">        return new ExistsRestrictions(fieldName);</span>
+    }
+
+    private static final class ExistsRestrictions extends Restrictions {
+        private final String fieldName;
+
+<span class="nc" id="L140">        public ExistsRestrictions(@Nonnull final String fieldName) {</span>
+<span class="nc" id="L141">            this.fieldName = fieldName;</span>
+<span class="nc" id="L142">        }</span>
+
+        @Override
+        public String toString() {
+<span class="nc" id="L146">            return &quot;exists r[\&quot;&quot; + escapeDoubleQuotes(fieldName) + &quot;\&quot;]&quot;;</span>
+        }
+    }
+
+    /**
+     * Check if an record contains a key or if that key’s value is null.
+     *
+     * @return restriction
+     */
+    @Nonnull
+    public Restrictions contains(@Nonnull final String[] set) {
+<span class="nc" id="L157">        return new ContainsRestrictions(fieldName, set);</span>
+    }
+
+    private static final class ContainsRestrictions extends Restrictions {
+        private final String fieldName;
+        private final String[] set;
+
+<span class="nc" id="L164">        public ContainsRestrictions(@Nonnull final String fieldName, @Nonnull final String[] set) {</span>
+<span class="nc" id="L165">            this.fieldName = fieldName;</span>
+<span class="nc" id="L166">            this.set = set;</span>
+<span class="nc" id="L167">        }</span>
+
+        @Override
+        public String toString() {
+<span class="nc" id="L171">            return &quot;contains(value: r[\&quot;&quot; + escapeDoubleQuotes(fieldName) + &quot;\&quot;], set:[&quot;</span>
+<span class="nc" id="L172">                    + Arrays.stream(set).map(FunctionsParameters::escapeDoubleQuotes)</span>
+<span class="nc" id="L173">                    .collect(Collectors.joining(&quot;\&quot;, \&quot;&quot;, &quot;\&quot;&quot;, &quot;\&quot;&quot;)) + &quot;])&quot;;</span>
+        }
+    }
+
+    private static final class OperatorRestrictions extends Restrictions {
+        private final String fieldName;
+        private final Object fieldValue;
+        private final String operator;
+
+<span class="nc" id="L182">        private OperatorRestrictions(@Nonnull final String fieldName,</span>
+                                     @Nonnull final Object fieldValue,
+                                     @Nonnull final String operator) {
+<span class="nc" id="L185">            this.fieldName = fieldName;</span>
+<span class="nc" id="L186">            this.fieldValue = fieldValue;</span>
+<span class="nc" id="L187">            this.operator = operator;</span>
+<span class="nc" id="L188">        }</span>
+
+        @Override
+        public String toString() {
+
+            String value;
+<span class="nc bnc" id="L194" title="All 2 branches missed.">            if (fieldValue instanceof String) {</span>
+<span class="nc" id="L195">                value = &quot;\&quot;&quot; + escapeDoubleQuotes((String) fieldValue) + &quot;\&quot;&quot;;</span>
+<span class="nc" id="L196">            } else {</span>
+<span class="nc" id="L197">                value = FunctionsParameters.serializeValue(fieldValue, false);</span>
+            }
+
+<span class="nc" id="L200">            return &quot;r[\&quot;&quot; + escapeDoubleQuotes(fieldName) + &quot;\&quot;] &quot; + operator + &quot; &quot; + value;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

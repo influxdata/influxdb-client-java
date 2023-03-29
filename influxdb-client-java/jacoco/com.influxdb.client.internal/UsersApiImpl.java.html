@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UsersApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">UsersApiImpl.java</span></div><h1>UsersApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+
+import com.influxdb.client.UsersApi;
+import com.influxdb.client.domain.PasswordResetBody;
+import com.influxdb.client.domain.PostUser;
+import com.influxdb.client.domain.User;
+import com.influxdb.client.domain.Users;
+import com.influxdb.client.service.UsersService;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
+
+import okhttp3.Credentials;
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (11/09/2018 10:16)
+ */
+final class UsersApiImpl extends AbstractRestClient implements UsersApi {
+
+<span class="fc" id="L46">    private static final Logger LOG = Logger.getLogger(UsersApiImpl.class.getName());</span>
+
+    private final UsersService service;
+
+<span class="fc" id="L50">    UsersApiImpl(@Nonnull final UsersService service) {</span>
+
+<span class="fc" id="L52">        Arguments.checkNotNull(service, &quot;service&quot;);</span>
+
+<span class="fc" id="L54">        this.service = service;</span>
+<span class="fc" id="L55">    }</span>
+
+    @Nonnull
+    @Override
+    public User findUserByID(@Nonnull final String userID) {
+
+<span class="nc" id="L61">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
+
+<span class="nc" id="L63">        Call&lt;User&gt; user = service.getUsersID(userID, null);</span>
+
+<span class="nc" id="L65">        return execute(user);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;User&gt; findUsers() {
+
+<span class="nc" id="L72">        Call&lt;Users&gt; usersCall = service.getUsers(null, null, null, null, null, null);</span>
+
+<span class="nc" id="L74">        Users users = execute(usersCall);</span>
+<span class="nc" id="L75">        LOG.log(Level.FINEST, &quot;findUsers found: {0}&quot;, users);</span>
+
+<span class="nc" id="L77">        return users.getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public User createUser(@Nonnull final String name) {
+
+<span class="nc" id="L84">        Arguments.checkNonEmpty(name, &quot;User name&quot;);</span>
+
+<span class="nc" id="L86">        User user = new User();</span>
+<span class="nc" id="L87">        user.setName(name);</span>
+
+<span class="nc" id="L89">        return createUser(user);</span>
+    }
+
+    @Nonnull
+    @Override
+    public User createUser(@Nonnull final User user) {
+
+<span class="nc" id="L96">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+
+<span class="nc" id="L98">        PostUser request = new PostUser()</span>
+<span class="nc" id="L99">                .oauthID(user.getOauthID())</span>
+<span class="nc" id="L100">                .name(user.getName())</span>
+<span class="nc" id="L101">                .status(PostUser.StatusEnum.fromValue(user.getStatus().getValue()));</span>
+
+<span class="nc" id="L103">        Call&lt;User&gt; call = service.postUsers(request, null);</span>
+
+<span class="nc" id="L105">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public User updateUser(@Nonnull final User user) {
+
+<span class="nc" id="L112">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+
+<span class="nc" id="L114">        PostUser request = new PostUser()</span>
+<span class="nc" id="L115">                .oauthID(user.getOauthID())</span>
+<span class="nc" id="L116">                .name(user.getName())</span>
+<span class="nc" id="L117">                .status(PostUser.StatusEnum.fromValue(user.getStatus().getValue()));</span>
+
+<span class="nc" id="L119">        Call&lt;User&gt; userCall = service.patchUsersID(user.getId(), request, null);</span>
+
+<span class="nc" id="L121">        return execute(userCall);</span>
+    }
+
+    @Override
+    public void updateUserPassword(@Nonnull final User user,
+                                   @Nonnull final String oldPassword,
+                                   @Nonnull final String newPassword) {
+
+<span class="nc" id="L129">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+<span class="nc" id="L130">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
+<span class="nc" id="L131">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
+
+<span class="nc" id="L133">        updateUserPassword(user.getId(), user.getName(), oldPassword, newPassword);</span>
+<span class="nc" id="L134">    }</span>
+
+    @Override
+    public void updateUserPassword(@Nonnull final String userID,
+                                   @Nonnull final String oldPassword,
+                                   @Nonnull final String newPassword) {
+
+<span class="nc" id="L141">        Arguments.checkNotNull(userID, &quot;User ID&quot;);</span>
+<span class="nc" id="L142">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
+<span class="nc" id="L143">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
+
+<span class="nc" id="L145">        Call&lt;User&gt; userByID = service.getUsersID(userID, null);</span>
+<span class="nc" id="L146">        User user = execute(userByID);</span>
+
+<span class="nc" id="L148">        updateUserPassword(userID, user.getName(), oldPassword, newPassword);</span>
+<span class="nc" id="L149">    }</span>
+
+    @Override
+    public void deleteUser(@Nonnull final User user) {
+
+<span class="nc" id="L154">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+
+<span class="nc" id="L156">        deleteUser(user.getId());</span>
+<span class="nc" id="L157">    }</span>
+
+    @Override
+    public void deleteUser(@Nonnull final String userID) {
+
+<span class="nc" id="L162">        Arguments.checkNonEmpty(userID, &quot;User ID&quot;);</span>
+
+<span class="nc" id="L164">        Call&lt;Void&gt; call = service.deleteUsersID(userID, null);</span>
+<span class="nc" id="L165">        execute(call);</span>
+<span class="nc" id="L166">    }</span>
+
+    @Nonnull
+    @Override
+    public User cloneUser(@Nonnull final String clonedName, @Nonnull final String userID) {
+
+<span class="nc" id="L172">        Arguments.checkNonEmpty(clonedName, &quot;clonedName&quot;);</span>
+<span class="nc" id="L173">        Arguments.checkNonEmpty(userID, &quot;userID&quot;);</span>
+
+<span class="nc" id="L175">        User user = findUserByID(userID);</span>
+
+<span class="nc" id="L177">        return cloneUser(clonedName, user);</span>
+    }
+
+    @Nonnull
+    @Override
+    public User cloneUser(@Nonnull final String clonedName, @Nonnull final User user) {
+
+<span class="nc" id="L184">        Arguments.checkNonEmpty(clonedName, &quot;clonedName&quot;);</span>
+<span class="nc" id="L185">        Arguments.checkNotNull(user, &quot;User&quot;);</span>
+
+<span class="nc" id="L187">        User cloned = new User();</span>
+<span class="nc" id="L188">        cloned.setName(clonedName);</span>
+
+<span class="nc" id="L190">        return createUser(cloned);</span>
+    }
+
+    @Nonnull
+    @Override
+    public User me() {
+
+<span class="nc" id="L197">        Call&lt;User&gt; call = service.getMe(null);</span>
+
+<span class="nc" id="L199">        return execute(call);</span>
+    }
+
+    @Override
+    public void meUpdatePassword(@Nonnull final String oldPassword, @Nonnull final String newPassword) {
+
+<span class="nc" id="L205">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
+<span class="nc" id="L206">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
+
+<span class="nc" id="L208">        User user = me();</span>
+
+<span class="nc" id="L210">        String credentials = Credentials</span>
+<span class="nc" id="L211">                .basic(user.getName(), oldPassword);</span>
+
+<span class="nc" id="L213">        PasswordResetBody passwordResetBody = new PasswordResetBody().password(newPassword);</span>
+
+<span class="nc" id="L215">        Call&lt;Void&gt; call = service.putMePassword(passwordResetBody, null, credentials);</span>
+
+<span class="nc" id="L217">        execute(call);</span>
+<span class="nc" id="L218">    }</span>
+
+    private void updateUserPassword(@Nonnull final String userID,
+                                    @Nonnull final String userName,
+                                    @Nonnull final String oldPassword,
+                                    @Nonnull final String newPassword) {
+
+<span class="nc" id="L225">        Arguments.checkNotNull(userID, &quot;User ID&quot;);</span>
+<span class="nc" id="L226">        Arguments.checkNotNull(userName, &quot;Username&quot;);</span>
+<span class="nc" id="L227">        Arguments.checkNotNull(oldPassword, &quot;old password&quot;);</span>
+<span class="nc" id="L228">        Arguments.checkNotNull(newPassword, &quot;new password&quot;);</span>
+
+<span class="nc" id="L230">        String credentials = Credentials.basic(userName, oldPassword);</span>
+
+<span class="nc" id="L232">        PasswordResetBody resetBody = new PasswordResetBody().password(newPassword);</span>
+<span class="nc" id="L233">        Call&lt;Void&gt; call = service.postUsersIDPassword(userID, resetBody, null, credentials);</span>
+
+<span class="nc" id="L235">        execute(call);</span>
+<span class="nc" id="L236">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

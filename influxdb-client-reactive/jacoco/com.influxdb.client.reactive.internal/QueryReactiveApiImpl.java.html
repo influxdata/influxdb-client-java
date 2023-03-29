@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>QueryReactiveApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The RxJava InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.reactive.internal</a> &gt; <span class="el_source">QueryReactiveApiImpl.java</span></div><h1>QueryReactiveApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.reactive.internal;
+
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
+import java.util.logging.Level;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.Cancellable;
+import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.domain.Dialect;
+import com.influxdb.client.domain.Query;
+import com.influxdb.client.internal.AbstractInfluxDBClient;
+import com.influxdb.client.reactive.QueryReactiveApi;
+import com.influxdb.client.service.QueryService;
+import com.influxdb.internal.AbstractQueryApi;
+import com.influxdb.query.FluxRecord;
+import com.influxdb.query.FluxTable;
+import com.influxdb.query.internal.FluxCsvParser;
+import com.influxdb.utils.Arguments;
+
+import io.reactivex.rxjava3.core.BackpressureStrategy;
+import io.reactivex.rxjava3.core.Flowable;
+import io.reactivex.rxjava3.core.Observable;
+import io.reactivex.rxjava3.core.ObservableEmitter;
+import org.jetbrains.annotations.NotNull;
+import org.reactivestreams.Publisher;
+
+/**
+ * @author Jakub Bednar (bednar@github) (21/11/2018 07:21)
+ */
+final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReactiveApi {
+
+    private final QueryService service;
+    private final InfluxDBClientOptions options;
+
+<span class="fc" id="L58">    QueryReactiveApiImpl(@Nonnull final QueryService service, @Nonnull final InfluxDBClientOptions options) {</span>
+
+<span class="fc" id="L60">        Arguments.checkNotNull(service, &quot;InfluxDBReactiveService&quot;);</span>
+<span class="fc" id="L61">        Arguments.checkNotNull(options, &quot;options&quot;);</span>
+
+<span class="fc" id="L63">        this.service = service;</span>
+<span class="fc" id="L64">        this.options = options;</span>
+<span class="fc" id="L65">    }</span>
+
+    @Nonnull
+    @Override
+    public Publisher&lt;FluxRecord&gt; query(@Nonnull final String query) {
+
+<span class="nc" id="L71">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L73">        return query(query, options.getOrg());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;FluxRecord&gt; query(@Nonnull final String query, @Nonnull final String org) {
+
+<span class="nc" id="L80">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
+<span class="nc" id="L81">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="nc" id="L83">        return query(Flowable.just(query), org);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;FluxRecord&gt; query(@Nonnull final Query query, @Nonnull final String org) {
+
+<span class="nc" id="L90">        Arguments.checkNotNull(query, &quot;Flux query&quot;);</span>
+<span class="nc" id="L91">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+<span class="nc" id="L92">        return queryQuery(Flowable.just(query), org);</span>
+    }
+
+    @Nonnull
+
+    @Override
+    public Publisher&lt;FluxRecord&gt; query(@Nonnull final Query query) {
+
+<span class="nc" id="L100">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+<span class="nc" id="L101">        Arguments.checkNotNull(query, &quot;Flux query&quot;);</span>
+
+<span class="nc" id="L103">        return queryQuery(Flowable.just(query), options.getOrg());</span>
+    }
+
+    @Override
+    public &lt;M&gt; Publisher&lt;M&gt; query(@Nonnull final String query, @Nonnull final Class&lt;M&gt; measurementType) {
+
+<span class="nc" id="L109">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L111">        return query(query, options.getOrg(), measurementType);</span>
+    }
+
+    @Override
+    public &lt;M&gt; Publisher&lt;M&gt; query(@Nonnull final String query,
+                                  @Nonnull final String org,
+                                  @Nonnull final Class&lt;M&gt; measurementType) {
+
+<span class="nc" id="L119">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
+<span class="nc" id="L120">        Arguments.checkNotNull(measurementType, &quot;Measurement type&quot;);</span>
+<span class="nc" id="L121">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="nc" id="L123">        return query(Flowable.just(query), org, measurementType);</span>
+    }
+
+    @Override
+    public &lt;M&gt; Publisher&lt;M&gt; query(@Nonnull final Query query, @Nonnull final String org,
+                                  @Nonnull final Class&lt;M&gt; measurementType) {
+<span class="nc" id="L129">        Arguments.checkNotNull(query, &quot;Flux query&quot;);</span>
+<span class="nc" id="L130">        Arguments.checkNotNull(measurementType, &quot;Measurement type&quot;);</span>
+<span class="nc" id="L131">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="nc" id="L133">        return Flowable</span>
+<span class="nc" id="L134">            .fromPublisher(queryQuery(Flowable.just(query), org))</span>
+<span class="nc" id="L135">            .map(fluxRecord -&gt; resultMapper.toPOJO(fluxRecord, measurementType));</span>
+    }
+
+
+    @Nonnull
+    @Override
+    public Publisher&lt;FluxRecord&gt; query(@Nonnull final Publisher&lt;String&gt; queryStream) {
+
+<span class="nc" id="L143">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L145">        return query(queryStream, options.getOrg());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;FluxRecord&gt; query(@Nonnull final Publisher&lt;String&gt; queryStream,
+                                       @Nonnull final String org) {
+<span class="nc" id="L152">        return queryQuery(Flowable.fromPublisher(queryStream)</span>
+<span class="nc" id="L153">            .map(query -&gt; new Query().query(query).dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)), org);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;FluxRecord&gt; queryQuery(@Nonnull final Publisher&lt;Query&gt; queryStream,
+                                            @Nonnull final String org) {
+
+<span class="nc" id="L161">        Arguments.checkNotNull(queryStream, &quot;queryStream&quot;);</span>
+<span class="nc" id="L162">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="nc" id="L164">        return Flowable</span>
+<span class="nc" id="L165">                .fromPublisher(queryStream)</span>
+<span class="nc" id="L166">                .map(it -&gt; service.postQueryResponseBody(null, null,</span>
+<span class="nc" id="L167">                        null, org, null, it.dialect(AbstractInfluxDBClient.DEFAULT_DIALECT)))</span>
+<span class="nc" id="L168">                .flatMap(queryCall -&gt; {</span>
+
+<span class="nc" id="L170">                    Observable&lt;FluxRecord&gt; observable = Observable.create(subscriber -&gt; {</span>
+
+<span class="nc" id="L172">                        FluxCsvParser.FluxResponseConsumer consumer = new FluxCsvParser.FluxResponseConsumer() {</span>
+
+                            @Override
+                            public void accept(final int index,
+                                               @Nonnull final Cancellable cancellable,
+                                               @Nonnull final FluxTable table) {
+
+<span class="nc" id="L179">                            }</span>
+
+                            @Override
+                            public void accept(final int index,
+                                               @Nonnull final Cancellable cancellable,
+                                               @Nonnull final FluxRecord record) {
+
+<span class="nc bnc" id="L186" title="All 2 branches missed.">                                if (subscriber.isDisposed()) {</span>
+<span class="nc" id="L187">                                    cancellable.cancel();</span>
+                                } else {
+<span class="nc" id="L189">                                    subscriber.onNext(record);</span>
+                                }
+<span class="nc" id="L191">                            }</span>
+                        };
+
+<span class="nc" id="L194">                        query(queryCall, consumer, onError(subscriber), subscriber::onComplete, false);</span>
+<span class="nc" id="L195">                    });</span>
+
+<span class="nc" id="L197">                    return observable.toFlowable(BackpressureStrategy.BUFFER);</span>
+                });
+    }
+
+    @Nonnull
+    @Override
+    public &lt;M&gt; Publisher&lt;M&gt; query(@Nonnull final Publisher&lt;String&gt; queryStream,
+                                  @Nonnull final Class&lt;M&gt; measurementType) {
+
+<span class="nc" id="L206">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L208">        return query(queryStream, options.getOrg(), measurementType);</span>
+    }
+
+    @Nonnull
+    @Override
+    public &lt;M&gt; Publisher&lt;M&gt; query(@Nonnull final Publisher&lt;String&gt; queryStream,
+                                  @Nonnull final String org,
+                                  @Nonnull final Class&lt;M&gt; measurementType) {
+
+<span class="nc" id="L217">        Arguments.checkNotNull(queryStream, &quot;queryStream&quot;);</span>
+<span class="nc" id="L218">        Arguments.checkNotNull(measurementType, &quot;Measurement type&quot;);</span>
+<span class="nc" id="L219">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="nc" id="L221">        return Flowable</span>
+<span class="nc" id="L222">                .fromPublisher(query(queryStream, org))</span>
+<span class="nc" id="L223">                .map(fluxRecord -&gt; resultMapper.toPOJO(fluxRecord, measurementType));</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRaw(@Nonnull final String query) {
+
+<span class="nc" id="L230">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L232">        return queryRaw(query, options.getOrg());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRaw(@Nonnull final Query query) {
+
+<span class="nc" id="L239">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L241">        return queryRawQuery(Flowable.just(query), null, options.getOrg());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRaw(@Nonnull final String query, @Nonnull final String org) {
+
+<span class="fc" id="L248">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
+<span class="fc" id="L249">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="fc" id="L251">        return queryRaw(Flowable.just(query), org);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRaw(@Nonnull final Publisher&lt;String&gt; queryStream) {
+
+<span class="nc" id="L258">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L260">        return queryRaw(queryStream, options.getOrg());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRaw(@Nonnull final Publisher&lt;String&gt; queryStream,
+                                      @Nonnull final String org) {
+
+<span class="fc" id="L268">        Arguments.checkNotNull(queryStream, &quot;queryStream&quot;);</span>
+<span class="fc" id="L269">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="fc" id="L271">        return queryRaw(queryStream, AbstractInfluxDBClient.DEFAULT_DIALECT, org);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRaw(@Nonnull final String query, @Nullable final Dialect dialect) {
+
+<span class="nc" id="L278">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L280">        return queryRaw(query, dialect, options.getOrg());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRaw(@Nonnull final String query,
+                                      @Nullable final Dialect dialect,
+                                      @Nonnull final String org) {
+
+<span class="nc" id="L289">        Arguments.checkNonEmpty(query, &quot;Flux query&quot;);</span>
+<span class="nc" id="L290">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="nc" id="L292">        return queryRaw(Flowable.just(query), dialect, org);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRaw(@Nonnull final Publisher&lt;String&gt; queryStream, @Nullable final Dialect dialect) {
+
+<span class="nc" id="L299">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L301">        return queryRaw(queryStream, dialect, options.getOrg());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRaw(@Nonnull final Query query,
+                                      @Nullable final Dialect dialect,
+                                      @Nonnull final String org) {
+<span class="nc" id="L309">        return queryRawQuery(Flowable.just(query), dialect, org);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRawQuery(@Nonnull final Publisher&lt;Query&gt; queryStream,
+                                           @Nullable final Dialect dialect,
+                                           @Nonnull final String org) {
+
+<span class="fc" id="L318">        Arguments.checkNotNull(queryStream, &quot;queryStream&quot;);</span>
+<span class="fc" id="L319">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="fc" id="L321">        return Flowable</span>
+<span class="fc" id="L322">            .fromPublisher(queryStream)</span>
+<span class="fc" id="L323">            .map(it -&gt; service.postQueryResponseBody(null, null,</span>
+<span class="fc" id="L324">                null, org, null, it.dialect(dialect)))</span>
+<span class="fc" id="L325">            .flatMap(queryCall -&gt; {</span>
+
+<span class="fc" id="L327">                Observable&lt;String&gt; observable = Observable.create(subscriber -&gt; {</span>
+
+
+<span class="fc" id="L330">                    BiConsumer&lt;Cancellable, String&gt; consumer = (cancellable, line) -&gt; {</span>
+<span class="nc bnc" id="L331" title="All 2 branches missed.">                        if (subscriber.isDisposed()) {</span>
+<span class="nc" id="L332">                            cancellable.cancel();</span>
+                        } else {
+<span class="nc" id="L334">                            subscriber.onNext(line);</span>
+                        }
+<span class="nc" id="L336">                    };</span>
+
+<span class="fc" id="L338">                    queryRaw(queryCall, consumer, onError(subscriber), subscriber::onComplete, false);</span>
+<span class="fc" id="L339">                });</span>
+
+<span class="fc" id="L341">                return observable.toFlowable(BackpressureStrategy.BUFFER);</span>
+            });
+    }
+
+    @Nonnull
+    @Override
+    public Publisher&lt;String&gt; queryRaw(@Nonnull final Publisher&lt;String&gt; queryStream,
+                                      @Nullable final Dialect dialect,
+                                      @Nonnull final String org) {
+
+<span class="fc" id="L351">        Arguments.checkNotNull(queryStream, &quot;queryStream&quot;);</span>
+<span class="fc" id="L352">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="fc" id="L354">        return queryRawQuery(Flowable.fromPublisher(queryStream)</span>
+<span class="fc" id="L355">            .map(q -&gt; new Query().query(q).dialect(dialect)), dialect, org);</span>
+    }
+
+    @NotNull
+    private Consumer&lt;Throwable&gt; onError(final ObservableEmitter&lt;?&gt; subscriber) {
+<span class="fc" id="L360">        return throwable -&gt; {</span>
+<span class="pc bpc" id="L361" title="1 of 2 branches missed.">            if (!subscriber.isDisposed()) {</span>
+<span class="fc" id="L362">                subscriber.onError(throwable);</span>
+            } else {
+<span class="nc" id="L364">                LOG.log(Level.FINEST, &quot;The exception could not be delivered to the consumer &quot;</span>
+                        + &quot;because it has already canceled/disposed.&quot;, throwable);
+            }
+<span class="fc" id="L367">        };</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

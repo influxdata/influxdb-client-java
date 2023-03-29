@@ -1,0 +1,732 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TasksApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">TasksApiImpl.java</span></div><h1>TasksApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.time.OffsetDateTime;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.client.TasksApi;
+import com.influxdb.client.TasksQuery;
+import com.influxdb.client.domain.AddResourceMemberRequestBody;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.LabelMapping;
+import com.influxdb.client.domain.LabelResponse;
+import com.influxdb.client.domain.LabelsResponse;
+import com.influxdb.client.domain.LogEvent;
+import com.influxdb.client.domain.Logs;
+import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.ResourceMember;
+import com.influxdb.client.domain.ResourceMembers;
+import com.influxdb.client.domain.ResourceOwner;
+import com.influxdb.client.domain.ResourceOwners;
+import com.influxdb.client.domain.Run;
+import com.influxdb.client.domain.RunManually;
+import com.influxdb.client.domain.Runs;
+import com.influxdb.client.domain.Task;
+import com.influxdb.client.domain.TaskCreateRequest;
+import com.influxdb.client.domain.TaskStatusType;
+import com.influxdb.client.domain.TaskUpdateRequest;
+import com.influxdb.client.domain.Tasks;
+import com.influxdb.client.domain.User;
+import com.influxdb.client.service.TasksService;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
+
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (11/09/2018 07:59)
+ */
+final class TasksApiImpl extends AbstractRestClient implements TasksApi {
+
+<span class="fc" id="L65">    private static final Logger LOG = Logger.getLogger(TasksApiImpl.class.getName());</span>
+
+    private final TasksService service;
+
+<span class="fc" id="L69">    TasksApiImpl(@Nonnull final TasksService service) {</span>
+
+<span class="fc" id="L71">        Arguments.checkNotNull(service, &quot;service&quot;);</span>
+
+<span class="fc" id="L73">        this.service = service;</span>
+<span class="fc" id="L74">    }</span>
+
+    @Nonnull
+    @Override
+    public Task findTaskByID(@Nonnull final String taskID) {
+
+<span class="nc" id="L80">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="nc" id="L82">        Call&lt;Task&gt; call = service.getTasksID(taskID, null);</span>
+
+<span class="nc" id="L84">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasks() {
+<span class="nc" id="L90">        return findTasks(null, null, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasksByUser(@Nonnull final User user) {
+
+<span class="nc" id="L97">        Arguments.checkNotNull(user, &quot;user&quot;);</span>
+
+<span class="nc" id="L99">        return findTasksByUserID(user.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasksByUserID(@Nullable final String userID) {
+
+<span class="nc" id="L106">        return findTasks(null, userID, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasksByOrganization(@Nonnull final Organization organization) {
+
+<span class="nc" id="L113">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="nc" id="L115">        return findTasksByOrganizationID(organization.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasksByOrganizationID(@Nullable final String orgID) {
+<span class="nc" id="L121">        return findTasks(null, null, orgID);</span>
+    }
+
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasks(@Nullable final String afterID,
+                                @Nullable final String userID,
+                                @Nullable final String orgID) {
+<span class="nc" id="L130">        final TasksQuery tasksQuery = new TasksQuery();</span>
+<span class="nc" id="L131">        tasksQuery.setAfter(afterID);</span>
+<span class="nc" id="L132">        tasksQuery.setUser(userID);</span>
+<span class="nc" id="L133">        tasksQuery.setOrgID(orgID);</span>
+
+<span class="nc" id="L135">        return findTasks(tasksQuery);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Task&gt; findTasks(@Nonnull final TasksQuery query) {
+<span class="nc" id="L141">        Call&lt;Tasks&gt; call = service.getTasks(null, query.getName(), query.getAfter(), query.getUser(),</span>
+<span class="nc" id="L142">                query.getOrg(), query.getOrgID(), query.getStatus(), query.getLimit(), query.getType());</span>
+
+<span class="nc" id="L144">        Tasks tasks = execute(call);</span>
+<span class="nc" id="L145">        LOG.log(Level.FINEST, &quot;findTasks found: {0}&quot;, tasks);</span>
+
+<span class="nc" id="L147">        return tasks.getTasks();</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTask(@Nonnull final Task task) {
+
+<span class="nc" id="L154">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L156">        TaskCreateRequest request = new TaskCreateRequest();</span>
+<span class="nc" id="L157">        request.setFlux(task.getFlux());</span>
+<span class="nc" id="L158">        request.setOrgID(task.getOrgID());</span>
+<span class="nc" id="L159">        request.setOrg(task.getOrg());</span>
+<span class="nc" id="L160">        request.setDescription(task.getDescription());</span>
+
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (task.getStatus() != null) {</span>
+<span class="nc" id="L163">            request.setStatus(TaskStatusType.fromValue(task.getStatus().getValue()));</span>
+        }
+
+<span class="nc" id="L166">        return createTask(request);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTask(@Nonnull final TaskCreateRequest taskCreateRequest) {
+
+<span class="nc" id="L173">        Arguments.checkNotNull(taskCreateRequest, &quot;taskCreateRequest&quot;);</span>
+
+<span class="nc" id="L175">        Call&lt;Task&gt; call = service.postTasks(taskCreateRequest, null);</span>
+
+<span class="nc" id="L177">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTaskCron(@Nonnull final String name,
+                               @Nonnull final String flux,
+                               @Nonnull final String cron,
+                               @Nonnull final Organization organization) {
+
+<span class="nc" id="L187">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L188">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L189">        Arguments.checkNonEmpty(cron, &quot;cron expression&quot;);</span>
+<span class="nc" id="L190">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="nc" id="L192">        Task task = createTask(name, flux, null, cron, organization.getId());</span>
+
+<span class="nc" id="L194">        return createTask(task);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTaskCron(@Nonnull final String name,
+                               @Nonnull final String flux,
+                               @Nonnull final String cron,
+                               @Nonnull final String orgID) {
+
+<span class="nc" id="L204">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L205">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L206">        Arguments.checkNonEmpty(cron, &quot;cron expression&quot;);</span>
+<span class="nc" id="L207">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
+
+<span class="nc" id="L209">        Task task = createTask(name, flux, null, cron, orgID);</span>
+
+<span class="nc" id="L211">        return createTask(task);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTaskEvery(@Nonnull final String name,
+                                @Nonnull final String flux,
+                                @Nonnull final String every,
+                                @Nonnull final Organization organization) {
+
+<span class="nc" id="L221">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L222">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L223">        Arguments.checkNonEmpty(every, &quot;every&quot;);</span>
+<span class="nc" id="L224">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="nc" id="L226">        Task task = createTask(name, flux, every, null, organization.getId());</span>
+
+<span class="nc" id="L228">        return createTask(task);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task createTaskEvery(@Nonnull final String name,
+                                @Nonnull final String flux,
+                                @Nonnull final String every,
+                                @Nonnull final String orgID) {
+
+<span class="nc" id="L238">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L239">        Arguments.checkNonEmpty(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L240">        Arguments.checkNonEmpty(every, &quot;every expression&quot;);</span>
+<span class="nc" id="L241">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
+
+<span class="nc" id="L243">        Task task = createTask(name, flux, every, null, orgID);</span>
+
+<span class="nc" id="L245">        return createTask(task);</span>
+    }
+
+
+    @Nonnull
+    @Override
+    public Task updateTask(@Nonnull final Task task) {
+
+<span class="nc" id="L253">        Arguments.checkNotNull(task, &quot;Task is required&quot;);</span>
+<span class="nc" id="L254">        Arguments.checkDurationNotRequired(task.getEvery(), &quot;Task.every&quot;);</span>
+
+<span class="nc" id="L256">        TaskUpdateRequest taskUpdateRequest = new TaskUpdateRequest();</span>
+<span class="nc" id="L257">        taskUpdateRequest.setStatus(TaskStatusType.fromValue(task.getStatus().getValue()));</span>
+<span class="nc" id="L258">        taskUpdateRequest.setFlux(task.getFlux());</span>
+<span class="nc" id="L259">        taskUpdateRequest.setName(task.getName());</span>
+<span class="nc" id="L260">        taskUpdateRequest.setEvery(task.getEvery());</span>
+<span class="nc" id="L261">        taskUpdateRequest.setCron(task.getCron());</span>
+<span class="nc" id="L262">        taskUpdateRequest.setOffset(task.getOffset());</span>
+<span class="nc" id="L263">        taskUpdateRequest.setDescription(task.getDescription());</span>
+
+<span class="nc" id="L265">        return updateTask(task.getId(), taskUpdateRequest);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task updateTask(@Nonnull final String taskID, @Nonnull final TaskUpdateRequest request) {
+
+<span class="nc" id="L272">        Arguments.checkNotNull(request, &quot;request&quot;);</span>
+<span class="nc" id="L273">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="nc" id="L275">        Call&lt;Task&gt; call = service.patchTasksID(taskID, request, null);</span>
+
+<span class="nc" id="L277">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteTask(@Nonnull final Task task) {
+
+<span class="nc" id="L283">        Arguments.checkNotNull(task, &quot;Task is required&quot;);</span>
+
+<span class="nc" id="L285">        deleteTask(task.getId());</span>
+<span class="nc" id="L286">    }</span>
+
+    @Override
+    public void deleteTask(@Nonnull final String taskID) {
+
+<span class="nc" id="L291">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="nc" id="L293">        Call&lt;Void&gt; call = service.deleteTasksID(taskID, null);</span>
+<span class="nc" id="L294">        execute(call);</span>
+<span class="nc" id="L295">    }</span>
+
+    @Nonnull
+    @Override
+    public Task cloneTask(@Nonnull final String taskID) {
+
+<span class="nc" id="L301">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="nc" id="L303">        Task task = findTaskByID(taskID);</span>
+
+<span class="nc" id="L305">        return cloneTask(task);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Task cloneTask(@Nonnull final Task task) {
+
+<span class="nc" id="L312">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L314">        Task cloned = new Task();</span>
+<span class="nc" id="L315">        cloned.setName(task.getName());</span>
+<span class="nc" id="L316">        cloned.setOrgID(task.getOrgID());</span>
+<span class="nc" id="L317">        cloned.setFlux(task.getFlux());</span>
+<span class="nc" id="L318">        cloned.setStatus(TaskStatusType.ACTIVE);</span>
+
+<span class="nc" id="L320">        Task created = createTask(cloned);</span>
+
+<span class="nc" id="L322">        getLabels(task).forEach(label -&gt; addLabel(label, created));</span>
+
+<span class="nc" id="L324">        return created;</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final String taskID) {
+
+<span class="nc" id="L331">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L333">        Call&lt;ResourceMembers&gt; call = service.getTasksIDMembers(taskID, null);</span>
+
+<span class="nc" id="L335">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="nc" id="L336">        LOG.log(Level.FINEST, &quot;findTaskMembers found: {0}&quot;, resourceMembers);</span>
+
+<span class="nc" id="L338">        return resourceMembers.getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final Task task) {
+
+<span class="nc" id="L345">        Arguments.checkNotNull(task, &quot;Task&quot;);</span>
+
+<span class="nc" id="L347">        return getMembers(task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final Task task) {
+
+<span class="nc" id="L354">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L355">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+
+<span class="nc" id="L357">        return addMember(member.getId(), task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String taskID) {
+
+<span class="nc" id="L364">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L365">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L367">        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();</span>
+<span class="nc" id="L368">        user.setId(memberID);</span>
+
+<span class="nc" id="L370">        Call&lt;ResourceMember&gt; call = service.postTasksIDMembers(taskID, user, null);</span>
+
+<span class="nc" id="L372">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final User member, @Nonnull final Task task) {
+
+<span class="nc" id="L378">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L379">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+
+<span class="nc" id="L381">        deleteMember(member.getId(), task.getId());</span>
+<span class="nc" id="L382">    }</span>
+
+    @Override
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String taskID) {
+
+<span class="nc" id="L387">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L388">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L390">        Call&lt;Void&gt; call = service.deleteTasksIDMembersID(memberID, taskID, null);</span>
+<span class="nc" id="L391">        execute(call);</span>
+<span class="nc" id="L392">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceOwner&gt; getOwners(@Nonnull final String taskID) {
+
+<span class="nc" id="L398">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L400">        Call&lt;ResourceOwners&gt; call = service.getTasksIDOwners(taskID, null);</span>
+
+<span class="nc" id="L402">        ResourceOwners resourceMembers = execute(call);</span>
+<span class="nc" id="L403">        LOG.log(Level.FINEST, &quot;findTaskMembers found: {0}&quot;, resourceMembers);</span>
+
+<span class="nc" id="L405">        return resourceMembers.getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceOwner&gt; getOwners(@Nonnull final Task task) {
+
+<span class="nc" id="L412">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L414">        return getOwners(task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Task task) {
+
+<span class="nc" id="L421">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L422">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+
+<span class="nc" id="L424">        return addOwner(owner.getId(), task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
+
+<span class="nc" id="L431">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L432">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L434">        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();</span>
+<span class="nc" id="L435">        user.setId(ownerID);</span>
+
+<span class="nc" id="L437">        Call&lt;ResourceOwner&gt; call = service.postTasksIDOwners(taskID, user, null);</span>
+
+<span class="nc" id="L439">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final Task task) {
+
+<span class="nc" id="L445">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+<span class="nc" id="L446">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+
+<span class="nc" id="L448">        deleteOwner(owner.getId(), task.getId());</span>
+<span class="nc" id="L449">    }</span>
+
+    @Override
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String taskID) {
+
+<span class="nc" id="L454">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L455">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L457">        Call&lt;Void&gt; call = service.deleteTasksIDOwnersID(ownerID, taskID, null);</span>
+<span class="nc" id="L458">        execute(call);</span>
+<span class="nc" id="L459">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;Run&gt; getRuns(@Nonnull final Task task) {
+
+<span class="nc" id="L465">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L467">        return getRuns(task, null, null, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Run&gt; getRuns(@Nonnull final Task task,
+                             @Nullable final OffsetDateTime afterTime,
+                             @Nullable final OffsetDateTime beforeTime,
+                             @Nullable final Integer limit) {
+
+<span class="nc" id="L477">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L479">        return getRuns(task.getId(), afterTime, beforeTime, limit);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Run&gt; getRuns(@Nonnull final String taskID) {
+
+<span class="nc" id="L486">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L488">        return getRuns(taskID, null, null, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Run&gt; getRuns(@Nonnull final String taskID,
+                             @Nullable final OffsetDateTime afterTime,
+                             @Nullable final OffsetDateTime beforeTime,
+                             @Nullable final Integer limit) {
+
+<span class="nc" id="L498">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L500">        Call&lt;Runs&gt; runs = service.getTasksIDRuns(taskID, null, null, limit, afterTime, beforeTime);</span>
+<span class="nc" id="L501">        Runs execute = execute(runs);</span>
+
+<span class="nc" id="L503">        return execute.getRuns();</span>
+    }
+
+    @Nonnull
+    @Override
+    public Run getRun(@Nonnull final Run run) {
+
+<span class="nc" id="L510">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+
+<span class="nc" id="L512">        return getRun(run.getTaskID(), run.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Run getRun(@Nonnull final String taskID, @Nonnull final String runID) {
+
+<span class="fc" id="L519">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="fc" id="L520">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+
+<span class="fc" id="L522">        Call&lt;Run&gt; run = service.getTasksIDRunsID(taskID, runID, null);</span>
+
+<span class="fc" id="L524">        return execute(run);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;LogEvent&gt; getRunLogs(@Nonnull final Run run) {
+
+<span class="nc" id="L531">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+
+<span class="nc" id="L533">        return getRunLogs(run.getTaskID(), run.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;LogEvent&gt; getRunLogs(@Nonnull final String taskID,
+                                     @Nonnull final String runID) {
+
+<span class="nc" id="L541">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L542">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+
+<span class="nc" id="L544">        Call&lt;Logs&gt; call = service.getTasksIDRunsIDLogs(taskID, runID, null);</span>
+
+<span class="nc" id="L546">        Logs logs = execute(call);</span>
+
+<span class="nc" id="L548">        return logs.getEvents();</span>
+    }
+
+    @Nonnull
+    @Override
+    public Run runManually(@Nonnull final Task task) {
+
+<span class="nc" id="L555">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L557">        return runManually(task.getId(), new RunManually());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Run runManually(@Nonnull final String taskId, @Nonnull final RunManually runManually) {
+
+<span class="nc" id="L564">        Arguments.checkNonEmpty(taskId, &quot;taskId&quot;);</span>
+<span class="nc" id="L565">        Arguments.checkNotNull(runManually, &quot;runManually&quot;);</span>
+
+<span class="nc" id="L567">        Call&lt;Run&gt; call = service.postTasksIDRuns(taskId, null, runManually);</span>
+
+<span class="nc" id="L569">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Run retryRun(@Nonnull final Run run) {
+
+<span class="nc" id="L576">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+
+<span class="nc" id="L578">        return retryRun(run.getTaskID(), run.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Run retryRun(@Nonnull final String taskID, @Nonnull final String runID) {
+
+<span class="nc" id="L585">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L586">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+
+<span class="nc" id="L588">        Call&lt;Run&gt; run = service.postTasksIDRunsIDRetry(taskID, runID, null, &quot;&quot;);</span>
+
+<span class="nc" id="L590">        return execute(run);</span>
+    }
+
+    @Override
+    public void cancelRun(@Nonnull final Run run) {
+
+<span class="nc" id="L596">        Arguments.checkNotNull(run, &quot;run&quot;);</span>
+
+<span class="nc" id="L598">        cancelRun(run.getTaskID(), run.getId());</span>
+<span class="nc" id="L599">    }</span>
+
+    @Override
+    public void cancelRun(@Nonnull final String taskID, @Nonnull final String runID) {
+
+<span class="nc" id="L604">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+<span class="nc" id="L605">        Arguments.checkNonEmpty(runID, &quot;Run.ID&quot;);</span>
+
+<span class="nc" id="L607">        Call&lt;Void&gt; run = service.deleteTasksIDRunsID(taskID, runID, null);</span>
+<span class="nc" id="L608">        execute(run);</span>
+<span class="nc" id="L609">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;LogEvent&gt; getLogs(@Nonnull final Task task) {
+
+<span class="nc" id="L615">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L617">        return getLogs(task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;LogEvent&gt; getLogs(@Nonnull final String taskID) {
+
+<span class="nc" id="L624">        Arguments.checkNonEmpty(taskID, &quot;Task.ID&quot;);</span>
+
+<span class="nc" id="L626">        Call&lt;Logs&gt; execute = service.getTasksIDLogs(taskID, null);</span>
+
+<span class="nc" id="L628">        Logs logs = execute(execute);</span>
+
+<span class="nc" id="L630">        return logs.getEvents();</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final Task task) {
+
+<span class="nc" id="L637">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L639">        return getLabels(task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final String taskID) {
+
+<span class="nc" id="L646">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="nc" id="L648">        Call&lt;LabelsResponse&gt; call = service.getTasksIDLabels(taskID, null);</span>
+
+<span class="nc" id="L650">        return execute(call).getLabels();</span>
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Task task) {
+
+<span class="nc" id="L657">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L658">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L660">        return addLabel(label.getId(), task.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String taskID) {
+
+<span class="nc" id="L667">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L668">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="nc" id="L670">        LabelMapping labelMapping = new LabelMapping();</span>
+<span class="nc" id="L671">        labelMapping.setLabelID(labelID);</span>
+
+<span class="nc" id="L673">        Call&lt;LabelResponse&gt; call = service.postTasksIDLabels(taskID, labelMapping, null);</span>
+
+<span class="nc" id="L675">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Task task) {
+
+<span class="nc" id="L681">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L682">        Arguments.checkNotNull(task, &quot;task&quot;);</span>
+
+<span class="nc" id="L684">        deleteLabel(label.getId(), task.getId());</span>
+<span class="nc" id="L685">    }</span>
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String taskID) {
+
+<span class="nc" id="L690">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L691">        Arguments.checkNonEmpty(taskID, &quot;taskID&quot;);</span>
+
+<span class="nc" id="L693">        Call&lt;Void&gt; call = service.deleteTasksIDLabelsID(taskID, labelID, null);</span>
+<span class="nc" id="L694">        execute(call);</span>
+<span class="nc" id="L695">    }</span>
+
+    @Nonnull
+    private Task createTask(@Nonnull final String name,
+                            @Nonnull final String flux,
+                            @Nullable final String every,
+                            @Nullable final String cron,
+                            @Nonnull final String orgID) {
+
+<span class="nc" id="L704">        Arguments.checkNonEmpty(name, &quot;name of the task&quot;);</span>
+<span class="nc" id="L705">        Arguments.checkNotNull(flux, &quot;Flux script to run&quot;);</span>
+<span class="nc" id="L706">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L707">        Arguments.checkDurationNotRequired(every, &quot;Task.every&quot;);</span>
+
+<span class="nc" id="L709">        Task task = new Task();</span>
+<span class="nc" id="L710">        task.setName(name);</span>
+<span class="nc" id="L711">        task.setOrgID(orgID);</span>
+<span class="nc" id="L712">        task.setStatus(TaskStatusType.ACTIVE);</span>
+<span class="nc" id="L713">        task.setFlux(flux);</span>
+
+<span class="nc" id="L715">        String repetition = &quot;&quot;;</span>
+<span class="nc bnc" id="L716" title="All 2 branches missed.">        if (every != null) {</span>
+<span class="nc" id="L717">            repetition += &quot;every: &quot;;</span>
+<span class="nc" id="L718">            repetition += every;</span>
+        }
+<span class="nc bnc" id="L720" title="All 2 branches missed.">        if (cron != null) {</span>
+<span class="nc" id="L721">            repetition += &quot;cron: &quot;;</span>
+<span class="nc" id="L722">            repetition += &quot;\&quot;&quot; + cron + &quot;\&quot;&quot;;</span>
+        }
+
+<span class="nc" id="L725">        String fluxWithOptions = String.format(&quot;%s\n\noption task = {name: \&quot;%s\&quot;, %s}&quot;, flux, name, repetition);</span>
+
+<span class="nc" id="L727">        task.setFlux(fluxWithOptions);</span>
+
+<span class="nc" id="L729">        return task;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

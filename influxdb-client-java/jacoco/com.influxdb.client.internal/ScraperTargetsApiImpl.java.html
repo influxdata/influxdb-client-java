@@ -1,0 +1,412 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>ScraperTargetsApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">ScraperTargetsApiImpl.java</span></div><h1>ScraperTargetsApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.client.ScraperTargetsApi;
+import com.influxdb.client.domain.AddResourceMemberRequestBody;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.LabelMapping;
+import com.influxdb.client.domain.LabelResponse;
+import com.influxdb.client.domain.LabelsResponse;
+import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.ResourceMember;
+import com.influxdb.client.domain.ResourceMembers;
+import com.influxdb.client.domain.ResourceOwner;
+import com.influxdb.client.domain.ResourceOwners;
+import com.influxdb.client.domain.ScraperTargetRequest;
+import com.influxdb.client.domain.ScraperTargetResponse;
+import com.influxdb.client.domain.ScraperTargetResponses;
+import com.influxdb.client.domain.User;
+import com.influxdb.client.service.ScraperTargetsService;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
+
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (22/01/2019 08:17)
+ */
+final class ScraperTargetsApiImpl extends AbstractRestClient implements ScraperTargetsApi {
+
+<span class="nc" id="L56">    private static final Logger LOG = Logger.getLogger(ScraperTargetsApiImpl.class.getName());</span>
+
+    private final ScraperTargetsService service;
+
+<span class="nc" id="L60">    ScraperTargetsApiImpl(@Nonnull final ScraperTargetsService service) {</span>
+
+<span class="nc" id="L62">        Arguments.checkNotNull(service, &quot;service&quot;);</span>
+
+<span class="nc" id="L64">        this.service = service;</span>
+<span class="nc" id="L65">    }</span>
+
+    @Nonnull
+    @Override
+    public ScraperTargetResponse createScraperTarget(@Nonnull final ScraperTargetRequest scraperTargetRequest) {
+
+<span class="nc" id="L71">        Arguments.checkNotNull(scraperTargetRequest, &quot;scraperTargetRequest&quot;);</span>
+
+<span class="nc" id="L73">        Call&lt;ScraperTargetResponse&gt; call = service.postScrapers(scraperTargetRequest, null);</span>
+
+<span class="nc" id="L75">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public ScraperTargetResponse createScraperTarget(@Nonnull final String name,
+                                                     @Nonnull final String url,
+                                                     @Nonnull final String bucketID,
+                                                     @Nonnull final String orgID) {
+
+<span class="nc" id="L85">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="nc" id="L86">        Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="nc" id="L87">        Arguments.checkNonEmpty(bucketID, &quot;bucketID&quot;);</span>
+<span class="nc" id="L88">        Arguments.checkNonEmpty(orgID, &quot; orgID&quot;);</span>
+
+<span class="nc" id="L90">        ScraperTargetRequest scraperTarget = new ScraperTargetRequest();</span>
+<span class="nc" id="L91">        scraperTarget.setName(name);</span>
+<span class="nc" id="L92">        scraperTarget.setUrl(url);</span>
+<span class="nc" id="L93">        scraperTarget.setBucketID(bucketID);</span>
+<span class="nc" id="L94">        scraperTarget.setOrgID(orgID);</span>
+
+<span class="nc" id="L96">        return createScraperTarget(scraperTarget);</span>
+    }
+
+    @Nonnull
+    @Override
+    public ScraperTargetResponse updateScraperTarget(@Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L103">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+
+<span class="nc" id="L105">        return updateScraperTarget(scraperTargetResponse.getId(), scraperTargetResponse);</span>
+    }
+
+    @Nonnull
+    @Override
+    public ScraperTargetResponse updateScraperTarget(@Nonnull final String scraperTargetID,
+                                                     @Nonnull final ScraperTargetRequest scraperTargetRequest) {
+
+<span class="nc" id="L113">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+<span class="nc" id="L114">        Arguments.checkNotNull(scraperTargetRequest, &quot;scraperTargetRequest&quot;);</span>
+
+<span class="nc" id="L116">        Call&lt;ScraperTargetResponse&gt; call = service</span>
+<span class="nc" id="L117">                .patchScrapersID(scraperTargetID, scraperTargetRequest, null);</span>
+
+<span class="nc" id="L119">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteScraperTarget(@Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L125">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+
+<span class="nc" id="L127">        deleteScraperTarget(scraperTargetResponse.getId());</span>
+<span class="nc" id="L128">    }</span>
+
+    @Override
+    public void deleteScraperTarget(@Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L133">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L135">        Call&lt;Void&gt; call = service.deleteScrapersID(scraperTargetID, null);</span>
+<span class="nc" id="L136">        execute(call);</span>
+<span class="nc" id="L137">    }</span>
+
+    @Nonnull
+    @Override
+    public ScraperTargetResponse cloneScraperTarget(@Nonnull final String clonedName,
+                                                    @Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L144">        Arguments.checkNonEmpty(clonedName, &quot;clonedName&quot;);</span>
+<span class="nc" id="L145">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L147">        ScraperTargetResponse scraperTarget = findScraperTargetByID(scraperTargetID);</span>
+
+<span class="nc" id="L149">        return cloneScraperTarget(clonedName, scraperTarget);</span>
+    }
+
+    @Nonnull
+    @Override
+    public ScraperTargetResponse cloneScraperTarget(@Nonnull final String clonedName,
+                                                    @Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L157">        Arguments.checkNonEmpty(clonedName, &quot;clonedName&quot;);</span>
+<span class="nc" id="L158">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+
+<span class="nc" id="L160">        ScraperTargetRequest cloned = new ScraperTargetRequest();</span>
+<span class="nc" id="L161">        cloned.setName(clonedName);</span>
+<span class="nc" id="L162">        cloned.setUrl(scraperTargetResponse.getUrl());</span>
+<span class="nc" id="L163">        cloned.setOrgID(scraperTargetResponse.getOrgID());</span>
+<span class="nc" id="L164">        cloned.setBucketID(scraperTargetResponse.getBucketID());</span>
+
+<span class="nc" id="L166">        ScraperTargetResponse created = createScraperTarget(cloned);</span>
+
+<span class="nc" id="L168">        getLabels(scraperTargetResponse).forEach(label -&gt; addLabel(label, created));</span>
+
+<span class="nc" id="L170">        return created;</span>
+    }
+
+    @Nonnull
+    @Override
+    public ScraperTargetResponse findScraperTargetByID(@Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L177">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L179">        Call&lt;ScraperTargetResponse&gt; call = service.getScrapersID(scraperTargetID, null);</span>
+
+<span class="nc" id="L181">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ScraperTargetResponse&gt; findScraperTargets() {
+
+<span class="nc" id="L188">        return findScraperTargetsByOrgId(null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ScraperTargetResponse&gt; findScraperTargetsByOrg(@Nonnull final Organization organization) {
+
+<span class="nc" id="L195">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="nc" id="L197">        return findScraperTargetsByOrgId(organization.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ScraperTargetResponse&gt; findScraperTargetsByOrgId(@Nullable final String orgID) {
+
+<span class="nc" id="L204">        Call&lt;ScraperTargetResponses&gt; call = service.getScrapers(null, null, null, orgID, null);</span>
+
+<span class="nc" id="L206">        ScraperTargetResponses responses = execute(call);</span>
+<span class="nc" id="L207">        LOG.log(Level.FINEST, &quot;findScraperTargets found: {0}&quot;, responses);</span>
+
+<span class="nc" id="L209">        return responses.getConfigurations();</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L216">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+
+<span class="nc" id="L218">        return getMembers(scraperTargetResponse.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L225">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L227">        Call&lt;ResourceMembers&gt; call = service.getScrapersIDMembers(scraperTargetID, null);</span>
+<span class="nc" id="L228">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="nc" id="L229">        LOG.log(Level.FINEST, &quot;findScraperTargetMembers found: {0}&quot;, resourceMembers);</span>
+
+<span class="nc" id="L231">        return resourceMembers.getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final User member,
+                                    @Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L239">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L240">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+
+<span class="nc" id="L242">        return addMember(member.getId(), scraperTargetResponse.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L249">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L250">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L252">        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();</span>
+<span class="nc" id="L253">        user.setId(memberID);</span>
+
+<span class="nc" id="L255">        Call&lt;ResourceMember&gt; call = service</span>
+<span class="nc" id="L256">                .postScrapersIDMembers(scraperTargetID, user, null);</span>
+
+<span class="nc" id="L258">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final User member, @Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L264">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L265">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+
+<span class="nc" id="L267">        deleteMember(member.getId(), scraperTargetResponse.getId());</span>
+<span class="nc" id="L268">    }</span>
+
+    @Override
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L273">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="nc" id="L274">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L276">        Call&lt;Void&gt; call = service.deleteScrapersIDMembersID(memberID, scraperTargetID, null);</span>
+<span class="nc" id="L277">        execute(call);</span>
+<span class="nc" id="L278">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceOwner&gt; getOwners(@Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L284">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+
+<span class="nc" id="L286">        return getOwners(scraperTargetResponse.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceOwner&gt; getOwners(@Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L293">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L295">        Call&lt;ResourceOwners&gt; call = service.getScrapersIDOwners(scraperTargetID, null);</span>
+<span class="nc" id="L296">        ResourceOwners resourceMembers = execute(call);</span>
+<span class="nc" id="L297">        LOG.log(Level.FINEST, &quot;findScraperTargetOwners found: {0}&quot;, resourceMembers);</span>
+
+<span class="nc" id="L299">        return resourceMembers.getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceOwner addOwner(@Nonnull final User owner,
+                                  @Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L307">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L308">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+
+<span class="nc" id="L310">        return addOwner(owner.getId(), scraperTargetResponse.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L317">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L318">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L320">        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();</span>
+<span class="nc" id="L321">        user.setId(ownerID);</span>
+
+<span class="nc" id="L323">        Call&lt;ResourceOwner&gt; call = service.postScrapersIDOwners(scraperTargetID, user, null);</span>
+
+<span class="nc" id="L325">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L331">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+<span class="nc" id="L332">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+
+<span class="nc" id="L334">        deleteOwner(owner.getId(), scraperTargetResponse.getId());</span>
+<span class="nc" id="L335">    }</span>
+
+    @Override
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L340">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L341">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L343">        Call&lt;Void&gt; call = service.deleteScrapersIDOwnersID(ownerID, scraperTargetID, null);</span>
+<span class="nc" id="L344">        execute(call);</span>
+<span class="nc" id="L345">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L351">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+
+<span class="nc" id="L353">        return getLabels(scraperTargetResponse.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L360">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L362">        Call&lt;LabelsResponse&gt; call = service.getScrapersIDLabels(scraperTargetID, null);</span>
+
+<span class="nc" id="L364">        return execute(call).getLabels();</span>
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final Label label,
+                                  @Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L372">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L373">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+
+<span class="nc" id="L375">        return addLabel(label.getId(), scraperTargetResponse.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L382">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L383">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L385">        LabelMapping labelMapping = new LabelMapping();</span>
+<span class="nc" id="L386">        labelMapping.setLabelID(labelID);</span>
+
+<span class="nc" id="L388">        Call&lt;LabelResponse&gt; call = service.postScrapersIDLabels(scraperTargetID, labelMapping, null);</span>
+
+<span class="nc" id="L390">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final ScraperTargetResponse scraperTargetResponse) {
+
+<span class="nc" id="L396">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L397">        Arguments.checkNotNull(scraperTargetResponse, &quot;scraperTarget&quot;);</span>
+
+<span class="nc" id="L399">        deleteLabel(label.getId(), scraperTargetResponse.getId());</span>
+<span class="nc" id="L400">    }</span>
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String scraperTargetID) {
+
+<span class="nc" id="L405">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L406">        Arguments.checkNonEmpty(scraperTargetID, &quot;scraperTargetID&quot;);</span>
+
+<span class="nc" id="L408">        Call&lt;Void&gt; call = service.deleteScrapersIDLabelsID(scraperTargetID, labelID, null);</span>
+<span class="nc" id="L409">        execute(call);</span>
+<span class="nc" id="L410">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

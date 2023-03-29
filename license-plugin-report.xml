@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1669899743074">
+<licensePluginReport goal="CHECK" timestamp="1679948066670">
     <module artifactId="influxdb-client" groupId="com.influxdb" version="6.8.0-SNAPSHOT"/>
     <files>
         <file path=".circleci/config.yml" result="PRESENT"/>

@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>LabelsApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">LabelsApiImpl.java</span></div><h1>LabelsApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.client.LabelsApi;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.LabelCreateRequest;
+import com.influxdb.client.domain.LabelResponse;
+import com.influxdb.client.domain.LabelUpdate;
+import com.influxdb.client.domain.LabelsResponse;
+import com.influxdb.client.domain.Organization;
+import com.influxdb.client.service.LabelsService;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
+
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (28/01/2019 10:48)
+ */
+final class LabelsApiImpl extends AbstractRestClient implements LabelsApi {
+
+<span class="nc" id="L49">    private static final Logger LOG = Logger.getLogger(LabelsApiImpl.class.getName());</span>
+
+    private final LabelsService service;
+
+<span class="nc" id="L53">    LabelsApiImpl(@Nonnull final LabelsService service) {</span>
+
+<span class="nc" id="L55">        Arguments.checkNotNull(service, &quot;service&quot;);</span>
+
+<span class="nc" id="L57">        this.service = service;</span>
+<span class="nc" id="L58">    }</span>
+
+    @Nonnull
+    @Override
+    public Label createLabel(@Nonnull final String name,
+                             @Nonnull final Map&lt;String, String&gt; properties,
+                             @Nonnull final String orgID) {
+
+<span class="nc" id="L66">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+<span class="nc" id="L67">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="nc" id="L68">        Arguments.checkNotNull(properties, &quot;properties&quot;);</span>
+
+<span class="nc" id="L70">        LabelCreateRequest label = new LabelCreateRequest();</span>
+<span class="nc" id="L71">        label.setName(name);</span>
+<span class="nc" id="L72">        label.setProperties(properties);</span>
+<span class="nc" id="L73">        label.setOrgID(orgID);</span>
+
+<span class="nc" id="L75">        return createLabel(label);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label createLabel(@Nonnull final LabelCreateRequest request) {
+
+<span class="nc" id="L82">        Arguments.checkNotNull(request, &quot;request&quot;);</span>
+
+<span class="nc" id="L84">        Call&lt;LabelResponse&gt; call = service.postLabels(request);</span>
+<span class="nc" id="L85">        LabelResponse labelResponse = execute(call);</span>
+
+<span class="nc" id="L87">        LOG.log(Level.FINEST, &quot;createLabel response: {0}&quot;, labelResponse);</span>
+
+<span class="nc" id="L89">        return labelResponse.getLabel();</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label updateLabel(@Nonnull final Label label) {
+
+<span class="nc" id="L96">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+
+<span class="nc" id="L98">        LabelUpdate labelUpdate = new LabelUpdate();</span>
+<span class="nc" id="L99">        labelUpdate.properties(label.getProperties());</span>
+
+<span class="nc" id="L101">        return updateLabel(label.getId(), labelUpdate);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label updateLabel(@Nonnull final String labelID, @Nonnull final LabelUpdate labelUpdate) {
+
+<span class="nc" id="L108">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L109">        Arguments.checkNotNull(labelUpdate, &quot;labelUpdate&quot;);</span>
+
+<span class="nc" id="L111">        Call&lt;LabelResponse&gt; call = service.patchLabelsID(labelID, labelUpdate, null);</span>
+<span class="nc" id="L112">        LabelResponse labelResponse = execute(call);</span>
+
+<span class="nc" id="L114">        LOG.log(Level.FINEST, &quot;updateLabel response: {0}&quot;, labelResponse);</span>
+
+<span class="nc" id="L116">        return labelResponse.getLabel();</span>
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label) {
+
+<span class="nc" id="L122">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+
+<span class="nc" id="L124">        deleteLabel(label.getId());</span>
+<span class="nc" id="L125">    }</span>
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID) {
+
+<span class="nc" id="L130">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+
+<span class="nc" id="L132">        Call&lt;Void&gt; call = service.deleteLabelsID(labelID, null);</span>
+<span class="nc" id="L133">        execute(call);</span>
+<span class="nc" id="L134">    }</span>
+
+    @Nonnull
+    @Override
+    public Label cloneLabel(@Nonnull final String clonedName, @Nonnull final String labelID) {
+
+<span class="nc" id="L140">        Arguments.checkNonEmpty(clonedName, &quot;clonedName&quot;);</span>
+<span class="nc" id="L141">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+
+<span class="nc" id="L143">        Label label = findLabelByID(labelID);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (label == null) {</span>
+<span class="nc" id="L145">            throw new IllegalStateException(&quot;NotFound Label with ID: &quot; + labelID);</span>
+        }
+
+<span class="nc" id="L148">        return cloneLabel(clonedName, label);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label cloneLabel(@Nonnull final String clonedName, @Nonnull final Label label) {
+
+<span class="nc" id="L155">        Arguments.checkNonEmpty(clonedName, &quot;clonedName&quot;);</span>
+<span class="nc" id="L156">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+
+<span class="nc" id="L158">        LabelCreateRequest cloned = new LabelCreateRequest();</span>
+<span class="nc" id="L159">        cloned.setName(clonedName);</span>
+<span class="nc" id="L160">        cloned.setOrgID(label.getOrgID());</span>
+
+<span class="nc bnc" id="L162" title="All 2 branches missed.">        if (label.getProperties() != null) {</span>
+<span class="nc" id="L163">            label.getProperties().forEach(cloned::putPropertiesItem);</span>
+        }
+<span class="nc" id="L165">        cloned.getProperties().putAll(label.getProperties());</span>
+
+<span class="nc" id="L167">        return createLabel(cloned);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label findLabelByID(@Nonnull final String labelID) {
+
+<span class="nc" id="L174">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+
+<span class="nc" id="L176">        Call&lt;LabelResponse&gt; call = service.getLabelsID(labelID, null);</span>
+
+<span class="nc" id="L178">        return execute(call).getLabel();</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; findLabels() {
+
+<span class="nc" id="L185">        return findLabelsByOrgId(null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; findLabelsByOrg(@Nonnull final Organization organization) {
+
+<span class="nc" id="L192">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="nc" id="L194">        return findLabelsByOrgId(organization.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; findLabelsByOrgId(@Nullable final String orgID) {
+
+<span class="nc" id="L201">        Call&lt;LabelsResponse&gt; sourcesCall = service.getLabels(null, orgID);</span>
+
+<span class="nc" id="L203">        LabelsResponse labels = execute(sourcesCall);</span>
+<span class="nc" id="L204">        LOG.log(Level.FINEST, &quot;findLabels found: {0}&quot;, labels);</span>
+
+<span class="nc" id="L206">        return labels.getLabels();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

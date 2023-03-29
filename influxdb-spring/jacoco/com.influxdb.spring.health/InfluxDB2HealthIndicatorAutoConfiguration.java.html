@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InfluxDB2HealthIndicatorAutoConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Spring Integration for InfluxDB 2.x</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.spring.health</a> &gt; <span class="el_source">InfluxDB2HealthIndicatorAutoConfiguration.java</span></div><h1>InfluxDB2HealthIndicatorAutoConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.spring.health;
+
+import java.util.Map;
+
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.spring.influx.InfluxDB2AutoConfiguration;
+
+import org.springframework.boot.actuate.autoconfigure.health.CompositeHealthContributorConfiguration;
+import org.springframework.boot.actuate.autoconfigure.health.ConditionalOnEnabledHealthIndicator;
+import org.springframework.boot.actuate.health.HealthContributor;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+/**
+ * {@link EnableAutoConfiguration Auto-configuration} for {@link InfluxDB2HealthIndicator}.
+ *
+ * @author Jakub Bednar
+ */
+@Configuration(proxyBeanMethods = false)
+@ConditionalOnClass(InfluxDBClient.class)
+@ConditionalOnBean(InfluxDBClient.class)
+@ConditionalOnEnabledHealthIndicator(&quot;influx&quot;)
+@AutoConfigureAfter(InfluxDB2AutoConfiguration.class)
+<span class="fc" id="L50">public class InfluxDB2HealthIndicatorAutoConfiguration</span>
+        extends CompositeHealthContributorConfiguration&lt;InfluxDB2HealthIndicator, InfluxDBClient&gt; {
+
+    @Bean
+    @ConditionalOnMissingBean(name = { &quot;influxDB2HealthIndicator&quot;, &quot;influxDB2HealthContributor&quot; })
+    public HealthContributor influxDbHealthContributor(final Map&lt;String, InfluxDBClient&gt; influxDBClients) {
+<span class="fc" id="L56">        return createContributor(influxDBClients);</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

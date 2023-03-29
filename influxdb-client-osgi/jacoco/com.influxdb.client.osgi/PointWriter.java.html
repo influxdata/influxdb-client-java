@@ -1,0 +1,340 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PointWriter.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The OSGi InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.osgi</a> &gt; <span class="el_source">PointWriter.java</span></div><h1>PointWriter.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.osgi;
+
+import java.net.InetAddress;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.util.Collection;
+import java.util.Date;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.Point;
+
+import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.ConfigurationPolicy;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
+import org.osgi.service.event.Event;
+import org.osgi.service.event.EventConstants;
+import org.osgi.service.event.EventHandler;
+import org.osgi.service.metatype.annotations.AttributeDefinition;
+import org.osgi.service.metatype.annotations.AttributeType;
+import org.osgi.service.metatype.annotations.Designate;
+import org.osgi.service.metatype.annotations.ObjectClassDefinition;
+
+/**
+ * OSGi event handler writing structured data (points) to InfluxDB.
+ *
+ * &lt;p&gt;Service is used to write structural ({@link com.influxdb.client.write.Point} or
+ * {@link java.util.Map}) event data to InfluxDB. OSGi event topic
+ * {@link PointWriter#DEFAULT_EVENT_TOPIC} used by default. The following OSGi event properties are supported:&lt;/p&gt;
+ *
+ * &lt;ul&gt;
+ *     &lt;li&gt;&lt;i&gt;point&lt;/i&gt; ({@link Point} or {@link Map}): value represents a single structured data&lt;/li&gt;
+ *     &lt;li&gt;&lt;i&gt;points&lt;/i&gt; ({@link Collection}): value represents a collection of structured data&lt;/li&gt;
+ *     &lt;li&gt;&lt;i&gt;organization&lt;/i&gt; ({@link String}, optional): used to override InfluxDB organization of
+ *         {@link LineProtocolWriter} service (by event).&lt;/li&gt;
+ *     &lt;li&gt;&lt;i&gt;bucket&lt;/i&gt; ({@link String}, optional): used to override InfluxDB bucket of
+ *         {@link LineProtocolWriter} service (by event).&lt;/li&gt;
+ * &lt;/ul&gt;
+ *
+ * &lt;p&gt;One of &lt;i&gt;point&lt;/i&gt; or &lt;i&gt;points&lt;/i&gt; must be set.&lt;/p&gt;
+ *
+ * &lt;p&gt;Measurement name is defined by OSGi event topic if {@link Map} type is used: measure name is fragment after
+ * the last slash (&lt;code&gt;/&lt;/code&gt;) character. For example: &lt;b&gt;weather&lt;/b&gt; measure is written
+ * if event topic is &lt;code&gt;influxdb/point/weather&lt;/code&gt; (in this case OSGi event filter must be changed,
+ * i.e. &lt;code&gt;influxdb/point/*&lt;/code&gt;).&lt;/p&gt;
+ *
+ * &lt;p&gt;Structured data can be decorated with host name, host address or timestamp (by configuration).&lt;/p&gt;
+ */
+@Component(immediate = true, configurationPolicy = ConfigurationPolicy.REQUIRE, property = {
+        EventConstants.EVENT_TOPIC + &quot;=&quot; + PointWriter.DEFAULT_EVENT_TOPIC
+})
+@Designate(ocd = PointWriter.Config.class)
+<span class="fc" id="L86">@Slf4j</span>
+<span class="fc" id="L87">public class PointWriter implements EventHandler {</span>
+
+    /**
+     * Default OSGi event topic.
+     */
+    public static final String DEFAULT_EVENT_TOPIC = &quot;influxdb/point&quot;;
+
+    /**
+     * OSGi event property name used to write single structured data.
+     */
+    public static final String POINT = &quot;point&quot;;
+    /**
+     * OSGi event property name used to write collection of structured data.
+     */
+    public static final String POINTS = &quot;points&quot;;
+
+    /**
+     * OSGi event property name to override InfluxDB organization.
+     */
+    public static final String ORGANIZATION = &quot;organization&quot;;
+    /**
+     * OSGi event property name to override InfluxDB bucket.
+     */
+    public static final String BUCKET = &quot;bucket&quot;;
+
+    /**
+     * Field name used to store host name.
+     */
+    static final String HOST_NAME = &quot;_host&quot;;
+
+    /**
+     * Field name used to store host address.
+     */
+    static final String HOST_ADDRESS = &quot;_host_address&quot;;
+
+    /**
+     * Field name used to store timestamp.
+     */
+    static final String TIMESTAMP_KEY = &quot;timestamp&quot;;
+
+    /**
+     * Field name used for tags.
+     */
+    static final String TAGS_KEY = &quot;tags&quot;;
+
+    /**
+     * Field name used for fields.
+     */
+    static final String FIELDS_KEY = &quot;fields&quot;;
+
+    /**
+     * Configuration for Point Writer.
+     */
+    @ObjectClassDefinition(name = &quot;InfluxDB Point Writer&quot;,
+            description = &quot;Event handler writing point(s) to InfluxDB&quot;)
+    public @interface Config {
+
+        /**
+         * OSGi event handler topic(s).
+         */
+        @AttributeDefinition(name = &quot;Topics&quot;,
+                description = &quot;OSGi event topics&quot;)
+        String[] event_topics() default {DEFAULT_EVENT_TOPIC};
+
+        /**
+         * OSGi target filter for InfluxDB connection, i.e. &lt;code&gt;(alias=test)&lt;/code&gt;. The following properties are
+         * copied from {@link InfluxDBConnector}: &lt;code&gt;organization&lt;/code&gt;, &lt;code&gt;bucket&lt;/code&gt;, &lt;code&gt;database&lt;/code&gt;,
+         * &lt;code&gt;url&lt;/code&gt;, &lt;code&gt;alias&lt;/code&gt;.
+         */
+        @AttributeDefinition(required = false, name = &quot;InfluxDB client target&quot;,
+                description = &quot;OSGi target filter of InfluxDB client service&quot;)
+        String client_target();
+
+        /**
+         * Tag point(s) by host name (as {@link PointWriter#HOST_NAME}) if enabled.
+         */
+        @AttributeDefinition(required = false, name = &quot;Add host name&quot;,
+                description = &quot;Add host name to point(s)&quot;, type = AttributeType.BOOLEAN)
+        boolean host_name_add() default false;
+
+        /**
+         * Tag point(s) by host address (as {@link PointWriter#HOST_ADDRESS}) if enabled.
+         */
+        @AttributeDefinition(required = false, name = &quot;Add host address&quot;,
+                description = &quot;Add host address to point(s)&quot;, type = AttributeType.BOOLEAN)
+        boolean host_address_add() default false;
+
+        /**
+         * Add timestamp to point(s) if enabled. Timestamp of OSGi event is used if available, current timestamp
+         * otherwise.
+         */
+        @AttributeDefinition(required = false, name = &quot;Add timestamp&quot;,
+                description = &quot;Add timestamp to point(s)&quot;, type = AttributeType.BOOLEAN)
+        boolean timestamp_add() default false;
+
+        /**
+         * Precision used if adding timestamp, values: &lt;code&gt;s&lt;/code&gt;, &lt;code&gt;ms&lt;/code&gt;, &lt;code&gt;us&lt;/code&gt;,
+         * &lt;code&gt;ns&lt;/code&gt;.
+         */
+        @AttributeDefinition(required = false, name = &quot;Precision&quot;,
+                description = &quot;Precision used if adding timestamp&quot;)
+        String timestamp_precision() default &quot;ns&quot;;
+
+        /**
+         * InfluxDB organization to write data (overriding organization of {@link InfluxDBClient}).
+         */
+        @AttributeDefinition(required = false, name = &quot;Organization&quot;,
+                description = &quot;InfluxDB organization to write&quot;)
+        String organization();
+
+        /**
+         * InfluxDB bucket to write data (overriding bucket of {@link InfluxDBClient}).
+         */
+        @AttributeDefinition(required = false, name = &quot;Bucket&quot;,
+                description = &quot;InfluxDB bucket to write&quot;)
+        String bucket();
+    }
+
+    @Reference(policyOption = ReferencePolicyOption.GREEDY)
+    InfluxDBClient client;
+
+    Config config;
+
+    /**
+     * Start or reconfigure OSGi component.
+     *
+     * @param config configuration
+     */
+    @Activate
+    @Modified
+    void start(final Config config) {
+<span class="fc" id="L218">        this.config = config;</span>
+<span class="fc" id="L219">    }</span>
+
+    /**
+     * Write structured data from OSGi event.
+     *
+     * @param event OSGI event containing data
+     */
+    @Override
+    public void handleEvent(final Event event) {
+<span class="fc" id="L228">        String organization = (String) event.getProperty(ORGANIZATION);</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        if (organization == null) {</span>
+<span class="fc" id="L230">            organization = config.organization();</span>
+        }
+<span class="fc" id="L232">        String bucket = (String) event.getProperty(BUCKET);</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (bucket == null) {</span>
+<span class="fc" id="L234">            bucket = config.bucket();</span>
+        }
+
+<span class="fc" id="L237">        final WriteApiBlocking writeApi = client.getWriteApiBlocking();</span>
+
+<span class="fc" id="L239">        final Object point = event.getProperty(POINT);</span>
+<span class="fc" id="L240">        final Collection&lt;Object&gt; points = (Collection&lt;Object&gt;) event.getProperty(POINTS);</span>
+
+        final Instant timestamp;
+<span class="fc bfc" id="L243" title="All 2 branches covered.">        if (config.timestamp_add()) {</span>
+<span class="fc" id="L244">            final Long epoch = (Long) event.getProperty(EventConstants.TIMESTAMP);</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">            if (epoch != null) {</span>
+<span class="fc" id="L246">                timestamp = new Date(epoch).toInstant();</span>
+            } else {
+<span class="fc" id="L248">                timestamp = Instant.now();</span>
+            }
+<span class="fc" id="L250">        } else {</span>
+<span class="fc" id="L251">            timestamp = null;</span>
+        }
+
+<span class="fc bfc" id="L254" title="All 2 branches covered.">        if (point != null) {</span>
+<span class="fc bfc" id="L255" title="All 4 branches covered.">            if (organization != null &amp;&amp; bucket != null) {</span>
+<span class="fc" id="L256">                writeApi.writePoint(bucket, organization, decorate(point, event, timestamp));</span>
+            } else {
+<span class="fc" id="L258">                writeApi.writePoint(decorate(point, event, timestamp));</span>
+            }
+<span class="fc bfc" id="L260" title="All 2 branches covered.">        } else if (points != null) {</span>
+<span class="fc bfc" id="L261" title="All 4 branches covered.">            if (organization != null &amp;&amp; bucket != null) {</span>
+<span class="fc" id="L262">                writeApi.writePoints(bucket, organization, points.stream()</span>
+<span class="fc" id="L263">                        .map(p -&gt; decorate(p, event, timestamp))</span>
+<span class="fc" id="L264">                        .collect(Collectors.toList()));</span>
+            } else {
+<span class="fc" id="L266">                writeApi.writePoints(points.stream()</span>
+<span class="fc" id="L267">                        .map(p -&gt; decorate(p, event, timestamp))</span>
+<span class="fc" id="L268">                        .collect(Collectors.toList()));</span>
+            }
+        } else {
+<span class="fc" id="L271">            throw new IllegalArgumentException(&quot;Missing point(s)&quot;);</span>
+        }
+<span class="fc" id="L273">    }</span>
+
+<span class="fc" id="L275">    @SneakyThrows</span>
+    private Point decorate(final Object object, final Event event, final Instant instant) {
+<span class="fc" id="L277">        final WritePrecision precision = WritePrecision.fromValue(config.timestamp_precision());</span>
+
+        final Point point;
+<span class="fc bfc" id="L280" title="All 2 branches covered.">        if (object instanceof Point) {</span>
+<span class="fc" id="L281">            point = (Point) object;</span>
+<span class="fc bfc" id="L282" title="All 2 branches covered.">            if (instant != null) {</span>
+<span class="fc" id="L283">                point.time(instant, precision);</span>
+            }
+<span class="fc bfc" id="L285" title="All 2 branches covered.">        } else if (object instanceof Map) {</span>
+<span class="fc" id="L286">            final String measurement = event.getTopic().replaceAll(&quot;.*/&quot;, &quot;&quot;);</span>
+<span class="fc" id="L287">            point = Point.measurement(measurement);</span>
+
+<span class="fc" id="L289">            final Map&lt;String, Object&gt; data = (Map&lt;String, Object&gt;) object;</span>
+
+<span class="fc" id="L291">            final Object timestamp = data.get(TIMESTAMP_KEY);</span>
+<span class="fc bfc" id="L292" title="All 2 branches covered.">            if (instant != null) {</span>
+<span class="fc" id="L293">                point.time(instant, precision);</span>
+<span class="fc bfc" id="L294" title="All 2 branches covered.">            } else if (!setTimestamp(timestamp, point, precision)) {</span>
+                // instant must be set because no (valid) _timestamp found in map
+<span class="fc" id="L296">                point.time(Instant.now(), precision);</span>
+            }
+
+<span class="fc" id="L299">            Optional.ofNullable((Map&lt;String, String&gt;) data.get(TAGS_KEY))</span>
+<span class="fc" id="L300">                    .ifPresent(tags -&gt; point.addTags(tags));</span>
+
+<span class="fc" id="L302">            Optional.ofNullable((Map&lt;String, Object&gt;) data.get(FIELDS_KEY))</span>
+<span class="fc" id="L303">                    .ifPresent(fields -&gt; point.addFields(fields));</span>
+<span class="fc" id="L304">        } else {</span>
+<span class="fc" id="L305">            throw new IllegalArgumentException(&quot;Invalid point&quot;);</span>
+        }
+
+<span class="fc bfc" id="L308" title="All 2 branches covered.">        if (config.host_name_add()) {</span>
+<span class="fc" id="L309">            point.addTag(HOST_NAME, InetAddress.getLocalHost().getHostName());</span>
+<span class="fc" id="L310">            point.addField(HOST_NAME, InetAddress.getLocalHost().getHostName());</span>
+        }
+
+<span class="fc bfc" id="L313" title="All 2 branches covered.">        if (config.host_address_add()) {</span>
+<span class="fc" id="L314">            point.addTag(HOST_ADDRESS, InetAddress.getLocalHost().getHostAddress());</span>
+        }
+
+<span class="fc" id="L317">        return point;</span>
+    }
+
+    private boolean setTimestamp(final Object timestamp, final Point point, final WritePrecision precision) {
+<span class="fc bfc" id="L321" title="All 2 branches covered.">        if (timestamp instanceof Date) {</span>
+<span class="fc" id="L322">            point.time(((Date) timestamp).toInstant(), precision);</span>
+<span class="fc bfc" id="L323" title="All 2 branches covered.">        } else if (timestamp instanceof Instant) {</span>
+<span class="fc" id="L324">            point.time((Instant) timestamp, precision);</span>
+<span class="fc bfc" id="L325" title="All 2 branches covered.">        } else if (timestamp instanceof LocalDateTime) {</span>
+<span class="fc" id="L326">            point.time(((LocalDateTime) timestamp).atZone(ZoneId.systemDefault()).toInstant(), precision);</span>
+<span class="fc bfc" id="L327" title="All 2 branches covered.">        } else if (timestamp instanceof OffsetDateTime) {</span>
+<span class="fc" id="L328">            point.time(((OffsetDateTime) timestamp).toInstant(), precision);</span>
+<span class="fc bfc" id="L329" title="All 2 branches covered.">        } else if (timestamp instanceof ZonedDateTime) {</span>
+<span class="fc" id="L330">            point.time(((ZonedDateTime) timestamp).toInstant(), precision);</span>
+<span class="fc bfc" id="L331" title="All 2 branches covered.">        } else if (timestamp instanceof Long) {</span>
+<span class="fc" id="L332">            point.time((Long) timestamp, precision);</span>
+        } else {
+<span class="fc" id="L334">            return false;</span>
+        }
+
+<span class="fc" id="L337">        return true;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

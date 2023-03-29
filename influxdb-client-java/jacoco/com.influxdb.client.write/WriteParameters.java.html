@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WriteParameters.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.write</a> &gt; <span class="el_source">WriteParameters.java</span></div><h1>WriteParameters.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.write;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.ThreadSafe;
+
+import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.domain.WriteConsistency;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.utils.Arguments;
+
+/**
+ * Write API parameters.
+ * &lt;p&gt;
+ * Supports to specify:
+ * &lt;ul&gt;
+ *     &lt;li&gt;&lt;code&gt;bucket&lt;/code&gt; - Specifies the destination bucket for writes.&lt;/li&gt;
+ *     &lt;li&gt;&lt;code&gt;org&lt;/code&gt; - Specifies the destination organization for writes.&lt;/li&gt;
+ *     &lt;li&gt;&lt;code&gt;precision&lt;/code&gt; - Precision for unix timestamps in the line protocol of the request payload.&lt;/li&gt;
+ *     &lt;li&gt;
+ *         &lt;code&gt;consistency&lt;/code&gt; - The write consistency for the point.
+ *         InfluxDB assumes that the write consistency is {@link  WriteConsistency#ONE} if you do not
+ *         specify consistency.
+ *         See the &lt;a href=&quot;https://bit.ly/enterprise-consistency&quot;&gt;InfluxDB Enterprise documentation&lt;/a&gt; for
+ *         detailed descriptions of each consistency option.
+ *         &lt;b&gt;Available with InfluxDB Enterprise clusters only!&lt;/b&gt;
+ *     &lt;/li&gt;
+ * &lt;/ul&gt;
+ */
+@ThreadSafe
+@SuppressWarnings(&quot;ConstantConditions&quot;)
+public final class WriteParameters {
+
+<span class="fc" id="L55">    public static final WritePrecision DEFAULT_WRITE_PRECISION = WritePrecision.NS;</span>
+
+    private final String bucket;
+    private final String org;
+    private final WritePrecision precision;
+    private final WriteConsistency consistency;
+
+    /**
+     * Construct WriteAPI parameters.
+     *
+     * @param bucket      The destination bucket for writes.
+     *                    If it is not specified then use {@link InfluxDBClientOptions#getBucket()}.
+     * @param org         The destination organization for writes.
+     *                    If it is not specified then use {@link InfluxDBClientOptions#getOrg()}.
+     * @param precision   Precision for unix timestamps in the line protocol of the request payload.
+     *                    If it is not specified then use {@link WritePrecision#NS}.
+     * @param consistency The write consistency for the point. For more info see {@link WriteParameters}.
+     */
+    public WriteParameters(@Nullable final String bucket,
+                           @Nullable final String org,
+                           @Nullable final WritePrecision precision,
+<span class="fc" id="L76">                           @Nullable final WriteConsistency consistency) {</span>
+<span class="fc" id="L77">        this.bucket = bucket;</span>
+<span class="fc" id="L78">        this.org = org;</span>
+<span class="fc" id="L79">        this.precision = precision;</span>
+<span class="fc" id="L80">        this.consistency = consistency;</span>
+<span class="fc" id="L81">    }</span>
+
+    /**
+     * Construct WriteAPI parameters.
+     *
+     * @param precision   Precision for unix timestamps in the line protocol of the request payload.
+     *                    If it is not specified then use {@link WritePrecision#NS}.
+     * @param consistency The write consistency for the point. For more info see {@link WriteParameters}.
+     */
+    public WriteParameters(@Nullable final WritePrecision precision,
+                           @Nullable final WriteConsistency consistency) {
+<span class="fc" id="L92">        this(null, null, precision, consistency);</span>
+<span class="fc" id="L93">    }</span>
+
+    /**
+     * The backward internal constructor, please use
+     * {@link #WriteParameters(String, String, WritePrecision, WriteConsistency)}.
+     *
+     * @param bucket    The destination bucket for writes.
+     * @param org       The destination organization for writes.
+     * @param precision Precision for unix timestamps in the line protocol of the request payload.
+     */
+    public WriteParameters(@Nonnull final String bucket,
+                           @Nonnull final String org,
+<span class="fc" id="L105">                           @Nonnull final WritePrecision precision) {</span>
+
+<span class="fc" id="L107">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L108">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+<span class="fc" id="L109">        Arguments.checkNotNull(precision, &quot;WritePrecision&quot;);</span>
+
+<span class="fc" id="L111">        this.bucket = bucket;</span>
+<span class="fc" id="L112">        this.org = org;</span>
+<span class="fc" id="L113">        this.precision = precision;</span>
+<span class="fc" id="L114">        this.consistency = null;</span>
+<span class="fc" id="L115">    }</span>
+
+    /**
+     * @param options with default value
+     * @return The destination organization for writes.
+     */
+    @Nonnull
+    public String orgSafe(@Nonnull final InfluxDBClientOptions options) {
+<span class="fc" id="L123">        Arguments.checkNotNull(options, &quot;options&quot;);</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">        return isNotDefined(org) ? options.getOrg() : org;</span>
+    }
+
+    /**
+     * @param options with default value
+     * @return The destination bucket for writes.
+     */
+    @Nonnull
+    public String bucketSafe(@Nonnull final InfluxDBClientOptions options) {
+<span class="fc" id="L133">        Arguments.checkNotNull(options, &quot;options&quot;);</span>
+<span class="fc bfc" id="L134" title="All 2 branches covered.">        return isNotDefined(bucket) ? options.getBucket() : bucket;</span>
+    }
+
+    /**
+     * @param options with default value
+     * @return Precision for unix timestamps in the line protocol of the request payload.
+     */
+    @Nonnull
+    public WritePrecision precisionSafe(@Nonnull final InfluxDBClientOptions options) {
+<span class="fc" id="L143">        Arguments.checkNotNull(options, &quot;options&quot;);</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">        return precision == null ? options.getPrecision() : precision;</span>
+    }
+
+    /**
+     * @param options with default value
+     * @return The write consistency for the point.
+     */
+    @Nullable
+    public WriteConsistency consistencySafe(@Nonnull final InfluxDBClientOptions options) {
+<span class="fc" id="L153">        Arguments.checkNotNull(options, &quot;options&quot;);</span>
+<span class="fc bfc" id="L154" title="All 2 branches covered.">        return consistency == null ? options.getConsistency() : consistency;</span>
+    }
+
+    /**
+     * Enforces that the destination {@code bucket} and destination {@code organization} are defined.
+     *
+     * @param options with default values
+     * @throws IllegalArgumentException if the bucket or organization is not defined
+     */
+    public void check(@Nonnull final InfluxDBClientOptions options) {
+<span class="fc" id="L164">        Arguments.checkNotNull(options, &quot;options&quot;);</span>
+
+<span class="fc bfc" id="L166" title="All 4 branches covered.">        if (isNotDefined(bucket) &amp;&amp; isNotDefined(options.getBucket())) {</span>
+<span class="fc" id="L167">            throw new IllegalArgumentException(&quot;Expecting a non-empty string for destination bucket. &quot;</span>
+                    + &quot;Please specify the bucket as a method parameter or use default configuration &quot;
+                    + &quot;at 'InfluxDBClientOptions.Bucket'.&quot;);
+        }
+
+<span class="fc bfc" id="L172" title="All 4 branches covered.">        if (isNotDefined(org) &amp;&amp; isNotDefined(options.getOrg())) {</span>
+<span class="fc" id="L173">            throw new IllegalArgumentException(&quot;Expecting a non-empty string for destination organization. &quot;</span>
+                    + &quot;Please specify the organization as a method parameter or use default configuration &quot;
+                    + &quot;at 'InfluxDBClientOptions.Organization'.&quot;);
+        }
+<span class="fc" id="L177">    }</span>
+
+    /**
+     * Copy current parameters with new precision.
+     *
+     * @param precision new precision
+     * @param options   default values
+     * @return copied parameters
+     */
+    @Nonnull
+    public WriteParameters copy(@Nonnull final WritePrecision precision,
+                                @Nonnull final InfluxDBClientOptions options) {
+
+<span class="fc" id="L190">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+<span class="fc" id="L191">        Arguments.checkNotNull(options, &quot;options&quot;);</span>
+
+<span class="fc" id="L193">        return new WriteParameters(</span>
+<span class="fc" id="L194">                bucketSafe(options),</span>
+<span class="fc" id="L195">                orgSafe(options),</span>
+                precision,
+<span class="fc" id="L197">                consistencySafe(options));</span>
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+<span class="fc bfc" id="L202" title="All 2 branches covered.">        if (this == o) {</span>
+<span class="fc" id="L203">            return true;</span>
+        }
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">        if (!(o instanceof WriteParameters)) {</span>
+<span class="nc" id="L206">            return false;</span>
+        }
+
+<span class="fc" id="L209">        WriteParameters that = (WriteParameters) o;</span>
+
+<span class="pc bpc" id="L211" title="1 of 2 branches missed.">        if (!bucket.equals(that.bucket)) {</span>
+<span class="nc" id="L212">            return false;</span>
+        }
+<span class="pc bpc" id="L214" title="1 of 2 branches missed.">        if (!org.equals(that.org)) {</span>
+<span class="nc" id="L215">            return false;</span>
+        }
+<span class="pc bpc" id="L217" title="1 of 2 branches missed.">        if (precision != that.precision) {</span>
+<span class="nc" id="L218">            return false;</span>
+        }
+<span class="pc bpc" id="L220" title="1 of 2 branches missed.">        return consistency == that.consistency;</span>
+    }
+
+    @Override
+    @SuppressWarnings(&quot;MagicNumber&quot;)
+    public int hashCode() {
+<span class="fc bfc" id="L226" title="All 2 branches covered.">        int result = bucket != null ? bucket.hashCode() : 0;</span>
+<span class="fc bfc" id="L227" title="All 2 branches covered.">        result = 31 * result + (org != null ? org.hashCode() : 0);</span>
+<span class="fc bfc" id="L228" title="All 2 branches covered.">        result = 31 * result + (precision != null ? precision.hashCode() : 0);</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">        result = 31 * result + (consistency != null ? consistency.hashCode() : 0);</span>
+<span class="fc" id="L230">        return result;</span>
+    }
+
+    private boolean isNotDefined(final String option) {
+<span class="fc bfc" id="L234" title="All 4 branches covered.">        return option == null || option.isEmpty();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

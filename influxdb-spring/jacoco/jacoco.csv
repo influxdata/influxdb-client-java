@@ -1,0 +1,7 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Spring Integration for InfluxDB 2.x,com.influxdb.spring.influx,InfluxDB2AutoConfigurationReactive,0,18,0,0,0,4,0,2,0,2
+Spring Integration for InfluxDB 2.x,com.influxdb.spring.influx,InfluxDB2AutoConfiguration,0,18,0,0,0,4,0,2,0,2
+Spring Integration for InfluxDB 2.x,com.influxdb.spring.influx,InfluxDB2Properties,20,68,0,0,10,25,5,16,5,16
+Spring Integration for InfluxDB 2.x,com.influxdb.spring.influx,AbstractInfluxDB2AutoConfiguration,0,88,1,7,0,21,1,5,0,2
+Spring Integration for InfluxDB 2.x,com.influxdb.spring.health,InfluxDB2HealthIndicatorAutoConfiguration,0,8,0,0,0,2,0,2,0,2
+Spring Integration for InfluxDB 2.x,com.influxdb.spring.health,InfluxDB2HealthIndicator,15,10,2,0,5,4,2,1,1,1

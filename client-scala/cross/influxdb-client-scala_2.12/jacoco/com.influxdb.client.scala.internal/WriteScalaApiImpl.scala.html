@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WriteScalaApiImpl.scala</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Scala InfluxDB 2.x Client [Scala 2.12]</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.scala.internal</a> &gt; <span class="el_source">WriteScalaApiImpl.scala</span></div><h1>WriteScalaApiImpl.scala</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.scala.internal
+
+import akka.Done
+import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
+import com.influxdb.client.InfluxDBClientOptions
+import com.influxdb.client.domain.WritePrecision
+import com.influxdb.client.internal.{AbstractWriteBlockingClient, AbstractWriteClient}
+import com.influxdb.client.scala.WriteScalaApi
+import com.influxdb.client.service.WriteService
+import com.influxdb.client.write.{Point, WriteParameters}
+
+import javax.annotation.Nonnull
+import scala.collection.immutable.ListMap
+import scala.concurrent.Future
+import scala.jdk.CollectionConverters._
+
+/**
+ * @author Jakub Bednar (bednar@github) (05/09/2022 09:48)
+ */
+<span class="fc" id="L41">class WriteScalaApiImpl(@Nonnull service: WriteService, @Nonnull options: InfluxDBClientOptions)</span>
+
+<span class="fc" id="L43">  extends AbstractWriteBlockingClient(service, options) with WriteScalaApi {</span>
+
+  /**
+   * Write Line Protocol record into specified bucket.
+   *
+   * @param precision Precision for the unix timestamps within the body line-protocol.
+   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+   * @param bucket    Specifies the destination bucket for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *                  `bucket` if the `bucket` is not specified.
+   * @param org       Specifies the destination organization for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *                  if the `org` is not specified.
+   * @return the sink that accept the record specified in InfluxDB Line Protocol.
+   */
+  override def writeRecord(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[String, Future[Done]] = {
+<span class="fc" id="L59">    Flow[String]</span>
+<span class="fc" id="L60">      .map(record =&gt; Seq(new AbstractWriteClient.BatchWriteDataRecord(record)))</span>
+<span class="fc" id="L61">      .toMat(Sink.foreach(batch =&gt; writeHttp(precision, bucket, org, batch)))(Keep.right)</span>
+  }
+
+  /**
+   * Write Line Protocol records into specified bucket.
+   *
+   * @param precision Precision for the unix timestamps within the body line-protocol.
+   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+   * @param bucket    Specifies the destination bucket for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *                  `bucket` if the `bucket` is not specified.
+   * @param org       Specifies the destination organization for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *                  if the `org` is not specified.
+   * @return the sink that accept the records specified in InfluxDB Line Protocol.
+   */
+  override def writeRecords(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[Seq[String], Future[Done]] = {
+<span class="fc" id="L78">    writeRecords(toWriteParameters(precision, bucket, org))</span>
+  }
+
+  /**
+   * Write Line Protocol records into specified bucket.
+   *
+   * @param parameters specify InfluxDB Write endpoint parameters
+   * @return the sink that accept the records specified in InfluxDB Line Protocol.
+   */
+  override def writeRecords(parameters: WriteParameters): Sink[Seq[String], Future[Done]] = {
+<span class="fc" id="L88">    Flow[Seq[String]]</span>
+<span class="fc" id="L89">      .map(records =&gt; records.map(record =&gt; new AbstractWriteClient.BatchWriteDataRecord(record)))</span>
+<span class="fc" id="L90">      .toMat(Sink.foreach(batch =&gt; writeHttp(parameters, batch)))(Keep.right)</span>
+  }
+
+  /**
+   * Write Data points into specified bucket.
+   *
+   * @param bucket Specifies the destination bucket for writes.
+   *               The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *               `bucket` if the `bucket` is not specified.
+   * @param org    Specifies the destination organization for writes.
+   *               The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *               if the `org` is not specified.
+   * @return the sink that accept the Data points.
+   */
+  override def writePoint(bucket: Option[String], org: Option[String]): Sink[Point, Future[Done]] = {
+<span class="fc" id="L105">    Flow[Point]</span>
+<span class="fc" id="L106">      .map(point =&gt; (point.getPrecision, Seq(new AbstractWriteClient.BatchWriteDataPoint(point, options))))</span>
+<span class="fc" id="L107">      .toMat(Sink.foreach(batch =&gt; writeHttp(Some(batch._1), bucket, org, batch._2)))(Keep.right)</span>
+  }
+
+  /**
+   * Write Data points into specified bucket.
+   *
+   * @param bucket Specifies the destination bucket for writes.
+   *               The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *               `bucket` if the `bucket` is not specified.
+   * @param org    Specifies the destination organization for writes.
+   *               The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *               if the `org` is not specified.
+   * @return the sink that accept the Data points.
+   */
+  override def writePoints(bucket: Option[String], org: Option[String]): Sink[Seq[Point], Future[Done]] = {
+<span class="fc" id="L122">    writePoints(new WriteParameters(bucket.orNull, org.orNull, null, null))</span>
+  }
+
+  /**
+   * Write Data points into specified bucket.
+   *
+   * @param parameters specify InfluxDB Write endpoint parameters
+   * @return the sink that accept the Data points.
+   */
+  override def writePoints(parameters: WriteParameters): Sink[Seq[Point], Future[Done]] = {
+<span class="fc" id="L132">    Flow[Seq[Point]]</span>
+      // create ordered Map&lt;Precision, Seq[Point]&gt;
+<span class="pc bpc" id="L134" title="1 of 2 branches missed.">      .map(records =&gt; records.foldRight(ListMap.empty[WritePrecision, Seq[Point]]) {</span>
+<span class="fc" id="L135">        case (point, map) =&gt; map.updated(point.getPrecision, point +: map.getOrElse(point.getPrecision, Seq()))</span>
+      }.toList.reverse)
+<span class="fc" id="L137">      .map(grouped =&gt; grouped.map(group =&gt; (group._1, group._2.map(point =&gt; new AbstractWriteClient.BatchWriteDataPoint(point, options)))))</span>
+<span class="fc" id="L138">      .flatMapConcat(batches =&gt; Source(batches))</span>
+<span class="fc" id="L139">      .toMat(Sink.foreach(batch =&gt; writeHttp(parameters.copy(batch._1, options), batch._2)))(Keep.right)</span>
+  }
+
+  /**
+   * Write Measurement into specified bucket.
+   *
+   * @param precision Precision for the unix timestamps within the body line-protocol.
+   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+   * @param bucket    Specifies the destination bucket for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *                  `bucket` if the `bucket` is not specified.
+   * @param org       Specifies the destination organization for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *                  if the `org` is not specified.
+   * @tparam M the type of the measurement (POJO)
+   * @return the sink that accept the measurement.
+   */
+  override def writeMeasurement[M](precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[M, Future[Done]] = {
+<span class="fc" id="L157">    Flow[M]</span>
+<span class="fc" id="L158">      .map(measurement =&gt; {</span>
+<span class="fc" id="L159">        val parameters = toWriteParameters(precision, bucket, org)</span>
+<span class="fc" id="L160">        Seq(toMeasurementBatch(measurement, parameters.precisionSafe(options)))</span>
+      })
+<span class="fc" id="L162">      .toMat(Sink.foreach(batch =&gt; writeHttp(precision, bucket, org, batch)))(Keep.right)</span>
+  }
+
+  /**
+   * Write Measurements into specified bucket.
+   *
+   * @param precision Precision for the unix timestamps within the body line-protocol.
+   *                  The [[com.influxdb.client.domain.WritePrecision.NS]] will be used as the precision if not specified.
+   * @param bucket    Specifies the destination bucket for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getBucket]] will be used as the destination
+   *                  `bucket` if the `bucket` is not specified.
+   * @param org       Specifies the destination organization for writes.
+   *                  The [[com.influxdb.client.InfluxDBClientOptions#getOrg]] will be used as the destination `organization`
+   *                  if the `org` is not specified.
+   * @tparam M the type of the measurement (POJO)
+   * @return the sink that accept the measurements.
+   */
+  override def writeMeasurements[M](precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): Sink[Seq[M], Future[Done]] = {
+<span class="fc" id="L180">    writeMeasurements(toWriteParameters(precision, bucket, org))</span>
+  }
+
+  /**
+   * Write Measurements into specified bucket.
+   *
+   * @param parameters specify InfluxDB Write endpoint parameters
+   * @tparam M the type of the measurement (POJO)
+   * @return the sink that accept the measurements.
+   */
+  override def writeMeasurements[M](parameters: WriteParameters): Sink[Seq[M], Future[Done]] = {
+<span class="fc" id="L191">    Flow[Seq[M]]</span>
+<span class="fc" id="L192">      .map(records =&gt; records.map(record =&gt; toMeasurementBatch(record, parameters.precisionSafe(options))))</span>
+<span class="fc" id="L193">      .toMat(Sink.foreach(batch =&gt; writeHttp(parameters, batch)))(Keep.right)</span>
+  }
+
+  private def writeHttp(precision: Option[WritePrecision], bucket: Option[String], org: Option[String], batch: Seq[AbstractWriteClient.BatchWriteData]): Done = {
+<span class="fc" id="L197">    writeHttp(toWriteParameters(precision, bucket, org), batch)</span>
+  }
+
+  private def writeHttp(parameters: WriteParameters, batch: Seq[AbstractWriteClient.BatchWriteData]): Done = {
+<span class="fc" id="L201">    write(parameters, batch.toList.asJava.stream())</span>
+<span class="fc" id="L202">    Done.done()</span>
+  }
+
+  private def toWriteParameters(precision: Option[WritePrecision], bucket: Option[String], org: Option[String]): WriteParameters = {
+<span class="fc" id="L206">    val parameters = new WriteParameters(bucket.orNull, org.orNull, precision.orNull, null)</span>
+<span class="fc" id="L207">    parameters.check(options)</span>
+<span class="fc" id="L208">    parameters</span>
+  }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

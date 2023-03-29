@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WriteOptionsReactive.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The RxJava InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.reactive</a> &gt; <span class="el_source">WriteOptionsReactive.java</span></div><h1>WriteOptionsReactive.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.reactive;
+
+import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
+import javax.annotation.concurrent.ThreadSafe;
+
+import com.influxdb.client.WriteApi;
+import com.influxdb.utils.Arguments;
+
+import io.reactivex.rxjava3.core.Scheduler;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
+import static com.influxdb.client.WriteOptions.DEFAULT_BATCH_SIZE;
+import static com.influxdb.client.WriteOptions.DEFAULT_EXPONENTIAL_BASE;
+import static com.influxdb.client.WriteOptions.DEFAULT_FLUSH_INTERVAL;
+import static com.influxdb.client.WriteOptions.DEFAULT_JITTER_INTERVAL;
+import static com.influxdb.client.WriteOptions.DEFAULT_MAX_RETRIES;
+import static com.influxdb.client.WriteOptions.DEFAULT_MAX_RETRY_DELAY;
+import static com.influxdb.client.WriteOptions.DEFAULT_MAX_RETRY_TIME;
+import static com.influxdb.client.WriteOptions.DEFAULT_RETRY_INTERVAL;
+
+/**
+ * The configuration for {@link WriteReactiveApi}.
+ *
+ * &lt;p&gt;
+ * &lt;b&gt;Example:&lt;/b&gt;
+ * &lt;/p&gt;
+ * &lt;pre&gt;
+ *     WriteOptionsReactive writeOptions = WriteOptionsReactive.builder()
+ *                 .batchSize(10_000)
+ *                 .flushInterval(500)
+ *                 .jitterInterval(1_000)
+ *                 .retryInterval(2_000)
+ *                 .maxRetries(5)
+ *                 .maxRetryDelay(250_123)
+ *                 .maxRetryTime(500_000)
+ *                 .exponentialBase(2)
+ *                 .computationScheduler(Schedulers.newThread())
+ *                 .build();
+ * &lt;/pre&gt;
+ *
+ * @author Jakub Bednar (05/08/2021 9:13)
+ */
+@ThreadSafe
+public final class WriteOptionsReactive implements WriteApi.RetryOptions {
+
+    /**
+     * Default configuration with values that are consistent with Telegraf.
+     */
+<span class="fc" id="L71">    public static final WriteOptionsReactive DEFAULTS = WriteOptionsReactive.builder().build();</span>
+
+    private final int batchSize;
+    private final int flushInterval;
+    private final int jitterInterval;
+    private final int retryInterval;
+    private final int maxRetries;
+    private final int maxRetryDelay;
+    private final int maxRetryTime;
+    private final int exponentialBase;
+    private final Scheduler computationScheduler;
+
+    /**
+     * @return the number of data point to collect in batch
+     * @see WriteOptionsReactive.Builder#batchSize(int)
+     */
+    public int getBatchSize() {
+<span class="fc" id="L88">        return batchSize;</span>
+    }
+
+    /**
+     * @return the time to wait at most (milliseconds)
+     * @see WriteOptionsReactive.Builder#flushInterval(int) (int)
+     */
+    public int getFlushInterval() {
+<span class="fc" id="L96">        return flushInterval;</span>
+    }
+
+    /**
+     * @return batch flush jitter interval value (milliseconds)
+     * @see WriteOptionsReactive.Builder#jitterInterval(int)
+     */
+    @Override
+    public int getJitterInterval() {
+<span class="fc" id="L105">        return jitterInterval;</span>
+    }
+
+    /**
+     * The retry interval is used when the InfluxDB server does not specify &quot;Retry-After&quot; header.
+     * &lt;br&gt;
+     * Retry-After: A non-negative decimal integer indicating the seconds to delay after the response is received.
+     *
+     * @return the time to wait before retry unsuccessful write (milliseconds)
+     * @see WriteOptionsReactive.Builder#retryInterval(int)
+     */
+    @Override
+    public int getRetryInterval() {
+<span class="fc" id="L118">        return retryInterval;</span>
+    }
+
+    /**
+     * The number of max retries when write fails.
+     *
+     * @return number of max retries
+     * @see WriteOptionsReactive.Builder#maxRetries(int)
+     */
+    @Override
+    public int getMaxRetries() {
+<span class="fc" id="L129">        return maxRetries;</span>
+    }
+
+    /**
+     * The maximum delay between each retry attempt in milliseconds.
+     *
+     * @return maximum delay
+     * @see WriteOptionsReactive.Builder#maxRetryDelay(int)
+     */
+    @Override
+    public int getMaxRetryDelay() {
+<span class="fc" id="L140">        return maxRetryDelay;</span>
+    }
+
+    /**
+     * The maximum total retry timeout in milliseconds.
+     *
+     * @return maximum delay
+     * @see WriteOptionsReactive.Builder#maxRetryTime(int)
+     */
+    public int getMaxRetryTime() {
+<span class="fc" id="L150">        return maxRetryTime;</span>
+    }
+
+    /**
+     * The base for the exponential retry delay.
+     * &lt;p&gt;
+     * The next delay is computed as: retryInterval * exponentialBase^(attempts-1) + random(jitterInterval)
+     * &lt;/p&gt;
+     *
+     * @return exponential base
+     * @see WriteOptionsReactive.Builder#exponentialBase(int)
+     */
+    @Override
+    public int getExponentialBase() {
+<span class="fc" id="L164">        return exponentialBase;</span>
+    }
+
+    /**
+     * @return The scheduler which is used for computational work.
+     * @see WriteOptionsReactive.Builder#computationScheduler(Scheduler)
+     */
+    @Nonnull
+    public Scheduler getComputationScheduler() {
+<span class="fc" id="L173">        return computationScheduler;</span>
+    }
+
+<span class="fc" id="L176">    private WriteOptionsReactive(@Nonnull final WriteOptionsReactive.Builder builder) {</span>
+
+<span class="fc" id="L178">        Arguments.checkNotNull(builder, &quot;WriteOptionsReactive.Builder&quot;);</span>
+
+<span class="fc" id="L180">        batchSize = builder.batchSize;</span>
+<span class="fc" id="L181">        flushInterval = builder.flushInterval;</span>
+<span class="fc" id="L182">        jitterInterval = builder.jitterInterval;</span>
+<span class="fc" id="L183">        retryInterval = builder.retryInterval;</span>
+<span class="fc" id="L184">        maxRetries = builder.maxRetries;</span>
+<span class="fc" id="L185">        maxRetryDelay = builder.maxRetryDelay;</span>
+<span class="fc" id="L186">        maxRetryTime = builder.maxRetryTime;</span>
+<span class="fc" id="L187">        exponentialBase = builder.exponentialBase;</span>
+<span class="fc" id="L188">        computationScheduler = builder.computationScheduler;</span>
+<span class="fc" id="L189">    }</span>
+
+    /**
+     * Creates a builder instance.
+     *
+     * @return a builder
+     */
+    @Nonnull
+    public static WriteOptionsReactive.Builder builder() {
+<span class="fc" id="L198">        return new WriteOptionsReactive.Builder();</span>
+    }
+
+    /**
+     * A builder for {@link WriteOptionsReactive}.
+     */
+    @NotThreadSafe
+<span class="fc" id="L205">    public static class Builder {</span>
+
+<span class="fc" id="L207">        private int batchSize = DEFAULT_BATCH_SIZE;</span>
+<span class="fc" id="L208">        private int flushInterval = DEFAULT_FLUSH_INTERVAL;</span>
+<span class="fc" id="L209">        private int jitterInterval = DEFAULT_JITTER_INTERVAL;</span>
+<span class="fc" id="L210">        private int retryInterval = DEFAULT_RETRY_INTERVAL;</span>
+<span class="fc" id="L211">        private int maxRetries = DEFAULT_MAX_RETRIES;</span>
+<span class="fc" id="L212">        private int maxRetryDelay = DEFAULT_MAX_RETRY_DELAY;</span>
+<span class="fc" id="L213">        private int maxRetryTime = DEFAULT_MAX_RETRY_TIME;</span>
+<span class="fc" id="L214">        private int exponentialBase = DEFAULT_EXPONENTIAL_BASE;</span>
+<span class="fc" id="L215">        private Scheduler computationScheduler = Schedulers.computation();</span>
+
+        /**
+         * Set the number of data point to collect in batch.
+         *
+         * &lt;p&gt;
+         * If you set the {@code batchSize} to '0'
+         * the batching is disabled - whole upstream is written in one batch.
+         * &lt;/p&gt;
+         *
+         * @param batchSize the number of data point to collect in batch
+         * @return {@code this}
+         */
+        @Nonnull
+        public WriteOptionsReactive.Builder batchSize(final int batchSize) {
+<span class="fc" id="L230">            Arguments.checkNotNegativeNumber(batchSize, &quot;batchSize&quot;);</span>
+<span class="fc" id="L231">            this.batchSize = batchSize;</span>
+<span class="fc" id="L232">            return this;</span>
+        }
+
+        /**
+         * Set the time to wait at most (milliseconds).
+         *
+         * @param flushInterval the time to wait at most (milliseconds).
+         * @return {@code this}
+         */
+        @Nonnull
+        public WriteOptionsReactive.Builder flushInterval(final int flushInterval) {
+<span class="fc" id="L243">            Arguments.checkPositiveNumber(flushInterval, &quot;flushInterval&quot;);</span>
+<span class="fc" id="L244">            this.flushInterval = flushInterval;</span>
+<span class="fc" id="L245">            return this;</span>
+        }
+
+        /**
+         * Jitters the batch flush interval by a random amount. This is primarily to avoid
+         * large write spikes for users running a large number of client instances.
+         * ie, a jitter of 5s and flush duration 10s means flushes will happen every 10-15s.
+         *
+         * @param jitterInterval (milliseconds)
+         * @return {@code this}
+         */
+        @Nonnull
+        public WriteOptionsReactive.Builder jitterInterval(final int jitterInterval) {
+<span class="fc" id="L258">            Arguments.checkNotNegativeNumber(jitterInterval, &quot;jitterInterval&quot;);</span>
+<span class="fc" id="L259">            this.jitterInterval = jitterInterval;</span>
+<span class="fc" id="L260">            return this;</span>
+        }
+
+        /**
+         * Set the the time to wait before retry unsuccessful write (milliseconds).
+         * &lt;br&gt;&lt;br&gt;
+         * The retry interval is used when the InfluxDB server does not specify &quot;Retry-After&quot; header.
+         * &lt;br&gt;
+         * Retry-After: A non-negative decimal integer indicating the seconds to delay after the response is received.
+         *
+         * @param retryInterval the time to wait before retry unsuccessful write
+         * @return {@code this}
+         */
+        @Nonnull
+        public WriteOptionsReactive.Builder retryInterval(final int retryInterval) {
+<span class="fc" id="L275">            Arguments.checkPositiveNumber(retryInterval, &quot;retryInterval&quot;);</span>
+<span class="fc" id="L276">            this.retryInterval = retryInterval;</span>
+<span class="fc" id="L277">            return this;</span>
+        }
+
+        /**
+         * The number of max retries when write fails.
+         *
+         * &lt;p&gt;
+         * If you set the {@code maxRetries} to '0'
+         * the retry strategy is disabled - the error is immediately propagate to upstream.
+         * &lt;/p&gt;
+         *
+         * @param maxRetries number of max retries
+         * @return {@code this}
+         */
+        @Nonnull
+        public WriteOptionsReactive.Builder maxRetries(final int maxRetries) {
+<span class="fc" id="L293">            Arguments.checkNotNegativeNumber(maxRetries, &quot;maxRetries&quot;);</span>
+<span class="fc" id="L294">            this.maxRetries = maxRetries;</span>
+<span class="fc" id="L295">            return this;</span>
+        }
+
+        /**
+         * The maximum delay between each retry attempt in milliseconds.
+         *
+         * @param maxRetryDelay maximum delay
+         * @return {@code this}
+         */
+        @Nonnull
+        public WriteOptionsReactive.Builder maxRetryDelay(final int maxRetryDelay) {
+<span class="fc" id="L306">            Arguments.checkPositiveNumber(maxRetryDelay, &quot;maxRetryDelay&quot;);</span>
+<span class="fc" id="L307">            this.maxRetryDelay = maxRetryDelay;</span>
+<span class="fc" id="L308">            return this;</span>
+        }
+
+        /**
+         * The maximum total retry timeout in milliseconds.
+         *
+         * @param maxRetryTime maximum timout
+         * @return {@code this}
+         */
+        @Nonnull
+        public WriteOptionsReactive.Builder maxRetryTime(final int maxRetryTime) {
+<span class="fc" id="L319">            Arguments.checkPositiveNumber(maxRetryTime, &quot;maxRetryTime&quot;);</span>
+<span class="fc" id="L320">            this.maxRetryTime = maxRetryTime;</span>
+<span class="fc" id="L321">            return this;</span>
+        }
+
+        /**
+         * The base for the exponential retry delay.
+         *
+         * @param exponentialBase exponential base
+         * @return {@code this}
+         */
+        @Nonnull
+        public WriteOptionsReactive.Builder exponentialBase(final int exponentialBase) {
+<span class="fc" id="L332">            Arguments.checkPositiveNumber(exponentialBase, &quot;exponentialBase&quot;);</span>
+<span class="fc" id="L333">            this.exponentialBase = exponentialBase;</span>
+<span class="fc" id="L334">            return this;</span>
+        }
+
+
+        /**
+         * Set the scheduler which is used for computational work. Default value is {@link Schedulers#computation()}.
+         *
+         * @param computationScheduler the scheduler which is used for computational work.
+         * @return {@code this}
+         */
+        @Nonnull
+        public WriteOptionsReactive.Builder computationScheduler(@Nonnull final Scheduler computationScheduler) {
+
+<span class="fc" id="L347">            Arguments.checkNotNull(computationScheduler, &quot;Computation scheduler&quot;);</span>
+
+<span class="fc" id="L349">            this.computationScheduler = computationScheduler;</span>
+<span class="fc" id="L350">            return this;</span>
+        }
+
+        /**
+         * Build an instance of WriteOptions.
+         *
+         * @return {@code WriteOptions}
+         */
+        @Nonnull
+        public WriteOptionsReactive build() {
+
+<span class="fc" id="L361">            return new WriteOptionsReactive(this);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

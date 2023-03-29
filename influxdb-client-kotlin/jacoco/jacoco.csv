@@ -1,0 +1,24 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin,InfluxDBClientKotlinFactory.Companion,37,75,0,0,6,18,2,5,2,5
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin,InfluxDBClientKotlinFactory,3,0,0,0,1,0,1,0,1,0
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin,WriteKotlinApi.DefaultImpls,71,88,0,0,4,5,4,5,4,5
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,QueryKotlinApiImpl.query.consumer.3.new Function2() {...},19,0,0,0,2,0,1,0,1,0
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,QueryKotlinApiImpl.query.consumer.2.new Function2() {...},19,0,0,0,2,0,1,0,1,0
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,QueryKotlinApiImpl.query.consumer.1.new Function2() {...},13,0,0,0,2,0,1,0,1,0
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,QueryKotlinApiImpl.query.responseConsumer.new FluxCsvParser.FluxResponseConsumer() {...},27,9,2,0,5,1,3,1,2,1
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl.writeMeasurements..inlined.map.2.new FlowCollector() {...},0,7,0,0,0,1,0,1,0,1
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl.writePoints.lambda.5..inlined.map.1.new FlowCollector() {...},0,7,0,0,0,1,0,1,0,1
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,QueryKotlinApiImpl,430,124,2,0,48,16,20,5,19,5
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl.writePoints.lambda.5..inlined.map.new Flow() {...},0,16,0,0,0,3,0,2,0,2
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,InfluxDBClientKotlinImpl,56,52,0,0,10,4,7,4,7,4
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl.writeRecords..inlined.map.new Flow() {...},0,13,0,0,0,3,0,2,0,2
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl.writeRecords..inlined.map.new Flow() {...},0,13,0,0,0,3,0,2,0,2
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl.writeMeasurements..inlined.map.new Flow() {...},0,19,0,0,0,3,0,2,0,2
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl.writeMeasurements..inlined.map.new Flow() {...},0,19,0,0,0,3,0,2,0,2
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl.writeRecords..inlined.map.1.new FlowCollector() {...},0,7,0,0,0,1,0,1,0,1
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl.writeRecords..inlined.map.2.new FlowCollector() {...},0,7,0,0,0,1,0,1,0,1
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl.writeMeasurements..inlined.map.1.new FlowCollector() {...},0,7,0,0,0,1,0,1,0,1
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,WriteKotlinApiImpl,4,261,2,6,0,40,2,17,0,15
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,QueryKotlinApiImpl.queryRaw.new Function1() {...},6,0,0,0,1,0,1,0,1,0
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,QueryKotlinApiImpl.queryRaw.consumer.1.new Function2() {...},13,0,0,0,2,0,1,0,1,0
+The Kotlin InfluxDB 2.x Client,com.influxdb.client.kotlin.internal,QueryKotlinApiImpl.query.new Function1() {...},6,0,0,0,1,0,1,0,1,0

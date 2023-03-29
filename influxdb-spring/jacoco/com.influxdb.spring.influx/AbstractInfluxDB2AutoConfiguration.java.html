@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractInfluxDB2AutoConfiguration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Spring Integration for InfluxDB 2.x</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.spring.influx</a> &gt; <span class="el_source">AbstractInfluxDB2AutoConfiguration.java</span></div><h1>AbstractInfluxDB2AutoConfiguration.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.spring.influx;
+
+import java.util.Collections;
+import javax.annotation.Nonnull;
+
+import com.influxdb.client.InfluxDBClientOptions;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
+import org.springframework.util.StringUtils;
+
+/**
+ * @author Jakub Bednar (04/08/2021 11:41)
+ */
+abstract class AbstractInfluxDB2AutoConfiguration {
+    protected final InfluxDB2Properties properties;
+    protected final InfluxDB2OkHttpClientBuilderProvider builderProvider;
+
+    protected AbstractInfluxDB2AutoConfiguration(final InfluxDB2Properties properties,
+<span class="fc" id="L41">                                                 final InfluxDB2OkHttpClientBuilderProvider builderProvider) {</span>
+<span class="fc" id="L42">        this.properties = properties;</span>
+<span class="fc" id="L43">        this.builderProvider = builderProvider;</span>
+<span class="fc" id="L44">    }</span>
+
+    @Nonnull
+    protected InfluxDBClientOptions.Builder makeBuilder() {
+        OkHttpClient.Builder okHttpBuilder;
+<span class="fc bfc" id="L49" title="All 2 branches covered.">        if (builderProvider == null) {</span>
+<span class="fc" id="L50">            okHttpBuilder = new OkHttpClient.Builder()</span>
+<span class="fc" id="L51">                    .protocols(Collections.singletonList(Protocol.HTTP_1_1))</span>
+<span class="fc" id="L52">                    .readTimeout(properties.getReadTimeout())</span>
+<span class="fc" id="L53">                    .writeTimeout(properties.getWriteTimeout())</span>
+<span class="fc" id="L54">                    .connectTimeout(properties.getConnectTimeout());</span>
+        } else {
+<span class="fc" id="L56">            okHttpBuilder = builderProvider.get();</span>
+        }
+
+<span class="fc" id="L59">        InfluxDBClientOptions.Builder influxBuilder = InfluxDBClientOptions.builder()</span>
+<span class="fc" id="L60">                .url(properties.getUrl())</span>
+<span class="fc" id="L61">                .bucket(properties.getBucket())</span>
+<span class="fc" id="L62">                .org(properties.getOrg())</span>
+<span class="fc" id="L63">                .okHttpClient(okHttpBuilder);</span>
+
+<span class="fc bfc" id="L65" title="All 2 branches covered.">        if (StringUtils.hasLength(properties.getToken())) {</span>
+<span class="fc" id="L66">            influxBuilder.authenticateToken(properties.getToken().toCharArray());</span>
+<span class="pc bpc" id="L67" title="1 of 4 branches missed.">        } else if (StringUtils.hasLength(properties.getUsername()) &amp;&amp; StringUtils.hasLength(properties.getPassword())) {</span>
+<span class="fc" id="L68">            influxBuilder.authenticate(properties.getUsername(), properties.getPassword().toCharArray());</span>
+        }
+<span class="fc" id="L70">        return influxBuilder;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractFunctionFlux.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Flux DSL</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.query.dsl.functions</a> &gt; <span class="el_source">AbstractFunctionFlux.java</span></div><h1>AbstractFunctionFlux.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.query.dsl.functions;
+
+import java.time.temporal.ChronoUnit;
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.query.dsl.Expression;
+import com.influxdb.query.dsl.Expressions;
+import com.influxdb.query.dsl.Flux;
+import com.influxdb.query.dsl.VariableAssignment;
+import com.influxdb.query.dsl.functions.properties.TimeInterval;
+import com.influxdb.query.dsl.utils.ImportUtils;
+import com.influxdb.utils.Arguments;
+
+import static com.influxdb.query.dsl.functions.properties.FunctionsParameters.escapeDoubleQuotes;
+
+/**
+ * The base class for function definitions.
+ * The function definition describes the implementation of a function.
+ * A concrete call to this function can be created via the {@link #invoke()} method.
+ *
+ * &lt;p&gt;
+ * &lt;b&gt;Example Definition&lt;/b&gt;
+ * &lt;pre&gt;
+ * public static class MyCustomFunction extends AbstractFunctionFlux&amp;lt;MyCustomFunction.MyCustomFunctionCall&amp;gt; {
+ *
+ *     public MyCustomFunction() {
+ *         super(&quot;from2&quot;,
+ *                 new FromFlux()
+ *                         .withPropertyValue(&quot;bucket&quot;, &quot;n&quot;),
+ *                 MyCustomFunctionCall::new,
+ *                 new Parameter(&quot;n&quot;));
+ *         addImport(&quot;foo&quot;);
+ *     }
+ *
+ *     public static class MyCustomFunctionCall extends AbstractFunctionCallFlux {
+ *
+ *         public MyCustomFunctionCall(@Nonnull String name) {
+ *             super(name);
+ *         }
+ *
+ *         public MyCustomFunctionCall withN(final String n) {
+ *             this.withPropertyValueEscaped(&quot;n&quot;, n);
+ *             return this;
+ *         }
+ *     }
+ * }
+ * &lt;/pre&gt;
+ * &lt;p&gt;
+ * &lt;b&gt;Example Usage&lt;/b&gt;
+ * &lt;pre&gt;
+ * MyCustomFunction fun = new MyCustomFunction();
+ *
+ * Expressions flux = new Expressions(
+ *    fun,
+ *    fun.invoke().withN(&quot;bar&quot;).count(),
+ *    fun.invoke().withN(&quot;bar2&quot;),
+ * );
+ * &lt;/pre&gt;
+ *
+ * @param &lt;CALL&gt; the type of the {@link AbstractFunctionCallFlux}
+ * @see Expressions
+ */
+public class AbstractFunctionFlux&lt;CALL extends AbstractFunctionCallFlux&gt; extends VariableAssignment {
+
+    @Nonnull
+    private final Function&lt;String, CALL&gt; invocationFactory;
+    @Nonnull
+    private final Parameter[] parameter;
+
+    /**
+     * @param name               the name of the function (the variable th function is assigned to)
+     * @param functionDefinition the function body
+     * @param invocationFactory  a factory to create an invocation, should be the
+     *                           {@link AbstractFunctionCallFlux#AbstractFunctionCallFlux(String) constructor reference}
+     *                           to the concrete &lt;code&gt;CALL&lt;/code&gt; implementation
+     * @param parameter          the parameters of this function
+     */
+    protected AbstractFunctionFlux(
+            @Nonnull final String name,
+            @Nonnull final Expression functionDefinition,
+            @Nonnull final Function&lt;String, CALL&gt; invocationFactory,
+            @Nonnull final Parameter... parameter) {
+<span class="nc" id="L110">        super(name, functionDefinition);</span>
+<span class="nc" id="L111">        this.invocationFactory = invocationFactory;</span>
+<span class="nc" id="L112">        this.parameter = parameter;</span>
+<span class="nc" id="L113">    }</span>
+
+    @Override
+    public String toString(@Nonnull final Map&lt;String, Object&gt; parameters, final boolean prependImports) {
+<span class="nc" id="L117">        StringBuilder builder = new StringBuilder();</span>
+
+<span class="nc bnc" id="L119" title="All 2 branches missed.">        if (prependImports) {</span>
+<span class="nc" id="L120">            builder.append(ImportUtils.getImportsString(this));</span>
+        }
+<span class="nc" id="L122">        builder.append(name).append(&quot; = &quot;)</span>
+<span class="nc" id="L123">                .append(Arrays.stream(parameter)</span>
+<span class="nc" id="L124">                        .map(Parameter::toString)</span>
+<span class="nc" id="L125">                        .collect(Collectors.joining(&quot;, &quot;, &quot;(&quot;, &quot;) =&gt; &quot;)))</span>
+<span class="nc" id="L126">                .append(expression.toString(parameters, false));</span>
+<span class="nc" id="L127">        return builder.toString();</span>
+    }
+
+    /**
+     * @return A flux invoking this method. The invocation arguments can be adjusted via this flux.
+     */
+    @Nonnull
+    public CALL invoke() {
+<span class="nc" id="L135">        return invocationFactory.apply(getVariableName());</span>
+    }
+
+    @Nonnull
+    public CALL invokePiped(@Nonnull final Flux flux) {
+<span class="nc" id="L140">        Arguments.checkNotNull(flux, &quot;Source is required&quot;);</span>
+
+<span class="nc" id="L142">        CALL invoke = invoke();</span>
+<span class="nc" id="L143">        invoke.source = flux;</span>
+<span class="nc" id="L144">        return invoke;</span>
+    }
+
+    @Override
+    public Set&lt;String&gt; getImports() {
+<span class="nc" id="L149">        return super.getImports();</span>
+    }
+
+
+    public static class Parameter {
+        @Nonnull
+        private final String name;
+        private String defaultValue;
+
+        private boolean pipeForward;
+
+        private boolean optional;
+
+<span class="nc" id="L162">        public Parameter(@Nonnull final String name) {</span>
+
+<span class="nc" id="L164">            Arguments.checkNotNull(name, &quot;name&quot;);</span>
+
+<span class="nc" id="L166">            this.name = name;</span>
+<span class="nc" id="L167">        }</span>
+
+        @Nonnull
+        public String getName() {
+<span class="nc" id="L171">            return name;</span>
+        }
+
+        @Nullable
+        public String getDefaultValue() {
+<span class="nc" id="L176">            return defaultValue;</span>
+        }
+
+        @Nonnull
+        public Parameter withDefaultValue(@Nonnull final Number defaultValue) {
+<span class="nc" id="L181">            Arguments.checkNotNull(defaultValue, &quot;defaultValue&quot;);</span>
+
+<span class="nc" id="L183">            this.defaultValue = String.valueOf(defaultValue);</span>
+<span class="nc" id="L184">            return this;</span>
+        }
+
+        @Nonnull
+        public Parameter withDefaultValue(@Nonnull final String defaultValue) {
+<span class="nc" id="L189">            Arguments.checkNotNull(defaultValue, &quot;defaultValue&quot;);</span>
+
+<span class="nc" id="L191">            this.defaultValue = &quot;\&quot;&quot; + escapeDoubleQuotes(defaultValue) + &quot;\&quot;&quot;;</span>
+
+<span class="nc" id="L193">            return this;</span>
+        }
+
+        @Nonnull
+        public Parameter withDefaultValue(final boolean defaultValue) {
+<span class="nc" id="L198">            this.defaultValue = String.valueOf(defaultValue);</span>
+<span class="nc" id="L199">            return this;</span>
+        }
+
+        @Nonnull
+        public Parameter withDefaultValue(final long amount, @Nonnull final ChronoUnit unit) {
+<span class="nc" id="L204">            Arguments.checkNotNull(unit, &quot;unit&quot;);</span>
+
+<span class="nc" id="L206">            this.defaultValue = new TimeInterval(amount, unit).toString();</span>
+<span class="nc" id="L207">            return this;</span>
+        }
+
+        /**
+         * Indicates the parameter that, by default, represents the piped-forward value.
+         *
+         * @param pipeForward true to use &lt;code&gt;&amp;lt;-&lt;/code&gt; for this parameter
+         * @return this
+         * @see Flux#withPipedFunction(AbstractFunctionFlux)
+         */
+        @Nonnull
+        public Parameter withPipeForward(final boolean pipeForward) {
+<span class="nc" id="L219">            this.pipeForward = pipeForward;</span>
+<span class="nc" id="L220">            return this;</span>
+        }
+
+        /**
+         * @param optional true, if this parameter is optional
+         * @return this
+         */
+        @Nonnull
+        public Parameter withOptional(final boolean optional) {
+<span class="nc" id="L229">            this.optional = optional;</span>
+<span class="nc" id="L230">            return this;</span>
+        }
+
+        @Override
+        public String toString() {
+<span class="nc" id="L235">            StringBuilder result = new StringBuilder();</span>
+<span class="nc bnc" id="L236" title="All 2 branches missed.">            if (optional) {</span>
+<span class="nc" id="L237">                result.append(&quot;?&quot;);</span>
+            }
+<span class="nc" id="L239">            result.append(name);</span>
+<span class="nc bnc" id="L240" title="All 2 branches missed.">            if (pipeForward) {</span>
+<span class="nc" id="L241">                result.append(&quot;=&lt;-&quot;);</span>
+<span class="nc bnc" id="L242" title="All 2 branches missed.">            } else if (defaultValue != null) {</span>
+<span class="nc" id="L243">                result.append(&quot; = &quot;).append(defaultValue);</span>
+            }
+<span class="nc" id="L245">            return result.toString();</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

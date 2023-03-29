@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AuthorizationsApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">AuthorizationsApiImpl.java</span></div><h1>AuthorizationsApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.client.AuthorizationsApi;
+import com.influxdb.client.domain.Authorization;
+import com.influxdb.client.domain.AuthorizationPostRequest;
+import com.influxdb.client.domain.AuthorizationUpdateRequest;
+import com.influxdb.client.domain.Authorizations;
+import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.Permission;
+import com.influxdb.client.domain.User;
+import com.influxdb.client.service.AuthorizationsService;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
+
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (17/09/2018 12:00)
+ */
+final class AuthorizationsApiImpl extends AbstractRestClient implements AuthorizationsApi {
+
+<span class="fc" id="L49">    private static final Logger LOG = Logger.getLogger(AuthorizationsApiImpl.class.getName());</span>
+
+    private final AuthorizationsService service;
+
+<span class="fc" id="L53">    AuthorizationsApiImpl(@Nonnull final AuthorizationsService service) {</span>
+
+<span class="fc" id="L55">        Arguments.checkNotNull(service, &quot;service&quot;);</span>
+
+<span class="fc" id="L57">        this.service = service;</span>
+<span class="fc" id="L58">    }</span>
+
+    @Nonnull
+    @Override
+    public Authorization createAuthorization(@Nonnull final Organization organization,
+                                             @Nonnull final List&lt;Permission&gt; permissions) {
+
+<span class="nc" id="L65">        Arguments.checkNotNull(organization, &quot;Organization is required&quot;);</span>
+<span class="nc" id="L66">        Arguments.checkNotNull(permissions, &quot;Permissions are required&quot;);</span>
+
+<span class="nc" id="L68">        return createAuthorization(organization.getId(), permissions);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Authorization createAuthorization(@Nonnull final String orgID,
+                                             @Nonnull final List&lt;Permission&gt; permissions) {
+
+<span class="nc" id="L76">        Arguments.checkNonEmpty(orgID, &quot;Organization ID&quot;);</span>
+<span class="nc" id="L77">        Arguments.checkNotNull(permissions, &quot;Permissions are required&quot;);</span>
+
+<span class="nc" id="L79">        Authorization authorization = new Authorization();</span>
+<span class="nc" id="L80">        authorization.setOrgID(orgID);</span>
+<span class="nc" id="L81">        authorization.setPermissions(permissions);</span>
+<span class="nc" id="L82">        authorization.setStatus(Authorization.StatusEnum.ACTIVE);</span>
+
+<span class="nc" id="L84">        return createAuthorization(authorization);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Authorization createAuthorization(@Nonnull final Authorization authorization) {
+
+<span class="nc" id="L91">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
+
+<span class="nc" id="L93">        AuthorizationPostRequest request = new AuthorizationPostRequest();</span>
+<span class="nc" id="L94">        request</span>
+<span class="nc" id="L95">                .orgID(authorization.getOrgID())</span>
+<span class="nc" id="L96">                .userID(authorization.getUserID())</span>
+<span class="nc" id="L97">                .permissions(authorization.getPermissions())</span>
+<span class="nc" id="L98">                .description(authorization.getDescription());</span>
+
+<span class="nc" id="L100">        return createAuthorization(request);</span>
+    }
+
+    @Override
+    @Nonnull
+    public Authorization createAuthorization(@Nonnull final AuthorizationPostRequest request) {
+
+<span class="nc" id="L107">        Arguments.checkNotNull(request, &quot;AuthorizationPostRequest is required&quot;);</span>
+
+<span class="nc" id="L109">        Call&lt;Authorization&gt; call = service.postAuthorizations(request, null);</span>
+
+<span class="nc" id="L111">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Authorization&gt; findAuthorizations() {
+<span class="nc" id="L117">        return findAuthorizationsByUserID(null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Authorization findAuthorizationByID(@Nonnull final String authorizationID) {
+
+<span class="fc" id="L124">        Arguments.checkNonEmpty(authorizationID, &quot;authorizationID&quot;);</span>
+
+<span class="fc" id="L126">        Call&lt;Authorization&gt; call = service.getAuthorizationsID(authorizationID, null);</span>
+
+<span class="fc" id="L128">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Authorization&gt; findAuthorizationsByUser(@Nonnull final User user) {
+
+<span class="nc" id="L135">        Arguments.checkNotNull(user, &quot;User is required&quot;);</span>
+
+<span class="nc" id="L137">        return findAuthorizations(user.getId(), null, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Authorization&gt; findAuthorizationsByUserID(@Nullable final String userID) {
+<span class="nc" id="L143">        return findAuthorizations(userID, null, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Authorization&gt; findAuthorizationsByUserName(@Nullable final String userName) {
+<span class="nc" id="L149">        return findAuthorizations(null, userName, null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Authorization&gt; findAuthorizationsByOrg(@Nonnull final Organization organization) {
+
+<span class="nc" id="L156">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="nc" id="L158">        return findAuthorizationsByOrgID(organization.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Authorization&gt; findAuthorizationsByOrgID(@Nullable final String orgID) {
+<span class="nc" id="L164">        return findAuthorizations(null, null, orgID);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Authorization updateAuthorization(@Nonnull final Authorization authorization) {
+
+<span class="nc" id="L171">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
+
+<span class="nc" id="L173">        return updateAuthorization(authorization.getId(), authorization);</span>
+    }
+
+    @Override
+    @Nonnull
+    public Authorization updateAuthorization(@Nonnull final String authorizationID,
+                                             @Nonnull final AuthorizationUpdateRequest request) {
+
+<span class="nc" id="L181">        Arguments.checkNonEmpty(authorizationID, &quot;authorizationID&quot;);</span>
+<span class="nc" id="L182">        Arguments.checkNotNull(authorizationID, &quot;AuthorizationUpdateRequest&quot;);</span>
+
+<span class="nc" id="L184">        Call&lt;Authorization&gt; authorizationCall = service.patchAuthorizationsID(authorizationID, request, null);</span>
+
+<span class="nc" id="L186">        return execute(authorizationCall);</span>
+    }
+
+    @Override
+    public void deleteAuthorization(@Nonnull final Authorization authorization) {
+
+<span class="nc" id="L192">        Arguments.checkNotNull(authorization, &quot;Authorization is required&quot;);</span>
+
+<span class="nc" id="L194">        deleteAuthorization(authorization.getId());</span>
+<span class="nc" id="L195">    }</span>
+
+    @Override
+    public void deleteAuthorization(@Nonnull final String authorizationID) {
+
+<span class="nc" id="L200">        Arguments.checkNonEmpty(authorizationID, &quot;authorizationID&quot;);</span>
+
+<span class="nc" id="L202">        Call&lt;Void&gt; call = service.deleteAuthorizationsID(authorizationID, null);</span>
+<span class="nc" id="L203">        execute(call);</span>
+<span class="nc" id="L204">    }</span>
+
+    @Nonnull
+    @Override
+    public Authorization cloneAuthorization(@Nonnull final String authorizationID) {
+
+<span class="nc" id="L210">        Arguments.checkNonEmpty(authorizationID, &quot;authorizationID&quot;);</span>
+
+<span class="nc" id="L212">        Authorization authorization = findAuthorizationByID(authorizationID);</span>
+
+<span class="nc" id="L214">        return cloneAuthorization(authorization);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Authorization cloneAuthorization(@Nonnull final Authorization authorization) {
+
+<span class="nc" id="L221">        Arguments.checkNotNull(authorization, &quot;authorization&quot;);</span>
+
+<span class="nc" id="L223">        Authorization cloned = new Authorization();</span>
+<span class="nc" id="L224">        cloned.setOrgID(authorization.getOrgID());</span>
+<span class="nc" id="L225">        cloned.setStatus(Authorization.StatusEnum.ACTIVE);</span>
+<span class="nc" id="L226">        cloned.setDescription(authorization.getDescription());</span>
+<span class="nc" id="L227">        cloned.setPermissions(authorization.getPermissions());</span>
+
+<span class="nc" id="L229">        return createAuthorization(cloned);</span>
+    }
+
+    @Nonnull
+    private List&lt;Authorization&gt; findAuthorizations(@Nullable final String userID,
+                                                   @Nullable final String userName,
+                                                   @Nullable final String orgID) {
+
+<span class="nc" id="L237">        Call&lt;Authorizations&gt; authorizationsCall = service.getAuthorizations(null, userID, userName, orgID, null);</span>
+
+<span class="nc" id="L239">        Authorizations authorizations = execute(authorizationsCall);</span>
+<span class="nc" id="L240">        LOG.log(Level.FINEST, &quot;findAuthorizations found: {0}&quot;, authorizations);</span>
+
+<span class="nc" id="L242">        return authorizations.getAuthorizations();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.8.202204050719</span></div></body></html>

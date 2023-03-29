@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"com.influxdb.client.flux"},{"l":"com.influxdb.client.flux.internal"}];updateSearchResults();
