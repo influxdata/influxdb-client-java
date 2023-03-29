@@ -28,7 +28,7 @@
     <parent>
         <artifactId>influxdb-karaf</artifactId>
         <groupId>com.influxdb</groupId>
-        <version>6.8.0-SNAPSHOT</version>
+        <version>6.8.0</version>
     </parent>
 
     <artifactId>influxdb-karaf-kar</artifactId>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>${project.groupId}</groupId>
             <artifactId>influxdb-karaf-features</artifactId>
-            <version>6.8.0-SNAPSHOT</version>
+            <version>6.8.0</version>
             <classifier>features</classifier>
             <type>xml</type>
         </dependency>

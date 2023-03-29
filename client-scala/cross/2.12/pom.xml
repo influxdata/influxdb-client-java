@@ -26,7 +26,7 @@
   <parent>
     <artifactId>influxdb-client</artifactId>
     <groupId>com.influxdb</groupId>
-    <version>6.8.0-SNAPSHOT</version>
+    <version>6.8.0</version>
     <relativePath>../../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -68,7 +68,7 @@
     <connection>scm:git:git@github.com:influxdata/influxdb-client-java.git</connection>
     <developerConnection>scm:git:git@github.com:influxdata/influxdb-client-java.git</developerConnection>
     <url>https://github.com/influxdata/influxdb-client-java/tree/master</url>
-    <tag>HEAD</tag>
+    <tag>v6.8.0</tag>
   </scm>
 
   <properties>
