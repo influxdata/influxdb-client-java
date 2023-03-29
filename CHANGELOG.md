@@ -1,4 +1,4 @@
-## 6.8.0 [unreleased]
+## 6.8.0 [2023-03-29]
 
 ### Bug Fixes
 1. [#470](https://github.com/influxdata/influxdb-client-java/pull/470): Move auto-configuration registration to `AutoConfiguration.imports` [spring]
@@ -82,7 +82,7 @@ Update dependencies:
   - [#420](https://github.com/influxdata/influxdb-client-java/pull/420): `micrometer-registry-influx` to `1.9.4`
   - [#423](https://github.com/influxdata/influxdb-client-java/pull/423): `scala-library` to `2.12.17`
   - [#430](https://github.com/influxdata/influxdb-client-java/pull/430): `spring-boot` to `2.7.4`
-  
+
 #### Maven Plugin:
   - [#413](https://github.com/influxdata/influxdb-client-java/pull/413): `versions-maven-plugin` to `2.12.0`
   - [#426](https://github.com/influxdata/influxdb-client-java/pull/426): `maven-jar-plugin` to `3.3.0`
@@ -96,7 +96,7 @@ Update dependencies:
   - [#417](https://github.com/influxdata/influxdb-client-java/pull/417): `mockito` to `4.8.0`
   - [#425](https://github.com/influxdata/influxdb-client-java/pull/425): `spring-test` to `5.3.23`
   - [#427](https://github.com/influxdata/influxdb-client-java/pull/427): `junit-jupiter-engine` to `5.9.1`
-               
+
 Remove dependencies:
 #### Test:
   - [#418](https://github.com/influxdata/influxdb-client-java/pull/418): `junit-platform-runner`
@@ -138,12 +138,12 @@ Update dependencies:
   - [#400](https://github.com/influxdata/influxdb-client-java/pull/400): `mockito` to `4.7.0`
 
 ## 6.4.0 [2022-07-29]
-  
+
 ### Release Notice
 
 #### Spring
 
-:warning: The client upgrades the `OkHttp` library to version `4.10.0`. 
+:warning: The client upgrades the `OkHttp` library to version `4.10.0`.
 
 The `spring-boot` supports the `OkHttp:4.10.0` from the version `3.0.0-M4` - [spring-boot/OkHttp 4.10,0](https://github.com/spring-projects/spring-boot/commit/6cb1a958a5d43a2fffb7e7635e3be9c0ee15f3b1).
 For the older version of `spring-boot` you have to configure Spring Boot's `okhttp3.version` property:
@@ -165,7 +165,7 @@ For the older version of `spring-boot` you have to configure Spring Boot's `okht
    * Add ArrayFromFlux [FluxDSL]
    * Add UnionFlux [FluxDSL]
 1. [#376](https://github.com/influxdata/influxdb-client-java/pull/376) Add FillFlux [FluxDSL]
- 
+
 ### Bug Fixes
 1. [#358](https://github.com/influxdata/influxdb-client-java/pull/358): Missing backpressure for asynchronous non-blocking API
 1. [#372](https://github.com/influxdata/influxdb-client-java/pull/372): Redact the `Authorization` HTTP header from log
@@ -180,7 +180,7 @@ For the older version of `spring-boot` you have to configure Spring Boot's `okht
     - micrometer-registry-influx to 1.9.2
     - okhttp3 to 4.10.0
     - okio to 3.2.0
-    - rxjava to 3.1.5 
+    - rxjava to 3.1.5
     - scala-library_2 to 2.12.16
     - scala-collection-compat_2.12 to 2.8.0
     - spring to 5.3.22
@@ -284,7 +284,7 @@ For the older version of `spring-boot` you have to configure Spring Boot's `okht
   - `WriteOptionsReactive`
     - `io.reactivex.Scheduler` -> `io.reactivex.rxjava3.core.Scheduler`
     - `io.reactivex.schedulers.Schedulers` -> `io.reactivex.rxjava3.schedulers.Schedulers`
-  - `TelegrafsService` and `TelegrafsApi` 
+  - `TelegrafsService` and `TelegrafsApi`
     - `TelegrafRequest` renamed to  `TelegrafPluginRequest` to create/update `Telegraf` configuration
     - `TelegrafPlugin.TypeEnum.INPUTS` renamed to  `TelegrafPlugin.TypeEnum.INPUT`
     - `TelegrafPlugin.TypeEnum.OUTPUTS` renamed to  `TelegrafPlugin.TypeEnum.OUTPUT`
@@ -302,9 +302,9 @@ This release also uses new version of InfluxDB OSS API definitions - [oss.yml](h
 - Update `TemplatesService` to deal with `Stack` and `Template` API
 - Update `RestoreService` to deal with new restore functions of InfluxDB
 
-### List of updated dependencies: 
+### List of updated dependencies:
  - Core:
-    - com.squareup.okhttp3:okhttp:jar:4.9.3 
+    - com.squareup.okhttp3:okhttp:jar:4.9.3
     - com.squareup.okio:okio:jar:2.10.0
     - com.google.code.gson:gson:jar:2.9.0
     - io.reactivex.rxjava3:rxjava:jar:3.1.4
@@ -317,7 +317,7 @@ This release also uses new version of InfluxDB OSS API definitions - [oss.yml](h
  - Karaf
    - karaf 4.3.6
    - gson-fire 1.8.5
- - Micrometer 
+ - Micrometer
    - micrometer 1.8.4
  - OSGi
    - org.osgi:osgi.core:8.0.0
@@ -334,15 +334,15 @@ This release also uses new version of InfluxDB OSS API definitions - [oss.yml](h
 1. [#334](https://github.com/influxdata/influxdb-client-java/pull/334): Supports not operator [FluxDSL]
 1. [#335](https://github.com/influxdata/influxdb-client-java/pull/335): URL to connect to the InfluxDB is always evaluate as a connection string
 1. [#329](https://github.com/influxdata/influxdb-client-java/pull/329): Add support for write `consistency` parameter [InfluxDB Enterprise]
-    
+
     Configure `consistency` via `Write API`:
     ```diff
     - writeApi.writeRecord(WritePrecision.NS, "cpu_load_short,host=server02 value=0.67");
     + WriteParameters parameters = new WriteParameters(WritePrecision.NS, WriteConsistency.ALL);
-    + 
+    +
     + writeApi.writeRecord("cpu_load_short,host=server02 value=0.67", parameters);
     ```
-    
+
     Configure `consistency` via client options:
     ```diff
     - InfluxDBClient client = InfluxDBClientFactory.createV1("http://influxdb_enterpriser:8086",
@@ -354,7 +354,7 @@ This release also uses new version of InfluxDB OSS API definitions - [oss.yml](h
     +    "my-username",
     +    "my-password".toCharArray(),
     +    "my-db",
-    +    "autogen", 
+    +    "autogen",
     +    WriteConsistency.ALL);
     ```
 
@@ -390,7 +390,7 @@ This release also uses new version of InfluxDB OSS API definitions - [oss.yml](h
 ## 4.1.0 [2022-01-20]
 
 ### Features
-1. [#286](https://github.com/influxdata/influxdb-client-java/pull/286): Add support for Parameterized Queries 
+1. [#286](https://github.com/influxdata/influxdb-client-java/pull/286): Add support for Parameterized Queries
 
 ### Bug Fixes
 1. [#283](https://github.com/influxdata/influxdb-client-java/pull/283): Serialization `null` tag's value into LineProtocol
@@ -410,8 +410,8 @@ This release uses the latest InfluxDB OSS API definitions - [oss.yml](https://ra
 
 - Add `LegacyAuthorizationsService` to deal with legacy authorizations
 - Add `ResourceService` to retrieve all knows resources
-- Move `postSignin` operation from `DefaultService` to `SigninService` 
-- Move `postSignout` operation from `DefaultService` to `SignoutService` 
+- Move `postSignin` operation from `DefaultService` to `SigninService`
+- Move `postSignout` operation from `DefaultService` to `SignoutService`
 - Remove `TemplateApi` in favour of [InfluxDB Community Templates](https://github.com/influxdata/community-templates). For more info see - [influxdb#19300](https://github.com/influxdata/influxdb/pull/19300), [openapi#192](https://github.com/influxdata/openapi/pull/192)
 
 ### Deprecates
@@ -443,9 +443,9 @@ This release uses the latest InfluxDB OSS API definitions - [oss.yml](https://ra
 
 ### CI
 1. [#267](https://github.com/influxdata/influxdb-client-java/pull/267): Add JDK 17 (LTS) to CI pipeline instead of JDK 16
-                                                                     
+
 ## 3.3.0 [2021-09-17]
-                                                                     
+
 ### Bug Fixes
 1. [#258](https://github.com/influxdata/influxdb-client-java/pull/258): Avoid requirements to `jdk.unsupported` module
 1. [#263](https://github.com/influxdata/influxdb-client-java/pull/263): Fix dependency structure for `flux-dsl` module
@@ -456,7 +456,7 @@ This release uses the latest InfluxDB OSS API definitions - [oss.yml](https://ra
 
 ### CI
 1. [#266](https://github.com/influxdata/influxdb-client-java/pull/266): Switch to next-gen CircleCI's convenience images
- 
+
 ## 3.2.0 [2021-08-20]
 
 ### Bug Fixes
@@ -498,10 +498,10 @@ Change configuration prefix from `spring.influx2` to `influx` according to [Spri
 
 #### `influxdb-spring`:
 
-The `micrometer` v1.7.0 brings [support](https://github.com/micrometer-metrics/micrometer/issues/1974) for InfluxDB 2. 
+The `micrometer` v1.7.0 brings [support](https://github.com/micrometer-metrics/micrometer/issues/1974) for InfluxDB 2.
 That is a reason why the [influxdb-spring](./spring) no longer needs provide a custom Micrometer metrics exporter.
-Now you are able to use `micrometer-registry-influx`, for more info [see our docs](./spring/README.md#actuator-for-influxdb2-micrometer-registry). 
- 
+Now you are able to use `micrometer-registry-influx`, for more info [see our docs](./spring/README.md#actuator-for-influxdb2-micrometer-registry).
+
 #### Management API
 This release introduces a support for new InfluxDB OSS API definitions - [oss.yml](https://github.com/influxdata/openapi/blob/master/contracts/oss.yml). The following breaking changes are in underlying API services and doesn't affect common apis such as - `WriteApi`, `QueryApi`, `BucketsApi`, `OrganizationsApi`...
 
@@ -538,7 +538,7 @@ The `shift()` function renamed to `timeShift()`.
 
 ### API
 1. [#233](https://github.com/influxdata/influxdb-client-java/pull/233): Use InfluxDB OSS API definitions to generated APIs
- 
+
 ## 2.3.0 [2021-06-04]
 
 ### Features
@@ -567,7 +567,7 @@ You have to replace your dependency from: `influxdb-client-scala` to:
    - Kotlin to 1.4.32
 1. [#222](https://github.com/influxdata/influxdb-client-csharp/pull/222): Update plugins:
    - dokka-maven-plugin to 1.4.30
-   
+
 ## 2.1.0 [2021-04-01]
 
 ### Bug Fixes
@@ -628,7 +628,7 @@ You have to replace your dependency from: `influxdb-client-scala` to:
 
 ### API
 1. [#139](https://github.com/influxdata/influxdb-client-java/pull/148): Changed default port from 9999 to 8086
-1. [#153](https://github.com/influxdata/influxdb-client-java/pull/153): Removed labels in Organization API, removed Pkg* domains, added "after" to FindOption  
+1. [#153](https://github.com/influxdata/influxdb-client-java/pull/153): Removed labels in Organization API, removed Pkg* domains, added "after" to FindOption
 
 ### Bug Fixes
 1. [#151](https://github.com/influxdata/influxdb-client-java/pull/151): Fixed closing OkHttp3 response body
@@ -638,16 +638,16 @@ You have to replace your dependency from: `influxdb-client-scala` to:
 ### Features
 1. [#139](https://github.com/influxdata/influxdb-client-java/pull/139): Marked Apis as @ThreadSafe
 1. [#140](https://github.com/influxdata/influxdb-client-java/pull/140): Validate OffsetDateTime to satisfy RFC 3339
-1. [#141](https://github.com/influxdata/influxdb-client-java/issues/141): Move swagger api generator to separate module influxdb-clients-apigen 
+1. [#141](https://github.com/influxdata/influxdb-client-java/issues/141): Move swagger api generator to separate module influxdb-clients-apigen
 
 ### Bug Fixes
 1. [#136](https://github.com/influxdata/influxdb-client-java/pull/136): Data Point: measurement name is requiring in constructor
-1. [#132](https://github.com/influxdata/influxdb-client-java/pull/132): Fixed thread safe issue in MeasurementMapper 
+1. [#132](https://github.com/influxdata/influxdb-client-java/pull/132): Fixed thread safe issue in MeasurementMapper
 
 ## 1.10.0 [2020-07-17]
 
 ### Bug Fixes
-1. [#129](https://github.com/influxdata/influxdb-client-java/pull/129): Fixed serialization of `\n`, `\r` and `\t` to Line Protocol, `=` is valid sign for measurement name 
+1. [#129](https://github.com/influxdata/influxdb-client-java/pull/129): Fixed serialization of `\n`, `\r` and `\t` to Line Protocol, `=` is valid sign for measurement name
 
 ### Dependencies
 
@@ -664,16 +664,16 @@ You have to replace your dependency from: `influxdb-client-scala` to:
 1. [#122](https://github.com/influxdata/influxdb-client-java/pull/122): Removed log system from Bucket, Dashboard, Organization, Task and Users API - [influxdb#18459](https://github.com/influxdata/influxdb/pull/18459)
 
 ### CI
-1. [#123](https://github.com/influxdata/influxdb-client-java/pull/123): Upgraded InfluxDB 1.7 to 1.8 
+1. [#123](https://github.com/influxdata/influxdb-client-java/pull/123): Upgraded InfluxDB 1.7 to 1.8
 
 ### Bug Fixes
 1. [#116](https://github.com/influxdata/influxdb-client-java/pull/116): The closing message of the `WriteApi` has `Fine` log level
 
 ### Dependencies
 
-1. [#112](https://github.com/influxdata/influxdb-client-java/pull/112): Update dependencies: akka: 2.6.5, assertj-core: 3.16.1, 
-assertk-jvm: 0.22, commons-csv:1.8, commons-lang3: 3.10, gson: 2.8.6, json: 20190722, junit-jupiter: 5.6.2, 
-junit-platform-runner:1.6.2, okhttp3: 4.6.0, okio: 2.60, retrofit: 2.8.1, rxjava: 2.2.19, scala: 2.13.2, 
+1. [#112](https://github.com/influxdata/influxdb-client-java/pull/112): Update dependencies: akka: 2.6.5, assertj-core: 3.16.1,
+assertk-jvm: 0.22, commons-csv:1.8, commons-lang3: 3.10, gson: 2.8.6, json: 20190722, junit-jupiter: 5.6.2,
+junit-platform-runner:1.6.2, okhttp3: 4.6.0, okio: 2.60, retrofit: 2.8.1, rxjava: 2.2.19, scala: 2.13.2,
 scalatest: 3.1.2, spring: 5.2.6.RELEASE, spring-boot: 2.2.7.RELEASE
 1. [#112](https://github.com/influxdata/influxdb-client-java/pull/112): Update plugins: build-helper-maven-plugin: 3.1.0,
 jacoco-maven-plugin: 0.8.5, maven-checkstyle: 3.1.1, maven-javadoc: 3.2.0, maven-site: 3.9.0, maven-surefire: 2.22.2
@@ -790,7 +790,7 @@ jacoco-maven-plugin: 0.8.5, maven-checkstyle: 3.1.1, maven-javadoc: 3.2.0, maven
 1. [#43](https://github.com/influxdata/influxdb-client-java/issues/43): The data point without field should be ignored
 
 ### CI
-1. [#37](https://github.com/influxdata/influxdb-client-java/issues/37): Switch CI from oraclejdk to openjdk 
+1. [#37](https://github.com/influxdata/influxdb-client-java/issues/37): Switch CI from oraclejdk to openjdk
 
 ## 1.0.0.M1
 

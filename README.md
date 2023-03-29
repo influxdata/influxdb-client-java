@@ -38,8 +38,8 @@ This section contains links to the client library documentation.
     - Querying data using the Flux language
     - Querying data using the InfluxQL
     - Writing data using
-        - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/) 
-        - [Data Point](https://github.com/influxdata/influxdb-client-java/blob/master/client/src/main/java/org/influxdata/client/write/Point.java#L46) 
+        - [Line Protocol](https://docs.influxdata.com/influxdb/v1.6/write_protocols/line_protocol_tutorial/)
+        - [Data Point](https://github.com/influxdata/influxdb-client-java/blob/master/client/src/main/java/org/influxdata/client/write/Point.java#L46)
         - POJO
     - InfluxDB 2.x Management API client for managing
         - sources, buckets
@@ -47,8 +47,8 @@ This section contains links to the client library documentation.
         - authorizations
         - health check
         - ...
-- Supports querying using the Flux language over the InfluxDB 1.7+ REST API (`/api/v2/query endpoint`) 
-         
+- Supports querying using the Flux language over the InfluxDB 1.7+ REST API (`/api/v2/query endpoint`)
+
 ## Clients
 
 The Java, Reactive, OSGi, Kotlin and Scala clients are implemented for the InfluxDB 2.x:
@@ -62,7 +62,7 @@ The Java, Reactive, OSGi, Kotlin and Scala clients are implemented for the Influ
 | **[osgi](./client-osgi)** | The reference OSGi (R6) client embedding Java and reactive clients and providing standard features (declarative services, configuration, event processing) for the InfluxDB 2.x. | [javadoc](https://influxdata.github.io/influxdb-client-java/influxdb-client-osgi/apidocs/index.html), [readme](./client-osgi) | 2.x |
 | **[karaf](./karaf)** | The Apache Karaf feature definition for the InfluxDB 2.x. | [readme](./karaf) | 2.x |
 
-There is also possibility to use the Flux language over the InfluxDB 1.7+ provided by: 
+There is also possibility to use the Flux language over the InfluxDB 1.7+ provided by:
 
 | Client | Description | Documentation | Compatibility |
 | --- | --- | --- |                                      --- |
@@ -82,9 +82,9 @@ Flux flux = Flux
 | **[flux-dsl](./flux-dsl)** | A Java query builder for the Flux language | [javadoc](https://influxdata.github.io/influxdb-client-java/flux-dsl/apidocs/index.html), [readme](./flux-dsl#flux-dsl/)| 1.7+, 2.x |
 
 
-## How To Use  
+## How To Use
 
-This clients are hosted in Maven central Repository. 
+This clients are hosted in Maven central Repository.
 
 If you want to use it with the Maven, you have to add only the dependency on the artifact.
 
@@ -102,15 +102,15 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-java</artifactId>
-    <version>6.7.0</version>
+    <version>6.8.0</version>
 </dependency>
 ```
-       
+
 ##### Or when using Gradle:
 
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-java:6.7.0"
+    implementation "com.influxdb:influxdb-client-java:6.8.0"
 }
 ```
 
@@ -202,9 +202,9 @@ public class InfluxDB2Example {
         Instant time;
     }
 }
-```    
+```
 
-### Use Management API to create a new Bucket in InfluxDB 2.x  
+### Use Management API to create a new Bucket in InfluxDB 2.x
 
 The following example demonstrates how to use a InfluxDB 2.x Management API. For further information see [client documentation](./client#management-api).
 
@@ -218,15 +218,15 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-java</artifactId>
-    <version>6.7.0</version>
+    <version>6.8.0</version>
 </dependency>
 ```
-       
+
 ##### Or when using Gradle:
 
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-java:6.7.0"
+    implementation "com.influxdb:influxdb-client-java:6.8.0"
 }
 ```
 
@@ -289,7 +289,7 @@ public class InfluxDB2ManagementExample {
         influxDBClient.close();
     }
 }
-``` 
+```
 
 ### InfluxDB 1.8 API compatibility
 
@@ -301,7 +301,7 @@ The following forward compatible APIs are available:
 |:----------|:----------|:----------|
 | [QueryApi.java](client/src/main/java/com/influxdb/client/QueryApi.java) | [/api/v2/query](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-query-http-endpoint) | Query data in InfluxDB 1.8.0+ using the InfluxDB 2.x API and [Flux](https://docs.influxdata.com/flux/latest/) _(endpoint should be enabled by [`flux-enabled` option](https://docs.influxdata.com/influxdb/latest/administration/config/#flux-enabled-false))_  |
 | [WriteApi.java](client/src/main/java/com/influxdb/client/WriteApi.java) | [/api/v2/write](https://docs.influxdata.com/influxdb/latest/tools/api/#api-v2-write-http-endpoint) | Write data to InfluxDB 1.8.0+ using the InfluxDB 2.x API |
-| [health()](client/src/main/java/com/influxdb/client/InfluxDBClient.java#L236) | [/health](https://docs.influxdata.com/influxdb/latest/tools/api/#health-http-endpoint) | Check the health of your InfluxDB instance |    
+| [health()](client/src/main/java/com/influxdb/client/InfluxDBClient.java#L236) | [/health](https://docs.influxdata.com/influxdb/latest/tools/api/#health-http-endpoint) | Check the health of your InfluxDB instance |
 
 For detail info see [InfluxDB 1.8 example](examples/src/main/java/example/InfluxDB18Example.java).
 
@@ -319,17 +319,17 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-flux</artifactId>
-    <version>6.7.0</version>
+    <version>6.8.0</version>
 </dependency>
 ```
-       
+
 ##### Or when using Gradle:
 
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-flux:6.7.0"
+    implementation "com.influxdb:influxdb-client-flux:6.8.0"
 }
-``` 
+```
 
 ```java
 package example;
@@ -389,7 +389,7 @@ public class FluxExample {
         fluxClient.close();
     }
 }
-```     
+```
 
 ## Build Requirements
 
