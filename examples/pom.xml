@@ -27,12 +27,12 @@
     <parent>
         <artifactId>influxdb-client</artifactId>
         <groupId>com.influxdb</groupId>
-        <version>6.8.0</version>
+        <version>6.9.0-SNAPSHOT</version>
     </parent>
 
     <properties>
         <checkstyle.skip>true</checkstyle.skip>
-        <influxdb-client.version>6.8.0</influxdb-client.version>
+        <influxdb-client.version>6.9.0-SNAPSHOT</influxdb-client.version>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>

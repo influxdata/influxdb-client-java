@@ -28,7 +28,7 @@
     <parent>
         <artifactId>influxdb-karaf</artifactId>
         <groupId>com.influxdb</groupId>
-        <version>6.8.0</version>
+        <version>6.9.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>influxdb-karaf-features</artifactId>
