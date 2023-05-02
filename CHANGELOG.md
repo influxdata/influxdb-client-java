@@ -6,6 +6,7 @@ Update dependencies:
 
 #### Build:
  - [#507](https://github.com/influxdata/influxdb-client-java/pull/507): `rxjava` to `3.1.5`
+ - [#511](https://github.com/influxdata/influxdb-client-java/pull/511): `lombok` to `1.8.26`
  - [#536](https://github.com/influxdata/influxdb-client-java/pull/536): `spring-boot` to `2.7.11`
 
 ## 6.8.0 [2023-03-29]
