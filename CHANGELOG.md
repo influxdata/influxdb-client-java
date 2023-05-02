@@ -15,7 +15,6 @@ Update dependencies:
  - [#526](https://github.com/influxdata/influxdb-client-java/pull/526): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.0.0`
  - [#527](https://github.com/influxdata/influxdb-client-java/pull/527): `scala-maven-plugin` to `4.8.1`
  - [#528](https://github.com/influxdata/influxdb-client-java/pull/528): `license-maven-plugin` to `4.2`
- - [#529](https://github.com/influxdata/influxdb-client-java/pull/529): `maven-deploy-plugin` to `3.1.1`
 
 ## 6.8.0 [2023-03-29]
 
