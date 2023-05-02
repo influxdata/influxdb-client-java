@@ -122,7 +122,7 @@
         <plugin.scala.version>4.8.1</plugin.scala.version>
 
         <akka.version>2.6.20</akka.version>
-        <kotlin.version>1.8.0</kotlin.version>
+        <kotlin.version>1.8.21</kotlin.version>
         <junit-jupiter.version>5.9.1</junit-jupiter.version>
         <kotlin-coroutines.version>1.6.4</kotlin-coroutines.version>
         <mockito.version>4.10.0</mockito.version>
