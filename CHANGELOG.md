@@ -10,6 +10,9 @@ Update dependencies:
  - [#512](https://github.com/influxdata/influxdb-client-java/pull/512): `commons-csv` to `1.10.0`
  - [#536](https://github.com/influxdata/influxdb-client-java/pull/536): `spring-boot` to `2.7.11`
 
+#### Maven:
+ - [#526](https://github.com/influxdata/influxdb-client-java/pull/526): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.0.0`
+
 ## 6.8.0 [2023-03-29]
 
 ### Bug Fixes
