@@ -99,13 +99,13 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-spring</artifactId>
-  <version>6.7.0</version>
+  <version>6.8.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-spring:6.7.0"
+    implementation "com.influxdb:influxdb-spring:6.8.0"
 }
 ```
