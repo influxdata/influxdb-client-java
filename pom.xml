@@ -119,7 +119,7 @@
         <plugin.checkstyle.version>3.2.1</plugin.checkstyle.version>
         <plugin.jacoco.version>0.8.8</plugin.jacoco.version>
         <plugin.site.version>3.12.1</plugin.site.version>
-        <plugin.scala.version>4.8.0</plugin.scala.version>
+        <plugin.scala.version>4.8.1</plugin.scala.version>
 
         <akka.version>2.6.20</akka.version>
         <kotlin.version>1.8.0</kotlin.version>
