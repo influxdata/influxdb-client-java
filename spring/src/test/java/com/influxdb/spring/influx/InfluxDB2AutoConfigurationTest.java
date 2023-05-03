@@ -21,23 +21,19 @@
  */
 package com.influxdb.spring.influx;
 
-import java.util.List;
 import java.util.concurrent.TimeUnit;
-import javax.annotation.Nonnull;
 
 import com.influxdb.client.InfluxDBClient;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import org.assertj.core.api.Assertions;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.autoconfigure.AutoConfigurations;
-import org.springframework.boot.test.context.assertj.AssertableApplicationContext;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.test.util.ReflectionTestUtils;
-import retrofit2.Retrofit;
 
 /**
  * Tests for {@link InfluxDB2AutoConfiguration}.
@@ -69,8 +65,8 @@ class InfluxDB2AutoConfigurationTest {
         this.contextRunner.withPropertyValues("influx.url=http://localhost:8086/")
                 .run((context) -> {
                     Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class)).hasSize(1);
-                    int readTimeout = getReadTimeoutProperty(context);
-                    Assertions.assertThat(readTimeout).isEqualTo(10_000);
+                    InfluxDBClient influxDB = context.getBean(InfluxDBClient.class);
+                    Assertions.assertThat(influxDB).extracting("retrofit.callFactory.readTimeoutMillis").isEqualTo(10_000);
                 });
     }
 
@@ -81,8 +77,8 @@ class InfluxDB2AutoConfigurationTest {
                 .withPropertyValues("influx.url=http://localhost:8086/", "influx.token:token")
                 .run((context) -> {
                     Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class)).hasSize(1);
-                    int readTimeout = getReadTimeoutProperty(context);
-                    Assertions.assertThat(readTimeout).isEqualTo(40_000);
+                    InfluxDBClient influxDB = context.getBean(InfluxDBClient.class);
+                    Assertions.assertThat(influxDB).extracting("retrofit.callFactory.readTimeoutMillis").isEqualTo(40_000);
                 });
     }
 
@@ -91,8 +87,8 @@ class InfluxDB2AutoConfigurationTest {
         this.contextRunner.withPropertyValues("influx.url=http://localhost:8086/", "influx.readTimeout=13s")
                 .run((context) -> {
                     Assertions.assertThat(context.getBeansOfType(InfluxDBClient.class)).hasSize(1);
-                    int readTimeout = getReadTimeoutProperty(context);
-                    Assertions.assertThat(readTimeout).isEqualTo(13_000);
+                    InfluxDBClient influxDB = context.getBean(InfluxDBClient.class);
+                    Assertions.assertThat(influxDB).extracting("retrofit.callFactory.readTimeoutMillis").isEqualTo(13_000);
                 });
     }
 
@@ -100,23 +96,9 @@ class InfluxDB2AutoConfigurationTest {
     public void protocolVersion() {
         this.contextRunner.withPropertyValues("influx.url=http://localhost:8086/", "spring.influx2.token:token")
                 .run((context) -> {
-                    List<Protocol> protocols = getOkHttpClient(context).protocols();
-                    Assertions.assertThat(protocols).hasSize(1);
-                    Assertions.assertThat(protocols).contains(Protocol.HTTP_1_1);
+                    InfluxDBClient influxDB = context.getBean(InfluxDBClient.class);
+                    Assertions.assertThat(influxDB).extracting("retrofit.callFactory.protocols", InstanceOfAssertFactories.LIST).contains(Protocol.HTTP_1_1);
                 });
-    }
-
-    private int getReadTimeoutProperty(AssertableApplicationContext context) {
-        OkHttpClient callFactory = getOkHttpClient(context);
-        return callFactory.readTimeoutMillis();
-    }
-
-    @Nonnull
-    private OkHttpClient getOkHttpClient(final AssertableApplicationContext context) {
-        InfluxDBClient influxDB = context.getBean(InfluxDBClient.class);
-        Retrofit retrofit = (Retrofit) ReflectionTestUtils.getField(influxDB, "retrofit");
-        OkHttpClient callFactory = (OkHttpClient) retrofit.callFactory();
-        return callFactory;
     }
 
     @Configuration
