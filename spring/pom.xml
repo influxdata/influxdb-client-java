@@ -72,7 +72,7 @@
   </scm>
 
     <properties>
-        <micrometer.version>1.10.3</micrometer.version>
+        <micrometer.version>1.10.6</micrometer.version>
         <spring-boot.version>2.7.11</spring-boot.version>
         <spring.version>5.3.26</spring.version>
     </properties>
