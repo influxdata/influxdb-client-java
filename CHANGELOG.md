@@ -16,6 +16,7 @@ Update dependencies:
  - [#527](https://github.com/influxdata/influxdb-client-java/pull/527): `scala-maven-plugin` to `4.8.1`
  - [#528](https://github.com/influxdata/influxdb-client-java/pull/528): `license-maven-plugin` to `4.2`
  - [#529](https://github.com/influxdata/influxdb-client-java/pull/529): `maven-deploy-plugin` to `3.1.1`
+ - [#550](https://github.com/influxdata/influxdb-client-java/pull/550): `maven-compiler-plugin` to `3.11.0`
 
 ## 6.8.0 [2023-03-29]
 
