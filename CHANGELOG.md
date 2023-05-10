@@ -10,6 +10,7 @@ Update dependencies:
  - [#512](https://github.com/influxdata/influxdb-client-java/pull/512): `commons-csv` to `1.10.0`
  - [#536](https://github.com/influxdata/influxdb-client-java/pull/536): `spring-boot` to `2.7.11`
  - [#540](https://github.com/influxdata/influxdb-client-java/pull/540): `kotlin` to `1.8.21`
+ - [#552](https://github.com/influxdata/influxdb-client-java/pull/552): `micrometer-registry-influx` to `1.11.0`
 
 #### Maven:
  - [#526](https://github.com/influxdata/influxdb-client-java/pull/526): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.0.0`
