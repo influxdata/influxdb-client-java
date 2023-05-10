@@ -11,6 +11,7 @@ Update dependencies:
  - [#536](https://github.com/influxdata/influxdb-client-java/pull/536): `spring-boot` to `2.7.11`
  - [#540](https://github.com/influxdata/influxdb-client-java/pull/540): `kotlin` to `1.8.21`
  - [#545](https://github.com/influxdata/influxdb-client-java/pull/545): `scala-collection-compat_2.12` to `2.10.0`
+ - [#548](https://github.com/influxdata/influxdb-client-java/pull/548): `maven-gpg-plugin` to `3.1.0`
  - [#552](https://github.com/influxdata/influxdb-client-java/pull/552): `micrometer-registry-influx` to `1.11.0`
 
 #### Maven:
