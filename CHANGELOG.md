@@ -16,6 +16,7 @@ Update dependencies:
  - [#527](https://github.com/influxdata/influxdb-client-java/pull/527): `scala-maven-plugin` to `4.8.1`
  - [#528](https://github.com/influxdata/influxdb-client-java/pull/528): `license-maven-plugin` to `4.2`
  - [#529](https://github.com/influxdata/influxdb-client-java/pull/529): `maven-deploy-plugin` to `3.1.1`
+ - [#543](https://github.com/influxdata/influxdb-client-java/pull/543): `jacoco-maven-plugin` to `0.8.10`
  - [#549](https://github.com/influxdata/influxdb-client-java/pull/549): `maven-checkstyle-plugin` to `3.2.2`
  - [#550](https://github.com/influxdata/influxdb-client-java/pull/550): `maven-compiler-plugin` to `3.11.0`
 
