@@ -22,6 +22,7 @@ Update dependencies:
  - [#544](https://github.com/influxdata/influxdb-client-java/pull/544): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.1.0`
  - [#549](https://github.com/influxdata/influxdb-client-java/pull/549): `maven-checkstyle-plugin` to `3.2.2`
  - [#550](https://github.com/influxdata/influxdb-client-java/pull/550): `maven-compiler-plugin` to `3.11.0`
+ - [#559](https://github.com/influxdata/influxdb-client-java/pull/559): `maven-project-info-reports-plugin` to `3.4.3`
 
 #### Provided:
  - [#561](https://github.com/influxdata/influxdb-client-java/pull/561): `slf4j-api` to `2.0.7`
