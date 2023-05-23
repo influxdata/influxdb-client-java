@@ -23,6 +23,9 @@ Update dependencies:
  - [#549](https://github.com/influxdata/influxdb-client-java/pull/549): `maven-checkstyle-plugin` to `3.2.2`
  - [#550](https://github.com/influxdata/influxdb-client-java/pull/550): `maven-compiler-plugin` to `3.11.0`
 
+#### Provided:
+ - [#561](https://github.com/influxdata/influxdb-client-java/pull/561): `slf4j-api` to `2.0.7`
+
 #### Test:
  - [#564](https://github.com/influxdata/influxdb-client-java/pull/564): `assertk-jvm` to `0.26.1`
 
