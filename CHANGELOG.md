@@ -28,6 +28,7 @@ Update dependencies:
  - [#561](https://github.com/influxdata/influxdb-client-java/pull/561): `slf4j-api` to `2.0.7`
 
 #### Test:
+ - [#556](https://github.com/influxdata/influxdb-client-java/pull/556): `logback-classic` to `1.3.7`
  - [#564](https://github.com/influxdata/influxdb-client-java/pull/564): `assertk-jvm` to `0.26.1`
 
 ## 6.8.0 [2023-03-29]
