@@ -23,6 +23,9 @@ Update dependencies:
  - [#549](https://github.com/influxdata/influxdb-client-java/pull/549): `maven-checkstyle-plugin` to `3.2.2`
  - [#550](https://github.com/influxdata/influxdb-client-java/pull/550): `maven-compiler-plugin` to `3.11.0`
 
+#### Test:
+ - [#564](https://github.com/influxdata/influxdb-client-java/pull/564): `assertk-jvm` to `0.26.1`
+
 ## 6.8.0 [2023-03-29]
 
 ### Bug Fixes
