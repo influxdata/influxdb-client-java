@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="CHECK" timestamp="1683030134597">
+    <module artifactId="influxdb-client-reactive" groupId="com.influxdb" version="6.8.0-SNAPSHOT"/>
+    <files>
+        <file path="pom.xml" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/reactive/InfluxDBClientReactive.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/reactive/InfluxDBClientReactiveFactory.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/reactive/QueryReactiveApi.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/reactive/WriteOptionsReactive.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/reactive/WriteReactiveApi.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/reactive/internal/InfluxDBClientReactiveImpl.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/reactive/internal/QueryReactiveApiImpl.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/reactive/internal/WriteReactiveApiImpl.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/reactive/AbstractITInfluxDBClientTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/reactive/ITInfluxDBReactiveClient.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/reactive/ITWriteQueryReactiveApi.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/reactive/InfluxDBClientReactiveFactoryTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/reactive/QueryReactiveApiTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/reactive/WriteOptionsReactiveTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/reactive/WriteReactiveApiTest.java" result="PRESENT"/>
+        <file path="src/test/resources/influx2.properties" result="PRESENT"/>
+    </files>
+</licensePluginReport>

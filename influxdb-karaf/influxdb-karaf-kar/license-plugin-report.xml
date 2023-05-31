@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="CHECK" timestamp="1683030192054">
+    <module artifactId="influxdb-karaf-kar" groupId="com.influxdb" version="6.8.0-SNAPSHOT"/>
+    <files>
+        <file path="pom.xml" result="PRESENT"/>
+    </files>
+</licensePluginReport>
