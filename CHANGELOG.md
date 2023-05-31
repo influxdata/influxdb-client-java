@@ -1,4 +1,4 @@
-## 6.9.0 [unreleased]
+## 6.9.0 [2023-05-31]
 
 ### Dependencies
 
