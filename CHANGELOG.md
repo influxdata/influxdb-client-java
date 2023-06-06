@@ -6,6 +6,7 @@ Update dependencies:
 
 #### Maven:
  - [#570](https://github.com/influxdata/influxdb-client-java/pull/570): `build-helper-maven-plugin` to `3.4.0`
+ - [#575](https://github.com/influxdata/influxdb-client-java/pull/575): `maven-project-info-reports-plugin` to `3.4.4`
 
 #### Examples:
  - [#571](https://github.com/influxdata/influxdb-client-java/pull/571): `commons-io` to `2.12.0`
