@@ -147,6 +147,100 @@ class MeasurementMapperTest {
         Assertions.assertThat(lineProtocol).isEqualTo("primitives bool1=true,bool2=true,double1=123.12,double2=123.12,float1=10.5,float2=10.5,integer1=50i,integer2=50i,long1=123456789i,long2=123456789i");
     }
 
+    @Test
+    void pojoMeasurementWithObjectValue() {
+        PojoMeasurementWithObjectValue pojo;
+        String lineProtocol;
+
+        // integer
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = 5;
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=5i");
+
+        // Integer
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = Integer.valueOf(5);
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=5i");
+
+        // long
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = 5L;
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=5i");
+
+        // Long
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = Long.valueOf(5L);
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=5i");
+
+        // double
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = 0.25;
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=0.25");
+
+        // Double
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = Double.valueOf(0.25);
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=0.25");
+
+        // float
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = 0.25f;
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=0.25");
+
+        // Float
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = Float.valueOf(0.25f);
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=0.25");
+
+        // boolean
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = true;
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=true");
+
+        // Boolean
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = Boolean.valueOf(true);
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=true");
+
+        // String
+        pojo = new PojoMeasurementWithObjectValue();
+        pojo.tag = "a";
+        pojo.value = "test";
+        pojo.customField = "mem";
+        lineProtocol = mapper.toPoint(pojo, WritePrecision.S).toLineProtocol();
+        Assertions.assertThat(lineProtocol).isEqualTo("mem,tag=a value=\"test\"");
+    }
+
     @Measurement(name = "pojo")
     private static class Pojo {
 
@@ -218,5 +312,16 @@ class MeasurementMapperTest {
         private Long long1;
         @Column
         private long long2;
+    }
+
+    public static class PojoMeasurementWithObjectValue {
+        @Column(measurement = true)
+        String customField;
+
+        @Column(name = "tag", tag = true)
+        private String tag;
+
+        @Column(name = "value")
+        private Object value;
     }
 }
