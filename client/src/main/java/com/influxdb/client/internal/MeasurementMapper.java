@@ -74,16 +74,19 @@ public final class MeasurementMapper {
             }
 
             Class<?> fieldType = field.getType();
+            // value type can be different from field type
+            // value won't be null at this point
+            Class<?> valueType = value.getClass();
             if (column.tag()) {
                 point.addTag(name, value.toString());
             } else if (column.timestamp()) {
                 Instant instant = (Instant) value;
                 point.time(instant, precision);
-            } else if (isNumber(fieldType)) {
+            } else if (isNumber(valueType)) {
                 point.addField(name, (Number) value);
-            } else if (Boolean.class.isAssignableFrom(fieldType) || boolean.class.isAssignableFrom(fieldType)) {
+            } else if (Boolean.class.isAssignableFrom(valueType) || boolean.class.isAssignableFrom(fieldType)) {
                 point.addField(name, (Boolean) value);
-            } else if (String.class.isAssignableFrom(fieldType)) {
+            } else if (String.class.isAssignableFrom(valueType)) {
                 point.addField(name, (String) value);
             } else {
                 point.addField(name, value.toString());
