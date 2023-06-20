@@ -6,6 +6,7 @@ Update dependencies:
 
 #### Build:
  - [#582](https://github.com/influxdata/influxdb-client-java/pull/582): `scala-collection-compat_2.12` to `2.11.0`
+ - [#581](https://github.com/influxdata/influxdb-client-java/pull/581): `micrometer-registry-influx` to `1.11.1`
 
 #### Maven:
  - [#570](https://github.com/influxdata/influxdb-client-java/pull/570): `build-helper-maven-plugin` to `3.4.0`
