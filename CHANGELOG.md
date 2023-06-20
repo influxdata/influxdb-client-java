@@ -11,6 +11,7 @@ Update dependencies:
 
 #### Maven:
  - [#570](https://github.com/influxdata/influxdb-client-java/pull/570): `build-helper-maven-plugin` to `3.4.0`
+ - [#573](https://github.com/influxdata/influxdb-client-java/pull/573): `dokka-maven-plugin` to `1.8.20`
  - [#583](https://github.com/influxdata/influxdb-client-java/pull/583): `maven-project-info-reports-plugin` to `3.4.5`
 
 #### Examples:
