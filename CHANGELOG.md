@@ -5,6 +5,7 @@
 Update dependencies:
 
 #### Build:
+ - [#567](https://github.com/influxdata/influxdb-client-java/pull/567): `lombok` to `1.18.28`
  - [#582](https://github.com/influxdata/influxdb-client-java/pull/582): `scala-collection-compat_2.12` to `2.11.0`
  - [#581](https://github.com/influxdata/influxdb-client-java/pull/581): `micrometer-registry-influx` to `1.11.1`
 
