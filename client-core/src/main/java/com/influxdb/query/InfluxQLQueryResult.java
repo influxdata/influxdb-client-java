@@ -87,6 +87,9 @@ public final class InfluxQLQueryResult {
      */
     public static final class Series {
         @Nonnull
+        private final Map<String, String> tags;
+
+        @Nonnull
         private final Map<String, Integer> columns;
 
         @Nonnull
@@ -94,11 +97,15 @@ public final class InfluxQLQueryResult {
 
         private final List<Record> values;
 
-        public Series(final @Nonnull String name, final @Nonnull Map<String, Integer> columns) {
+        public Series(final @Nonnull String name,
+                      final @Nonnull Map<String, String> tags,
+                      final @Nonnull Map<String, Integer> columns) {
             Arguments.checkNotNull(name, "name");
+            Arguments.checkNotNull(tags, "tags");
             Arguments.checkNotNull(columns, "columns");
 
             this.name = name;
+            this.tags = tags;
             this.columns = columns;
             this.values = new ArrayList<>();
         }
@@ -109,6 +116,14 @@ public final class InfluxQLQueryResult {
         @Nonnull
         public String getName() {
             return this.name;
+        }
+
+        /**
+         * @return the tags
+         */
+        @Nonnull
+        public Map<String, String> getTags() {
+            return this.tags;
         }
 
         /**
