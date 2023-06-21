@@ -1,5 +1,8 @@
 ## 6.10.0 [unreleased]
 
+### Bug Fixes
+1. [#584](https://github.com/influxdata/influxdb-client-java/pull/584): InfluxQL tags support
+
 ### Dependencies
 
 Update dependencies:
