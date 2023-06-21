@@ -479,6 +479,20 @@ public class InfluxQLExample {
 }
 ```
 
+When the data are grouped by tag(s) using `GROUP BY` clause, series tags are accessible
+via `InfluxQLQueryResult.Series.getTags()` method, eg.
+```java
+      ...
+      for (InfluxQLQueryResult.Result resultResult : result.getResults()) {
+        for (InfluxQLQueryResult.Series series : resultResult.getSeries()) {
+          for (Map.Entry<String, String> tag : series.getTags().entrySet()) {
+            System.out.println(tag.getKey() + "=" + tag.getValue());
+          }
+        }
+      }
+      ...
+```
+
 ## Writes
 
 The client offers two types of API to ingesting data:
