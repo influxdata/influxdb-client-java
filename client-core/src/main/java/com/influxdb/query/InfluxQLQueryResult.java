@@ -22,6 +22,7 @@
 package com.influxdb.query;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Nonnull;
@@ -96,6 +97,10 @@ public final class InfluxQLQueryResult {
         private final String name;
 
         private final List<Record> values;
+
+        public Series(final @Nonnull String name, final @Nonnull Map<String, Integer> columns) {
+            this(name, new HashMap<>(), columns);
+        }
 
         public Series(final @Nonnull String name,
                       final @Nonnull Map<String, String> tags,
