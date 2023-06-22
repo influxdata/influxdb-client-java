@@ -26,6 +26,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -110,13 +112,13 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
             @Nullable final InfluxQLQueryResult.Series.ValueExtractor valueExtractor
     ) throws IOException {
         List<InfluxQLQueryResult.Result> results = new ArrayList<>();
-
-        Map<String, InfluxQLQueryResult.Series> series = null;
+        Map<List<Object>, InfluxQLQueryResult.Series> series = null;
         Map<String, Integer> headerCols = null;
-        int nameCol = 0;
-        // The first 3 columns are static (`name`, `tags` and `time`) and got skipped.
+        final int nameCol = 0;
+        final int tagsCol = 1;
+        // The first 2 columns are static (`name`, `tags`) and got skipped.
         // All other columns are dynamically parsed
-        int dynamicColumnsStartIndex = 2;
+        final int dynamicColumnsStartIndex = 2;
 
         try (CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.builder().setIgnoreEmptyLines(false).build())) {
             for (CSVRecord csvRecord : parser) {
@@ -148,10 +150,11 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
 
                 } else {
                     String name = csvRecord.get(nameCol);
+                    Map<String, String> finalTags = parseTags(csvRecord.get(tagsCol));
                     Map<String, Integer> finalHeaderCols = headerCols;
                     InfluxQLQueryResult.Series serie = series.computeIfAbsent(
-                            name,
-                            n -> new InfluxQLQueryResult.Series(n, finalHeaderCols)
+                            Arrays.asList(name, finalTags),
+                            n -> new InfluxQLQueryResult.Series(name, finalTags, finalHeaderCols)
                     );
                     Object[] values = headerCols.entrySet().stream().map(entry -> {
                         String value = csvRecord.get(entry.getValue() + dynamicColumnsStartIndex);
@@ -173,5 +176,17 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
             results.add(result);
         }
         return new InfluxQLQueryResult(results);
+    }
+
+    private static Map<String, String> parseTags(@Nonnull final String value) {
+        final Map<String, String> tags = new HashMap<>();
+        if (value.length() > 0) {
+            for (String entry : value.split(",")) {
+                final String[] kv = entry.split("=");
+                tags.put(kv[0], kv[1]);
+            }
+        }
+
+        return tags;
     }
 }

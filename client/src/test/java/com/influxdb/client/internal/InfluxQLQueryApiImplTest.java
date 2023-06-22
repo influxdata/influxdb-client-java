@@ -65,12 +65,17 @@ class InfluxQLQueryApiImplTest {
 				"\n" +
 				"name,tags,name\n" +
 				"databases,,measurement-1\n" +
-				"databases,,measurement-2");
+				"databases,,measurement-2\n" +
+				"\n" +
+				"name,tags,time,usage_user,usage_system\n" +
+				"cpu,\"region=us-east-1,host=server1\",1483225200,13.57,1.4\n" +
+				"cpu,\"region=us-east-1,host=server1\",1483225201,14.06,1.7\n" +
+				"cpu,\"region=us-east-1,host=server2\",1483225200,67.91,1.3\n");
 
 		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLResult(reader, NO_CANCELLING, extractValues);
 
 		List<InfluxQLQueryResult.Result> results = result.getResults();
-		Assertions.assertThat(results).hasSize(3);
+		Assertions.assertThat(results).hasSize(4);
 		Assertions.assertThat(results.get(0))
 				.extracting(InfluxQLQueryResult.Result::getSeries)
 				.satisfies(series -> {
@@ -125,6 +130,44 @@ class InfluxQLQueryApiImplTest {
 										.isEqualTo("measurement-1");
 								Assertions.assertThat( series1.getValues().get(1).getValueByKey("name"))
 										.isEqualTo("measurement-2");
+							});
+				});
+
+		Assertions.assertThat(results.get(3))
+				.extracting(InfluxQLQueryResult.Result::getSeries)
+				.satisfies(series -> {
+					Assertions.assertThat(series).hasSize(2);
+					Assertions.assertThat(series.get(0))
+							.satisfies(series1 -> {
+								Assertions.assertThat(series1.getName()).isEqualTo("cpu");
+								Assertions.assertThat(series1.getTags()).containsOnlyKeys("region", "host");
+								Assertions.assertThat(series1.getTags().get("region")).isEqualTo("us-east-1");
+								Assertions.assertThat(series1.getTags().get("host")).isEqualTo("server1");
+								Assertions.assertThat(series1.getColumns()).containsOnlyKeys("time","usage_user","usage_system");
+								Assertions.assertThat(series1.getValues()).hasSize(2);
+
+								Assertions.assertThat( series1.getValues().get(0).getValueByKey("usage_user"))
+										.isEqualTo("13.57");
+								Assertions.assertThat( series1.getValues().get(0).getValueByKey("usage_system"))
+										.isEqualTo("1.4");
+								Assertions.assertThat( series1.getValues().get(1).getValueByKey("usage_user"))
+										.isEqualTo("14.06");
+								Assertions.assertThat( series1.getValues().get(1).getValueByKey("usage_system"))
+										.isEqualTo("1.7");
+							});
+					Assertions.assertThat(series.get(1))
+							.satisfies(series2 -> {
+								Assertions.assertThat(series2.getName()).isEqualTo("cpu");
+								Assertions.assertThat(series2.getTags()).containsOnlyKeys("region", "host");
+								Assertions.assertThat(series2.getTags().get("region")).isEqualTo("us-east-1");
+								Assertions.assertThat(series2.getTags().get("host")).isEqualTo("server2");
+								Assertions.assertThat(series2.getColumns()).containsOnlyKeys("time","usage_user","usage_system");
+								Assertions.assertThat(series2.getValues()).hasSize(1);
+
+								Assertions.assertThat( series2.getValues().get(0).getValueByKey("usage_user"))
+										.isEqualTo("67.91");
+								Assertions.assertThat( series2.getValues().get(0).getValueByKey("usage_system"))
+										.isEqualTo("1.3");
 							});
 				});
 	}
