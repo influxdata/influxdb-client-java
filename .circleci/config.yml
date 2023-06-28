@@ -233,7 +233,7 @@ jobs:
       - run:
           name: Deploying Snapshot
           command: |
-            mvn -s scripts/deploy-settings.xml -DskipTests=true clean package deploy
+            mvn -s scripts/deploy-settings.xml -DskipTests=true clean deploy
       - save_cache:
           name: Saving Maven Cache
           key: *cache-key-deploy
