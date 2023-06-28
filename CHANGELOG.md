@@ -11,6 +11,9 @@ Update dependencies:
  - [#567](https://github.com/influxdata/influxdb-client-java/pull/567): `lombok` to `1.18.28`
  - [#582](https://github.com/influxdata/influxdb-client-java/pull/582): `scala-collection-compat_2.12` to `2.11.0`
  - [#581](https://github.com/influxdata/influxdb-client-java/pull/581): `micrometer-registry-influx` to `1.11.1`
+ - [#587](https://github.com/influxdata/influxdb-client-java/pull/587): `spring-boot` to `2.7.13`
+ - [#588](https://github.com/influxdata/influxdb-client-java/pull/588): `scala-library` to `2.12.18`
+ - [#589](https://github.com/influxdata/influxdb-client-java/pull/589): `kotlin` to `1.8.22`
  - [#592](https://github.com/influxdata/influxdb-client-java/pull/592): `akka` to `2.6.21`
 
 #### Maven:
@@ -18,6 +21,9 @@ Update dependencies:
  - [#570](https://github.com/influxdata/influxdb-client-java/pull/570): `build-helper-maven-plugin` to `3.4.0`
  - [#573](https://github.com/influxdata/influxdb-client-java/pull/573): `dokka-maven-plugin` to `1.8.20`
  - [#583](https://github.com/influxdata/influxdb-client-java/pull/583): `maven-project-info-reports-plugin` to `3.4.5`
+ - [#586](https://github.com/influxdata/influxdb-client-java/pull/586): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.1.2`
+ - [#590](https://github.com/influxdata/influxdb-client-java/pull/590): `maven-bundle-plugin` to `5.1.9`
+ - [#591](https://github.com/influxdata/influxdb-client-java/pull/591): `maven-source-plugin` to `3.3.0`
 
 #### Examples:
  - [#571](https://github.com/influxdata/influxdb-client-java/pull/571): `commons-io` to `2.12.0`
