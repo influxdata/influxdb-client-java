@@ -3,6 +3,9 @@
 ### Bug Fixes
 1. [#584](https://github.com/influxdata/influxdb-client-java/pull/584): InfluxQL tags support
 
+### CI
+1. [#593](https://github.com/influxdata/influxdb-client-java/pull/593): Add JDK 20 to CI pipeline
+
 ### Dependencies
 
 Update dependencies:
