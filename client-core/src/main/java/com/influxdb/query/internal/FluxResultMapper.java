@@ -71,21 +71,21 @@ public class FluxResultMapper {
 
                     String col = null;
 
-                    if (recordValues.containsKey(columnName)) {
+                    if (recordValues.containsValue(columnName)) {
                         col = columnName;
-                    } else if (recordValues.containsKey("_" + columnName)) {
+                    } else if (recordValues.containsValue("_" + columnName)) {
                         col = "_" + columnName;
                     } else if (anno != null && anno.measurement()) {
                         col = "_measurement";
                     } else {
                         String columnNameInSnakeCase = camelCaseToSnakeCase(columnName);
-                        if (recordValues.containsKey(columnNameInSnakeCase)) {
+                        if (recordValues.containsValue(columnNameInSnakeCase)) {
                             col = columnNameInSnakeCase;
                         }
                     }
 
                     if (col != null) {
-                        Object value = record.getValueByKey(col);
+                        Object value = record.getValues().get("_value");
 
                         setFieldValue(pojo, field, value);
                     }
