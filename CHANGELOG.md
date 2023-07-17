@@ -18,6 +18,7 @@ Update dependencies:
  - [#588](https://github.com/influxdata/influxdb-client-java/pull/588): `scala-library` to `2.12.18`
  - [#589](https://github.com/influxdata/influxdb-client-java/pull/589): `kotlin` to `1.8.22`
  - [#592](https://github.com/influxdata/influxdb-client-java/pull/592): `akka` to `2.6.21`
+ - [#602](https://github.com/influxdata/influxdb-client-java/pull/602): `okio` to `3.4.0`
 
 #### Maven:
  - [#569](https://github.com/influxdata/influxdb-client-java/pull/569): `maven-enforcer-plugin` to `3.3.0`
