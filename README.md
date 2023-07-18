@@ -9,9 +9,7 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/pulls)
 [![Slack Status](https://img.shields.io/badge/slack-join_chat-white.svg?logo=slack&style=social)](https://www.influxdata.com/slack)
 
-This repository contains the reference JVM clients for the InfluxDB 2.x. Currently, Java, Reactive, Kotlin and Scala clients are implemented.
-
-#### Note: Use this client library with InfluxDB 2.x and InfluxDB 1.8+ ([see details](#influxdb-18-api-compatibility)). For connecting to InfluxDB 1.7 or earlier instances, use the [influxdb-java](https://github.com/influxdata/influxdb-java) client library.
+This repository contains the Java client library for use with InfluxDB 2.0 specifically with Flux. Currently, Java, Reactive, Kotlin and Scala clients are implemented. For InfluxDB 3.0 users, utilize the lightweight [v3 client library](https://github.com/InfluxCommunity/influxdb3-java). Most users of previous versions of InfluxDB will want to use InfluxQL and the [v1 client library](https://github.com/influxdata/influxdb-java).
 
 - [Features](#features)
 - [Clients](#clients)
