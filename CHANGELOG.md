@@ -1,4 +1,6 @@
-## 6.10.0 [unreleased]
+## 6.11.0 [unreleased]
+
+## 6.10.0 [2023-07-28]
 
 ### Bug Fixes
 1. [#584](https://github.com/influxdata/influxdb-client-java/pull/584): InfluxQL tags support
@@ -13,11 +15,12 @@ Update dependencies:
 #### Build:
  - [#567](https://github.com/influxdata/influxdb-client-java/pull/567): `lombok` to `1.18.28`
  - [#582](https://github.com/influxdata/influxdb-client-java/pull/582): `scala-collection-compat_2.12` to `2.11.0`
- - [#581](https://github.com/influxdata/influxdb-client-java/pull/581): `micrometer-registry-influx` to `1.11.1`
- - [#587](https://github.com/influxdata/influxdb-client-java/pull/587): `spring-boot` to `2.7.13`
+ - [#601](https://github.com/influxdata/influxdb-client-java/pull/601): `micrometer-registry-influx` to `1.11.2`
+ - [#608](https://github.com/influxdata/influxdb-client-java/pull/608): `spring-boot` to `2.7.14`
  - [#588](https://github.com/influxdata/influxdb-client-java/pull/588): `scala-library` to `2.12.18`
  - [#589](https://github.com/influxdata/influxdb-client-java/pull/589): `kotlin` to `1.8.22`
  - [#592](https://github.com/influxdata/influxdb-client-java/pull/592): `akka` to `2.6.21`
+ - [#602](https://github.com/influxdata/influxdb-client-java/pull/602): `okio` to `3.4.0`
 
 #### Maven:
  - [#569](https://github.com/influxdata/influxdb-client-java/pull/569): `maven-enforcer-plugin` to `3.3.0`
@@ -30,6 +33,9 @@ Update dependencies:
 
 #### Examples:
  - [#571](https://github.com/influxdata/influxdb-client-java/pull/571): `commons-io` to `2.12.0`
+
+#### Test:
+ - [#596](https://github.com/influxdata/influxdb-client-java/pull/596): `logback-classic` to `1.3.8`
 
 ## 6.9.0 [2023-05-31]
 

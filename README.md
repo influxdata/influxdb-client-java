@@ -9,9 +9,9 @@
 [![GitHub pull requests](https://img.shields.io/github/issues-pr-raw/influxdata/influxdb-client-java.svg)](https://github.com/influxdata/influxdb-client-java/pulls)
 [![Slack Status](https://img.shields.io/badge/slack-join_chat-white.svg?logo=slack&style=social)](https://www.influxdata.com/slack)
 
-This repository contains the reference JVM clients for the InfluxDB 2.x. Currently, Java, Reactive, Kotlin and Scala clients are implemented.
+This repository contains the Java client library for use with InfluxDB 2.x and Flux. Currently, Java, Reactive, Kotlin and Scala clients are implemented. InfluxDB 3.x users should instead use the lightweight [v3 client library](https://github.com/InfluxCommunity/influxdb3-java). InfluxDB 1.x users should use the [v1 client library](https://github.com/influxdata/influxdb-java).
 
-#### Note: Use this client library with InfluxDB 2.x and InfluxDB 1.8+ ([see details](#influxdb-18-api-compatibility)). For connecting to InfluxDB 1.7 or earlier instances, use the [influxdb-java](https://github.com/influxdata/influxdb-java) client library.
+For ease of migration and a consistent query and write experience, v2 users should consider using InfluxQL and the [v1 client library](https://github.com/influxdata/influxdb-java).
 
 - [Features](#features)
 - [Clients](#clients)
@@ -102,7 +102,7 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-java</artifactId>
-    <version>6.9.0</version>
+    <version>6.10.0</version>
 </dependency>
 ```
 
@@ -110,7 +110,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-java:6.9.0"
+    implementation "com.influxdb:influxdb-client-java:6.10.0"
 }
 ```
 
@@ -218,7 +218,7 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-java</artifactId>
-    <version>6.9.0</version>
+    <version>6.10.0</version>
 </dependency>
 ```
 
@@ -226,7 +226,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-java:6.9.0"
+    implementation "com.influxdb:influxdb-client-java:6.10.0"
 }
 ```
 
@@ -319,7 +319,7 @@ Download the latest version:
 <dependency>
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client-flux</artifactId>
-    <version>6.9.0</version>
+    <version>6.10.0</version>
 </dependency>
 ```
 
@@ -327,7 +327,7 @@ Download the latest version:
 
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-flux:6.9.0"
+    implementation "com.influxdb:influxdb-client-flux:6.10.0"
 }
 ```
 
