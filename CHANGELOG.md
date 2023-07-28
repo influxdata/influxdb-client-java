@@ -31,6 +31,9 @@ Update dependencies:
 #### Examples:
  - [#571](https://github.com/influxdata/influxdb-client-java/pull/571): `commons-io` to `2.12.0`
 
+#### Test:
+ - [#596](https://github.com/influxdata/influxdb-client-java/pull/596): `logback-classic` to `1.3.8`
+
 ## 6.9.0 [2023-05-31]
 
 ### Dependencies
