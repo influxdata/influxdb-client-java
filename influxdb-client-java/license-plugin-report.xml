@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1683030132574">
-    <module artifactId="influxdb-client-java" groupId="com.influxdb" version="6.8.0-SNAPSHOT"/>
+<licensePluginReport goal="CHECK" timestamp="1685514608404">
+    <module artifactId="influxdb-client-java" groupId="com.influxdb" version="6.9.0"/>
     <files>
         <file path="pom.xml" result="PRESENT"/>
         <file path="src/main/java/com/influxdb/client/AuthorizationsApi.java" result="PRESENT"/>

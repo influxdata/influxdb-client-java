@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1683030124646">
-    <module artifactId="influxdb-client-core" groupId="com.influxdb" version="6.8.0-SNAPSHOT"/>
+<licensePluginReport goal="CHECK" timestamp="1685514597421">
+    <module artifactId="influxdb-client-core" groupId="com.influxdb" version="6.9.0"/>
     <files>
         <file path="pom.xml" result="PRESENT"/>
         <file path="src/main/java/com/influxdb/Cancellable.java" result="PRESENT"/>
