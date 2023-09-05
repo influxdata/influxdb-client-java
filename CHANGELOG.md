@@ -6,6 +6,7 @@ Update dependencies:
 
 #### Build:
  - [#614](https://github.com/influxdata/influxdb-client-java/pull/614): `commons-lang3` to `3.13.0`
+ - [#622](https://github.com/influxdata/influxdb-client-java/pull/622): `micrometer-registry-influx` to `1.11.3`
 
 ## 6.10.0 [2023-07-28]
 
