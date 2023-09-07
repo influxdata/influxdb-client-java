@@ -73,7 +73,7 @@
 
     <properties>
         <micrometer.version>1.11.3</micrometer.version>
-        <spring-boot.version>2.7.14</spring-boot.version>
+        <spring-boot.version>2.7.15</spring-boot.version>
         <spring.version>5.3.26</spring.version>
     </properties>
 
