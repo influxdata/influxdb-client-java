@@ -10,6 +10,7 @@ Update dependencies:
  - [#619](https://github.com/influxdata/influxdb-client-java/pull/619): `spring-boot` to `2.7.15`
 
 #### Maven:
+ - [#618](https://github.com/influxdata/influxdb-client-java/pull/618): `maven-enforcer-plugin` to `3.4.0`
  - [#621](https://github.com/influxdata/influxdb-client-java/pull/621): `dokka-maven-plugin` to `1.9.0`
 
 #### Test:
