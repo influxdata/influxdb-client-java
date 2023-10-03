@@ -9,6 +9,7 @@ Update dependencies:
  - [#622](https://github.com/influxdata/influxdb-client-java/pull/622): `micrometer-registry-influx` to `1.11.3`
  - [#619](https://github.com/influxdata/influxdb-client-java/pull/619): `spring-boot` to `2.7.15`
  - [#625](https://github.com/influxdata/influxdb-client-java/pull/625): `lombok` to `1.18.30`
+ - [#629](https://github.com/influxdata/influxdb-client-java/pull/629): `karaf` to `4.4.4`
 
 #### Maven:
  - [#618](https://github.com/influxdata/influxdb-client-java/pull/618): `maven-enforcer-plugin` to `3.4.0`
