@@ -11,6 +11,8 @@ Update dependencies:
  - [#625](https://github.com/influxdata/influxdb-client-java/pull/625): `lombok` to `1.18.30`
  - [#629](https://github.com/influxdata/influxdb-client-java/pull/629): `karaf` to `4.4.4`
  - [#617](https://github.com/influxdata/influxdb-client-java/pull/617): `kotlin` to `1.9.10`
+ - [#542](https://github.com/influxdata/influxdb-client-java/pull/542): `okhttp` to `4.11.0`
+ - [#542](https://github.com/influxdata/influxdb-client-java/pull/542): `okio` to `3.5.0`
 
 #### Maven:
  - [#618](https://github.com/influxdata/influxdb-client-java/pull/618): `maven-enforcer-plugin` to `3.4.0`
