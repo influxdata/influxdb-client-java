@@ -21,13 +21,13 @@
  */
 package com.influxdb.client.kotlin
 
+import assertk.assertFailure
 import assertk.assertThat
 import assertk.assertions.contains
 import assertk.assertions.containsExactly
 import assertk.assertions.hasSize
 import assertk.assertions.isEmpty
 import assertk.assertions.isEqualTo
-import assertk.assertions.isFailure
 import assertk.assertions.isInstanceOf
 import assertk.assertions.isTrue
 import assertk.assertions.startsWith
@@ -271,9 +271,9 @@ internal class ITQueryKotlinApi : AbstractITInfluxDBClientKotlin() {
 
         val channel = clientNotRunning.getQueryKotlinApi().query(flux, organization.id)
 
-        assertThat {
+        assertFailure {
             runBlocking { channel.toList() }
-        }.isFailure().isInstanceOf(ConnectException::class.java)
+        }.isInstanceOf(ConnectException::class.java)
 
         assertThat(channel.isClosedForReceive).isTrue()
         assertThat(channel.isClosedForSend).isTrue()
