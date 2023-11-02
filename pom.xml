@@ -114,7 +114,7 @@
         <dependency.gson.version>2.10.1</dependency.gson.version>
         <dependency.io.reactivex.rxjava3>3.1.6</dependency.io.reactivex.rxjava3>
 
-        <plugin.surefire.version>3.1.2</plugin.surefire.version>
+        <plugin.surefire.version>3.2.1</plugin.surefire.version>
         <plugin.javadoc.version>3.6.0</plugin.javadoc.version>
         <plugin.checkstyle.version>3.3.0</plugin.checkstyle.version>
         <plugin.jacoco.version>0.8.10</plugin.jacoco.version>
