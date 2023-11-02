@@ -20,6 +20,9 @@ Update dependencies:
  - [#628](https://github.com/influxdata/influxdb-client-java/pull/628): `versions-maven-plugin` to `2.16.1`
  - [#627](https://github.com/influxdata/influxdb-client-java/pull/627): `assertk-jvm` to `0.27.0`
 
+#### Examples:
+ - [#638](https://github.com/influxdata/influxdb-client-java/pull/638): `commons-cli ` to `1.6.0`
+
 #### Test:
  - [#620](https://github.com/influxdata/influxdb-client-java/pull/620): `logback-classic` to `1.3.11`
 
