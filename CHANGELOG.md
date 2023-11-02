@@ -19,6 +19,7 @@ Update dependencies:
  - [#621](https://github.com/influxdata/influxdb-client-java/pull/621): `dokka-maven-plugin` to `1.9.0`
  - [#628](https://github.com/influxdata/influxdb-client-java/pull/628): `versions-maven-plugin` to `2.16.1`
  - [#627](https://github.com/influxdata/influxdb-client-java/pull/627): `assertk-jvm` to `0.27.0`
+ - [#637](https://github.com/influxdata/influxdb-client-java/pull/637): `maven-javadoc-plugin` to `3.6.0`
 
 #### Test:
  - [#620](https://github.com/influxdata/influxdb-client-java/pull/620): `logback-classic` to `1.3.11`
