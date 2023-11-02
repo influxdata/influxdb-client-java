@@ -10,7 +10,7 @@ Update dependencies:
  - [#635](https://github.com/influxdata/influxdb-client-java/pull/635): `spring-boot` to `2.7.17`
  - [#625](https://github.com/influxdata/influxdb-client-java/pull/625): `lombok` to `1.18.30`
  - [#629](https://github.com/influxdata/influxdb-client-java/pull/629): `karaf` to `4.4.4`
- - [#617](https://github.com/influxdata/influxdb-client-java/pull/617): `kotlin` to `1.9.10`
+ - [#634](https://github.com/influxdata/influxdb-client-java/pull/634): `kotlin` to `1.9.20`
  - [#542](https://github.com/influxdata/influxdb-client-java/pull/542): `okhttp` to `4.11.0`
  - [#630](https://github.com/influxdata/influxdb-client-java/pull/630): `okio` to `3.6.0`
 
