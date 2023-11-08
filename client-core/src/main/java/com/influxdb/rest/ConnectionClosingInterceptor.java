@@ -36,11 +36,13 @@ import okhttp3.Response;
 import okhttp3.internal.connection.RealConnection;
 
 /**
- * This interceptor closes connections that exceed a specified maximum age.
- * It's beneficial for scenarios where your application requires establishing new connections to the same host after a predetermined interval.
- * This interceptor is most effective in applications that use a single connection, meaning requests are not made in parallel.
+ * This interceptor closes connections that exceed a specified maximum lifetime age (TTL). It's beneficial for
+ * scenarios where your application requires establishing new connections to the same host after a predetermined
+ * interval. This interceptor is most effective in applications that use a single connection, meaning requests
+ * are not made in parallel.
  * <p>
- * Caution is advised, as setting a very short interval can lead to performance issues because establishing new connections is a resource-intensive operation.
+ * Caution is advised, as setting a very short interval can lead to performance issues because
+ * establishing new connections is a resource-intensive operation.
  */
 public class ConnectionClosingInterceptor extends EventListener implements Interceptor {
 
