@@ -72,6 +72,7 @@ public class ConnectionClosingInterceptor extends EventListener implements Inter
             if (connection instanceof RealConnection) {
                 LOG.fine("Marking connection to not be reused: " + connection);
                 ((RealConnection) connection).noNewExchanges$okhttp();
+                connectionTimes.remove(connection);
             } else {
                 LOG.warning("Unable to mark connection to not be reused: " + connection);
             }
@@ -93,6 +94,10 @@ public class ConnectionClosingInterceptor extends EventListener implements Inter
      */
     private boolean isConnectionOld(@Nonnull final Connection connection) {
         Long time = connectionTimes.get(connection);
-        return (time != null && (System.currentTimeMillis() - time) > connectionMaxAgeMillis);
+        if (time == null) {
+            return false;
+        }
+        long age = System.currentTimeMillis() - time;
+        return age > connectionMaxAgeMillis;
     }
 }
