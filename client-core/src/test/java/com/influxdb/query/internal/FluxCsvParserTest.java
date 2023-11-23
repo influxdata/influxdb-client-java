@@ -705,6 +705,7 @@ class FluxCsvParserTest {
         Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("owner")).isEqualTo("influxdata");
         Assertions.assertThat(tables.get(0).getRecords().get(1).getValueByKey("owner")).isEqualTo("nana");
         Assertions.assertThat(tables.get(0).getRecords().get(2).getValueByKey("owner")).isEqualTo("nana");
+        
     }
 
     @Test
