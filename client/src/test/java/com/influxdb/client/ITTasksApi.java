@@ -29,6 +29,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
 import com.influxdb.client.domain.Authorization;
@@ -49,6 +51,7 @@ import com.influxdb.client.domain.User;
 import com.influxdb.exceptions.NotFoundException;
 
 import org.assertj.core.api.Assertions;
+import org.jetbrains.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -313,6 +316,42 @@ class ITTasksApi extends AbstractITClientTest {
 
         Assertions.assertThat(tasks).hasSize(1);
         Assertions.assertThat(tasks.get(0).getId()).isEqualTo(task2.getId());
+    }
+
+    @Test
+    void findTasksAll() {
+        String taskName = generateName("it task all");
+        int numOfTasks = 10;
+
+        for (int i = 0; i < numOfTasks; i++) {
+            tasksApi.createTaskCron(taskName, TASK_FLUX, "0 2 * * *", organization);
+        }
+
+        final TasksQuery tasksQuery = new TasksQuery();
+        tasksQuery.setName(taskName);
+
+        List<Task> tasks;
+
+        // get tasks in 3-4 batches
+        tasksQuery.setLimit(numOfTasks / 3);
+        tasks = tasksApi.findTasksStream(tasksQuery).collect(Collectors.toList());
+        Assertions.assertThat(tasks).hasSize(numOfTasks);
+
+        // get tasks in one equally size batch
+        tasksQuery.setLimit(numOfTasks);
+        tasks = tasksApi.findTasksStream(tasksQuery).collect(Collectors.toList());
+        Assertions.assertThat(tasks).hasSize(numOfTasks);
+
+        // get tasks in one batch
+        tasksQuery.setLimit(numOfTasks + 1);
+        tasks = tasksApi.findTasksStream(tasksQuery).collect(Collectors.toList());
+        Assertions.assertThat(tasks).hasSize(numOfTasks);
+
+        // get no tasks
+        tasksQuery.setLimit(null);
+        tasksQuery.setName(taskName + "___");
+        tasks = tasksApi.findTasksStream(tasksQuery).collect(Collectors.toList());
+        Assertions.assertThat(tasks).hasSize(0);
     }
 
     @Test

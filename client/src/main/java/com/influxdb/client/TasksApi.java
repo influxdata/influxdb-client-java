@@ -23,6 +23,7 @@ package com.influxdb.client;
 
 import java.time.OffsetDateTime;
 import java.util.List;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
@@ -274,6 +275,15 @@ public interface TasksApi {
      */
     @Nonnull
     List<Task> findTasks(@Nonnull final TasksQuery query);
+
+    /**
+     * Query tasks, automaticaly paged by given limit (default 100).
+     *
+     * @param query query params for task
+     * @return A list of tasks
+     */
+    @Nonnull
+    Stream<Task> findTasksStream(@Nonnull final TasksQuery query);
 
     /**
      * List all task members.
