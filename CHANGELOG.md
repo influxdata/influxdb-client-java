@@ -1,5 +1,8 @@
 ## 6.11.0 [unreleased]
 
+### Bug Fixes
+1. [#648](https://github.com/influxdata/influxdb-client-java/pull/648): With csv parsing, return empty string when `stringValue` and `defaultValue` are both an empty string.
+
 ### Dependencies
 
 Update dependencies:
