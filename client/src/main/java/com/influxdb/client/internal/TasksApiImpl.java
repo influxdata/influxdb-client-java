@@ -203,7 +203,7 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
                     doQueryNext();
                 }
 
-                if (tasksIterator.hasNext()){
+                if (tasksIterator.hasNext()) {
                     return tasksIterator.next();
                 } else {
                     throw new IndexOutOfBoundsException();
