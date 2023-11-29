@@ -674,6 +674,60 @@ class FluxCsvParserTest {
         Assertions.assertThat(tables.get(0).getRecords().get(0).getRow().get(7)).isEqualTo(25.3);
     }
 
+
+    @Test
+    public void parseEmptyString() throws IOException {
+        String data = "#group,false,false,true,true,true,true,true,false,false\n"
+          + "#datatype,string,long,dateTime:RFC3339,dateTime:RFC3339,string,string,string,double,string\n"
+          + "#default,_result,,,,,,nana,,\n"
+          + ",result,table,_start,_stop,_field,_measurement,owner,le,_value\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,influxdata,0,\"foo\"\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,,10,\"foo\"\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,\"\",20,\"foo\"\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,influxdata,30,\"foo\"\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,influxdata,40,\"foo\"\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,influxdata,50,\"foo\"\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,influxdata,60,\"foo\"\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,influxdata,70,\"foo\"\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,influxdata,80,\"\"\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,influxdata,90,\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,influxdata,100,\"bar\"\n"
+          + ",,0,2021-06-23T06:50:11.897825012Z,2021-06-25T06:50:11.897825012Z,wumpus,snipe,influxdata,-100,\"bar\"\n"
+          + "\n";
+
+        List<FluxTable> tables = parseFluxResponse(data);
+
+        Assertions.assertThat(tables).hasSize(1);
+        Assertions.assertThat(tables.get(0).getRecords().get(7).getValue()).isEqualTo("foo");
+        Assertions.assertThat(tables.get(0).getRecords().get(8).getValue()).isEqualTo(""); // -- todo make sure default value is respected
+        Assertions.assertThat(tables.get(0).getRecords().get(9).getValue()).isNotNull();
+        Assertions.assertThat(tables.get(0).getRecords().get(10).getValue()).isEqualTo("bar");
+        Assertions.assertThat(tables.get(0).getRecords().get(0).getValueByKey("owner")).isEqualTo("influxdata");
+        Assertions.assertThat(tables.get(0).getRecords().get(1).getValueByKey("owner")).isEqualTo("nana");
+        Assertions.assertThat(tables.get(0).getRecords().get(2).getValueByKey("owner")).isEqualTo("nana");
+    }
+
+    @Test
+    public void parseEmptyStringWithoutTableDefinition() throws IOException {
+
+        String data = ",result,table,_start,_stop,_time,_value,_field,_measurement,host,value\n"
+          + ",,0,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,10,free,mem,A,12.25\n"
+          + ",,1,1970-01-01T00:00:10Z,1970-01-01T00:00:20Z,1970-01-01T00:00:10Z,,free,mem,,15.55\n";
+
+        parser = new FluxCsvParser(FluxCsvParser.ResponseMetadataMode.ONLY_NAMES);
+        List<FluxTable> tables = parseFluxResponse(data);
+
+        Assertions.assertThat(tables).hasSize(2);
+        Assertions.assertThat(tables.get(0).getRecords()).hasSize(1);
+        Assertions.assertThat(tables.get(0).getRecords().get(0).getValues().get("value")).isEqualTo("12.25");
+        Assertions.assertThat(tables.get(0).getRecords().get(0).getValues().get("host")).isEqualTo("A");
+        Assertions.assertThat(tables.get(0).getRecords().get(0).getValue()).isEqualTo("10");
+        Assertions.assertThat(tables.get(1).getRecords()).hasSize(1);
+        Assertions.assertThat(tables.get(1).getRecords().get(0).getValues().get("value")).isEqualTo("15.55");
+        Assertions.assertThat(tables.get(1).getRecords().get(0).getValues().get("host")).isNull();
+        Assertions.assertThat(tables.get(1).getRecords().get(0).getValue()).isNull();
+    }
+
     @Nonnull
     private List<FluxTable> parseFluxResponse(@Nonnull final String data) throws IOException {
 
@@ -712,4 +766,5 @@ class FluxCsvParserTest {
             return cancelled;
         }
     }
+
 }
