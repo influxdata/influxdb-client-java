@@ -22,9 +22,15 @@
 package com.influxdb.client.internal;
 
 import java.time.OffsetDateTime;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -145,6 +151,77 @@ final class TasksApiImpl extends AbstractRestClient implements TasksApi {
         LOG.log(Level.FINEST, "findTasks found: {0}", tasks);
 
         return tasks.getTasks();
+    }
+
+    @Nonnull
+    @Override
+    public Stream<Task> findTasksStream(@Nonnull final TasksQuery query) {
+        Iterator<Task> iterator = new Iterator<Task>() {
+            private boolean hasNext = true;
+
+            @Nonnull
+            private Iterator<Task> tasksIterator = Collections.emptyIterator();
+
+            @Nullable
+            private String after = query.getAfter();
+
+            @Override
+            public boolean hasNext() {
+                if (tasksIterator.hasNext()) {
+                    return true;
+                } else if (hasNext) {
+                    doQueryNext();
+                    return tasksIterator.hasNext();
+                } else {
+                    return false;
+                }
+            }
+
+            private void doQueryNext() {
+                Call<Tasks> call = service.getTasks(null, query.getName(), after, query.getUser(),
+                        query.getOrg(), query.getOrgID(), query.getStatus(), query.getLimit(), query.getType());
+
+                Tasks tasks = execute(call);
+
+                List<Task> tasksList = tasks.getTasks();
+                tasksIterator = tasksList.iterator();
+                if (!tasksList.isEmpty()) {
+                    Task lastTask = tasksList.get(tasksList.size() - 1);
+                    after = lastTask.getId();
+                }
+
+                @Nullable String nextUrl = tasks.getLinks().getNext();
+                hasNext = nextUrl != null && !nextUrl.isEmpty();
+
+                String logMsg = "findTasksStream found: {0} has next page: {1} next after {2}: ";
+                LOG.log(Level.FINEST, logMsg, new Object[]{tasks, hasNext, after});
+            }
+
+            @Override
+            public Task next() throws IndexOutOfBoundsException {
+                if (!tasksIterator.hasNext() && hasNext) {
+                    doQueryNext();
+                }
+
+                if (tasksIterator.hasNext()) {
+                    return tasksIterator.next();
+                } else {
+                    throw new IndexOutOfBoundsException();
+                }
+            }
+
+            @Override
+            public void remove() throws UnsupportedOperationException {
+                throw new UnsupportedOperationException();
+            }
+        };
+
+        Stream<Task> stream = StreamSupport.stream(
+            Spliterators.spliteratorUnknownSize(iterator, Spliterator.ORDERED),
+            false);
+
+        return stream;
+
     }
 
     @Nonnull
