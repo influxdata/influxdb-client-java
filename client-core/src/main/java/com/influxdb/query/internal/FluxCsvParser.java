@@ -303,18 +303,20 @@ public class FluxCsvParser {
     private Object toValue(@Nullable final String strValue, final @Nonnull FluxColumn column) {
 
         Arguments.checkNotNull(column, "column");
+        String dataType = column.getDataType();
 
         // Default value
         if (strValue == null || strValue.isEmpty()) {
             String defaultValue = column.getDefaultValue();
             if (defaultValue == null || defaultValue.isEmpty()) {
+                if ("string".equals(dataType)) {
+                    return defaultValue;
+                }
                 return null;
             }
-
             return toValue(defaultValue, column);
         }
 
-        String dataType = column.getDataType();
         switch (dataType) {
             case "boolean":
                 return Boolean.valueOf(strValue);
