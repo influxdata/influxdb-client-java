@@ -33,7 +33,7 @@ Update dependencies:
  - [#638](https://github.com/influxdata/influxdb-client-java/pull/638): `commons-cli ` to `1.6.0`
 
 #### Test:
- - [#620](https://github.com/influxdata/influxdb-client-java/pull/620): `logback-classic` to `1.3.11`
+ - [#650](https://github.com/influxdata/influxdb-client-java/pull/650): `logback-classic` to `1.3.12`
 
 ## 6.10.0 [2023-07-28]
 
