@@ -21,7 +21,7 @@ Update dependencies:
  - [#630](https://github.com/influxdata/influxdb-client-java/pull/630): `okio` to `3.6.0`
 
 #### Maven:
- - [#618](https://github.com/influxdata/influxdb-client-java/pull/618): `maven-enforcer-plugin` to `3.4.0`
+ - [#656](https://github.com/influxdata/influxdb-client-java/pull/656): `maven-enforcer-plugin` to `3.4.1`
  - [#636](https://github.com/influxdata/influxdb-client-java/pull/636): `dokka-maven-plugin` to `1.9.10`
  - [#628](https://github.com/influxdata/influxdb-client-java/pull/628): `versions-maven-plugin` to `2.16.1`
  - [#627](https://github.com/influxdata/influxdb-client-java/pull/627): `assertk-jvm` to `0.27.0`
