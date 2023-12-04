@@ -12,6 +12,7 @@ Update dependencies:
 
 #### Build:
  - [#614](https://github.com/influxdata/influxdb-client-java/pull/614): `commons-lang3` to `3.13.0`
+ - [#653](https://github.com/influxdata/influxdb-client-java/pull/653): `commons-io` to `2.15.1`
  - [#622](https://github.com/influxdata/influxdb-client-java/pull/622): `micrometer-registry-influx` to `1.11.3`
  - [#635](https://github.com/influxdata/influxdb-client-java/pull/635): `spring-boot` to `2.7.17`
  - [#625](https://github.com/influxdata/influxdb-client-java/pull/625): `lombok` to `1.18.30`
