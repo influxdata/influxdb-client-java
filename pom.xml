@@ -117,7 +117,7 @@
         <plugin.surefire.version>3.2.2</plugin.surefire.version>
         <plugin.javadoc.version>3.6.0</plugin.javadoc.version>
         <plugin.checkstyle.version>3.3.0</plugin.checkstyle.version>
-        <plugin.jacoco.version>0.8.10</plugin.jacoco.version>
+        <plugin.jacoco.version>0.8.11</plugin.jacoco.version>
         <plugin.site.version>3.12.1</plugin.site.version>
         <plugin.scala.version>4.8.1</plugin.scala.version>
 
@@ -429,7 +429,7 @@
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>versions-maven-plugin</artifactId>
-                    <version>2.16.1</version>
+                    <version>2.16.2</version>
                 </plugin>
 
                 <plugin>
@@ -465,7 +465,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.4.5</version>
+                <version>3.5.0</version>
                 <configuration>
                     <dependencyDetailsEnabled>true</dependencyDetailsEnabled>
                 </configuration>
@@ -520,7 +520,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.16.1</version>
+                <version>2.16.2</version>
                 <reportSets>
                     <reportSet>
                         <reports>

@@ -12,6 +12,7 @@ Update dependencies:
 
 #### Build:
  - [#614](https://github.com/influxdata/influxdb-client-java/pull/614): `commons-lang3` to `3.13.0`
+ - [#653](https://github.com/influxdata/influxdb-client-java/pull/653): `commons-io` to `2.15.1`
  - [#622](https://github.com/influxdata/influxdb-client-java/pull/622): `micrometer-registry-influx` to `1.11.3`
  - [#635](https://github.com/influxdata/influxdb-client-java/pull/635): `spring-boot` to `2.7.17`
  - [#625](https://github.com/influxdata/influxdb-client-java/pull/625): `lombok` to `1.18.30`
@@ -23,17 +24,23 @@ Update dependencies:
 #### Maven:
  - [#618](https://github.com/influxdata/influxdb-client-java/pull/618): `maven-enforcer-plugin` to `3.4.0`
  - [#636](https://github.com/influxdata/influxdb-client-java/pull/636): `dokka-maven-plugin` to `1.9.10`
- - [#628](https://github.com/influxdata/influxdb-client-java/pull/628): `versions-maven-plugin` to `2.16.1`
+ - [#658](https://github.com/influxdata/influxdb-client-java/pull/658): `versions-maven-plugin` to `2.16.2`
  - [#627](https://github.com/influxdata/influxdb-client-java/pull/627): `assertk-jvm` to `0.27.0`
  - [#637](https://github.com/influxdata/influxdb-client-java/pull/637): `maven-javadoc-plugin` to `3.6.0`
  - [#639](https://github.com/influxdata/influxdb-client-java/pull/639): `license-maven-plugin` to `4.3`
  - [#651](https://github.com/influxdata/influxdb-client-java/pull/651): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.2.2`
+ - [#654](https://github.com/influxdata/influxdb-client-java/pull/654): `jacoco-maven-plugin` to `0.8.11`
+ - [#633](https://github.com/influxdata/influxdb-client-java/pull/633): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.2.1`
+ - [#655](https://github.com/influxdata/influxdb-client-java/pull/655): `maven-project-info-reports-plugin` to `3.5.0`
 
 #### Examples:
  - [#638](https://github.com/influxdata/influxdb-client-java/pull/638): `commons-cli ` to `1.6.0`
 
 #### Test:
- - [#650](https://github.com/influxdata/influxdb-client-java/pull/650): `logback-classic` to `1.3.12`
+ - [#650](https://github.com/influxdata/influxdb-client-java/pull/650): `logback-classic` to `1.3.14`
+
+#### Provided:
+ - [#657](https://github.com/influxdata/influxdb-client-java/pull/657): `slf4j-api` to `2.0.9`
 
 ## 6.10.0 [2023-07-28]
 
