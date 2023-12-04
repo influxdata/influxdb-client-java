@@ -27,7 +27,7 @@ Update dependencies:
  - [#627](https://github.com/influxdata/influxdb-client-java/pull/627): `assertk-jvm` to `0.27.0`
  - [#637](https://github.com/influxdata/influxdb-client-java/pull/637): `maven-javadoc-plugin` to `3.6.0`
  - [#639](https://github.com/influxdata/influxdb-client-java/pull/639): `license-maven-plugin` to `4.3`
- - [#633](https://github.com/influxdata/influxdb-client-java/pull/633): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.2.1`
+ - [#651](https://github.com/influxdata/influxdb-client-java/pull/651): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.2.2`
 
 #### Examples:
  - [#638](https://github.com/influxdata/influxdb-client-java/pull/638): `commons-cli ` to `1.6.0`
