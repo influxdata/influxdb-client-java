@@ -23,7 +23,7 @@ Update dependencies:
 #### Maven:
  - [#618](https://github.com/influxdata/influxdb-client-java/pull/618): `maven-enforcer-plugin` to `3.4.0`
  - [#636](https://github.com/influxdata/influxdb-client-java/pull/636): `dokka-maven-plugin` to `1.9.10`
- - [#628](https://github.com/influxdata/influxdb-client-java/pull/628): `versions-maven-plugin` to `2.16.1`
+ - [#658](https://github.com/influxdata/influxdb-client-java/pull/658): `versions-maven-plugin` to `2.16.2`
  - [#627](https://github.com/influxdata/influxdb-client-java/pull/627): `assertk-jvm` to `0.27.0`
  - [#637](https://github.com/influxdata/influxdb-client-java/pull/637): `maven-javadoc-plugin` to `3.6.0`
  - [#639](https://github.com/influxdata/influxdb-client-java/pull/639): `license-maven-plugin` to `4.3`
