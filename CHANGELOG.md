@@ -28,6 +28,7 @@ Update dependencies:
  - [#637](https://github.com/influxdata/influxdb-client-java/pull/637): `maven-javadoc-plugin` to `3.6.0`
  - [#639](https://github.com/influxdata/influxdb-client-java/pull/639): `license-maven-plugin` to `4.3`
  - [#633](https://github.com/influxdata/influxdb-client-java/pull/633): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.2.1`
+ - [#655](https://github.com/influxdata/influxdb-client-java/pull/655): `maven-project-info-reports-plugin` to `3.5.0`
 
 #### Examples:
  - [#638](https://github.com/influxdata/influxdb-client-java/pull/638): `commons-cli ` to `1.6.0`
