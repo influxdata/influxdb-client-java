@@ -1,4 +1,4 @@
-## 6.11.0 [unreleased]
+## 6.11.0 [2023-12-05]
 
 ### Features
 1. [#647](https://github.com/influxdata/influxdb-client-java/pull/647): `findTasksStream` function with pagination
