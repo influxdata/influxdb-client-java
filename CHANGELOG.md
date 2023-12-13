@@ -1,5 +1,76 @@
 ## 6.12.0 [unreleased]
 
+### Features
+1. [#643](https://github.com/influxdata/influxdb-client-java/pull/643): `ConnectionClosingInterceptor` interceptor closes connections that exceed 
+a specified maximum lifetime age (TTL). It's beneficial for scenarios where your application requires establishing new connections to the same host after 
+a predetermined interval. 
+
+The connection to the InfluxDB Enterprise with the `ConnectionClosingInterceptor` can be configured as follows:
+```java
+package example;
+
+import java.time.Duration;
+import java.util.Collections;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
+
+import com.influxdb.client.InfluxDBClient;
+import com.influxdb.client.InfluxDBClientFactory;
+import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.domain.WriteConsistency;
+import com.influxdb.rest.ConnectionClosingInterceptor;
+
+public class InfluxQLExample {
+
+    public static void main(final String[] args) throws InterruptedException {
+
+        //
+        // Credentials to connect to InfluxDB Enterprise
+        //
+        String url = "https://localhost:8086";
+        String username = "admin";
+        String password = "password";
+        String database = "database";
+        WriteConsistency consistency = WriteConsistency.ALL;
+
+        //
+        // Configure underlying HTTP client
+        //
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
+                .protocols(Collections.singletonList(Protocol.HTTP_1_1));
+
+        //
+        // Use new Connection TTL feature
+        //
+        Duration connectionMaxAge = Duration.ofMinutes(1);
+        ConnectionClosingInterceptor interceptor = new ConnectionClosingInterceptor(connectionMaxAge);
+        okHttpClientBuilder
+                .addNetworkInterceptor(interceptor)
+                .eventListenerFactory(call -> interceptor);
+
+        //
+        // Configure InfluxDB client
+        //
+        InfluxDBClientOptions.Builder optionsBuilder = InfluxDBClientOptions.builder()
+                .url(url)
+                .org("-")
+                .authenticateToken(String.format("%s:%s", username, password).toCharArray())
+                .bucket(String.format("%s/%s", database, ""))
+                .consistency(consistency)
+                .okHttpClient(okHttpClientBuilder);
+
+        //
+        // Create client and write data
+        //
+        try (InfluxDBClient client = InfluxDBClientFactory.create(optionsBuilder.build())) {
+
+            // ...
+        }
+    }
+}
+```
+
 ## 6.11.0 [2023-12-05]
 
 ### Features
