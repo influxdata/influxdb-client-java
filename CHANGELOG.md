@@ -1,4 +1,10 @@
-## 6.13.0 [unreleased]
+## 7.0.0 [unreleased]
+
+:warning: This client version discontinues support for Akka Streams and introduces support for Pekko Streams instead. Apache Pekko is a fork of [Akka](https://github.com/akka/akka) 2.6.x, created after the Akka project adopted the Business Source License, which is not compatible with open-source usage.
+
+### Features
+1. [#661](https://github.com/influxdata/influxdb-client-java/pull/661): Replaced Akka Streams with Pekko Streams in the Scala client.
+
 
 ## 6.12.0 [2023-12-15]
 

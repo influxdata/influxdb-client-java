@@ -21,8 +21,8 @@
  */
 package example
 
-import akka.actor.ActorSystem
-import akka.stream.scaladsl.{Keep, Source}
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.scaladsl.{Keep, Source}
 import com.influxdb.annotations.{Column, Measurement}
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.scala.InfluxDBClientScalaFactory

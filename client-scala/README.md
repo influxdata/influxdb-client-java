@@ -2,7 +2,7 @@
 
 [![ScalaDoc](https://img.shields.io/badge/Scaladoc-link-brightgreen.svg)](https://influxdata.github.io/influxdb-client-java/client-scala/cross/influxdb-client-scala_2.13/scaladocs/com/influxdb/client/scala/index.html)
 
-The reference Scala client that allows query and write for the InfluxDB 2.x by [Akka Streams](https://doc.akka.io/docs/akka/2.6/stream/).
+The reference Scala client that allows query and write for the InfluxDB 2.x by [Pekko Streams](https://pekko.apache.org/docs/pekko/current/stream/index.html).
 The client is cross-built against Scala `2.12` and `2.13`.
 
 ## Documentation
@@ -21,15 +21,15 @@ This section contains links to the client library documentation.
 
 ## Queries
 
-The [QueryScalaApi](https://influxdata.github.io/influxdb-client-java/client-scala/cross/influxdb-client-scala_2.13/scaladocs/com/influxdb/client/scala/QueryScalaApi.html) is based on the [Akka Streams](https://doc.akka.io/docs/akka/2.6/stream/). 
+The [QueryScalaApi](https://influxdata.github.io/influxdb-client-java/client-scala/cross/influxdb-client-scala_2.13/scaladocs/com/influxdb/client/scala/QueryScalaApi.html) is based on the [Pekko Streams](https://pekko.apache.org/docs/pekko/current/stream/index.html). 
 
 The following example demonstrates querying using the Flux language:
 
 ```scala
 package example
 
-import akka.actor.ActorSystem
-import akka.stream.scaladsl.Sink
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.scaladsl.Sink
 import com.influxdb.client.scala.InfluxDBClientScalaFactory
 import com.influxdb.query.FluxRecord
 
@@ -77,8 +77,8 @@ It is possible to parse a result line-by-line using the `queryRaw` method:
 ```scala
 package example
 
-import akka.actor.ActorSystem
-import akka.stream.scaladsl.Sink
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.scaladsl.Sink
 import com.influxdb.client.scala.InfluxDBClientScalaFactory
 
 import scala.concurrent.Await
@@ -204,8 +204,8 @@ package example
 
 import java.time.temporal.ChronoUnit
 
-import akka.actor.ActorSystem
-import akka.stream.scaladsl.Sink
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.scaladsl.Sink
 import com.influxdb.client.scala.InfluxDBClientScalaFactory
 import com.influxdb.query.FluxRecord
 import com.influxdb.query.dsl.Flux

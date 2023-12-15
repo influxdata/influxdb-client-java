@@ -21,8 +21,8 @@
  */
 package com.influxdb.client.scala
 
-import akka.actor.ActorSystem
-import akka.stream.testkit.scaladsl.TestSink
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.testkit.scaladsl.TestSink
 import com.influxdb.query.FluxRecord
 import org.scalatest.BeforeAndAfter
 import org.scalatest.funsuite.AnyFunSuite

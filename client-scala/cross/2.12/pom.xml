@@ -26,7 +26,7 @@
   <parent>
     <artifactId>influxdb-client</artifactId>
     <groupId>com.influxdb</groupId>
-    <version>6.13.0-SNAPSHOT</version>
+    <version>7.0.0-SNAPSHOT</version>
     <relativePath>../../../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -36,7 +36,7 @@
 
   <name>The Scala InfluxDB 2.x Client [Scala 2.12]</name>
   <description>
-    The reference Scala client that allows query and write for the InfluxDB 2.x by Akka Streams.
+    The reference Scala client that allows query and write for the InfluxDB 2.x by Pekko Streams.
   </description>
 
   <url>https://github.com/influxdata/influxdb-client-java/tree/master/client-scala</url>
@@ -173,9 +173,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.typesafe.akka</groupId>
-      <artifactId>akka-stream_2.12</artifactId>
-      <version>${akka.version}</version>
+      <groupId>org.apache.pekko</groupId>
+      <artifactId>pekko-stream_2.12</artifactId>
+      <version>${pekko.version}</version>
       <exclusions>
         <exclusion>
           <groupId>com.typesafe</groupId>
@@ -193,9 +193,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.typesafe.akka</groupId>
-      <artifactId>akka-testkit_2.12</artifactId>
-      <version>${akka.version}</version>
+      <groupId>org.apache.pekko</groupId>
+      <artifactId>pekko-testkit_2.12</artifactId>
+      <version>${pekko.version}</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
@@ -206,9 +206,9 @@
     </dependency>
 
     <dependency>
-      <groupId>com.typesafe.akka</groupId>
-      <artifactId>akka-stream-testkit_2.12</artifactId>
-      <version>${akka.version}</version>
+      <groupId>org.apache.pekko</groupId>
+      <artifactId>pekko-stream-testkit_2.12</artifactId>
+      <version>${pekko.version}</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>
