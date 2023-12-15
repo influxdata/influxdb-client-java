@@ -1,4 +1,4 @@
-## 6.12.0 [unreleased]
+## 6.12.0 [2023-12-15]
 
 ### Features
 1. [#643](https://github.com/influxdata/influxdb-client-java/pull/643): `ConnectionClosingInterceptor` interceptor closes connections that exceed 
