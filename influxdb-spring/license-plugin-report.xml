@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="CHECK" timestamp="1702275205879">
+    <module artifactId="influxdb-spring" groupId="com.influxdb" version="6.12.0-SNAPSHOT"/>
+    <files>
+        <file path="pom.xml" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/spring/health/InfluxDB2HealthIndicator.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/spring/health/InfluxDB2HealthIndicatorAutoConfiguration.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/spring/influx/AbstractInfluxDB2AutoConfiguration.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/spring/influx/InfluxDB2AutoConfiguration.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/spring/influx/InfluxDB2AutoConfigurationReactive.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/spring/influx/InfluxDB2OkHttpClientBuilderProvider.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/spring/influx/InfluxDB2Properties.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/spring/health/InfluxDB2HealthIndicatorAutoConfigurationTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/spring/influx/InfluxDB2AutoConfigurationReactiveTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/spring/influx/InfluxDB2AutoConfigurationTest.java" result="PRESENT"/>
+    </files>
+</licensePluginReport>

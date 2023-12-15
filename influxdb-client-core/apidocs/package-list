@@ -5,3 +5,4 @@ com.influxdb.internal
 com.influxdb.query
 com.influxdb.query.exceptions
 com.influxdb.query.internal
+com.influxdb.rest

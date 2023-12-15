@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="CHECK" timestamp="1702275167337">
+    <module artifactId="influxdb-client-flux" groupId="com.influxdb" version="6.12.0-SNAPSHOT"/>
+    <files>
+        <file path="pom.xml" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/flux/FluxClient.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/flux/FluxClientFactory.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/flux/FluxConnectionOptions.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/flux/internal/FluxApiImpl.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/flux/internal/FluxService.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/AbstractFluxClientTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/AbstractITFluxClient.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/FluxClientFactoryTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/FluxClientPingTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/FluxClientQueryRawTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/FluxClientQueryTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/FluxClientTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/FluxClientVersionTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/FluxConnectionOptionsTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/ITFluxClient.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/flux/TestConnectionString.java" result="PRESENT"/>
+    </files>
+</licensePluginReport>

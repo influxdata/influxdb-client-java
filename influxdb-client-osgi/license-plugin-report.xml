@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<licensePluginReport goal="CHECK" timestamp="1702275200079">
+    <module artifactId="influxdb-client-osgi" groupId="com.influxdb" version="6.12.0-SNAPSHOT"/>
+    <files>
+        <file path="pom.xml" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/osgi/InfluxDBConnector.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/osgi/LineProtocolWriter.java" result="PRESENT"/>
+        <file path="src/main/java/com/influxdb/client/osgi/PointWriter.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/osgi/ITConnectionTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/osgi/InfluxDBConnectorTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/osgi/LineProtocolWriterTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/osgi/PointWriterTest.java" result="PRESENT"/>
+        <file path="src/test/resources/logback-test.xml" result="PRESENT"/>
+    </files>
+</licensePluginReport>

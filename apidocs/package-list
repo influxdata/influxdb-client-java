@@ -23,6 +23,7 @@ com.influxdb.query.dsl.functions.restriction
 com.influxdb.query.dsl.utils
 com.influxdb.query.exceptions
 com.influxdb.query.internal
+com.influxdb.rest
 com.influxdb.spring.health
 com.influxdb.spring.influx
 com.influxdb.test
