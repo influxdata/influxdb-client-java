@@ -9,6 +9,9 @@ Update dependencies:
  - [#670](https://github.com/influxdata/influxdb-client-java/pull/670): `micrometer-registry-influx` to `1.12.1`
  - [#667](https://github.com/influxdata/influxdb-client-java/pull/667): `rxjava` to `3.1.8`
 
+#### Maven:
+ - [#671](https://github.com/influxdata/influxdb-client-java/pull/671): `maven-javadoc-plugin` to `3.6.3`
+
 ## 6.12.0 [2023-12-15]
 
 ### Features
