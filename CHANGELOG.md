@@ -18,6 +18,9 @@ Update dependencies:
 #### Maven:
  - [#671](https://github.com/influxdata/influxdb-client-java/pull/671): `maven-javadoc-plugin` to `3.6.3`
 
+#### Test:
+ - [#668](https://github.com/influxdata/influxdb-client-java/pull/668): `junit-jupiter` to `5.10.1`
+
 ## 6.12.0 [2023-12-15]
 
 ### Features
