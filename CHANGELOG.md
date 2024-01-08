@@ -5,6 +5,7 @@
 Update dependencies:
 
 #### Build:
+ - [#664](https://github.com/influxdata/influxdb-client-java/pull/664): `kotlin` to `1.9.22`
  - [#666](https://github.com/influxdata/influxdb-client-java/pull/666): `okio` to `3.7.0`
  - [#667](https://github.com/influxdata/influxdb-client-java/pull/667): `rxjava` to `3.1.8`
  - [#669](https://github.com/influxdata/influxdb-client-java/pull/669): `commons-lang3` to `3.14.0`
