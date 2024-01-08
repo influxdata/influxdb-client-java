@@ -6,6 +6,13 @@
 1. [#661](https://github.com/influxdata/influxdb-client-java/pull/661): Replaced Akka Streams with Pekko Streams in the Scala client.
 
 
+### Dependencies
+
+Update dependencies:
+
+#### Build:
+ - [#669](https://github.com/influxdata/influxdb-client-java/pull/669): `commons-lang3` to `3.14.0`
+
 ## 6.12.0 [2023-12-15]
 
 ### Features
