@@ -5,9 +5,10 @@
 Update dependencies:
 
 #### Build:
+ - [#666](https://github.com/influxdata/influxdb-client-java/pull/666): `okio` to `3.7.0`
+ - [#667](https://github.com/influxdata/influxdb-client-java/pull/667): `rxjava` to `3.1.8`
  - [#669](https://github.com/influxdata/influxdb-client-java/pull/669): `commons-lang3` to `3.14.0`
  - [#670](https://github.com/influxdata/influxdb-client-java/pull/670): `micrometer-registry-influx` to `1.12.1`
- - [#667](https://github.com/influxdata/influxdb-client-java/pull/667): `rxjava` to `3.1.8`
 
 #### Maven:
  - [#671](https://github.com/influxdata/influxdb-client-java/pull/671): `maven-javadoc-plugin` to `3.6.3`
