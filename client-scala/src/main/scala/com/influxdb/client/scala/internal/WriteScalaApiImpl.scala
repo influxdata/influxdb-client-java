@@ -21,8 +21,8 @@
  */
 package com.influxdb.client.scala.internal
 
-import akka.Done
-import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
+import org.apache.pekko.Done
+import org.apache.pekko.stream.scaladsl.{Flow, Keep, Sink, Source}
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.internal.{AbstractWriteBlockingClient, AbstractWriteClient}

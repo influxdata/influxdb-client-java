@@ -21,8 +21,8 @@
  */
 package com.influxdb.client.scala
 
-import akka.Done
-import akka.stream.scaladsl.Sink
+import org.apache.pekko.Done
+import org.apache.pekko.stream.scaladsl.Sink
 import com.influxdb.client.domain.WritePrecision
 import com.influxdb.client.write.{Point, WriteParameters}
 

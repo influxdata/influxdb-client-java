@@ -21,10 +21,10 @@
  */
 package com.influxdb.client.scala
 
-import akka.actor.ActorSystem
-import akka.stream.scaladsl.{FileIO, Keep, Source}
-import akka.stream.testkit.scaladsl.TestSink
-import akka.util.ByteString
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.scaladsl.{FileIO, Keep, Source}
+import org.apache.pekko.stream.testkit.scaladsl.TestSink
+import org.apache.pekko.util.ByteString
 import com.influxdb.annotations.Column
 import com.influxdb.client.domain._
 import com.influxdb.client.internal.AbstractInfluxDBClient

@@ -21,8 +21,8 @@
  */
 package example
 
-import akka.actor.ActorSystem
-import akka.stream.scaladsl.Sink
+import org.apache.pekko.actor.ActorSystem
+import org.apache.pekko.stream.scaladsl.Sink
 import com.influxdb.client.scala.InfluxDBClientScalaFactory
 import com.influxdb.query.FluxRecord
 

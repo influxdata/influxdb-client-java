@@ -37,5 +37,5 @@ This directory contains Java, Kotlin and Scala examples.
 - [ScalaQueryRaw.scala](src/main/java/example/ScalaQueryRaw.scala) - How to query data into a stream of `String`
 - [ScalaQueryDSL.scala](src/main/java/example/ScalaQueryDSL.scala) - How to use the [FluxDSL](../flux-dsl) to query data
 
-### Writes   
+### Writes
 - [ScalaWriteApi.scala](src/main/java/example/ScalaWriteApi.scala) - How to ingest data by `DataPoint`, `LineProtocol` or `POJO`

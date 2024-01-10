@@ -1,4 +1,37 @@
-## 6.13.0 [unreleased]
+## 7.0.0 [unreleased]
+
+:warning: This client version discontinues support for Akka Streams and introduces support for Pekko Streams instead. Apache Pekko is a fork of [Akka](https://github.com/akka/akka) 2.6.x, created after the Akka project adopted the Business Source License, which is not compatible with open-source usage.
+
+### Features
+1. [#661](https://github.com/influxdata/influxdb-client-java/pull/661): Replaced Akka Streams with Pekko Streams in the Scala client.
+
+
+### Dependencies
+
+Update dependencies:
+
+#### Build:
+ - [#664](https://github.com/influxdata/influxdb-client-java/pull/664): `kotlin` to `1.9.22`
+ - [#666](https://github.com/influxdata/influxdb-client-java/pull/666): `okio` to `3.7.0`
+ - [#667](https://github.com/influxdata/influxdb-client-java/pull/667): `rxjava` to `3.1.8`
+ - [#669](https://github.com/influxdata/influxdb-client-java/pull/669): `commons-lang3` to `3.14.0`
+ - [#670](https://github.com/influxdata/influxdb-client-java/pull/670): `micrometer-registry-influx` to `1.12.1`
+
+#### Maven:
+ - [#671](https://github.com/influxdata/influxdb-client-java/pull/671): `maven-javadoc-plugin` to `3.6.3`
+
+#### Test:
+ - [#668](https://github.com/influxdata/influxdb-client-java/pull/668): `junit-jupiter` to `5.10.1`
+
+### Dependencies
+
+Update dependencies:
+
+#### Build:
+ - [#669](https://github.com/influxdata/influxdb-client-java/pull/669): `commons-lang3` to `3.14.0`
+
+#### Test:
+ - [#668](https://github.com/influxdata/influxdb-client-java/pull/668): `junit-jupiter` to `5.10.1`
 
 ### Dependencies
 

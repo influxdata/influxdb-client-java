@@ -21,8 +21,8 @@
  */
 package com.influxdb.client.scala.internal
 
-import akka.NotUsed
-import akka.stream.scaladsl.Source
+import org.apache.pekko.NotUsed
+import org.apache.pekko.stream.scaladsl.Source
 import com.influxdb.client.InfluxDBClientOptions
 import com.influxdb.client.domain.{Dialect, Query}
 import com.influxdb.client.internal.AbstractInfluxDBClient
