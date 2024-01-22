@@ -56,7 +56,7 @@
                     <execution>
                         <id>default-verify</id>
                         <configuration>
-                            <javase>1.8</javase>
+                            <javase>17</javase>
                             <distribution>org.apache.karaf.features:framework</distribution>
                             <descriptors>
                                 <descriptor>mvn:org.apache.karaf.features/framework/${karaf.version}/xml/features</descriptor>

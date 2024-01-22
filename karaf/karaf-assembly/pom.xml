@@ -50,7 +50,7 @@
                     <execution>
                         <id>default-assembly</id>
                         <configuration>
-                            <javase>1.8</javase>
+                            <javase>17</javase>
                             <framework>framework</framework>
                             <bootFeatures>
                                 <feature>instance</feature>

@@ -393,7 +393,7 @@ public class FluxExample {
 
 ## Build Requirements
 
-* Java 1.8+ (tested with jdk8)
+* Java 17+ (tested with JDK 17)
 * Maven 3.0+ (tested with maven 3.5.0)
 * Docker daemon running
 * The latest InfluxDB 2.x and InfluxDB 1.X docker instances, which can be started using the `./scripts/influxdb-restart.sh` script
