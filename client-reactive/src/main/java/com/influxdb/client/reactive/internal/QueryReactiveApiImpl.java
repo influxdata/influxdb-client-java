@@ -44,7 +44,6 @@ import io.reactivex.rxjava3.core.BackpressureStrategy;
 import io.reactivex.rxjava3.core.Flowable;
 import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.ObservableEmitter;
-import org.jetbrains.annotations.NotNull;
 import org.reactivestreams.Publisher;
 
 /**
@@ -355,7 +354,7 @@ final class QueryReactiveApiImpl extends AbstractQueryApi implements QueryReacti
             .map(q -> new Query().query(q).dialect(dialect)), dialect, org);
     }
 
-    @NotNull
+    @Nonnull
     private Consumer<Throwable> onError(final ObservableEmitter<?> subscriber) {
         return throwable -> {
             if (!subscriber.isDisposed()) {

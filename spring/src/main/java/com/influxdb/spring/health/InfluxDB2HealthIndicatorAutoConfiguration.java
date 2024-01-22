@@ -50,6 +50,10 @@ import org.springframework.context.annotation.Configuration;
 public class InfluxDB2HealthIndicatorAutoConfiguration
         extends CompositeHealthContributorConfiguration<InfluxDB2HealthIndicator, InfluxDBClient> {
 
+    public InfluxDB2HealthIndicatorAutoConfiguration() {
+        super(InfluxDB2HealthIndicator::new);
+    }
+
     @Bean
     @ConditionalOnMissingBean(name = { "influxDB2HealthIndicator", "influxDB2HealthContributor" })
     public HealthContributor influxDbHealthContributor(final Map<String, InfluxDBClient> influxDBClients) {
