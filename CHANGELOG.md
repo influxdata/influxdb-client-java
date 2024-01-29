@@ -6,7 +6,8 @@
 
 ### Features
 1. [#661](https://github.com/influxdata/influxdb-client-java/pull/661): Replaced Akka Streams with Pekko Streams in the Scala client.
-
+1. [#673](https://github.com/influxdata/influxdb-client-java/pull/673): Upgrade SpringBoot to v3 and Spring to v6
+1. [#673](https://github.com/influxdata/influxdb-client-java/pull/673): Disable support for old JDKs (< 17)
 
 ### Dependencies
 
@@ -18,6 +19,10 @@ Update dependencies:
  - [#667](https://github.com/influxdata/influxdb-client-java/pull/667): `rxjava` to `3.1.8`
  - [#669](https://github.com/influxdata/influxdb-client-java/pull/669): `commons-lang3` to `3.14.0`
  - [#670](https://github.com/influxdata/influxdb-client-java/pull/670): `micrometer-registry-influx` to `1.12.1`
+ - [#673](https://github.com/influxdata/influxdb-client-java/pull/673): `spring-boot` to `3.2.2`
+ - [#673](https://github.com/influxdata/influxdb-client-java/pull/673): `spring` to `6.1.3`
+ - [#673](https://github.com/influxdata/influxdb-client-java/pull/673): `scala-library` to `2.13.11`
+ - [#673](https://github.com/influxdata/influxdb-client-java/pull/673): `okhttp` to `4.12.0`
 
 #### Maven:
  - [#671](https://github.com/influxdata/influxdb-client-java/pull/671): `maven-javadoc-plugin` to `3.6.3`
