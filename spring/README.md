@@ -43,11 +43,27 @@ influx:
     connectTimeout: 5s # Connection timeout for OkHttpClient. (Default: 10s)
 ```
 
+:warning: If you are using a version of Spring Boot prior to 2.7, auto-configuration will not take effect. 
+You need to add the `@ComponentScan` annotation to your Spring Boot startup class and include com.influxdb.spring.influx in the basePackages.
+For example:
+```java
+@SpringBootApplication
+@ComponentScan(basePackages = {"xyz", "com.influxdb.spring.influx"})
+public class Application {
+    public static void main(String[] args) {
+        ApplicationContext applicationContext = SpringApplication.run(Application.class, args);
+    }
+}
+```
+The reason for this is that Spring Boot 2.7 has changed the way that auto-configuration and management context classes are discovered. see https://github.com/spring-projects/spring-boot/wiki/Spring-Boot-2.7-Release-Notes
+
+
 If you want to configure the `InfluxDBClientReactive` client, you need to include `influxdb-client-reactive` on your classpath instead of `influxdb-client-java`.
 
 ## Actuator for InfluxDB2 micrometer registry
 
-To enable export metrics to **InfluxDB 2.x** you need to include `micrometer-registry-influx` on your classpath.
+To enable export metrics to **InfluxDB 2.x** you need to include `micrometer-core` on your classpath. 
+(Due to package conflicts, the `spring-boot-actuator` may have relied on an earlier version of the `micrometer-core`. Therefore, it is necessary to specify a higher version here.)
 
 The default configuration can be override via properties:
 
@@ -65,23 +81,24 @@ management.metrics.export.influx:
     num-threads: 2 # Number of threads to use with the metrics publishing scheduler. (Default: 2)
     batch-size: 10000 # Number of measurements per request to use for this backend. If more measurements are found, then multiple requests will be made. (Default: 10000)
 ```
+
 Maven dependency:
 
 ```xml
 <dependency>
     <groupId>io.micrometer</groupId>
-    <artifactId>micrometer-registry-influx</artifactId>
-    <version>1.7.0</version>
+    <artifactId>micrometer-core</artifactId>
+    <version>1.11.2</version>
 </dependency>
 ```
 
 or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "io.micrometer:micrometer-registry-influx:1.7.0"
+    implementation "io.micrometer:micrometer-core:1.11.2"
 }
-```
- 
+``` 
+
 ## Actuator for InfluxDB2 health
 
 The `/health` endpoint can monitor an **InfluxDB 2.x** server.
