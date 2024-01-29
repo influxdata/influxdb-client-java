@@ -44,11 +44,11 @@ influx:
 ```
 
 :warning: If you are using a version of Spring Boot prior to 2.7, auto-configuration will not take effect. 
-You need to add the @ComponentScan annotation to your Spring Boot startup class and include com.influxdb.spring.influx in the basePackages.
+You need to add the `@ComponentScan` annotation to your Spring Boot startup class and include com.influxdb.spring.influx in the basePackages.
 For example:
 ```java
 @SpringBootApplication
-@ComponentScan(basePackages = {"xxx", "com.influxdb.spring.influx"})
+@ComponentScan(basePackages = {"xyz", "com.influxdb.spring.influx"})
 public class Application {
     public static void main(String[] args) {
         ApplicationContext applicationContext = SpringApplication.run(Application.class, args);
