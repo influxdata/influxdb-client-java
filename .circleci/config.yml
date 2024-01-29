@@ -109,7 +109,7 @@ jobs:
     parameters:
       maven-image:
         type: string
-        default: &default-maven-image "cimg/openjdk:8.0"
+        default: &default-maven-image "cimg/openjdk:17.0"
       influxdb-image:
         type: string
         default: &default-influxdb-image "influxdb:latest"
@@ -251,18 +251,16 @@ workflows:
       - check-generate-site
       - check-licenses
       - tests-java:
-          name: jdk-8
-      - tests-java:
-          name: jdk-11
-          maven-image: "cimg/openjdk:11.0"
-      - tests-java:
           name: jdk-17
           maven-image: "cimg/openjdk:17.0"
       - tests-java:
           name: jdk-20
           maven-image: "cimg/openjdk:20.0"
       - tests-java:
-          name: jdk-8-nightly
+          name: jdk-21
+          maven-image: "cimg/openjdk:21.0"
+      - tests-java:
+          name: jdk-17-nightly
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
       - tests-java:
           name: client-backpressure
@@ -275,11 +273,10 @@ workflows:
             - check-dependencies
             - check-generate-site
             - check-licenses
-            - jdk-8
-            - jdk-11
             - jdk-17
             - jdk-20
-            - jdk-8-nightly
+            - jdk-21
+            - jdk-17-nightly
           filters:
             branches:
               only: master

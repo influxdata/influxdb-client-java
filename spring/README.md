@@ -10,10 +10,9 @@
 
 ## Spring Boot Compatibility
 
-:warning: The client version `6.4.0` upgrades the `OkHttp` library to version `4.10.0`. The version `3.12.x` is no longer supported - [okhttp#requirements](https://github.com/square/okhttp#requirements).
+:warning: The client version `7.0.0` upgrades the `OkHttp` library to version `4.12.0`. The version `3.x.x` is no longer supported - [okhttp#requirements](https://github.com/square/okhttp#requirements).
 
-The `spring-boot` supports the `OkHttp:4.10.0` from the version `3.0.0-M4` - [spring-boot/OkHttp 4.10,0](https://github.com/spring-projects/spring-boot/commit/6cb1a958a5d43a2fffb7e7635e3be9c0ee15f3b1).
-For the older version of `spring-boot` you have to configure Spring Boot's `okhttp3.version` property:
+The `spring-boot` supports the `OkHttp:4.12.0`. For the older version of `spring-boot` you have to configure Spring Boot's `okhttp3.version` property:
 
 ```xml
 <properties>
@@ -43,7 +42,7 @@ influx:
     connectTimeout: 5s # Connection timeout for OkHttpClient. (Default: 10s)
 ```
 
-:warning: If you are using a version of Spring Boot prior to 2.7, auto-configuration will not take effect. 
+:warning: If you are using a version of **Spring Boot prior to 2.7 with 6.x version of the client**, auto-configuration will not take effect. 
 You need to add the `@ComponentScan` annotation to your Spring Boot startup class and include com.influxdb.spring.influx in the basePackages.
 For example:
 ```java
@@ -62,7 +61,7 @@ If you want to configure the `InfluxDBClientReactive` client, you need to includ
 
 ## Actuator for InfluxDB2 micrometer registry
 
-To enable export metrics to **InfluxDB 2.x** you need to include `micrometer-core` on your classpath. 
+To enable export metrics to **InfluxDB 2.x** you need to include `micrometer-registry-influx` on your classpath. 
 (Due to package conflicts, the `spring-boot-actuator` may have relied on an earlier version of the `micrometer-core`. Therefore, it is necessary to specify a higher version here.)
 
 The default configuration can be override via properties:
@@ -81,24 +80,23 @@ management.metrics.export.influx:
     num-threads: 2 # Number of threads to use with the metrics publishing scheduler. (Default: 2)
     batch-size: 10000 # Number of measurements per request to use for this backend. If more measurements are found, then multiple requests will be made. (Default: 10000)
 ```
-
 Maven dependency:
 
 ```xml
 <dependency>
     <groupId>io.micrometer</groupId>
-    <artifactId>micrometer-core</artifactId>
-    <version>1.11.2</version>
+    <artifactId>micrometer-registry-influx</artifactId>
+    <version>1.12.2</version>
 </dependency>
 ```
 
 or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "io.micrometer:micrometer-core:1.11.2"
+    implementation "io.micrometer:micrometer-registry-influx:1.12.2"
 }
-``` 
-
+```
+ 
 ## Actuator for InfluxDB2 health
 
 The `/health` endpoint can monitor an **InfluxDB 2.x** server.

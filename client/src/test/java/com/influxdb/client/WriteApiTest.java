@@ -46,6 +46,7 @@ import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.RequestEntityTooLargeException;
 import com.influxdb.exceptions.UnauthorizedException;
 
+import com.influxdb.internal.UserAgentInterceptor;
 import io.reactivex.rxjava3.schedulers.TestScheduler;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.RecordedRequest;
@@ -1012,7 +1013,15 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
 
         String userAgent = recordedRequest.getHeader("User-Agent");
 
-        Assertions.assertThat(userAgent).startsWith("influxdb-client-java/7.");
+        String currentVersion = UserAgentInterceptor.class.getPackage().getImplementationVersion();
+
+        // not all test situations will get correct version from manifest at this point
+        String expectVersion = currentVersion == null
+          ? "unknown"
+          : currentVersion.substring(0, currentVersion.indexOf(".") + 1);
+
+        Assertions.assertThat(userAgent).startsWith(String.format("influxdb-client-java/%s", expectVersion));
+
     }
 
     @Test
