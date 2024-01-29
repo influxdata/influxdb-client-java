@@ -1013,13 +1013,8 @@ class WriteApiTest extends AbstractInfluxDBClientTest {
         String userAgent = recordedRequest.getHeader("User-Agent");
 
         String currentVersion = influxDBClient.getClass().getPackage().getImplementationVersion();
-
-        // not all test situations will get correct version from manifest at this point
-        String expectVersion = currentVersion == null
-          ? "unknown"
-          : currentVersion.substring(0, currentVersion.indexOf(".") + 1);
-
-        Assertions.assertThat(userAgent).startsWith(String.format("influxdb-client-java/%s", expectVersion));
+        
+        Assertions.assertThat(userAgent).startsWith("influxdb-client-java/7.");
     }
 
     @Test
