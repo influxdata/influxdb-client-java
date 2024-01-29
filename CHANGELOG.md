@@ -1,5 +1,7 @@
 ## 7.0.0 [unreleased]
 
+:warning: This client version discontinues support for JDK 8 and 11. The minimum supported JDK version is now JDK 17.
+
 :warning: This client version discontinues support for Akka Streams and introduces support for Pekko Streams instead. Apache Pekko is a fork of [Akka](https://github.com/akka/akka) 2.6.x, created after the Akka project adopted the Business Source License, which is not compatible with open-source usage.
 
 ### Features

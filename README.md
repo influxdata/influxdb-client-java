@@ -394,10 +394,10 @@ public class FluxExample {
 ## Build Requirements
 
 * Java 17+ (tested with JDK 17)
+    * :warning: If you want to use older version of JDK, you have to use the 6.x version of the client.
 * Maven 3.0+ (tested with maven 3.5.0)
 * Docker daemon running
 * The latest InfluxDB 2.x and InfluxDB 1.X docker instances, which can be started using the `./scripts/influxdb-restart.sh` script
-
 
 Once these are in place you can build influxdb-client-java with all tests with:
 
