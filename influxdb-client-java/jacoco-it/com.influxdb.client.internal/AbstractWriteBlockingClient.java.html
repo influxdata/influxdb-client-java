@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractWriteBlockingClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">AbstractWriteBlockingClient.java</span></div><h1>AbstractWriteBlockingClient.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.domain.WriteConsistency;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataMeasurement;
+import com.influxdb.client.service.WriteService;
+import com.influxdb.client.write.WriteParameters;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
+
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (20/04/2021 9:48)
+ */
+public abstract class AbstractWriteBlockingClient extends AbstractRestClient {
+
+<span class="fc" id="L47">    private static final Logger LOG = Logger.getLogger(AbstractWriteBlockingClient.class.getName());</span>
+
+    private final WriteService service;
+<span class="fc" id="L50">    private final MeasurementMapper measurementMapper = new MeasurementMapper();</span>
+
+    protected final InfluxDBClientOptions options;
+
+    public AbstractWriteBlockingClient(@Nonnull final WriteService service,
+<span class="fc" id="L55">                                       @Nonnull final InfluxDBClientOptions options) {</span>
+
+<span class="fc" id="L57">        Arguments.checkNotNull(service, &quot;service&quot;);</span>
+<span class="fc" id="L58">        Arguments.checkNotNull(options, &quot;options&quot;);</span>
+
+<span class="fc" id="L60">        this.options = options;</span>
+<span class="fc" id="L61">        this.service = service;</span>
+<span class="fc" id="L62">    }</span>
+
+    protected void write(@Nonnull final WriteParameters parameters,
+                         @Nonnull final Stream&lt;AbstractWriteClient.BatchWriteData&gt; stream) {
+
+<span class="fc" id="L67">        String lineProtocol = stream.map(AbstractWriteClient.BatchWriteData::toLineProtocol)</span>
+<span class="pc bpc" id="L68" title="1 of 4 branches missed.">                .filter(it -&gt; it != null &amp;&amp; !it.isEmpty())</span>
+<span class="fc" id="L69">                .collect(Collectors.joining(&quot;\n&quot;));</span>
+
+<span class="pc bpc" id="L71" title="1 of 2 branches missed.">        if (lineProtocol.isEmpty()) {</span>
+
+<span class="nc" id="L73">            LOG.warning(&quot;The writes: &quot; + stream + &quot; doesn't contains any Line Protocol, skipping&quot;);</span>
+<span class="nc" id="L74">            return;</span>
+        }
+
+<span class="fc" id="L77">        String organization = parameters.orgSafe(options);</span>
+<span class="fc" id="L78">        String bucket = parameters.bucketSafe(options);</span>
+<span class="fc" id="L79">        WritePrecision precision = parameters.precisionSafe(options);</span>
+<span class="fc" id="L80">        WriteConsistency consistency = parameters.consistencySafe(options);</span>
+
+<span class="fc" id="L82">        LOG.log(Level.FINEST,</span>
+                &quot;Writing time-series data into InfluxDB (org={0}, bucket={1}, precision={2})...&quot;,
+                new Object[]{organization, bucket, precision});
+
+<span class="fc" id="L86">        Call&lt;Void&gt; voidCall = service.postWrite(organization, bucket, lineProtocol, null,</span>
+                null, &quot;text/plain; charset=utf-8&quot;, null,
+                &quot;application/json&quot;, null, precision, consistency);
+
+<span class="fc" id="L90">        execute(voidCall);</span>
+
+<span class="fc" id="L92">        LOG.log(Level.FINEST, &quot;Written data into InfluxDB: {0}&quot;, lineProtocol);</span>
+<span class="fc" id="L93">    }</span>
+
+    @Nonnull
+    protected &lt;M&gt; BatchWriteDataMeasurement toMeasurementBatch(@Nullable final M measurement,
+                                                               @Nonnull final WritePrecision precision) {
+
+<span class="fc" id="L99">        Arguments.checkNotNull(precision, &quot;WritePrecision&quot;);</span>
+
+<span class="fc" id="L101">        return new BatchWriteDataMeasurement(measurement, precision, options, measurementMapper);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1702275207451">
-    <module artifactId="flux-dsl" groupId="com.influxdb" version="6.12.0-SNAPSHOT"/>
+<licensePluginReport goal="CHECK" timestamp="1705919997917">
+    <module artifactId="flux-dsl" groupId="com.influxdb" version="7.0.0-SNAPSHOT"/>
     <files>
         <file path="pom.xml" result="PRESENT"/>
         <file path="src/main/java/com/influxdb/query/dsl/Expression.java" result="PRESENT"/>

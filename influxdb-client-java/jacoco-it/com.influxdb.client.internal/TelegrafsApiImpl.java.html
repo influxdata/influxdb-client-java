@@ -1,0 +1,548 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TelegrafsApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">TelegrafsApiImpl.java</span></div><h1>TelegrafsApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.client.TelegrafsApi;
+import com.influxdb.client.domain.AddResourceMemberRequestBody;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.LabelMapping;
+import com.influxdb.client.domain.LabelResponse;
+import com.influxdb.client.domain.LabelsResponse;
+import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.ResourceMember;
+import com.influxdb.client.domain.ResourceMembers;
+import com.influxdb.client.domain.ResourceOwner;
+import com.influxdb.client.domain.ResourceOwners;
+import com.influxdb.client.domain.Telegraf;
+import com.influxdb.client.domain.TelegrafPlugin;
+import com.influxdb.client.domain.TelegrafPluginRequest;
+import com.influxdb.client.domain.TelegrafPluginRequestPlugins;
+import com.influxdb.client.domain.TelegrafRequestMetadata;
+import com.influxdb.client.domain.Telegrafs;
+import com.influxdb.client.domain.User;
+import com.influxdb.client.service.TelegrafsService;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
+
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (28/02/2019 10:25)
+ */
+final class TelegrafsApiImpl extends AbstractRestClient implements TelegrafsApi {
+
+<span class="fc" id="L63">    private static final Logger LOG = Logger.getLogger(TelegrafsApiImpl.class.getName());</span>
+
+    private final TelegrafsService service;
+
+<span class="fc" id="L67">    TelegrafsApiImpl(@Nonnull final TelegrafsService service) {</span>
+
+<span class="fc" id="L69">        Arguments.checkNotNull(service, &quot;service&quot;);</span>
+
+<span class="fc" id="L71">        this.service = service;</span>
+<span class="fc" id="L72">    }</span>
+
+    @Nonnull
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final Organization org,
+                                   @Nonnull final Collection&lt;TelegrafPlugin&gt; plugins) {
+
+<span class="fc" id="L81">        Arguments.checkNotNull(org, &quot;org&quot;);</span>
+
+<span class="fc" id="L83">        return createTelegraf(name, description, org, createAgentConfiguration(), plugins);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final Organization org,
+                                   @Nonnull final Map&lt;String, Object&gt; agentConfiguration,
+                                   @Nonnull final Collection&lt;TelegrafPlugin&gt; plugins) {
+
+<span class="fc" id="L94">        Arguments.checkNotNull(org, &quot;org&quot;);</span>
+
+<span class="fc" id="L96">        return createTelegraf(name, description, org.getId(), agentConfiguration, plugins);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final String orgID,
+                                   @Nonnull final Collection&lt;TelegrafPlugin&gt; plugins) {
+
+<span class="nc" id="L106">        return createTelegraf(name, description, orgID, createAgentConfiguration(), plugins);</span>
+    }
+
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final String orgID,
+                                   @Nonnull final Map&lt;String, Object&gt; agentConfiguration,
+                                   @Nonnull final Collection&lt;TelegrafPlugin&gt; plugins) {
+
+<span class="fc" id="L116">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L117">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+<span class="fc" id="L118">        Arguments.checkNotNull(agentConfiguration, &quot;agentConfiguration&quot;);</span>
+<span class="fc" id="L119">        Arguments.checkNotNull(plugins, &quot;plugins&quot;);</span>
+
+<span class="fc" id="L121">        StringBuilder config = new StringBuilder();</span>
+
+        // append agent configuration
+<span class="fc" id="L124">        config.append(&quot;[agent]&quot;).append(&quot;\n&quot;);</span>
+
+<span class="fc" id="L126">        TelegrafPluginRequest telegrafRequest = new TelegrafPluginRequest()</span>
+<span class="fc" id="L127">                .name(name)</span>
+<span class="fc" id="L128">                .description(description)</span>
+<span class="fc" id="L129">                .orgID(orgID)</span>
+<span class="fc" id="L130">                .config(config.toString());</span>
+
+<span class="fc bfc" id="L132" title="All 2 branches covered.">        for (TelegrafPlugin plugin : plugins) {</span>
+<span class="fc" id="L133">            telegrafRequest.addPluginsItem(new TelegrafPluginRequestPlugins()</span>
+<span class="fc" id="L134">                    .description(plugin.getDescription())</span>
+<span class="fc" id="L135">                    .type(plugin.getType().getValue())</span>
+<span class="fc" id="L136">                    .name(plugin.getName())</span>
+<span class="fc" id="L137">                    .config(plugin.getConfig()));</span>
+<span class="fc" id="L138">        }</span>
+
+<span class="fc" id="L140">        return createTelegraf(telegrafRequest);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final String orgID,
+                                   @Nonnull final String config,
+                                   @Nullable final TelegrafRequestMetadata metadata) {
+
+<span class="nc" id="L151">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="nc" id="L152">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+<span class="nc" id="L153">        Arguments.checkNonEmpty(config, &quot;config&quot;);</span>
+
+<span class="nc" id="L155">        TelegrafPluginRequest telegrafRequest = new TelegrafPluginRequest()</span>
+<span class="nc" id="L156">                .name(name)</span>
+<span class="nc" id="L157">                .description(description)</span>
+<span class="nc" id="L158">                .orgID(orgID)</span>
+<span class="nc" id="L159">                .config(config)</span>
+<span class="nc" id="L160">                .metadata(metadata);</span>
+
+<span class="nc" id="L162">        return createTelegraf(telegrafRequest);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf createTelegraf(@Nonnull final String name,
+                                   @Nullable final String description,
+                                   @Nonnull final Organization org,
+                                   @Nonnull final String config,
+                                   @Nullable final TelegrafRequestMetadata metadata) {
+
+<span class="nc" id="L173">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="nc" id="L174">        Arguments.checkNotNull(org, &quot;org&quot;);</span>
+<span class="nc" id="L175">        Arguments.checkNonEmpty(config, &quot;config&quot;);</span>
+
+<span class="nc" id="L177">        return createTelegraf(name, description, org.getId(), config, metadata);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf createTelegraf(@Nonnull final TelegrafPluginRequest telegrafPluginRequest) {
+
+<span class="fc" id="L184">        Arguments.checkNotNull(telegrafPluginRequest, &quot;telegrafPluginRequest&quot;);</span>
+
+<span class="fc" id="L186">        Call&lt;Telegraf&gt; call = service.postTelegrafs(telegrafPluginRequest, null);</span>
+
+<span class="fc" id="L188">        return execute(call);</span>
+    }
+
+    @Override
+    @Nonnull
+    @SuppressWarnings(&quot;MagicNumber&quot;)
+    public HashMap&lt;String, Object&gt; createAgentConfiguration() {
+<span class="fc" id="L195">        HashMap&lt;String, Object&gt; agent = new LinkedHashMap&lt;&gt;();</span>
+<span class="fc" id="L196">        agent.put(&quot;interval&quot;, &quot;10s&quot;);</span>
+<span class="fc" id="L197">        agent.put(&quot;round_interval&quot;, true);</span>
+<span class="fc" id="L198">        agent.put(&quot;metric_batch_size&quot;, 1000);</span>
+<span class="fc" id="L199">        agent.put(&quot;metric_buffer_limit&quot;, 10000);</span>
+<span class="fc" id="L200">        agent.put(&quot;collection_jitter&quot;, &quot;0s&quot;);</span>
+<span class="fc" id="L201">        agent.put(&quot;flush_jitter&quot;, &quot;0s&quot;);</span>
+<span class="fc" id="L202">        agent.put(&quot;precision&quot;, &quot;&quot;);</span>
+<span class="fc" id="L203">        agent.put(&quot;omit_hostname&quot;, false);</span>
+<span class="fc" id="L204">        return agent;</span>
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf updateTelegraf(@Nonnull final Telegraf telegraf) {
+
+<span class="nc" id="L211">        Arguments.checkNotNull(telegraf, &quot;TelegrafConfig&quot;);</span>
+
+<span class="nc" id="L213">        TelegrafPluginRequest telegrafRequest = toTelegrafRequest(telegraf);</span>
+
+<span class="nc" id="L215">        return updateTelegraf(telegraf.getId(), telegrafRequest);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf updateTelegraf(@Nonnull final String telegrafID,
+                                   @Nonnull final TelegrafPluginRequest telegrafPluginRequest) {
+<span class="fc" id="L222">        Arguments.checkNotNull(telegrafPluginRequest, &quot;TelegrafPluginRequest&quot;);</span>
+
+<span class="fc" id="L224">        Call&lt;Telegraf&gt; telegrafConfigCall = service.putTelegrafsID(telegrafID, telegrafPluginRequest, null);</span>
+
+<span class="fc" id="L226">        return execute(telegrafConfigCall);</span>
+    }
+
+    @Override
+    public void deleteTelegraf(@Nonnull final Telegraf telegraf) {
+
+<span class="fc" id="L232">        Arguments.checkNotNull(telegraf, &quot;TelegrafConfig&quot;);</span>
+
+<span class="fc" id="L234">        deleteTelegraf(telegraf.getId());</span>
+<span class="fc" id="L235">    }</span>
+
+    @Override
+    public void deleteTelegraf(@Nonnull final String telegrafID) {
+
+<span class="fc" id="L240">        Arguments.checkNonEmpty(telegrafID, &quot;telegrafConfigID&quot;);</span>
+
+<span class="fc" id="L242">        Call&lt;Void&gt; call = service.deleteTelegrafsID(telegrafID, null);</span>
+<span class="fc" id="L243">        execute(call);</span>
+<span class="fc" id="L244">    }</span>
+
+    @Nonnull
+    @Override
+    public Telegraf cloneTelegraf(@Nonnull final String clonedName,
+                                  @Nonnull final String telegrafConfigID) {
+
+<span class="fc" id="L251">        Arguments.checkNonEmpty(clonedName, &quot;clonedName&quot;);</span>
+<span class="fc" id="L252">        Arguments.checkNonEmpty(telegrafConfigID, &quot;telegrafConfigID&quot;);</span>
+
+<span class="fc" id="L254">        Telegraf telegrafConfig = findTelegrafByID(telegrafConfigID);</span>
+
+<span class="fc" id="L256">        return cloneTelegraf(clonedName, telegrafConfig);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf cloneTelegraf(@Nonnull final String clonedName,
+                                  @Nonnull final Telegraf telegraf) {
+
+<span class="fc" id="L264">        Arguments.checkNonEmpty(clonedName, &quot;clonedName&quot;);</span>
+<span class="fc" id="L265">        Arguments.checkNotNull(telegraf, &quot;TelegrafConfig&quot;);</span>
+
+
+<span class="fc" id="L268">        TelegrafPluginRequest telegrafRequest = toTelegrafRequest(telegraf);</span>
+
+<span class="fc" id="L270">        Telegraf created = createTelegraf(telegrafRequest);</span>
+<span class="fc" id="L271">        created.setName(clonedName);</span>
+
+<span class="fc" id="L273">        getLabels(telegraf).forEach(label -&gt; addLabel(label, created));</span>
+
+<span class="fc" id="L275">        return created;</span>
+    }
+
+    @Nonnull
+    @Override
+    public Telegraf findTelegrafByID(@Nonnull final String telegrafID) {
+
+<span class="fc" id="L282">        Arguments.checkNonEmpty(telegrafID, &quot;TelegrafConfig ID&quot;);</span>
+
+<span class="fc" id="L284">        Call&lt;Telegraf&gt; telegrafConfig = service.getTelegrafsIDTelegraf(telegrafID, null, &quot;application/json&quot;);</span>
+
+<span class="fc" id="L286">        return execute(telegrafConfig);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Telegraf&gt; findTelegrafs() {
+<span class="fc" id="L292">        return findTelegrafsByOrgId(null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Telegraf&gt; findTelegrafsByOrg(@Nonnull final Organization organization) {
+
+<span class="fc" id="L299">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="fc" id="L301">        return findTelegrafsByOrgId(organization.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Telegraf&gt; findTelegrafsByOrgId(@Nullable final String orgID) {
+
+<span class="fc" id="L308">        Call&lt;Telegrafs&gt; configsCall = service.getTelegrafs(orgID, null);</span>
+
+<span class="fc" id="L310">        Telegrafs telegrafConfigs = execute(configsCall);</span>
+<span class="fc" id="L311">        LOG.log(Level.FINEST, &quot;findTelegrafs found: {0}&quot;, telegrafConfigs);</span>
+
+<span class="fc" id="L313">        return telegrafConfigs.getConfigurations();</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getTOML(@Nonnull final Telegraf telegraf) {
+
+<span class="fc" id="L320">        Arguments.checkNotNull(telegraf, &quot;TelegrafConfig&quot;);</span>
+
+<span class="fc" id="L322">        return getTOML(telegraf.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public String getTOML(@Nonnull final String telegrafID) {
+
+<span class="fc" id="L329">        Arguments.checkNonEmpty(telegrafID, &quot;TelegrafConfig ID&quot;);</span>
+
+<span class="fc" id="L331">        Call&lt;String&gt; telegrafConfig = service</span>
+<span class="fc" id="L332">                .getTelegrafsID(telegrafID, null, &quot;application/toml&quot;);</span>
+
+<span class="fc" id="L334">        return execute(telegrafConfig);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final Telegraf telegraf) {
+
+<span class="fc" id="L341">        Arguments.checkNotNull(telegraf, &quot;TelegrafConfig&quot;);</span>
+
+<span class="fc" id="L343">        return getMembers(telegraf.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final String telegrafID) {
+
+<span class="fc" id="L350">        Arguments.checkNonEmpty(telegrafID, &quot;TelegrafConfig.ID&quot;);</span>
+
+<span class="fc" id="L352">        Call&lt;ResourceMembers&gt; call = service.getTelegrafsIDMembers(telegrafID, null);</span>
+<span class="fc" id="L353">        ResourceMembers resourceMembers = execute(call);</span>
+<span class="fc" id="L354">        LOG.log(Level.FINEST, &quot;findTelegrafConfigMembers found: {0}&quot;, resourceMembers);</span>
+
+<span class="fc" id="L356">        return resourceMembers.getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final Telegraf telegraf) {
+
+<span class="fc" id="L363">        Arguments.checkNotNull(telegraf, &quot;telegrafConfig&quot;);</span>
+<span class="fc" id="L364">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+
+<span class="fc" id="L366">        return addMember(member.getId(), telegraf.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String telegrafID) {
+
+<span class="fc" id="L373">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="fc" id="L374">        Arguments.checkNonEmpty(telegrafID, &quot;TelegrafConfig.ID&quot;);</span>
+
+<span class="fc" id="L376">        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();</span>
+<span class="fc" id="L377">        user.setId(memberID);</span>
+
+<span class="fc" id="L379">        Call&lt;ResourceMember&gt; call = service.postTelegrafsIDMembers(telegrafID, user, null);</span>
+
+<span class="fc" id="L381">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final User member, @Nonnull final Telegraf telegraf) {
+
+<span class="fc" id="L387">        Arguments.checkNotNull(telegraf, &quot;telegrafConfig&quot;);</span>
+<span class="fc" id="L388">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+
+<span class="fc" id="L390">        deleteMember(member.getId(), telegraf.getId());</span>
+<span class="fc" id="L391">    }</span>
+
+    @Override
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String telegrafID) {
+
+<span class="fc" id="L396">        Arguments.checkNonEmpty(memberID, &quot;Member ID&quot;);</span>
+<span class="fc" id="L397">        Arguments.checkNonEmpty(telegrafID, &quot;TelegrafConfig.ID&quot;);</span>
+
+<span class="fc" id="L399">        Call&lt;Void&gt; call = service.deleteTelegrafsIDMembersID(memberID, telegrafID, null);</span>
+<span class="fc" id="L400">        execute(call);</span>
+<span class="fc" id="L401">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceOwner&gt; getOwners(@Nonnull final Telegraf telegraf) {
+
+<span class="nc" id="L407">        Arguments.checkNotNull(telegraf, &quot;telegrafConfig&quot;);</span>
+
+<span class="nc" id="L409">        return getOwners(telegraf.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceOwner&gt; getOwners(@Nonnull final String telegrafID) {
+
+<span class="nc" id="L416">        Arguments.checkNonEmpty(telegrafID, &quot;TelegrafConfig.ID&quot;);</span>
+
+<span class="nc" id="L418">        Call&lt;ResourceOwners&gt; call = service.getTelegrafsIDOwners(telegrafID, null);</span>
+<span class="nc" id="L419">        ResourceOwners resourceMembers = execute(call);</span>
+<span class="nc" id="L420">        LOG.log(Level.FINEST, &quot;findTelegrafConfigOwners found: {0}&quot;, resourceMembers);</span>
+
+<span class="nc" id="L422">        return resourceMembers.getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Telegraf telegraf) {
+
+<span class="nc" id="L429">        Arguments.checkNotNull(telegraf, &quot;telegrafConfig&quot;);</span>
+<span class="nc" id="L430">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+
+<span class="nc" id="L432">        return addOwner(owner.getId(), telegraf.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String telegrafID) {
+
+<span class="nc" id="L439">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L440">        Arguments.checkNonEmpty(telegrafID, &quot;TelegrafConfig.ID&quot;);</span>
+
+<span class="nc" id="L442">        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody();</span>
+<span class="nc" id="L443">        user.setId(ownerID);</span>
+
+<span class="nc" id="L445">        Call&lt;ResourceOwner&gt; call = service.postTelegrafsIDOwners(telegrafID, user, null);</span>
+
+<span class="nc" id="L447">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final Telegraf telegraf) {
+
+<span class="nc" id="L453">        Arguments.checkNotNull(telegraf, &quot;telegrafConfig&quot;);</span>
+<span class="nc" id="L454">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+
+<span class="nc" id="L456">        deleteOwner(owner.getId(), telegraf.getId());</span>
+<span class="nc" id="L457">    }</span>
+
+    @Override
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String telegrafID) {
+
+<span class="nc" id="L462">        Arguments.checkNonEmpty(ownerID, &quot;Owner ID&quot;);</span>
+<span class="nc" id="L463">        Arguments.checkNonEmpty(telegrafID, &quot;TelegrafConfig.ID&quot;);</span>
+
+<span class="nc" id="L465">        Call&lt;Void&gt; call = service.deleteTelegrafsIDOwnersID(ownerID, telegrafID, null);</span>
+<span class="nc" id="L466">        execute(call);</span>
+<span class="nc" id="L467">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final Telegraf telegraf) {
+
+<span class="fc" id="L473">        Arguments.checkNotNull(telegraf, &quot;telegrafConfig&quot;);</span>
+
+<span class="fc" id="L475">        return getLabels(telegraf.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final String telegrafID) {
+
+<span class="fc" id="L482">        Arguments.checkNonEmpty(telegrafID, &quot;TelegrafConfig.ID&quot;);</span>
+
+<span class="fc" id="L484">        Call&lt;LabelsResponse&gt; call = service.getTelegrafsIDLabels(telegrafID, null);</span>
+
+<span class="fc" id="L486">        return execute(call).getLabels();</span>
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Telegraf telegraf) {
+
+<span class="fc" id="L493">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L494">        Arguments.checkNotNull(telegraf, &quot;telegrafConfig&quot;);</span>
+
+<span class="fc" id="L496">        return addLabel(label.getId(), telegraf.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String telegrafID) {
+
+<span class="fc" id="L503">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L504">        Arguments.checkNonEmpty(telegrafID, &quot;telegrafConfigID&quot;);</span>
+
+<span class="fc" id="L506">        LabelMapping labelMapping = new LabelMapping();</span>
+<span class="fc" id="L507">        labelMapping.setLabelID(labelID);</span>
+
+<span class="fc" id="L509">        Call&lt;LabelResponse&gt; call = service.postTelegrafsIDLabels(telegrafID, labelMapping, null);</span>
+
+<span class="fc" id="L511">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Telegraf telegraf) {
+
+<span class="fc" id="L517">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L518">        Arguments.checkNotNull(telegraf, &quot;telegrafConfig&quot;);</span>
+
+<span class="fc" id="L520">        deleteLabel(label.getId(), telegraf.getId());</span>
+<span class="fc" id="L521">    }</span>
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String telegrafID) {
+
+<span class="fc" id="L526">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L527">        Arguments.checkNonEmpty(telegrafID, &quot;telegrafConfigID&quot;);</span>
+
+<span class="fc" id="L529">        Call&lt;Void&gt; call = service.deleteTelegrafsIDLabelsID(telegrafID, labelID, null);</span>
+<span class="fc" id="L530">        execute(call);</span>
+<span class="fc" id="L531">    }</span>
+
+    @Nonnull
+    private TelegrafPluginRequest toTelegrafRequest(@Nonnull final Telegraf telegraf) {
+
+<span class="fc" id="L536">        Arguments.checkNotNull(telegraf, &quot;telegraf&quot;);</span>
+
+<span class="fc" id="L538">        TelegrafPluginRequest telegrafRequest = new TelegrafPluginRequest();</span>
+<span class="fc" id="L539">        telegrafRequest.setName(telegraf.getName());</span>
+<span class="fc" id="L540">        telegrafRequest.setDescription(telegraf.getDescription());</span>
+<span class="fc" id="L541">        telegrafRequest.setConfig(telegraf.getConfig());</span>
+<span class="fc" id="L542">        telegrafRequest.setMetadata(telegraf.getMetadata());</span>
+<span class="fc" id="L543">        telegrafRequest.setOrgID(telegraf.getOrgID());</span>
+
+<span class="fc" id="L545">        return telegrafRequest;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FindOptions.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client</a> &gt; <span class="el_source">FindOptions.java</span></div><h1>FindOptions.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client;
+
+import java.util.Set;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import okhttp3.HttpUrl;
+
+/**
+ * FindOptions represents options passed to all find methods with multiple results.
+ *
+ * @author Jakub Bednar (bednar@github) (30/01/2019 07:41)
+ */
+<span class="fc" id="L35">public final class FindOptions {</span>
+
+    public static final String LIMIT_KEY = &quot;limit&quot;;
+    public static final String OFFSET_KEY = &quot;offset&quot;;
+    public static final String SORT_BY_KEY = &quot;sortBy&quot;;
+    public static final String DESCENDING_KEY = &quot;descending&quot;;
+    public static final String AFTER_KEY = &quot;after&quot;;
+
+    private Integer limit;
+    private Integer offset;
+    private String sortBy;
+    private Boolean descending;
+    private String after;
+
+    @Nonnull
+    public static FindOptions create(@Nullable final String link) {
+
+<span class="fc" id="L52">        FindOptions options = new FindOptions();</span>
+<span class="pc bpc" id="L53" title="1 of 2 branches missed.">        if (link == null) {</span>
+<span class="nc" id="L54">            return options;</span>
+        }
+
+<span class="fc" id="L57">        HttpUrl httpUrl = HttpUrl.parse(&quot;https://influxdb&quot; + link);</span>
+<span class="pc bpc" id="L58" title="1 of 2 branches missed.">        if (httpUrl == null) {</span>
+<span class="nc" id="L59">            return options;</span>
+        }
+
+<span class="fc" id="L62">        Set&lt;String&gt; qp = httpUrl.queryParameterNames();</span>
+<span class="pc bpc" id="L63" title="5 of 6 branches missed.">        if (!qp.contains(LIMIT_KEY) &amp;&amp; !qp.contains(OFFSET_KEY) &amp;&amp; !qp.contains(SORT_BY_KEY)</span>
+<span class="nc bnc" id="L64" title="All 4 branches missed.">                &amp;&amp; !qp.contains(DESCENDING_KEY) &amp;&amp; !qp.contains(AFTER_KEY)) {</span>
+
+<span class="nc" id="L66">            return options;</span>
+        }
+
+<span class="fc" id="L69">        String limit = httpUrl.queryParameter(LIMIT_KEY);</span>
+<span class="pc bpc" id="L70" title="1 of 2 branches missed.">        if (limit != null) {</span>
+<span class="fc" id="L71">            options.setLimit(Integer.valueOf(limit));</span>
+        }
+
+<span class="fc" id="L74">        String offset = httpUrl.queryParameter(OFFSET_KEY);</span>
+<span class="pc bpc" id="L75" title="1 of 2 branches missed.">        if (offset != null) {</span>
+<span class="fc" id="L76">            options.setOffset(Integer.valueOf(offset));</span>
+        }
+
+<span class="fc" id="L79">        String sortBy = httpUrl.queryParameter(SORT_BY_KEY);</span>
+<span class="pc bpc" id="L80" title="1 of 2 branches missed.">        if (sortBy != null) {</span>
+<span class="nc" id="L81">            options.setSortBy(sortBy);</span>
+        }
+
+<span class="fc" id="L84">        String descending = httpUrl.queryParameter(DESCENDING_KEY);</span>
+<span class="pc bpc" id="L85" title="1 of 2 branches missed.">        if (descending != null) {</span>
+<span class="fc" id="L86">            options.setDescending(Boolean.valueOf(descending));</span>
+        }
+
+<span class="fc" id="L89">        String after = httpUrl.queryParameter(AFTER_KEY);</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">        if (after != null) {</span>
+<span class="nc" id="L91">            options.setAfter(after);</span>
+        }
+
+<span class="fc" id="L94">        return options;</span>
+    }
+
+    public Integer getLimit() {
+<span class="fc" id="L98">        return limit;</span>
+    }
+
+    public void setLimit(final Integer limit) {
+<span class="fc" id="L102">        this.limit = limit;</span>
+<span class="fc" id="L103">    }</span>
+
+    public Integer getOffset() {
+<span class="fc" id="L106">        return offset;</span>
+    }
+
+    public void setOffset(final Integer offset) {
+<span class="fc" id="L110">        this.offset = offset;</span>
+<span class="fc" id="L111">    }</span>
+
+    public String getSortBy() {
+<span class="nc" id="L114">        return sortBy;</span>
+    }
+
+    public void setSortBy(final String sortBy) {
+<span class="nc" id="L118">        this.sortBy = sortBy;</span>
+<span class="nc" id="L119">    }</span>
+
+    public Boolean getDescending() {
+<span class="nc" id="L122">        return descending;</span>
+    }
+
+    public void setDescending(final Boolean descending) {
+<span class="fc" id="L126">        this.descending = descending;</span>
+<span class="fc" id="L127">    }</span>
+
+    public String getAfter() {
+<span class="fc" id="L130">        return after;</span>
+    }
+
+    public void setAfter(final String after) {
+<span class="nc" id="L134">        this.after = after;</span>
+<span class="nc" id="L135">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>InfluxException.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The InfluxDB Client Core</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.exceptions</a> &gt; <span class="el_source">InfluxException.java</span></div><h1>InfluxException.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.exceptions;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
+import java.util.function.Supplier;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import kotlin.Pair;
+import okhttp3.ResponseBody;
+import retrofit2.HttpException;
+import retrofit2.Response;
+
+
+/**
+ * The base type for Influx errors.
+ *
+ * @author Jakub Bednar (bednar@github) (31/07/2018 11:53)
+ */
+public class InfluxException extends RuntimeException {
+
+<span class="fc" id="L52">    private static final Logger LOG = Logger.getLogger(InfluxException.class.getName());</span>
+    private static final String HTTP_STATUS_CODE_MESSAGE = &quot;HTTP status code: %d; Message: %s&quot;;
+
+    private final Response&lt;?&gt; response;
+    private final String message;
+
+<span class="fc" id="L58">    private Map&lt;String, Object&gt; errorBody = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L60">    public InfluxException(@Nullable final String message) {</span>
+
+<span class="fc" id="L62">        this.response = null;</span>
+<span class="fc" id="L63">        this.message = message;</span>
+<span class="fc" id="L64">    }</span>
+
+    public InfluxException(@Nullable final Throwable cause) {
+
+<span class="fc" id="L68">        super(cause);</span>
+
+<span class="fc bfc" id="L70" title="All 2 branches covered.">        if (cause instanceof HttpException) {</span>
+<span class="fc" id="L71">            this.response = ((HttpException) cause).response();</span>
+        } else {
+<span class="fc" id="L73">            this.response = null;</span>
+        }
+
+<span class="fc" id="L76">        this.message = messageFromResponse();</span>
+<span class="fc" id="L77">    }</span>
+
+    public InfluxException(@Nullable final Response&lt;?&gt; cause) {
+
+<span class="fc" id="L81">        super();</span>
+<span class="fc" id="L82">        this.response = cause;</span>
+<span class="fc" id="L83">        this.message = messageFromResponse();</span>
+<span class="fc" id="L84">    }</span>
+
+    @Override
+    public String getMessage() {
+<span class="fc" id="L88">        return message;</span>
+    }
+
+    /**
+     * Gets the reference code unique to the error type. If the reference code is not present then return &quot;0&quot;.
+     *
+     * @return reference code unique to the error type
+     */
+    public int reference() {
+
+<span class="fc" id="L98">        String reference = null;</span>
+<span class="fc bfc" id="L99" title="All 2 branches covered.">        if (response != null) {</span>
+<span class="fc" id="L100">            reference = this.response.headers().get(&quot;X-Influx-Reference&quot;);</span>
+        }
+
+<span class="fc bfc" id="L103" title="All 2 branches covered.">        if (reference != null) {</span>
+<span class="fc" id="L104">            return Integer.valueOf(reference);</span>
+        }
+
+<span class="fc" id="L107">        return 0;</span>
+    }
+
+    /**
+     * Gets the HTTP status code of the unsuccessful response.
+     * If the response is not present then return &quot;0&quot;.
+     *
+     * @return HTTP status code
+     */
+    public int status() {
+
+<span class="fc bfc" id="L118" title="All 2 branches covered.">        if (response != null) {</span>
+<span class="fc" id="L119">            return response.code();</span>
+        }
+
+<span class="fc" id="L122">        return 0;</span>
+    }
+
+    /**
+     * Gets the HTTP headers from the unsuccessful response.
+     * If the response is not present then return empty {@code Map}.
+     *
+     * @return HTTP headers
+     */
+    @Nonnull
+    public Map&lt;String, String&gt; headers() {
+<span class="fc bfc" id="L133" title="All 2 branches covered.">        if (response != null) {</span>
+<span class="fc" id="L134">            return StreamSupport</span>
+<span class="fc" id="L135">                    .stream(response.headers().spliterator(), false)</span>
+<span class="fc" id="L136">                    .collect(Collectors.toMap(</span>
+                            Pair::component1,
+                            Pair::component2,
+<span class="nc" id="L139">                            (oldValue, newValue) -&gt; newValue,</span>
+<span class="fc" id="L140">                            (Supplier&lt;Map&lt;String, String&gt;&gt;) () -&gt; new TreeMap&lt;&gt;(String.CASE_INSENSITIVE_ORDER)));</span>
+        }
+
+<span class="fc" id="L143">        return Collections.emptyMap();</span>
+    }
+
+    /**
+     * The JSON unsuccessful response body.
+     *
+     * @return a response body
+     */
+    @Nonnull
+    public Map&lt;String, Object&gt; errorBody() {
+<span class="fc" id="L153">        return errorBody;</span>
+    }
+
+    @Nullable
+    private String messageFromResponse() {
+<span class="fc bfc" id="L158" title="All 2 branches covered.">        if (response != null) {</span>
+<span class="fc" id="L159">            int code = response.code();</span>
+            try {
+<span class="fc" id="L161">                ResponseBody body = response.errorBody();</span>
+<span class="pc bpc" id="L162" title="1 of 2 branches missed.">                if (body != null) {</span>
+<span class="fc" id="L163">                    String json = body.source().readUtf8();</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">                    if (!json.isEmpty()) {</span>
+<span class="fc" id="L165">                        errorBody = new Gson().fromJson(json, new TypeToken&lt;Map&lt;String, Object&gt;&gt;() {</span>
+<span class="fc" id="L166">                        }.getType());</span>
+<span class="fc bfc" id="L167" title="All 2 branches covered.">                        if (errorBody.containsKey(&quot;message&quot;)) {</span>
+<span class="fc" id="L168">                            return String.format(HTTP_STATUS_CODE_MESSAGE, code, errorBody.get(&quot;message&quot;).toString());</span>
+                        }
+                    }
+                }
+<span class="fc" id="L172">            } catch (Exception e) {</span>
+<span class="fc" id="L173">                LOG.log(Level.FINEST, &quot;Can't parse msg from response {}&quot;, response);</span>
+<span class="fc" id="L174">            }</span>
+
+<span class="fc" id="L176">            String value = Stream.of(&quot;X-Platform-Error-Code&quot;, &quot;X-Influx-Error&quot;, &quot;X-InfluxDb-Error&quot;)</span>
+<span class="fc" id="L177">                    .map(name -&gt; response.headers().get(name))</span>
+<span class="fc bfc" id="L178" title="All 4 branches covered.">                    .filter(message -&gt; message != null &amp;&amp; !message.isEmpty()).findFirst()</span>
+<span class="fc" id="L179">                    .orElse(null);</span>
+
+<span class="fc bfc" id="L181" title="All 2 branches covered.">            if (value != null) {</span>
+<span class="fc" id="L182">                return String.format(HTTP_STATUS_CODE_MESSAGE, code, value);</span>
+            }
+        }
+
+<span class="fc" id="L186">        Throwable cause = getCause();</span>
+<span class="fc bfc" id="L187" title="All 2 branches covered.">        if (cause != null) {</span>
+<span class="fc" id="L188">            return cause.getMessage();</span>
+        }
+
+<span class="fc" id="L191">        return null;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

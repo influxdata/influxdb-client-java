@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NotificationEndpointsApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">NotificationEndpointsApiImpl.java</span></div><h1>NotificationEndpointsApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.client.FindOptions;
+import com.influxdb.client.NotificationEndpointsApi;
+import com.influxdb.client.domain.HTTPNotificationEndpoint;
+import com.influxdb.client.domain.HTTPNotificationEndpoint.MethodEnum;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.LabelMapping;
+import com.influxdb.client.domain.LabelResponse;
+import com.influxdb.client.domain.LabelsResponse;
+import com.influxdb.client.domain.NotificationEndpoint;
+import com.influxdb.client.domain.NotificationEndpointBase;
+import com.influxdb.client.domain.NotificationEndpointType;
+import com.influxdb.client.domain.NotificationEndpointUpdate;
+import com.influxdb.client.domain.NotificationEndpoints;
+import com.influxdb.client.domain.PagerDutyNotificationEndpoint;
+import com.influxdb.client.domain.SlackNotificationEndpoint;
+import com.influxdb.client.service.NotificationEndpointsService;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
+
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (11/09/2019 09:23)
+ */
+final class NotificationEndpointsApiImpl extends AbstractRestClient implements NotificationEndpointsApi {
+
+    private final NotificationEndpointsService service;
+
+<span class="fc" id="L56">    NotificationEndpointsApiImpl(@Nonnull final NotificationEndpointsService service) {</span>
+
+<span class="fc" id="L58">        Arguments.checkNotNull(service, &quot;notificationEndpointsService&quot;);</span>
+
+<span class="fc" id="L60">        this.service = service;</span>
+<span class="fc" id="L61">    }</span>
+
+    @Nonnull
+    @Override
+    public SlackNotificationEndpoint createSlackEndpoint(@Nonnull final String name,
+                                                         @Nonnull final String url,
+                                                         @Nonnull final String orgID) {
+
+<span class="nc" id="L69">        Arguments.checkNotNull(url, &quot;url&quot;);</span>
+
+<span class="nc" id="L71">        return createSlackEndpoint(name, url, null, orgID);</span>
+    }
+
+    @Nonnull
+    @Override
+    public SlackNotificationEndpoint createSlackEndpoint(@Nonnull final String name,
+                                                         @Nonnull final String url,
+                                                         @Nullable final String token,
+                                                         @Nonnull final String orgID) {
+
+<span class="fc" id="L81">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L82">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+<span class="fc" id="L83">        Arguments.checkNotNull(url, &quot;url&quot;);</span>
+
+<span class="fc" id="L85">        SlackNotificationEndpoint endpoint = new SlackNotificationEndpoint();</span>
+<span class="fc" id="L86">        endpoint.setType(NotificationEndpointType.SLACK);</span>
+<span class="fc" id="L87">        endpoint.setUrl(url);</span>
+<span class="fc" id="L88">        endpoint.setToken(token);</span>
+<span class="fc" id="L89">        endpoint.orgID(orgID);</span>
+<span class="fc" id="L90">        endpoint.setName(name);</span>
+<span class="fc" id="L91">        endpoint.setStatus(NotificationEndpointBase.StatusEnum.ACTIVE);</span>
+
+<span class="fc" id="L93">        return (SlackNotificationEndpoint) createEndpoint(endpoint);</span>
+    }
+
+    @Nonnull
+    @Override
+    public PagerDutyNotificationEndpoint createPagerDutyEndpoint(@Nonnull final String name,
+                                                                 @Nonnull final String clientURL,
+                                                                 @Nonnull final String routingKey,
+                                                                 @Nonnull final String orgID) {
+
+<span class="fc" id="L103">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L104">        Arguments.checkNonEmpty(clientURL, &quot;clientURL&quot;);</span>
+<span class="fc" id="L105">        Arguments.checkNonEmpty(routingKey, &quot;routingKey&quot;);</span>
+<span class="fc" id="L106">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+
+<span class="fc" id="L108">        PagerDutyNotificationEndpoint endpoint = new PagerDutyNotificationEndpoint();</span>
+<span class="fc" id="L109">        endpoint.setType(NotificationEndpointType.PAGERDUTY);</span>
+<span class="fc" id="L110">        endpoint.setClientURL(clientURL);</span>
+<span class="fc" id="L111">        endpoint.setRoutingKey(routingKey);</span>
+<span class="fc" id="L112">        endpoint.orgID(orgID);</span>
+<span class="fc" id="L113">        endpoint.setName(name);</span>
+<span class="fc" id="L114">        endpoint.setStatus(NotificationEndpointBase.StatusEnum.ACTIVE);</span>
+
+<span class="fc" id="L116">        return (PagerDutyNotificationEndpoint) createEndpoint(endpoint);</span>
+    }
+
+    @Nonnull
+    @Override
+    public HTTPNotificationEndpoint createHTTPEndpoint(@Nonnull final String name,
+                                                       @Nonnull final String url,
+                                                       @Nonnull final MethodEnum method,
+                                                       @Nonnull final String orgID) {
+
+<span class="fc" id="L126">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L127">        Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="fc" id="L128">        Arguments.checkNotNull(method, &quot;method&quot;);</span>
+<span class="fc" id="L129">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+
+<span class="fc" id="L131">        HTTPNotificationEndpoint endpoint = new HTTPNotificationEndpoint();</span>
+<span class="fc" id="L132">        endpoint.setType(NotificationEndpointType.HTTP);</span>
+<span class="fc" id="L133">        endpoint.setMethod(method);</span>
+<span class="fc" id="L134">        endpoint.setUrl(url);</span>
+<span class="fc" id="L135">        endpoint.orgID(orgID);</span>
+<span class="fc" id="L136">        endpoint.setName(name);</span>
+<span class="fc" id="L137">        endpoint.setAuthMethod(HTTPNotificationEndpoint.AuthMethodEnum.NONE);</span>
+<span class="fc" id="L138">        endpoint.setStatus(NotificationEndpointBase.StatusEnum.ACTIVE);</span>
+
+<span class="fc" id="L140">        return (HTTPNotificationEndpoint) createEndpoint(endpoint);</span>
+    }
+
+    @Nonnull
+    @Override
+    public HTTPNotificationEndpoint createHTTPEndpointBasicAuth(@Nonnull final String name,
+                                                                @Nonnull final String url,
+                                                                @Nonnull final MethodEnum method,
+                                                                @Nonnull final String username,
+                                                                @Nonnull final String password,
+                                                                @Nonnull final String orgID) {
+
+<span class="fc" id="L152">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L153">        Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="fc" id="L154">        Arguments.checkNotNull(method, &quot;method&quot;);</span>
+<span class="fc" id="L155">        Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
+<span class="fc" id="L156">        Arguments.checkNonEmpty(password, &quot;password&quot;);</span>
+<span class="fc" id="L157">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+
+<span class="fc" id="L159">        HTTPNotificationEndpoint endpoint = new HTTPNotificationEndpoint();</span>
+<span class="fc" id="L160">        endpoint.setType(NotificationEndpointType.HTTP);</span>
+<span class="fc" id="L161">        endpoint.setMethod(method);</span>
+<span class="fc" id="L162">        endpoint.setUrl(url);</span>
+<span class="fc" id="L163">        endpoint.orgID(orgID);</span>
+<span class="fc" id="L164">        endpoint.setName(name);</span>
+<span class="fc" id="L165">        endpoint.setUsername(username);</span>
+<span class="fc" id="L166">        endpoint.setPassword(password);</span>
+<span class="fc" id="L167">        endpoint.setAuthMethod(HTTPNotificationEndpoint.AuthMethodEnum.BASIC);</span>
+<span class="fc" id="L168">        endpoint.setStatus(NotificationEndpointBase.StatusEnum.ACTIVE);</span>
+
+<span class="fc" id="L170">        return (HTTPNotificationEndpoint) createEndpoint(endpoint);</span>
+    }
+
+    @Nonnull
+    @Override
+    public HTTPNotificationEndpoint createHTTPEndpointBearer(@Nonnull final String name,
+                                                             @Nonnull final String url,
+                                                             @Nonnull final MethodEnum method,
+                                                             @Nonnull final String token,
+                                                             @Nonnull final String orgID) {
+
+<span class="fc" id="L181">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L182">        Arguments.checkNonEmpty(url, &quot;url&quot;);</span>
+<span class="fc" id="L183">        Arguments.checkNotNull(method, &quot;method&quot;);</span>
+<span class="fc" id="L184">        Arguments.checkNonEmpty(token, &quot;token&quot;);</span>
+<span class="fc" id="L185">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+
+<span class="fc" id="L187">        HTTPNotificationEndpoint endpoint = new HTTPNotificationEndpoint();</span>
+<span class="fc" id="L188">        endpoint.setType(NotificationEndpointType.HTTP);</span>
+<span class="fc" id="L189">        endpoint.setMethod(method);</span>
+<span class="fc" id="L190">        endpoint.setUrl(url);</span>
+<span class="fc" id="L191">        endpoint.orgID(orgID);</span>
+<span class="fc" id="L192">        endpoint.setName(name);</span>
+<span class="fc" id="L193">        endpoint.setToken(token);</span>
+<span class="fc" id="L194">        endpoint.setAuthMethod(HTTPNotificationEndpoint.AuthMethodEnum.BEARER);</span>
+<span class="fc" id="L195">        endpoint.setStatus(NotificationEndpointBase.StatusEnum.ACTIVE);</span>
+
+<span class="fc" id="L197">        return (HTTPNotificationEndpoint) createEndpoint(endpoint);</span>
+    }
+
+    @Override
+    @Nonnull
+    public NotificationEndpoint createEndpoint(@Nonnull final NotificationEndpoint notificationEndpoint) {
+
+<span class="fc" id="L204">        Arguments.checkNotNull(notificationEndpoint, &quot;notificationEndpoint&quot;);</span>
+
+<span class="fc" id="L206">        Call&lt;NotificationEndpoint&gt; endpointCall = service</span>
+<span class="fc" id="L207">                .createNotificationEndpoint(notificationEndpoint);</span>
+
+<span class="fc" id="L209">        return execute(endpointCall);</span>
+    }
+
+    @Nonnull
+    @Override
+    public NotificationEndpoint updateEndpoint(@Nonnull final NotificationEndpoint notificationEndpoint) {
+
+<span class="fc" id="L216">        Arguments.checkNotNull(notificationEndpoint, &quot;notificationEndpoint&quot;);</span>
+
+<span class="fc" id="L218">        NotificationEndpointUpdate update = new NotificationEndpointUpdate()</span>
+<span class="fc" id="L219">                .name(notificationEndpoint.getName())</span>
+<span class="fc" id="L220">                .description(notificationEndpoint.getDescription())</span>
+<span class="fc" id="L221">                .status(NotificationEndpointUpdate.StatusEnum.fromValue(notificationEndpoint.getStatus().getValue()));</span>
+
+<span class="fc" id="L223">        return updateEndpoint(notificationEndpoint.getId(), update);</span>
+    }
+
+    @Nonnull
+    @Override
+    public NotificationEndpoint updateEndpoint(@Nonnull final String endpointID,
+                                               @Nonnull final NotificationEndpointUpdate notificationEndpointUpdate) {
+
+<span class="fc" id="L231">        Arguments.checkNonEmpty(endpointID, &quot;endpointID&quot;);</span>
+<span class="fc" id="L232">        Arguments.checkNotNull(notificationEndpointUpdate, &quot;notificationEndpointUpdate&quot;);</span>
+
+<span class="fc" id="L234">        Call&lt;NotificationEndpoint&gt; endpointCall = service</span>
+<span class="fc" id="L235">                .patchNotificationEndpointsID(endpointID, notificationEndpointUpdate, null);</span>
+
+<span class="fc" id="L237">        return execute(endpointCall);</span>
+    }
+
+    @Override
+    public void deleteNotificationEndpoint(@Nonnull final NotificationEndpoint notificationEndpoint) {
+
+<span class="fc" id="L243">        Arguments.checkNotNull(notificationEndpoint, &quot;notificationEndpoint&quot;);</span>
+
+<span class="fc" id="L245">        deleteNotificationEndpoint(notificationEndpoint.getId());</span>
+<span class="fc" id="L246">    }</span>
+
+    @Override
+    public void deleteNotificationEndpoint(@Nonnull final String endpointID) {
+
+<span class="fc" id="L251">        Arguments.checkNonEmpty(endpointID, &quot;endpointID&quot;);</span>
+
+<span class="fc" id="L253">        Call&lt;Void&gt; endpointCall = service</span>
+<span class="fc" id="L254">                .deleteNotificationEndpointsID(endpointID, null);</span>
+
+<span class="fc" id="L256">        execute(endpointCall);</span>
+<span class="fc" id="L257">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;NotificationEndpoint&gt; findNotificationEndpoints(@Nonnull final String orgID) {
+
+<span class="fc" id="L263">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+
+<span class="fc" id="L265">        return findNotificationEndpoints(orgID, new FindOptions()).getNotificationEndpoints();</span>
+    }
+
+    @Nonnull
+    @Override
+    public NotificationEndpoints findNotificationEndpoints(@Nonnull final String orgID,
+                                                           @Nonnull final FindOptions findOptions) {
+
+<span class="fc" id="L273">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+<span class="fc" id="L274">        Arguments.checkNotNull(findOptions, &quot;findOptions&quot;);</span>
+
+<span class="fc" id="L276">        Call&lt;NotificationEndpoints&gt; endpointCall = service</span>
+<span class="fc" id="L277">                .getNotificationEndpoints(orgID, null, findOptions.getOffset(), findOptions.getLimit());</span>
+
+<span class="fc" id="L279">        return execute(endpointCall);</span>
+    }
+
+    @Nonnull
+    @Override
+    public SlackNotificationEndpoint cloneSlackEndpoint(@Nonnull final String name,
+                                                        @Nullable final String token,
+                                                        @Nonnull final String endpointID) {
+
+<span class="fc" id="L288">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L289">        Arguments.checkNotNull(endpointID, &quot;endpointID&quot;);</span>
+
+<span class="nc" id="L291">        return cloneSlackEndpoint(name, token, (SlackNotificationEndpoint) findNotificationEndpointByID(endpointID));</span>
+    }
+
+    @Nonnull
+    @Override
+    public SlackNotificationEndpoint cloneSlackEndpoint(@Nonnull final String name,
+                                                        @Nullable final String token,
+                                                        @Nonnull final SlackNotificationEndpoint endpoint) {
+
+<span class="fc" id="L300">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L301">        Arguments.checkNotNull(endpoint, &quot;endpoint&quot;);</span>
+
+<span class="fc" id="L303">        SlackNotificationEndpoint cloned = new SlackNotificationEndpoint()</span>
+<span class="fc" id="L304">                .url(endpoint.getUrl())</span>
+<span class="fc" id="L305">                .token(token);</span>
+
+<span class="fc" id="L307">        return (SlackNotificationEndpoint) cloneEndpoint(name, endpoint, cloned);</span>
+    }
+
+    @Nonnull
+    @Override
+    public PagerDutyNotificationEndpoint clonePagerDutyEndpoint(@Nonnull final String name,
+                                                                @Nonnull final String routingKey,
+                                                                @Nonnull final String endpointID) {
+
+<span class="fc" id="L316">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L317">        Arguments.checkNonEmpty(routingKey, &quot;routingKey&quot;);</span>
+<span class="fc" id="L318">        Arguments.checkNonEmpty(endpointID, &quot;endpointID&quot;);</span>
+
+<span class="pc" id="L320">        return clonePagerDutyEndpoint(name, routingKey,</span>
+<span class="nc" id="L321">                (PagerDutyNotificationEndpoint) findNotificationEndpointByID(endpointID));</span>
+    }
+
+    @Nonnull
+    @Override
+    public PagerDutyNotificationEndpoint clonePagerDutyEndpoint(@Nonnull final String name,
+                                                                @Nonnull final String routingKey,
+                                                                @Nonnull final PagerDutyNotificationEndpoint endpoint) {
+
+<span class="fc" id="L330">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L331">        Arguments.checkNonEmpty(routingKey, &quot;routingKey&quot;);</span>
+<span class="fc" id="L332">        Arguments.checkNotNull(endpoint, &quot;endpoint&quot;);</span>
+
+<span class="fc" id="L334">        PagerDutyNotificationEndpoint cloned = new PagerDutyNotificationEndpoint()</span>
+<span class="fc" id="L335">                .clientURL(endpoint.getClientURL())</span>
+<span class="fc" id="L336">                .routingKey(routingKey);</span>
+
+<span class="fc" id="L338">        return (PagerDutyNotificationEndpoint) cloneEndpoint(name, endpoint, cloned);</span>
+    }
+
+    @Nonnull
+    @Override
+    public HTTPNotificationEndpoint cloneHTTPEndpoint(@Nonnull final String name, @Nonnull final String endpointID) {
+
+<span class="fc" id="L345">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L346">        Arguments.checkNonEmpty(endpointID, &quot;endpointID&quot;);</span>
+
+<span class="nc" id="L348">        return cloneHTTPEndpoint(name, (HTTPNotificationEndpoint) findNotificationEndpointByID(endpointID));</span>
+    }
+
+    @Nonnull
+    @Override
+    public HTTPNotificationEndpoint cloneHTTPEndpoint(@Nonnull final String name,
+                                                      @Nonnull final HTTPNotificationEndpoint endpoint) {
+
+<span class="fc" id="L356">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L357">        Arguments.checkNotNull(endpoint, &quot;endpoint&quot;);</span>
+
+<span class="fc" id="L359">        HTTPNotificationEndpoint cloned = new HTTPNotificationEndpoint()</span>
+<span class="fc" id="L360">                .url(endpoint.getUrl())</span>
+<span class="fc" id="L361">                .method(endpoint.getMethod())</span>
+<span class="fc" id="L362">                .authMethod(HTTPNotificationEndpoint.AuthMethodEnum.NONE)</span>
+<span class="fc" id="L363">                .contentTemplate(endpoint.getContentTemplate())</span>
+<span class="fc" id="L364">                .headers(endpoint.getHeaders());</span>
+
+<span class="fc" id="L366">        return (HTTPNotificationEndpoint) cloneEndpoint(name, endpoint, cloned);</span>
+    }
+
+
+    @Nonnull
+    @Override
+    public HTTPNotificationEndpoint cloneHTTPEndpointBasicAuth(@Nonnull final String name,
+                                                               @Nonnull final String username,
+                                                               @Nonnull final String password,
+                                                               @Nonnull final String endpointID) {
+
+<span class="fc" id="L377">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L378">        Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
+<span class="fc" id="L379">        Arguments.checkNonEmpty(password, &quot;password&quot;);</span>
+<span class="fc" id="L380">        Arguments.checkNonEmpty(endpointID, &quot;endpointID&quot;);</span>
+
+<span class="pc" id="L382">        return cloneHTTPEndpointBasicAuth(name, username, password,</span>
+<span class="nc" id="L383">                (HTTPNotificationEndpoint) findNotificationEndpointByID(endpointID));</span>
+    }
+
+    @Nonnull
+    @Override
+    public HTTPNotificationEndpoint cloneHTTPEndpointBasicAuth(@Nonnull final String name,
+                                                               @Nonnull final String username,
+                                                               @Nonnull final String password,
+                                                               @Nonnull final HTTPNotificationEndpoint endpoint) {
+
+<span class="fc" id="L393">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L394">        Arguments.checkNonEmpty(username, &quot;username&quot;);</span>
+<span class="fc" id="L395">        Arguments.checkNonEmpty(password, &quot;password&quot;);</span>
+<span class="fc" id="L396">        Arguments.checkNotNull(endpoint, &quot;endpoint&quot;);</span>
+
+<span class="fc" id="L398">        HTTPNotificationEndpoint cloned = new HTTPNotificationEndpoint()</span>
+<span class="fc" id="L399">                .url(endpoint.getUrl())</span>
+<span class="fc" id="L400">                .username(username)</span>
+<span class="fc" id="L401">                .password(password)</span>
+<span class="fc" id="L402">                .method(endpoint.getMethod())</span>
+<span class="fc" id="L403">                .authMethod(HTTPNotificationEndpoint.AuthMethodEnum.BASIC)</span>
+<span class="fc" id="L404">                .contentTemplate(endpoint.getContentTemplate())</span>
+<span class="fc" id="L405">                .headers(endpoint.getHeaders());</span>
+
+<span class="fc" id="L407">        return (HTTPNotificationEndpoint) cloneEndpoint(name, endpoint, cloned);</span>
+    }
+
+    @Nonnull
+    @Override
+    public HTTPNotificationEndpoint cloneHTTPEndpointBearer(@Nonnull final String name,
+                                                            @Nonnull final String token,
+                                                            @Nonnull final String endpointID) {
+
+<span class="fc" id="L416">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L417">        Arguments.checkNonEmpty(token, &quot;token&quot;);</span>
+<span class="fc" id="L418">        Arguments.checkNonEmpty(endpointID, &quot;endpointID&quot;);</span>
+
+<span class="pc" id="L420">        return cloneHTTPEndpointBearer(name, token,</span>
+<span class="nc" id="L421">                (HTTPNotificationEndpoint) findNotificationEndpointByID(endpointID));</span>
+    }
+
+    @Nonnull
+    @Override
+    public HTTPNotificationEndpoint cloneHTTPEndpointBearer(@Nonnull final String name,
+                                                            @Nonnull final String token,
+                                                            @Nonnull final HTTPNotificationEndpoint endpoint) {
+
+<span class="fc" id="L430">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L431">        Arguments.checkNonEmpty(token, &quot;token&quot;);</span>
+<span class="fc" id="L432">        Arguments.checkNotNull(endpoint, &quot;endpoint&quot;);</span>
+
+<span class="fc" id="L434">        HTTPNotificationEndpoint cloned = new HTTPNotificationEndpoint().url(endpoint.getUrl())</span>
+<span class="fc" id="L435">                .token(token)</span>
+<span class="fc" id="L436">                .method(endpoint.getMethod())</span>
+<span class="fc" id="L437">                .authMethod(HTTPNotificationEndpoint.AuthMethodEnum.BEARER)</span>
+<span class="fc" id="L438">                .contentTemplate(endpoint.getContentTemplate())</span>
+<span class="fc" id="L439">                .headers(endpoint.getHeaders());</span>
+
+<span class="fc" id="L441">        return (HTTPNotificationEndpoint) cloneEndpoint(name, endpoint, cloned);</span>
+    }
+
+    @Nonnull
+    private NotificationEndpoint cloneEndpoint(@Nonnull final String name,
+                                               @Nonnull final NotificationEndpoint toCloneEndpoint,
+                                               @Nonnull final NotificationEndpoint clonedEndpoint) {
+
+<span class="fc" id="L449">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="fc" id="L450">        Arguments.checkNotNull(toCloneEndpoint, &quot;notificationEndpoint&quot;);</span>
+
+<span class="fc" id="L452">        clonedEndpoint</span>
+<span class="fc" id="L453">                .name(name)</span>
+<span class="fc" id="L454">                .orgID(toCloneEndpoint.getOrgID())</span>
+<span class="fc" id="L455">                .description(toCloneEndpoint.getDescription())</span>
+<span class="fc" id="L456">                .status(toCloneEndpoint.getStatus())</span>
+<span class="fc" id="L457">                .type(toCloneEndpoint.getType());</span>
+
+<span class="fc" id="L459">        NotificationEndpoint created = createEndpoint(clonedEndpoint);</span>
+
+<span class="pc" id="L461">        getLabels(created).forEach(label -&gt; addLabel(label, created));</span>
+
+<span class="fc" id="L463">        return created;</span>
+    }
+
+    @Nonnull
+    @Override
+    public NotificationEndpoint findNotificationEndpointByID(@Nonnull final String endpointID) {
+
+<span class="fc" id="L470">        Arguments.checkNonEmpty(endpointID, &quot;endpointID&quot;);</span>
+
+<span class="fc" id="L472">        Call&lt;NotificationEndpoint&gt; endpointCall = service</span>
+<span class="fc" id="L473">                .getNotificationEndpointsID(endpointID, null);</span>
+
+<span class="fc" id="L475">        return execute(endpointCall);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final NotificationEndpoint endpoint) {
+
+<span class="fc" id="L482">        Arguments.checkNotNull(endpoint, &quot;endpoint&quot;);</span>
+
+<span class="fc" id="L484">        return getLabels(endpoint.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final String endpointID) {
+
+<span class="fc" id="L491">        Arguments.checkNonEmpty(endpointID, &quot;endpointID&quot;);</span>
+
+<span class="fc" id="L493">        Call&lt;LabelsResponse&gt; call = service.getNotificationEndpointsIDLabels(endpointID, null);</span>
+
+<span class="fc" id="L495">        return execute(call).getLabels();</span>
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final NotificationEndpoint endpoint) {
+
+<span class="fc" id="L502">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L503">        Arguments.checkNotNull(endpoint, &quot;endpoint&quot;);</span>
+
+<span class="fc" id="L505">        return addLabel(label.getId(), endpoint.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String endpointID) {
+
+<span class="fc" id="L512">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L513">        Arguments.checkNonEmpty(endpointID, &quot;endpointID&quot;);</span>
+
+<span class="fc" id="L515">        LabelMapping labelMapping = new LabelMapping();</span>
+<span class="fc" id="L516">        labelMapping.setLabelID(labelID);</span>
+
+<span class="fc" id="L518">        Call&lt;LabelResponse&gt; call = service.postNotificationEndpointIDLabels(endpointID, labelMapping, null);</span>
+
+<span class="fc" id="L520">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final NotificationEndpoint endpoint) {
+
+<span class="fc" id="L526">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="fc" id="L527">        Arguments.checkNotNull(endpoint, &quot;bucket&quot;);</span>
+
+<span class="fc" id="L529">        deleteLabel(label.getId(), endpoint.getId());</span>
+<span class="fc" id="L530">    }</span>
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String endpointID) {
+
+<span class="fc" id="L535">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="fc" id="L536">        Arguments.checkNonEmpty(endpointID, &quot;endpointID&quot;);</span>
+
+<span class="fc" id="L538">        Call&lt;Void&gt; call = service.deleteNotificationEndpointsIDLabelsID(endpointID, labelID, null);</span>
+<span class="fc" id="L539">        execute(call);</span>
+<span class="fc" id="L540">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractInfluxDBClient.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">AbstractInfluxDBClient.java</span></div><h1>AbstractInfluxDBClient.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.annotation.Nonnull;
+
+import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.JSON;
+import com.influxdb.client.domain.Dialect;
+import com.influxdb.client.domain.HealthCheck;
+import com.influxdb.client.service.HealthService;
+import com.influxdb.client.service.PingService;
+import com.influxdb.exceptions.InfluxException;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.internal.UserAgentInterceptor;
+import com.influxdb.utils.Arguments;
+
+import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.CallAdapter;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+
+/**
+ * @author Jakub Bednar (bednar@github) (20/11/2018 07:13)
+ */
+public abstract class AbstractInfluxDBClient extends AbstractRestClient {
+
+<span class="fc" id="L58">    private static final Logger LOG = Logger.getLogger(AbstractInfluxDBClient.class.getName());</span>
+
+<span class="fc" id="L60">    public static final Dialect DEFAULT_DIALECT = new Dialect().header(true)</span>
+<span class="fc" id="L61">            .delimiter(&quot;,&quot;)</span>
+<span class="fc" id="L62">            .commentPrefix(&quot;#&quot;)</span>
+<span class="fc" id="L63">            .addAnnotationsItem(Dialect.AnnotationsEnum.DATATYPE)</span>
+<span class="fc" id="L64">            .addAnnotationsItem(Dialect.AnnotationsEnum.GROUP).addAnnotationsItem(Dialect.AnnotationsEnum.DEFAULT);</span>
+
+    public final HealthService healthService;
+    public final PingService pingService;
+
+    protected final Retrofit retrofit;
+    protected final InfluxDBClientOptions options;
+
+    protected final HttpLoggingInterceptor loggingInterceptor;
+    protected final GzipInterceptor gzipInterceptor;
+    private final AuthenticateInterceptor authenticateInterceptor;
+    private final OkHttpClient okHttpClient;
+<span class="fc" id="L76">    protected final Collection&lt;AutoCloseable&gt; autoCloseables = new CopyOnWriteArrayList&lt;&gt;();</span>
+
+    public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options, @Nonnull final String clientType) {
+<span class="fc" id="L79">        this(options, clientType, Collections.singletonList(RxJava3CallAdapterFactory.createSynchronous()));</span>
+<span class="fc" id="L80">    }</span>
+
+    public AbstractInfluxDBClient(@Nonnull final InfluxDBClientOptions options,
+                                  @Nonnull final String clientType,
+<span class="fc" id="L84">                                  @Nonnull final Collection&lt;CallAdapter.Factory&gt; factories) {</span>
+
+<span class="fc" id="L86">        Arguments.checkNotNull(options, &quot;InfluxDBClientOptions&quot;);</span>
+<span class="fc" id="L87">        Arguments.checkNotNull(factories, &quot;factories&quot;);</span>
+<span class="fc" id="L88">        Arguments.checkNonEmpty(clientType, &quot;clientType&quot;);</span>
+
+<span class="fc" id="L90">        this.options = options;</span>
+<span class="fc" id="L91">        this.loggingInterceptor = new HttpLoggingInterceptor();</span>
+<span class="fc" id="L92">        this.loggingInterceptor.redactHeader(&quot;Authorization&quot;);</span>
+<span class="fc" id="L93">        setLogLevel(loggingInterceptor, options.getLogLevel());</span>
+<span class="fc" id="L94">        this.authenticateInterceptor = new AuthenticateInterceptor(options);</span>
+<span class="fc" id="L95">        this.gzipInterceptor = new GzipInterceptor();</span>
+
+<span class="fc bfc" id="L97" title="All 2 branches covered.">        String customClientType = options.getClientType() != null ? options.getClientType() : clientType;</span>
+<span class="fc" id="L98">        this.okHttpClient = options.getOkHttpClient()</span>
+                //
+                // We don't need to disable the `retryOnConnectionFailure`. The retry logic
+                // in the OkHttp is not in a collision with our &quot;exponential backoff strategy&quot;
+                // for writes. OkHttp logic uses the possibility of routing to another &quot;routes&quot;
+                // - e.g. network loopback or multiple proxies.
+                //
+                //.retryOnConnectionFailure(false)
+<span class="fc" id="L106">                .addInterceptor(new UserAgentInterceptor(customClientType))</span>
+<span class="fc" id="L107">                .addInterceptor(this.authenticateInterceptor)</span>
+<span class="fc" id="L108">                .addInterceptor(this.loggingInterceptor)</span>
+<span class="fc" id="L109">                .addInterceptor(this.gzipInterceptor)</span>
+<span class="fc" id="L110">                .build();</span>
+
+<span class="fc" id="L112">        this.authenticateInterceptor.initToken(okHttpClient);</span>
+
+<span class="fc" id="L114">        Retrofit.Builder retrofitBuilder = new Retrofit.Builder()</span>
+<span class="fc" id="L115">                .baseUrl(options.getUrl())</span>
+<span class="fc" id="L116">                .client(okHttpClient)</span>
+<span class="fc" id="L117">                .addConverterFactory(ScalarsConverterFactory.create())</span>
+<span class="fc" id="L118">                .addConverterFactory(GsonConverterFactory.create(new JSON().getGson()));</span>
+
+<span class="fc bfc" id="L120" title="All 2 branches covered.">        for (CallAdapter.Factory factory : factories) {</span>
+<span class="fc" id="L121">            retrofitBuilder.addCallAdapterFactory(factory);</span>
+<span class="fc" id="L122">        }</span>
+
+<span class="fc" id="L124">        this.retrofit = retrofitBuilder.build();</span>
+
+<span class="fc" id="L126">        this.healthService = retrofit.create(HealthService.class);</span>
+<span class="fc" id="L127">        this.pingService = retrofit.create(PingService.class);</span>
+<span class="fc" id="L128">    }</span>
+
+    public void close() {
+
+<span class="fc" id="L132">        autoCloseables.stream().filter(Objects::nonNull).forEach(resource -&gt; {</span>
+            try {
+<span class="fc" id="L134">                resource.close();</span>
+<span class="nc" id="L135">            } catch (Exception e) {</span>
+<span class="nc" id="L136">                LOG.log(Level.WARNING, String.format(&quot;Exception was thrown while closing: %s&quot;, resource), e);</span>
+<span class="fc" id="L137">            }</span>
+<span class="fc" id="L138">        });</span>
+<span class="fc" id="L139">        autoCloseables.clear();</span>
+
+        //
+        // signout
+        //
+        try {
+<span class="fc" id="L145">            this.authenticateInterceptor.signout();</span>
+<span class="nc" id="L146">        } catch (IOException e) {</span>
+<span class="nc" id="L147">            LOG.log(Level.FINEST, &quot;The signout exception&quot;, e);</span>
+<span class="fc" id="L148">        }</span>
+
+        //
+        // Shutdown OkHttp
+        //
+<span class="fc" id="L153">        okHttpClient.connectionPool().evictAll();</span>
+<span class="fc" id="L154">        okHttpClient.dispatcher().executorService().shutdown();</span>
+<span class="fc" id="L155">    }</span>
+
+    @Nonnull
+    protected HealthCheck health(final Call&lt;HealthCheck&gt; healthCall) {
+
+<span class="fc" id="L160">        Arguments.checkNotNull(healthCall, &quot;health call&quot;);</span>
+
+        try {
+<span class="fc" id="L163">            return execute(healthCall);</span>
+<span class="fc" id="L164">        } catch (InfluxException e) {</span>
+<span class="fc" id="L165">            HealthCheck health = new HealthCheck();</span>
+<span class="fc" id="L166">            health.setName(&quot;influxdb&quot;);</span>
+<span class="fc" id="L167">            health.setStatus(HealthCheck.StatusEnum.FAIL);</span>
+<span class="fc" id="L168">            health.setMessage(e.getMessage());</span>
+
+<span class="fc" id="L170">            return health;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

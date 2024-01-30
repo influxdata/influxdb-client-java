@@ -1,0 +1,504 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Point.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.write</a> &gt; <span class="el_source">Point.java</span></div><h1>Point.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.write;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.text.NumberFormat;
+import java.time.Instant;
+import java.util.Collection;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
+
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.internal.NanosecondConverter;
+import com.influxdb.utils.Arguments;
+
+import static com.influxdb.client.write.WriteParameters.DEFAULT_WRITE_PRECISION;
+
+/**
+ * Point defines the values that will be written to the database.
+ * &lt;a href=&quot;http://bit.ly/influxdata-point&quot;&gt;See Go Implementation&lt;/a&gt;.
+ *
+ * @author Jakub Bednar (bednar@github) (11/10/2018 11:40)
+ */
+@NotThreadSafe
+public final class Point {
+
+    private static final int MAX_FRACTION_DIGITS = 340;
+<span class="fc" id="L56">    private static final ThreadLocal&lt;NumberFormat&gt; NUMBER_FORMATTER =</span>
+<span class="fc" id="L57">            ThreadLocal.withInitial(() -&gt; {</span>
+<span class="fc" id="L58">                NumberFormat numberFormat = NumberFormat.getInstance(Locale.ENGLISH);</span>
+<span class="fc" id="L59">                numberFormat.setMaximumFractionDigits(MAX_FRACTION_DIGITS);</span>
+<span class="fc" id="L60">                numberFormat.setGroupingUsed(false);</span>
+<span class="fc" id="L61">                numberFormat.setMinimumFractionDigits(1);</span>
+<span class="fc" id="L62">                return numberFormat;</span>
+            });
+
+
+    private final String name;
+<span class="fc" id="L67">    private final Map&lt;String, String&gt; tags = new TreeMap&lt;&gt;();</span>
+<span class="fc" id="L68">    private final Map&lt;String, Object&gt; fields = new TreeMap&lt;&gt;();</span>
+    private Number time;
+<span class="fc" id="L70">    private WritePrecision precision = DEFAULT_WRITE_PRECISION;</span>
+
+    /**
+     * Create a new Point with specified a measurement name.
+     *
+     * @param measurementName the measurement name
+     */
+<span class="fc" id="L77">    public Point(@Nonnull final String measurementName) {</span>
+
+<span class="fc" id="L79">        Arguments.checkNotNull(measurementName, &quot;measurement&quot;);</span>
+
+<span class="fc" id="L81">        this.name = measurementName;</span>
+<span class="fc" id="L82">    }</span>
+
+    /**
+     * Create a new Point withe specified a measurement name.
+     *
+     * @param measurementName the measurement name
+     * @return new instance of {@link Point}
+     */
+    @Nonnull
+    public static Point measurement(@Nonnull final String measurementName) {
+
+<span class="fc" id="L93">        Arguments.checkNotNull(measurementName, &quot;measurement&quot;);</span>
+
+<span class="fc" id="L95">        return new Point(measurementName);</span>
+    }
+
+    /**
+     * Adds or replaces a tag value for this point.
+     *
+     * @param key   the tag name
+     * @param value the tag value
+     * @return this
+     */
+    @Nonnull
+    public Point addTag(@Nonnull final String key, @Nullable final String value) {
+
+<span class="fc" id="L108">        Arguments.checkNotNull(key, &quot;tagName&quot;);</span>
+
+<span class="fc" id="L110">        tags.put(key, value);</span>
+
+<span class="fc" id="L112">        return this;</span>
+    }
+
+    /**
+     * Adds or replaces tags for this point.
+     *
+     * @param tagsToAdd the Map of tags to add
+     * @return this
+     */
+    @Nonnull
+    public Point addTags(@Nonnull final Map&lt;String, String&gt; tagsToAdd) {
+
+<span class="nc" id="L124">        Arguments.checkNotNull(tagsToAdd, &quot;tagsToAdd&quot;);</span>
+
+<span class="nc" id="L126">        tagsToAdd.forEach(this::addTag);</span>
+
+<span class="nc" id="L128">        return this;</span>
+    }
+
+    /**
+     * Add {@link Boolean} field.
+     *
+     * @param field the field name
+     * @param value the field value
+     * @return this
+     */
+    @Nonnull
+    public Point addField(@Nonnull final String field, final boolean value) {
+<span class="nc" id="L140">        return putField(field, value);</span>
+    }
+
+    /**
+     * Add {@link Long} field.
+     *
+     * @param field the field name
+     * @param value the field value
+     * @return this
+     */
+    public Point addField(@Nonnull final String field, final long value) {
+<span class="fc" id="L151">        return putField(field, value);</span>
+    }
+
+    /**
+     * Add {@link Double} field.
+     *
+     * @param field the field name
+     * @param value the field value
+     * @return this
+     */
+    @Nonnull
+    public Point addField(@Nonnull final String field, final double value) {
+<span class="fc" id="L163">        return putField(field, value);</span>
+    }
+
+    /**
+     * Add {@link Number} field.
+     *
+     * @param field the field name
+     * @param value the field value
+     * @return this
+     */
+    @Nonnull
+    public Point addField(@Nonnull final String field, @Nullable final Number value) {
+<span class="fc" id="L175">        return putField(field, value);</span>
+    }
+
+    /**
+     * Add {@link String} field.
+     *
+     * @param field the field name
+     * @param value the field value
+     * @return this
+     */
+    @Nonnull
+    public Point addField(@Nonnull final String field, @Nullable final String value) {
+<span class="nc" id="L187">        return putField(field, value);</span>
+    }
+
+    /**
+     * Adds or replaces fields for this point.
+     *
+     * @param fieldsToAdd the Map of fields to add
+     * @return this
+     */
+    @Nonnull
+    public Point addFields(@Nonnull final Map&lt;String, Object&gt; fieldsToAdd) {
+
+<span class="nc" id="L199">        Arguments.checkNotNull(fieldsToAdd, &quot;fieldsToAdd&quot;);</span>
+
+<span class="nc" id="L201">        fieldsToAdd.forEach(this::putField);</span>
+
+<span class="nc" id="L203">        return this;</span>
+    }
+
+    /**
+     * Updates the timestamp for the point.
+     *
+     * @param time      the timestamp
+     * @param precision the timestamp precision
+     * @return this
+     */
+    @Nonnull
+    public Point time(@Nullable final Instant time, @Nonnull final WritePrecision precision) {
+
+<span class="pc bpc" id="L216" title="1 of 2 branches missed.">        if (time == null) {</span>
+<span class="nc" id="L217">            return time((Long) null, precision);</span>
+        }
+
+<span class="fc" id="L220">        BigInteger convertedTime = NanosecondConverter.convert(time, precision);</span>
+
+<span class="fc" id="L222">        return time(convertedTime, precision);</span>
+    }
+
+    /**
+     * Updates the timestamp for the point.
+     *
+     * @param time      the timestamp
+     * @param precision the timestamp precision
+     * @return this
+     */
+    @Nonnull
+    public Point time(@Nullable final Number time, @Nonnull final WritePrecision precision) {
+
+<span class="fc" id="L235">        Arguments.checkNotNull(precision, &quot;precision&quot;);</span>
+
+<span class="fc" id="L237">        this.time = time;</span>
+<span class="fc" id="L238">        this.precision = precision;</span>
+
+<span class="fc" id="L240">        return this;</span>
+    }
+
+    /**
+     * Updates the timestamp for the point.
+     *
+     * @param time      the timestamp
+     * @param precision the timestamp precision
+     * @return this
+     */
+    @Nonnull
+    public Point time(@Nullable final Long time, @Nonnull final WritePrecision precision) {
+
+<span class="fc" id="L253">        return time((Number) time, precision);</span>
+    }
+
+    /**
+     * @return the data point timestamp
+     */
+    @Nullable
+    public Number getTime() {
+<span class="nc" id="L261">        return time;</span>
+    }
+
+    /**
+     * @return the data point precision
+     */
+    @Nonnull
+    public WritePrecision getPrecision() {
+<span class="fc" id="L269">        return precision;</span>
+    }
+
+    /**
+     * Has point any fields?
+     *
+     * @return true, if the point contains any fields, false otherwise.
+     */
+    public boolean hasFields() {
+<span class="fc bfc" id="L278" title="All 2 branches covered.">        return !fields.isEmpty();</span>
+    }
+
+    /**
+     * @return Line Protocol
+     */
+    @Nonnull
+    public String toLineProtocol() {
+<span class="nc" id="L286">        return toLineProtocol(null);</span>
+    }
+
+    /**
+     * @param pointSettings with the default values
+     * @return Line Protocol
+     */
+    @Nonnull
+    public String toLineProtocol(@Nullable final PointSettings pointSettings) {
+<span class="fc" id="L295">        return toLineProtocol(pointSettings, precision);</span>
+    }
+
+    /**
+     * @param pointSettings with the default values
+     * @param precision     required precision
+     * @return Line Protocol
+     */
+    @Nonnull
+    public String toLineProtocol(@Nullable final PointSettings pointSettings,
+                                 @Nonnull final WritePrecision precision) {
+
+<span class="fc" id="L307">        StringBuilder sb = new StringBuilder();</span>
+
+<span class="fc" id="L309">        escapeKey(sb, name, false);</span>
+<span class="fc" id="L310">        appendTags(sb, pointSettings);</span>
+<span class="fc" id="L311">        boolean appendedFields = appendFields(sb);</span>
+<span class="pc bpc" id="L312" title="1 of 2 branches missed.">        if (!appendedFields) {</span>
+<span class="nc" id="L313">            return &quot;&quot;;</span>
+        }
+<span class="fc" id="L315">        appendTime(sb, precision);</span>
+
+<span class="fc" id="L317">        return sb.toString();</span>
+    }
+
+    @Nonnull
+    private Point putField(@Nonnull final String field, @Nullable final Object value) {
+
+<span class="fc" id="L323">        Arguments.checkNonEmpty(field, &quot;fieldName&quot;);</span>
+
+<span class="fc" id="L325">        fields.put(field, value);</span>
+<span class="fc" id="L326">        return this;</span>
+    }
+
+    private void appendTags(@Nonnull final StringBuilder sb, @Nullable final PointSettings pointSettings) {
+
+
+<span class="fc" id="L332">        Set&lt;Map.Entry&lt;String, String&gt;&gt; entries = this.tags.entrySet();</span>
+<span class="pc bpc" id="L333" title="1 of 2 branches missed.">        if (pointSettings != null) {</span>
+
+<span class="fc" id="L335">            Map&lt;String, String&gt; defaultTags = pointSettings.getDefaultTags();</span>
+<span class="fc bfc" id="L336" title="All 2 branches covered.">            if (!defaultTags.isEmpty()) {</span>
+
+<span class="fc" id="L338">                entries = Stream.of(this.tags, defaultTags)</span>
+<span class="fc" id="L339">                        .map(Map::entrySet)</span>
+<span class="fc" id="L340">                        .flatMap(Collection::stream)</span>
+<span class="pc bpc" id="L341" title="1 of 2 branches missed.">                        .filter(entry -&gt; entry.getValue() != null)</span>
+<span class="fc" id="L342">                        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (v1, v2) -&gt; {</span>
+<span class="nc bnc" id="L343" title="All 2 branches missed.">                            if (v1.isEmpty()) {</span>
+<span class="nc" id="L344">                                return v2;</span>
+                            }
+
+<span class="nc" id="L347">                            return v1;</span>
+                        }, TreeMap::new))
+<span class="fc" id="L349">                        .entrySet();</span>
+            }
+        }
+
+<span class="fc bfc" id="L353" title="All 2 branches covered.">        for (Map.Entry&lt;String, String&gt; tag : entries) {</span>
+
+<span class="fc" id="L355">            String key = tag.getKey();</span>
+<span class="fc" id="L356">            String value = tag.getValue();</span>
+
+<span class="pc bpc" id="L358" title="3 of 6 branches missed.">            if (key.isEmpty() || value == null || value.isEmpty()) {</span>
+<span class="nc" id="L359">                continue;</span>
+            }
+
+<span class="fc" id="L362">            sb.append(',');</span>
+<span class="fc" id="L363">            escapeKey(sb, key);</span>
+<span class="fc" id="L364">            sb.append('=');</span>
+<span class="fc" id="L365">            escapeKey(sb, value);</span>
+<span class="fc" id="L366">        }</span>
+<span class="fc" id="L367">        sb.append(' ');</span>
+<span class="fc" id="L368">    }</span>
+
+    private boolean appendFields(@Nonnull final StringBuilder sb) {
+
+<span class="fc" id="L372">        boolean appended = false;</span>
+<span class="fc bfc" id="L373" title="All 2 branches covered.">        for (Map.Entry&lt;String, Object&gt; field : this.fields.entrySet()) {</span>
+<span class="fc" id="L374">            Object value = field.getValue();</span>
+<span class="pc bpc" id="L375" title="1 of 2 branches missed.">            if (isNotDefined(value)) {</span>
+<span class="nc" id="L376">                continue;</span>
+            }
+<span class="fc" id="L378">            escapeKey(sb, field.getKey());</span>
+<span class="fc" id="L379">            sb.append('=');</span>
+<span class="pc bpc" id="L380" title="1 of 2 branches missed.">            if (value instanceof Number) {</span>
+<span class="pc bpc" id="L381" title="2 of 6 branches missed.">                if (value instanceof Double || value instanceof Float || value instanceof BigDecimal) {</span>
+<span class="fc" id="L382">                    sb.append(NUMBER_FORMATTER.get().format(value));</span>
+                } else {
+<span class="fc" id="L384">                    sb.append(value).append('i');</span>
+                }
+<span class="nc bnc" id="L386" title="All 2 branches missed.">            } else if (value instanceof String) {</span>
+<span class="nc" id="L387">                String stringValue = (String) value;</span>
+<span class="nc" id="L388">                sb.append('&quot;');</span>
+<span class="nc" id="L389">                escapeValue(sb, stringValue);</span>
+<span class="nc" id="L390">                sb.append('&quot;');</span>
+<span class="nc" id="L391">            } else {</span>
+<span class="nc" id="L392">                sb.append(value);</span>
+            }
+
+<span class="fc" id="L395">            sb.append(',');</span>
+
+<span class="fc" id="L397">            appended = true;</span>
+<span class="fc" id="L398">        }</span>
+
+        // efficiently chop off the trailing comma
+<span class="fc" id="L401">        int lengthMinusOne = sb.length() - 1;</span>
+<span class="pc bpc" id="L402" title="1 of 2 branches missed.">        if (sb.charAt(lengthMinusOne) == ',') {</span>
+<span class="fc" id="L403">            sb.setLength(lengthMinusOne);</span>
+        }
+
+<span class="fc" id="L406">        return appended;</span>
+    }
+
+    private void appendTime(@Nonnull final StringBuilder sb, final WritePrecision precision) {
+
+<span class="pc bpc" id="L411" title="1 of 2 branches missed.">        if (this.time == null) {</span>
+<span class="nc" id="L412">            return;</span>
+        }
+
+<span class="fc" id="L415">        sb.append(&quot; &quot;);</span>
+
+<span class="pc bpc" id="L417" title="1 of 2 branches missed.">        if (this.precision == precision) {</span>
+<span class="pc bpc" id="L418" title="1 of 2 branches missed.">            if (this.time instanceof BigDecimal) {</span>
+<span class="nc" id="L419">                sb.append(((BigDecimal) this.time).toBigInteger());</span>
+<span class="fc bfc" id="L420" title="All 2 branches covered.">            } else if (this.time instanceof BigInteger) {</span>
+<span class="fc" id="L421">                sb.append(this.time);</span>
+            } else {
+<span class="fc" id="L423">                sb.append(this.time.longValue());</span>
+            }
+        } else {
+            long time;
+<span class="nc bnc" id="L427" title="All 2 branches missed.">            if (this.time instanceof BigDecimal) {</span>
+<span class="nc" id="L428">                time = ((BigDecimal) this.time).longValueExact();</span>
+<span class="nc bnc" id="L429" title="All 2 branches missed.">            } else if (this.time instanceof BigInteger) {</span>
+<span class="nc" id="L430">                time = ((BigInteger) this.time).longValueExact();</span>
+            } else {
+<span class="nc" id="L432">                time = this.time.longValue();</span>
+            }
+<span class="nc" id="L434">            sb.append(toTimeUnit(precision).convert(time, toTimeUnit(this.precision)));</span>
+        }
+<span class="fc" id="L436">    }</span>
+
+    private void escapeKey(@Nonnull final StringBuilder sb, @Nonnull final String key) {
+<span class="fc" id="L439">        escapeKey(sb, key, true);</span>
+<span class="fc" id="L440">    }</span>
+
+    private void escapeKey(@Nonnull final StringBuilder sb, @Nonnull final String key, final boolean escapeEqual) {
+<span class="fc bfc" id="L443" title="All 2 branches covered.">        for (int i = 0; i &lt; key.length(); i++) {</span>
+<span class="pc bpc" id="L444" title="3 of 6 branches missed.">            switch (key.charAt(i)) {</span>
+                case '\n':
+<span class="nc" id="L446">                    sb.append(&quot;\\n&quot;);</span>
+<span class="nc" id="L447">                    continue;</span>
+                case '\r':
+<span class="nc" id="L449">                    sb.append(&quot;\\r&quot;);</span>
+<span class="nc" id="L450">                    continue;</span>
+                case '\t':
+<span class="nc" id="L452">                    sb.append(&quot;\\t&quot;);</span>
+<span class="nc" id="L453">                    continue;</span>
+                case ' ':
+                case ',':
+<span class="fc" id="L456">                    sb.append('\\');</span>
+<span class="fc" id="L457">                    break;</span>
+                case '=':
+<span class="pc bpc" id="L459" title="1 of 2 branches missed.">                    if (escapeEqual) {</span>
+<span class="fc" id="L460">                        sb.append('\\');</span>
+                    }
+                    break;
+                default:
+            }
+
+<span class="fc" id="L466">            sb.append(key.charAt(i));</span>
+        }
+<span class="fc" id="L468">    }</span>
+
+    private void escapeValue(@Nonnull final StringBuilder sb, @Nonnull final String value) {
+<span class="nc bnc" id="L471" title="All 2 branches missed.">        for (int i = 0; i &lt; value.length(); i++) {</span>
+<span class="nc bnc" id="L472" title="All 2 branches missed.">            switch (value.charAt(i)) {</span>
+                case '\\':
+                case '\&quot;':
+<span class="nc" id="L475">                    sb.append('\\');</span>
+                default:
+<span class="nc" id="L477">                    sb.append(value.charAt(i));</span>
+            }
+        }
+<span class="nc" id="L480">    }</span>
+
+    private boolean isNotDefined(final Object value) {
+<span class="pc bpc" id="L483" title="1 of 4 branches missed.">        return value == null</span>
+<span class="pc bpc" id="L484" title="2 of 4 branches missed.">                || (value instanceof Double &amp;&amp; !Double.isFinite((Double) value))</span>
+<span class="pc bnc" id="L485" title="All 2 branches missed.">                || (value instanceof Float &amp;&amp; !Float.isFinite((Float) value));</span>
+    }
+
+    @Nonnull
+    private TimeUnit toTimeUnit(@Nonnull final WritePrecision precision) {
+<span class="nc bnc" id="L490" title="All 5 branches missed.">        switch (precision) {</span>
+            case MS:
+<span class="nc" id="L492">                return TimeUnit.MILLISECONDS;</span>
+            case S:
+<span class="nc" id="L494">                return TimeUnit.SECONDS;</span>
+            case US:
+<span class="nc" id="L496">                return TimeUnit.MICROSECONDS;</span>
+            case NS:
+<span class="nc" id="L498">                return TimeUnit.NANOSECONDS;</span>
+            default:
+<span class="nc" id="L500">                throw new IllegalStateException(&quot;Unexpected value: &quot; + precision);</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

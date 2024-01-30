@@ -1,0 +1,499 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DashboardsApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">DashboardsApiImpl.java</span></div><h1>DashboardsApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.client.DashboardsApi;
+import com.influxdb.client.domain.AddResourceMemberRequestBody;
+import com.influxdb.client.domain.Cell;
+import com.influxdb.client.domain.CellUpdate;
+import com.influxdb.client.domain.CreateCell;
+import com.influxdb.client.domain.CreateDashboardRequest;
+import com.influxdb.client.domain.Dashboard;
+import com.influxdb.client.domain.Dashboards;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.LabelMapping;
+import com.influxdb.client.domain.LabelResponse;
+import com.influxdb.client.domain.LabelsResponse;
+import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.PatchDashboardRequest;
+import com.influxdb.client.domain.ResourceMember;
+import com.influxdb.client.domain.ResourceMembers;
+import com.influxdb.client.domain.ResourceOwner;
+import com.influxdb.client.domain.ResourceOwners;
+import com.influxdb.client.domain.User;
+import com.influxdb.client.domain.View;
+import com.influxdb.client.service.DashboardsService;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
+
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (bednar@github) (01/04/2019 10:51)
+ */
+final class DashboardsApiImpl extends AbstractRestClient implements DashboardsApi {
+
+    private final DashboardsService service;
+
+<span class="nc" id="L61">    DashboardsApiImpl(@Nonnull final DashboardsService service) {</span>
+
+<span class="nc" id="L63">        Arguments.checkNotNull(service, &quot;service&quot;);</span>
+
+<span class="nc" id="L65">        this.service = service;</span>
+<span class="nc" id="L66">    }</span>
+
+    @Override
+    public Dashboard createDashboard(@Nonnull final String name,
+                                     @Nullable final String description,
+                                     @Nonnull final String orgID) {
+
+<span class="nc" id="L73">        Arguments.checkNonEmpty(name, &quot;name&quot;);</span>
+<span class="nc" id="L74">        Arguments.checkNonEmpty(description, &quot;description&quot;);</span>
+<span class="nc" id="L75">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+
+<span class="nc" id="L77">        return createDashboard(new CreateDashboardRequest().name(name).description(description).orgID(orgID));</span>
+    }
+
+    @Nonnull
+    @Override
+    public Dashboard createDashboard(@Nonnull final CreateDashboardRequest createDashboardRequest) {
+
+<span class="nc" id="L84">        Arguments.checkNotNull(createDashboardRequest, &quot;createDashboardRequest&quot;);</span>
+
+<span class="nc" id="L86">        Call&lt;Dashboard&gt; call = service.postDashboards(createDashboardRequest, null);</span>
+
+<span class="nc" id="L88">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Dashboard updateDashboard(@Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L95">        Arguments.checkNotNull(dashboard, &quot;Dashboard&quot;);</span>
+
+<span class="nc" id="L97">        PatchDashboardRequest request = new PatchDashboardRequest()</span>
+<span class="nc" id="L98">                .name(dashboard.getName())</span>
+<span class="nc" id="L99">                .description(dashboard.getDescription());</span>
+
+<span class="nc" id="L101">        Call&lt;Dashboard&gt; call = service.patchDashboardsID(dashboard.getId(), null, request);</span>
+
+<span class="nc" id="L103">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteDashboard(@Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L109">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L111">        deleteDashboard(dashboard.getId());</span>
+<span class="nc" id="L112">    }</span>
+
+    @Override
+    public void deleteDashboard(@Nonnull final String dashboardID) {
+
+<span class="nc" id="L117">        Arguments.checkNotNull(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L119">        Call&lt;Void&gt; call = service.deleteDashboardsID(dashboardID, null);</span>
+
+<span class="nc" id="L121">        execute(call);</span>
+<span class="nc" id="L122">    }</span>
+
+    @Nonnull
+    @Override
+    public Dashboard findDashboardByID(@Nonnull final String dashboardID) {
+
+<span class="nc" id="L128">        Arguments.checkNotNull(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L130">        Call&lt;Dashboard&gt; call = service.getDashboardsID(dashboardID, null, null);</span>
+
+<span class="nc" id="L132">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Dashboard&gt; findDashboards() {
+<span class="nc" id="L138">        return findDashboardsByOrgName(null);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Dashboard&gt; findDashboardsByOrganization(@Nonnull final Organization organization) {
+
+<span class="nc" id="L145">        return findDashboardsByOrgName(organization.getName());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Dashboard&gt; findDashboardsByOrgName(@Nullable final String orgName) {
+
+<span class="nc" id="L152">        Call&lt;Dashboards&gt; call = service</span>
+<span class="nc" id="L153">                .getDashboards(null, null, null, null, null, null, null, null, orgName);</span>
+
+<span class="nc" id="L155">        return execute(call).getDashboards();</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L162">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L164">        return getMembers(dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceMember&gt; getMembers(@Nonnull final String dashboardID) {
+
+<span class="nc" id="L171">        Arguments.checkNotNull(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L173">        Call&lt;ResourceMembers&gt; call = service.getDashboardsIDMembers(dashboardID, null);</span>
+
+<span class="nc" id="L175">        return execute(call).getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final User member, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L182">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="nc" id="L183">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L185">        return addMember(member.getId(), dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceMember addMember(@Nonnull final String memberID, @Nonnull final String dashboardID) {
+
+<span class="nc" id="L192">        Arguments.checkNotNull(memberID, &quot;memberID&quot;);</span>
+<span class="nc" id="L193">        Arguments.checkNotNull(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L195">        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody().id(memberID);</span>
+
+<span class="nc" id="L197">        Call&lt;ResourceMember&gt; call = service.postDashboardsIDMembers(dashboardID, user, null);</span>
+
+<span class="nc" id="L199">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteMember(@Nonnull final User member, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L205">        Arguments.checkNotNull(member, &quot;member&quot;);</span>
+<span class="nc" id="L206">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L208">        deleteMember(member.getId(), dashboard.getId());</span>
+<span class="nc" id="L209">    }</span>
+
+    @Override
+    public void deleteMember(@Nonnull final String memberID, @Nonnull final String dashboardID) {
+
+<span class="nc" id="L214">        Arguments.checkNotNull(memberID, &quot;memberID&quot;);</span>
+<span class="nc" id="L215">        Arguments.checkNotNull(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L217">        Call&lt;Void&gt; call = service.deleteDashboardsIDMembersID(memberID, dashboardID, null);</span>
+
+<span class="nc" id="L219">        execute(call);</span>
+<span class="nc" id="L220">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceOwner&gt; getOwners(@Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L226">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L228">        return getOwners(dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;ResourceOwner&gt; getOwners(@Nonnull final String dashboardID) {
+
+<span class="nc" id="L235">        Arguments.checkNotNull(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L237">        Call&lt;ResourceOwners&gt; call = service.getDashboardsIDOwners(dashboardID, null);</span>
+
+<span class="nc" id="L239">        return execute(call).getUsers();</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceOwner addOwner(@Nonnull final User owner, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L246">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L247">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L249">        return addOwner(owner.getId(), dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public ResourceOwner addOwner(@Nonnull final String ownerID, @Nonnull final String dashboardID) {
+
+<span class="nc" id="L256">        Arguments.checkNotNull(ownerID, &quot;ownerID&quot;);</span>
+<span class="nc" id="L257">        Arguments.checkNotNull(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L259">        AddResourceMemberRequestBody user = new AddResourceMemberRequestBody().id(ownerID);</span>
+
+<span class="nc" id="L261">        Call&lt;ResourceOwner&gt; call = service.postDashboardsIDOwners(dashboardID, user, null);</span>
+
+<span class="nc" id="L263">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteOwner(@Nonnull final User owner, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L269">        Arguments.checkNotNull(owner, &quot;owner&quot;);</span>
+<span class="nc" id="L270">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L272">        deleteOwner(owner.getId(), dashboard.getId());</span>
+<span class="nc" id="L273">    }</span>
+
+    @Override
+    public void deleteOwner(@Nonnull final String ownerID, @Nonnull final String dashboardID) {
+
+<span class="nc" id="L278">        Arguments.checkNotNull(ownerID, &quot;ownerID&quot;);</span>
+<span class="nc" id="L279">        Arguments.checkNotNull(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L281">        Call&lt;Void&gt; call = service.deleteDashboardsIDOwnersID(ownerID, dashboardID, null);</span>
+
+<span class="nc" id="L283">        execute(call);</span>
+<span class="nc" id="L284">    }</span>
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L290">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L292">        return getLabels(dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final String dashboardID) {
+
+<span class="nc" id="L299">        Arguments.checkNotNull(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L301">        Call&lt;LabelsResponse&gt; call = service.getDashboardsIDLabels(dashboardID, null);</span>
+
+<span class="nc" id="L303">        return execute(call).getLabels();</span>
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final Label label, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L310">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L311">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L313">        return addLabel(label.getId(), dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public LabelResponse addLabel(@Nonnull final String labelID, @Nonnull final String dashboardID) {
+
+<span class="nc" id="L320">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L321">        Arguments.checkNonEmpty(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L323">        LabelMapping labelMapping = new LabelMapping().labelID(labelID);</span>
+
+<span class="nc" id="L325">        Call&lt;LabelResponse&gt; call = service.postDashboardsIDLabels(dashboardID, labelMapping, null);</span>
+
+<span class="nc" id="L327">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L333">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L334">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L336">        deleteLabel(label.getId(), dashboard.getId());</span>
+<span class="nc" id="L337">    }</span>
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String dashboardID) {
+
+<span class="nc" id="L342">        Arguments.checkNonEmpty(labelID, &quot;labelID&quot;);</span>
+<span class="nc" id="L343">        Arguments.checkNonEmpty(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L345">        Call&lt;Void&gt; call = service.deleteDashboardsIDLabelsID(dashboardID, labelID, null);</span>
+
+<span class="nc" id="L347">        execute(call);</span>
+<span class="nc" id="L348">    }</span>
+
+    @Nonnull
+    @Override
+    public Cell addCell(@Nonnull final CreateCell createCell, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L354">        Arguments.checkNotNull(createCell, &quot;createCell&quot;);</span>
+<span class="nc" id="L355">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L357">        return addCell(createCell, dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Cell addCell(@Nonnull final CreateCell createCell, @Nonnull final String dashboardID) {
+
+<span class="nc" id="L364">        Arguments.checkNotNull(createCell, &quot;createCell&quot;);</span>
+<span class="nc" id="L365">        Arguments.checkNonEmpty(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L367">        Call&lt;Cell&gt; call = service.postDashboardsIDCells(dashboardID, createCell, null);</span>
+
+<span class="nc" id="L369">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Dashboard replaceCells(@Nonnull final List&lt;Cell&gt; cells, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L376">        Arguments.checkNotNull(cells, &quot;cells&quot;);</span>
+<span class="nc" id="L377">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L379">        return replaceCells(cells, dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Dashboard replaceCells(@Nonnull final List&lt;Cell&gt; cells, @Nonnull final String dashboardID) {
+
+<span class="nc" id="L386">        Arguments.checkNotNull(cells, &quot;cells&quot;);</span>
+<span class="nc" id="L387">        Arguments.checkNonEmpty(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L389">        Call&lt;Dashboard&gt; call = service.putDashboardsIDCells(dashboardID, cells, null);</span>
+
+<span class="nc" id="L391">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Cell updateCell(@Nonnull final CellUpdate cellUpdate,
+                           @Nonnull final String cellID,
+                           @Nonnull final String dashboardID) {
+
+<span class="nc" id="L400">        Arguments.checkNotNull(cellUpdate, &quot;cellUpdate&quot;);</span>
+<span class="nc" id="L401">        Arguments.checkNonEmpty(cellID, &quot;cellID&quot;);</span>
+<span class="nc" id="L402">        Arguments.checkNonEmpty(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L404">        Call&lt;Cell&gt; call = service.patchDashboardsIDCellsID(dashboardID, cellID, cellUpdate, null);</span>
+
+<span class="nc" id="L406">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteCell(@Nonnull final Cell cell, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L412">        Arguments.checkNotNull(cell, &quot;cell&quot;);</span>
+<span class="nc" id="L413">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L415">        deleteCell(cell.getId(), dashboard.getId());</span>
+<span class="nc" id="L416">    }</span>
+
+    @Override
+    public void deleteCell(@Nonnull final String cellID, @Nonnull final String dashboardID) {
+
+<span class="nc" id="L421">        Arguments.checkNonEmpty(cellID, &quot;cellID&quot;);</span>
+<span class="nc" id="L422">        Arguments.checkNonEmpty(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L424">        Call&lt;Void&gt; call = service.deleteDashboardsIDCellsID(dashboardID, cellID, null);</span>
+
+<span class="nc" id="L426">        execute(call);</span>
+<span class="nc" id="L427">    }</span>
+
+    @Nonnull
+    @Override
+    public View addCellView(@Nonnull final View view, @Nonnull final Cell cell, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L433">        Arguments.checkNotNull(view, &quot;view&quot;);</span>
+<span class="nc" id="L434">        Arguments.checkNotNull(cell, &quot;cell&quot;);</span>
+<span class="nc" id="L435">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L437">        return addCellView(view, cell.getId(), dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public View addCellView(@Nonnull final View view, @Nonnull final String cellID, final @Nonnull String dashboardID) {
+
+<span class="nc" id="L444">        Arguments.checkNotNull(view, &quot;view&quot;);</span>
+<span class="nc" id="L445">        Arguments.checkNonEmpty(cellID, &quot;cellID&quot;);</span>
+<span class="nc" id="L446">        Arguments.checkNonEmpty(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L448">        return updateCellView(view, cellID, dashboardID);</span>
+    }
+
+    @Nonnull
+    @Override
+    public View updateCellView(@Nonnull final View view, @Nonnull final Cell cell, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L455">        Arguments.checkNotNull(view, &quot;view&quot;);</span>
+<span class="nc" id="L456">        Arguments.checkNotNull(cell, &quot;cell&quot;);</span>
+<span class="nc" id="L457">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L459">        return updateCellView(view, cell.getId(), dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public View updateCellView(@Nonnull final View view,
+                               @Nonnull final String cellID,
+                               @Nonnull final String dashboardID) {
+
+<span class="nc" id="L468">        Arguments.checkNotNull(view, &quot;view&quot;);</span>
+<span class="nc" id="L469">        Arguments.checkNonEmpty(cellID, &quot;cellID&quot;);</span>
+<span class="nc" id="L470">        Arguments.checkNonEmpty(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L472">        Call&lt;View&gt; call = service.patchDashboardsIDCellsIDView(dashboardID, cellID, view, null);</span>
+
+<span class="nc" id="L474">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public View getCellView(@Nonnull final Cell cell, @Nonnull final Dashboard dashboard) {
+
+<span class="nc" id="L481">        Arguments.checkNotNull(cell, &quot;cell&quot;);</span>
+<span class="nc" id="L482">        Arguments.checkNotNull(dashboard, &quot;dashboard&quot;);</span>
+
+<span class="nc" id="L484">        return getCellView(cell.getId(), dashboard.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public View getCellView(@Nonnull final String cellID, @Nonnull final String dashboardID) {
+
+<span class="nc" id="L491">        Arguments.checkNonEmpty(cellID, &quot;cellID&quot;);</span>
+<span class="nc" id="L492">        Arguments.checkNonEmpty(dashboardID, &quot;dashboardID&quot;);</span>
+
+<span class="nc" id="L494">        Call&lt;View&gt; call = service.getDashboardsIDCellsIDView(dashboardID, cellID, null);</span>
+
+<span class="nc" id="L496">        return execute(call);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

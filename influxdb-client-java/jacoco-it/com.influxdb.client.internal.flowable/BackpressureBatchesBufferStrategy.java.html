@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BackpressureBatchesBufferStrategy.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal.flowable</a> &gt; <span class="el_source">BackpressureBatchesBufferStrategy.java</span></div><h1>BackpressureBatchesBufferStrategy.java</h1><pre class="source lang-java linenums">package com.influxdb.client.internal.flowable;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
+
+import com.influxdb.client.internal.AbstractWriteClient;
+
+import io.reactivex.rxjava3.annotations.NonNull;
+import io.reactivex.rxjava3.core.BackpressureOverflowStrategy;
+import io.reactivex.rxjava3.core.FlowableOperator;
+import io.reactivex.rxjava3.core.FlowableSubscriber;
+import io.reactivex.rxjava3.exceptions.Exceptions;
+import io.reactivex.rxjava3.exceptions.MissingBackpressureException;
+import io.reactivex.rxjava3.functions.Action;
+import io.reactivex.rxjava3.internal.operators.flowable.FlowableOnBackpressureBufferStrategy;
+import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
+import io.reactivex.rxjava3.internal.util.BackpressureHelper;
+import io.reactivex.rxjava3.plugins.RxJavaPlugins;
+import org.reactivestreams.Subscriber;
+import org.reactivestreams.Subscription;
+
+/**
+ * The backpressure strategy which uses total sum of {@link AbstractWriteClient.BatchWriteItem#length()}
+ * to determine backpressure boundary.
+ * &lt;p&gt;
+ * The original strategy {@link FlowableOnBackpressureBufferStrategy} uses only count of elements.
+ *
+ * @see FlowableOnBackpressureBufferStrategy
+ */
+public final class BackpressureBatchesBufferStrategy implements
+        FlowableOperator&lt;AbstractWriteClient.BatchWriteItem, AbstractWriteClient.BatchWriteItem&gt; {
+
+    final long bufferSize;
+
+    final Action onOverflow;
+
+    final BackpressureOverflowStrategy strategy;
+
+    public BackpressureBatchesBufferStrategy(long bufferSize, Action onOverflow,
+<span class="fc" id="L42">                                             BackpressureOverflowStrategy strategy) {</span>
+<span class="fc" id="L43">        this.bufferSize = bufferSize;</span>
+<span class="fc" id="L44">        this.onOverflow = onOverflow;</span>
+<span class="fc" id="L45">        this.strategy = strategy;</span>
+<span class="fc" id="L46">    }</span>
+
+    @Override
+    public @NonNull Subscriber&lt;? super AbstractWriteClient.BatchWriteItem&gt; apply(
+            @NonNull final Subscriber&lt;? super AbstractWriteClient.BatchWriteItem&gt; subscriber) throws Throwable {
+<span class="fc" id="L51">        return new OnBackpressureBufferStrategySubscriber(subscriber, onOverflow, strategy, bufferSize);</span>
+    }
+
+    static final class OnBackpressureBufferStrategySubscriber
+            extends AtomicInteger
+            implements FlowableSubscriber&lt;AbstractWriteClient.BatchWriteItem&gt;, Subscription {
+
+        private static final long serialVersionUID = 3240706908776709697L;
+
+        final Subscriber&lt;? super AbstractWriteClient.BatchWriteItem&gt; downstream;
+
+        final Action onOverflow;
+
+        final BackpressureOverflowStrategy strategy;
+
+        final long bufferSize;
+
+        final AtomicLong requested;
+
+        final Deque&lt;AbstractWriteClient.BatchWriteItem&gt; deque;
+
+        Subscription upstream;
+
+        volatile boolean cancelled;
+
+        volatile boolean done;
+        Throwable error;
+
+        OnBackpressureBufferStrategySubscriber(Subscriber&lt;? super AbstractWriteClient.BatchWriteItem&gt; actual,
+                                               Action onOverflow,
+                                               BackpressureOverflowStrategy strategy,
+<span class="fc" id="L82">                                               long bufferSize) {</span>
+<span class="fc" id="L83">            this.downstream = actual;</span>
+<span class="fc" id="L84">            this.onOverflow = onOverflow;</span>
+<span class="fc" id="L85">            this.strategy = strategy;</span>
+<span class="fc" id="L86">            this.bufferSize = bufferSize;</span>
+<span class="fc" id="L87">            this.requested = new AtomicLong();</span>
+<span class="fc" id="L88">            this.deque = new ArrayDeque&lt;&gt;();</span>
+<span class="fc" id="L89">        }</span>
+
+        @Override
+        public void onSubscribe(@NonNull Subscription s) {
+<span class="pc bpc" id="L93" title="1 of 2 branches missed.">            if (SubscriptionHelper.validate(this.upstream, s)) {</span>
+<span class="fc" id="L94">                this.upstream = s;</span>
+
+<span class="fc" id="L96">                downstream.onSubscribe(this);</span>
+
+<span class="fc" id="L98">                s.request(Long.MAX_VALUE);</span>
+            }
+<span class="fc" id="L100">        }</span>
+
+        @Override
+        public void onNext(AbstractWriteClient.BatchWriteItem t) {
+<span class="pc bpc" id="L104" title="1 of 2 branches missed.">            if (done) {</span>
+<span class="nc" id="L105">                return;</span>
+            }
+<span class="fc" id="L107">            boolean callOnOverflow = false;</span>
+<span class="fc" id="L108">            boolean callError = false;</span>
+<span class="fc" id="L109">            Deque&lt;AbstractWriteClient.BatchWriteItem&gt; dq = deque;</span>
+<span class="fc" id="L110">            synchronized (dq) {</span>
+<span class="fc" id="L111">                AtomicLong size = new AtomicLong(t.length());</span>
+<span class="pc" id="L112">                dq.forEach(batchWriteItem -&gt; size.addAndGet(batchWriteItem.length()));</span>
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">                if (size.get() &gt; bufferSize) {</span>
+<span class="nc bnc" id="L114" title="All 3 branches missed.">                    switch (strategy) {</span>
+                        case DROP_LATEST:
+<span class="nc" id="L116">                            dq.pollLast();</span>
+<span class="nc" id="L117">                            dq.offer(t);</span>
+<span class="nc" id="L118">                            callOnOverflow = true;</span>
+<span class="nc" id="L119">                            break;</span>
+                        case DROP_OLDEST:
+<span class="nc" id="L121">                            dq.poll();</span>
+<span class="nc" id="L122">                            dq.offer(t);</span>
+<span class="nc" id="L123">                            callOnOverflow = true;</span>
+<span class="nc" id="L124">                            break;</span>
+                        default:
+                            // signal error
+<span class="nc" id="L127">                            callError = true;</span>
+<span class="nc" id="L128">                            break;</span>
+                    }
+                } else {
+<span class="fc" id="L131">                    dq.offer(t);</span>
+                }
+<span class="fc" id="L133">            }</span>
+
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">            if (callOnOverflow) {</span>
+<span class="nc bnc" id="L136" title="All 2 branches missed.">                if (onOverflow != null) {</span>
+                    try {
+<span class="nc" id="L138">                        onOverflow.run();</span>
+<span class="nc" id="L139">                    } catch (Throwable ex) {</span>
+<span class="nc" id="L140">                        Exceptions.throwIfFatal(ex);</span>
+<span class="nc" id="L141">                        upstream.cancel();</span>
+<span class="nc" id="L142">                        onError(ex);</span>
+<span class="nc" id="L143">                    }</span>
+                }
+<span class="pc bpc" id="L145" title="1 of 2 branches missed.">            } else if (callError) {</span>
+<span class="nc" id="L146">                upstream.cancel();</span>
+<span class="nc" id="L147">                onError(new MissingBackpressureException());</span>
+            } else {
+<span class="fc" id="L149">                drain();</span>
+            }
+<span class="fc" id="L151">        }</span>
+
+        @Override
+        public void onError(Throwable t) {
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            if (done) {</span>
+<span class="nc" id="L156">                RxJavaPlugins.onError(t);</span>
+<span class="nc" id="L157">                return;</span>
+            }
+<span class="nc" id="L159">            error = t;</span>
+<span class="nc" id="L160">            done = true;</span>
+<span class="nc" id="L161">            drain();</span>
+<span class="nc" id="L162">        }</span>
+
+        @Override
+        public void onComplete() {
+<span class="fc" id="L166">            done = true;</span>
+<span class="fc" id="L167">            drain();</span>
+<span class="fc" id="L168">        }</span>
+
+        @Override
+        public void request(long n) {
+<span class="pc bpc" id="L172" title="1 of 2 branches missed.">            if (SubscriptionHelper.validate(n)) {</span>
+<span class="fc" id="L173">                BackpressureHelper.add(requested, n);</span>
+<span class="fc" id="L174">                drain();</span>
+            }
+<span class="fc" id="L176">        }</span>
+
+        @Override
+        public void cancel() {
+<span class="nc" id="L180">            cancelled = true;</span>
+<span class="nc" id="L181">            upstream.cancel();</span>
+
+<span class="nc bnc" id="L183" title="All 2 branches missed.">            if (getAndIncrement() == 0) {</span>
+<span class="nc" id="L184">                clear(deque);</span>
+            }
+<span class="nc" id="L186">        }</span>
+
+        void clear(Deque&lt;AbstractWriteClient.BatchWriteItem&gt; dq) {
+<span class="nc" id="L189">            synchronized (dq) {</span>
+<span class="nc" id="L190">                dq.clear();</span>
+<span class="nc" id="L191">            }</span>
+<span class="nc" id="L192">        }</span>
+
+        void drain() {
+<span class="fc bfc" id="L195" title="All 2 branches covered.">            if (getAndIncrement() != 0) {</span>
+<span class="fc" id="L196">                return;</span>
+            }
+
+<span class="fc" id="L199">            int missed = 1;</span>
+<span class="fc" id="L200">            Deque&lt;AbstractWriteClient.BatchWriteItem&gt; dq = deque;</span>
+<span class="fc" id="L201">            Subscriber&lt;? super AbstractWriteClient.BatchWriteItem&gt; a = downstream;</span>
+            for (; ; ) {
+<span class="fc" id="L203">                long r = requested.get();</span>
+<span class="fc" id="L204">                long e = 0L;</span>
+<span class="pc bpc" id="L205" title="1 of 2 branches missed.">                while (e != r) {</span>
+<span class="pc bpc" id="L206" title="1 of 2 branches missed.">                    if (cancelled) {</span>
+<span class="nc" id="L207">                        clear(dq);</span>
+<span class="nc" id="L208">                        return;</span>
+                    }
+
+<span class="fc" id="L211">                    boolean d = done;</span>
+
+                    AbstractWriteClient.BatchWriteItem v;
+
+<span class="fc" id="L215">                    synchronized (dq) {</span>
+<span class="fc" id="L216">                        v = dq.poll();</span>
+<span class="fc" id="L217">                    }</span>
+
+<span class="fc bfc" id="L219" title="All 2 branches covered.">                    boolean empty = v == null;</span>
+
+<span class="fc bfc" id="L221" title="All 2 branches covered.">                    if (d) {</span>
+<span class="fc" id="L222">                        Throwable ex = error;</span>
+<span class="pc bpc" id="L223" title="1 of 2 branches missed.">                        if (ex != null) {</span>
+<span class="nc" id="L224">                            clear(dq);</span>
+<span class="nc" id="L225">                            a.onError(ex);</span>
+<span class="nc" id="L226">                            return;</span>
+                        }
+<span class="pc bpc" id="L228" title="1 of 2 branches missed.">                        if (empty) {</span>
+<span class="fc" id="L229">                            a.onComplete();</span>
+<span class="fc" id="L230">                            return;</span>
+                        }
+                    }
+
+<span class="fc bfc" id="L234" title="All 2 branches covered.">                    if (empty) {</span>
+<span class="fc" id="L235">                        break;</span>
+                    }
+
+<span class="fc" id="L238">                    a.onNext(v);</span>
+
+<span class="fc" id="L240">                    e++;</span>
+<span class="fc" id="L241">                }</span>
+
+<span class="pc bpc" id="L243" title="1 of 2 branches missed.">                if (e == r) {</span>
+<span class="nc bnc" id="L244" title="All 2 branches missed.">                    if (cancelled) {</span>
+<span class="nc" id="L245">                        clear(dq);</span>
+<span class="nc" id="L246">                        return;</span>
+                    }
+
+<span class="nc" id="L249">                    boolean d = done;</span>
+
+                    boolean empty;
+
+<span class="nc" id="L253">                    synchronized (dq) {</span>
+<span class="nc" id="L254">                        empty = dq.isEmpty();</span>
+<span class="nc" id="L255">                    }</span>
+
+<span class="nc bnc" id="L257" title="All 2 branches missed.">                    if (d) {</span>
+<span class="nc" id="L258">                        Throwable ex = error;</span>
+<span class="nc bnc" id="L259" title="All 2 branches missed.">                        if (ex != null) {</span>
+<span class="nc" id="L260">                            clear(dq);</span>
+<span class="nc" id="L261">                            a.onError(ex);</span>
+<span class="nc" id="L262">                            return;</span>
+                        }
+<span class="nc bnc" id="L264" title="All 2 branches missed.">                        if (empty) {</span>
+<span class="nc" id="L265">                            a.onComplete();</span>
+<span class="nc" id="L266">                            return;</span>
+                        }
+                    }
+                }
+
+<span class="fc bfc" id="L271" title="All 2 branches covered.">                if (e != 0L) {</span>
+<span class="fc" id="L272">                    BackpressureHelper.produced(requested, e);</span>
+                }
+
+<span class="fc" id="L275">                missed = addAndGet(-missed);</span>
+<span class="fc bfc" id="L276" title="All 2 branches covered.">                if (missed == 0) {</span>
+<span class="fc" id="L277">                    break;</span>
+                }
+<span class="fc" id="L279">            }</span>
+<span class="fc" id="L280">        }</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

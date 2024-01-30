@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FluxRecord.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The InfluxDB Client Core</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.query</a> &gt; <span class="el_source">FluxRecord.java</span></div><h1>FluxRecord.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.query;
+
+import java.io.Serializable;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.StringJoiner;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.utils.Arguments;
+
+
+/**
+ * A record is a tuple of values. Each record in the table represents a single point in the series.
+ *
+ * &lt;a href=&quot;http://bit.ly/flux-spec#record&quot;&gt;Specification&lt;/a&gt;.
+ */
+public final class FluxRecord implements Serializable {
+
+    /**
+     * The Index of the table that the record belongs.
+     */
+    private final Integer table;
+
+    /**
+     * The record's values.
+     */
+<span class="fc" id="L53">    private LinkedHashMap&lt;String, Object&gt; values = new LinkedHashMap&lt;&gt;();</span>
+
+<span class="fc" id="L55">    private List&lt;Object&gt; row = new ArrayList&lt;&gt;();</span>
+
+<span class="fc" id="L57">    public FluxRecord(@Nonnull final Integer table) {</span>
+
+<span class="fc" id="L59">        Arguments.checkNotNull(table, &quot;Table index&quot;);</span>
+
+<span class="fc" id="L61">        this.table = table;</span>
+<span class="fc" id="L62">    }</span>
+
+    /**
+     * @return the inclusive lower time bound of all records
+     */
+    @Nullable
+    public Instant getStart() {
+<span class="fc" id="L69">        return (Instant) getValueByKey(&quot;_start&quot;);</span>
+    }
+
+    /**
+     * @return the exclusive upper time bound of all records
+     */
+    @Nullable
+    public Instant getStop() {
+<span class="fc" id="L77">        return (Instant) getValueByKey(&quot;_stop&quot;);</span>
+    }
+
+    /**
+     * @return the time of the record
+     */
+    @Nullable
+    public Instant getTime() {
+<span class="fc" id="L85">        return (Instant) getValueByKey(&quot;_time&quot;);</span>
+    }
+
+    /**
+     * @return the value of the record
+     */
+    @Nullable
+    public Object getValue() {
+<span class="fc" id="L93">        return getValueByKey(&quot;_value&quot;);</span>
+    }
+
+    /**
+     * @return get value with key &lt;i&gt;_field&lt;/i&gt;
+     */
+    @Nullable
+    public String getField() {
+<span class="fc" id="L101">        return (String) getValueByKey(&quot;_field&quot;);</span>
+    }
+
+    /**
+     * @return get value with key &lt;i&gt;_measurement&lt;/i&gt;
+     */
+    @Nullable
+    public String getMeasurement() {
+<span class="fc" id="L109">        return (String) getValueByKey(&quot;_measurement&quot;);</span>
+    }
+
+    /**
+     * @return the index of table which contains the record
+     */
+    @Nonnull
+    public Integer getTable() {
+<span class="fc" id="L117">        return table;</span>
+    }
+
+    /**
+     * @return tuple of values
+     */
+    @Nonnull
+    public Map&lt;String, Object&gt; getValues() {
+<span class="fc" id="L125">        return values;</span>
+    }
+
+    /**
+     * @return record's columns
+     */
+    @Nonnull
+    public List&lt;Object&gt; getRow() {
+<span class="fc" id="L133">        return row;</span>
+    }
+
+    /**
+     * Get FluxRecord value by index.
+     *
+     * @param index of value in CSV response
+     * @return value
+     * @see ArrayIndexOutOfBoundsException
+     */
+    @Nullable
+    public Object getValueByIndex(final int index) {
+
+        //noinspection unchecked
+<span class="fc" id="L147">        return values.values().toArray()[index];</span>
+    }
+
+    /**
+     * Get FluxRecord value by key.
+     *
+     * @param key of value in CSV response
+     * @return value
+     */
+    @Nullable
+    public Object getValueByKey(@Nonnull final String key) {
+
+<span class="fc" id="L159">        Arguments.checkNonEmpty(key, &quot;key&quot;);</span>
+
+<span class="fc" id="L161">        return values.get(key);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="fc" id="L166">        return new StringJoiner(&quot;, &quot;, FluxRecord.class.getSimpleName() + &quot;[&quot;, &quot;]&quot;)</span>
+<span class="fc" id="L167">                .add(&quot;table=&quot; + table)</span>
+<span class="fc" id="L168">                .add(&quot;values=&quot; + values.size())</span>
+<span class="fc" id="L169">                .toString();</span>
+    }
+
+
+    @Override
+    public boolean equals(final Object o) {
+<span class="pc bpc" id="L175" title="1 of 2 branches missed.">        if (this == o) {</span>
+<span class="nc" id="L176">            return true;</span>
+        }
+<span class="pc bpc" id="L178" title="2 of 4 branches missed.">        if (o == null || getClass() != o.getClass()) {</span>
+<span class="nc" id="L179">            return false;</span>
+        }
+<span class="fc" id="L181">        final FluxRecord that = (FluxRecord) o;</span>
+<span class="pc bpc" id="L182" title="1 of 2 branches missed.">        return Objects.equals(table, that.table)</span>
+<span class="pc bpc" id="L183" title="1 of 2 branches missed.">                &amp;&amp; Objects.equals(values, that.values);</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="fc" id="L188">        return Objects.hash(table, values);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

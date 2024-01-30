@@ -1,0 +1,8 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+The InfluxDB 1.7+ Flux Client,com.influxdb.client.flux,FluxConnectionOptions,58,31,4,0,12,10,4,5,2,5
+The InfluxDB 1.7+ Flux Client,com.influxdb.client.flux,FluxConnectionOptions.Builder,67,38,6,1,18,10,8,3,3,3
+The InfluxDB 1.7+ Flux Client,com.influxdb.client.flux,FluxClientFactory,7,8,0,0,4,2,1,1,1,1
+The InfluxDB 1.7+ Flux Client,com.influxdb.client.flux.internal,FluxApiImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,16,0,0,0,4,0,3,0,3
+The InfluxDB 1.7+ Flux Client,com.influxdb.client.flux.internal,FluxApiImpl,211,248,1,1,51,64,14,12,13,12
+The InfluxDB 1.7+ Flux Client,com.influxdb.client.flux.internal,FluxApiImpl.new FluxCsvParser.FluxResponseConsumer() {...},0,25,0,0,0,4,0,3,0,3
+The InfluxDB 1.7+ Flux Client,com.influxdb.client.flux.internal,FluxApiImpl.new FluxCsvParser.FluxResponseConsumer() {...},25,0,0,0,4,0,3,0,3,0

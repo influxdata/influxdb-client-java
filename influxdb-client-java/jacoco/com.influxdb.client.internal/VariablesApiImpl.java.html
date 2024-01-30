@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>VariablesApiImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">VariablesApiImpl.java</span></div><h1>VariablesApiImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.util.List;
+import javax.annotation.Nonnull;
+
+import com.influxdb.client.VariablesApi;
+import com.influxdb.client.domain.Label;
+import com.influxdb.client.domain.LabelMapping;
+import com.influxdb.client.domain.LabelResponse;
+import com.influxdb.client.domain.LabelsResponse;
+import com.influxdb.client.domain.Organization;
+import com.influxdb.client.domain.Variable;
+import com.influxdb.client.domain.Variables;
+import com.influxdb.client.service.VariablesService;
+import com.influxdb.internal.AbstractRestClient;
+import com.influxdb.utils.Arguments;
+
+import retrofit2.Call;
+
+/**
+ * @author Jakub Bednar (27/03/2019 09:37)
+ */
+final class VariablesApiImpl extends AbstractRestClient implements VariablesApi {
+
+    private final VariablesService service;
+
+<span class="nc" id="L48">    VariablesApiImpl(@Nonnull final VariablesService service) {</span>
+
+<span class="nc" id="L50">        Arguments.checkNotNull(service, &quot;service&quot;);</span>
+
+<span class="nc" id="L52">        this.service = service;</span>
+<span class="nc" id="L53">    }</span>
+
+    @Nonnull
+    @Override
+    public Variable createVariable(@Nonnull final Variable variable) {
+
+<span class="nc" id="L59">        Arguments.checkNotNull(variable, &quot;variable&quot;);</span>
+
+<span class="nc" id="L61">        Call&lt;Variable&gt; call = service.postVariables(variable, null);</span>
+
+<span class="nc" id="L63">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Variable updateVariable(@Nonnull final Variable variable) {
+
+<span class="nc" id="L70">        Arguments.checkNotNull(variable, &quot;variable&quot;);</span>
+
+<span class="nc" id="L72">        Call&lt;Variable&gt; call = service.patchVariablesID(variable.getId(), variable, null);</span>
+
+<span class="nc" id="L74">        return execute(call);</span>
+    }
+
+    @Override
+    public void deleteVariable(@Nonnull final Variable variable) {
+
+<span class="nc" id="L80">        Arguments.checkNotNull(variable, &quot;variable&quot;);</span>
+
+<span class="nc" id="L82">        deleteVariable(variable.getId());</span>
+<span class="nc" id="L83">    }</span>
+
+    @Override
+    public void deleteVariable(@Nonnull final String variableID) {
+
+<span class="nc" id="L88">        Arguments.checkNonEmpty(variableID, &quot;variableID&quot;);</span>
+
+<span class="nc" id="L90">        Call&lt;Void&gt; call = service.deleteVariablesID(variableID, null);</span>
+
+<span class="nc" id="L92">        execute(call);</span>
+<span class="nc" id="L93">    }</span>
+
+    @Nonnull
+    @Override
+    public Variable cloneVariable(@Nonnull final String clonedName, @Nonnull final String variableID) {
+
+<span class="nc" id="L99">        Arguments.checkNonEmpty(clonedName, &quot;clonedName&quot;);</span>
+<span class="nc" id="L100">        Arguments.checkNonEmpty(variableID, &quot;variableID&quot;);</span>
+
+<span class="nc" id="L102">        return cloneVariable(clonedName, findVariableByID(variableID));</span>
+    }
+
+    @Nonnull
+    @Override
+    public Variable cloneVariable(@Nonnull final String clonedName, @Nonnull final Variable variable) {
+
+<span class="nc" id="L109">        Arguments.checkNonEmpty(clonedName, &quot;clonedName&quot;);</span>
+<span class="nc" id="L110">        Arguments.checkNotNull(variable, &quot;variable&quot;);</span>
+
+<span class="nc" id="L112">        Variable cloned = new Variable();</span>
+<span class="nc" id="L113">        cloned.name(clonedName)</span>
+<span class="nc" id="L114">                .orgID(variable.getOrgID())</span>
+<span class="nc" id="L115">                .selected(variable.getSelected())</span>
+<span class="nc" id="L116">                .arguments(variable.getArguments());</span>
+
+<span class="nc" id="L118">        return createVariable(cloned);</span>
+    }
+
+    @Nonnull
+    @Override
+    public Variable findVariableByID(@Nonnull final String variableID) {
+
+<span class="nc" id="L125">        Arguments.checkNonEmpty(variableID, &quot;variableID&quot;);</span>
+
+<span class="nc" id="L127">        Call&lt;Variable&gt; call = service.getVariablesID(variableID, null);</span>
+
+<span class="nc" id="L129">        return execute(call);</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Variable&gt; findVariables(@Nonnull final Organization organization) {
+
+<span class="nc" id="L136">        Arguments.checkNotNull(organization, &quot;organization&quot;);</span>
+
+<span class="nc" id="L138">        return findVariables(organization.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Variable&gt; findVariables(@Nonnull final String orgID) {
+
+<span class="nc" id="L145">        Arguments.checkNonEmpty(orgID, &quot;orgID&quot;);</span>
+
+<span class="nc" id="L147">        Call&lt;Variables&gt; call = service.getVariables(null, null, orgID);</span>
+
+<span class="nc" id="L149">        return execute(call).getVariables();</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final Variable variable) {
+
+<span class="nc" id="L156">        Arguments.checkNotNull(variable, &quot;variable&quot;);</span>
+
+<span class="nc" id="L158">        return getLabels(variable.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public List&lt;Label&gt; getLabels(@Nonnull final String variableID) {
+
+<span class="nc" id="L165">        Arguments.checkNonEmpty(&quot;variableID&quot;, variableID);</span>
+
+<span class="nc" id="L167">        Call&lt;LabelsResponse&gt; call = service.getVariablesIDLabels(variableID, null);</span>
+
+<span class="nc" id="L169">        return execute(call).getLabels();</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final Label label,
+                                   @Nonnull final Variable variable) {
+
+<span class="nc" id="L177">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L178">        Arguments.checkNotNull(variable, &quot;variable&quot;);</span>
+
+<span class="nc" id="L180">        return addLabel(label.getId(), variable.getId());</span>
+    }
+
+    @Nonnull
+    @Override
+    public Label addLabel(@Nonnull final String labelID, @Nonnull final String variableID) {
+
+<span class="nc" id="L187">        Arguments.checkNonEmpty(&quot;variableID&quot;, variableID);</span>
+<span class="nc" id="L188">        Arguments.checkNonEmpty(&quot;labelID&quot;, labelID);</span>
+
+<span class="nc" id="L190">        Call&lt;LabelResponse&gt; call = service</span>
+<span class="nc" id="L191">                .postVariablesIDLabels(variableID, new LabelMapping().labelID(labelID), null);</span>
+
+<span class="nc" id="L193">        return execute(call).getLabel();</span>
+    }
+
+    @Override
+    public void deleteLabel(@Nonnull final Label label, @Nonnull final Variable variable) {
+
+<span class="nc" id="L199">        Arguments.checkNotNull(label, &quot;label&quot;);</span>
+<span class="nc" id="L200">        Arguments.checkNotNull(variable, &quot;variable&quot;);</span>
+
+<span class="nc" id="L202">        deleteLabel(label.getId(), variable.getId());</span>
+<span class="nc" id="L203">    }</span>
+
+    @Override
+    public void deleteLabel(@Nonnull final String labelID, @Nonnull final String variableID) {
+
+<span class="nc" id="L208">        Arguments.checkNonEmpty(&quot;variableID&quot;, variableID);</span>
+<span class="nc" id="L209">        Arguments.checkNonEmpty(&quot;labelID&quot;, labelID);</span>
+
+<span class="nc" id="L211">        Call&lt;Void&gt; call = service.deleteVariablesIDLabelsID(variableID, labelID, null);</span>
+<span class="nc" id="L212">        execute(call);</span>
+<span class="nc" id="L213">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>

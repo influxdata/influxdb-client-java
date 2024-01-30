@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WriteApiBlockingImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">The Java InfluxDB 2.x Client</a> &gt; <a href="index.source.html" class="el_package">com.influxdb.client.internal</a> &gt; <span class="el_source">WriteApiBlockingImpl.java</span></div><h1>WriteApiBlockingImpl.java</h1><pre class="source lang-java linenums">/*
+ * The MIT License
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the &quot;Software&quot;), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+package com.influxdb.client.internal;
+
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import com.influxdb.client.InfluxDBClientOptions;
+import com.influxdb.client.WriteApiBlocking;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteData;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataPoint;
+import com.influxdb.client.internal.AbstractWriteClient.BatchWriteDataRecord;
+import com.influxdb.client.service.WriteService;
+import com.influxdb.client.write.Point;
+import com.influxdb.client.write.WriteParameters;
+import com.influxdb.exceptions.InfluxException;
+import com.influxdb.utils.Arguments;
+
+/**
+ * @author Jakub Bednar (bednar@github) (16/07/2019 06:48)
+ */
+final class WriteApiBlockingImpl extends AbstractWriteBlockingClient implements WriteApiBlocking {
+
+    WriteApiBlockingImpl(@Nonnull final WriteService service,
+                         @Nonnull final InfluxDBClientOptions options) {
+<span class="fc" id="L52">        super(service, options);</span>
+<span class="fc" id="L53">    }</span>
+
+    @Override
+    public void writeRecord(@Nonnull final WritePrecision precision, @Nullable final String record) {
+
+<span class="nc" id="L58">        Arguments.checkNotNull(options.getBucket(), &quot;InfluxDBClientOptions.getBucket&quot;);</span>
+<span class="nc" id="L59">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L61">        writeRecord(options.getBucket(), options.getOrg(), precision, record);</span>
+<span class="nc" id="L62">    }</span>
+
+    @Override
+    public void writeRecord(@Nonnull final String bucket,
+                            @Nonnull final String org,
+                            @Nonnull final WritePrecision precision,
+                            @Nullable final String record) {
+
+<span class="fc" id="L70">        writeRecord(record, new WriteParameters(bucket, org, precision));</span>
+<span class="fc" id="L71">    }</span>
+
+    @Override
+    public void writeRecord(@Nullable final String record,
+                            @Nonnull final WriteParameters parameters) throws InfluxException {
+
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (record == null) {</span>
+<span class="nc" id="L78">            return;</span>
+        }
+
+<span class="fc" id="L81">        Arguments.checkNotNull(parameters, &quot;WriteParameters&quot;);</span>
+<span class="fc" id="L82">        parameters.check(options);</span>
+
+<span class="fc" id="L84">        write(parameters, new BatchWriteDataRecord(record));</span>
+<span class="fc" id="L85">    }</span>
+
+    @Override
+    public void writeRecords(@Nonnull final WritePrecision precision,
+                             @Nonnull final List&lt;String&gt; records) {
+
+<span class="nc" id="L91">        Arguments.checkNotNull(options.getBucket(), &quot;InfluxDBClientOptions.getBucket&quot;);</span>
+<span class="nc" id="L92">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L94">        writeRecords(options.getBucket(), options.getOrg(), precision, records);</span>
+<span class="nc" id="L95">    }</span>
+
+    @Override
+    public void writeRecords(@Nonnull final String bucket,
+                             @Nonnull final String org,
+                             @Nonnull final WritePrecision precision,
+                             @Nonnull final List&lt;String&gt; records) {
+
+<span class="nc" id="L103">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="nc" id="L104">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+<span class="nc" id="L105">        Arguments.checkNotNull(precision, &quot;WritePrecision is required&quot;);</span>
+<span class="nc" id="L106">        Arguments.checkNotNull(records, &quot;records&quot;);</span>
+
+<span class="nc" id="L108">        writeRecords(records, new WriteParameters(bucket, org, precision));</span>
+<span class="nc" id="L109">    }</span>
+
+    @Override
+    public void writeRecords(@Nonnull final List&lt;String&gt; records,
+                             @Nonnull final WriteParameters parameters) throws InfluxException {
+
+<span class="fc" id="L115">        Arguments.checkNotNull(records, &quot;records&quot;);</span>
+<span class="fc" id="L116">        Arguments.checkNotNull(parameters, &quot;WriteParameters&quot;);</span>
+<span class="fc" id="L117">        parameters.check(options);</span>
+
+<span class="fc" id="L119">        write(parameters, records.stream().map(BatchWriteDataRecord::new));</span>
+<span class="fc" id="L120">    }</span>
+
+    @Override
+    public void writePoint(@Nullable final Point point) {
+<span class="nc" id="L124">        Arguments.checkNotNull(options.getBucket(), &quot;InfluxDBClientOptions.getBucket&quot;);</span>
+<span class="nc" id="L125">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L127">        writePoint(options.getBucket(), options.getOrg(), point);</span>
+<span class="nc" id="L128">    }</span>
+
+    @Override
+    public void writePoint(@Nonnull final String bucket, @Nonnull final String org, @Nullable final Point point) {
+
+<span class="nc" id="L133">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="nc" id="L134">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+
+<span class="nc" id="L136">        writePoint(point, new WriteParameters(bucket, org, WriteParameters.DEFAULT_WRITE_PRECISION));</span>
+<span class="nc" id="L137">    }</span>
+
+    @Override
+    public void writePoint(@Nullable final Point point,
+                           @Nonnull final WriteParameters parameters) throws InfluxException {
+
+<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        if (point == null) {</span>
+<span class="nc" id="L144">            return;</span>
+        }
+
+<span class="fc" id="L147">        Arguments.checkNotNull(parameters, &quot;WriteParameters&quot;);</span>
+<span class="fc" id="L148">        parameters.check(options);</span>
+
+<span class="fc" id="L150">        writePoints(Collections.singletonList(point), parameters);</span>
+<span class="fc" id="L151">    }</span>
+
+    @Override
+    public void writePoints(@Nonnull final List&lt;Point&gt; points) {
+<span class="nc" id="L155">        Arguments.checkNotNull(options.getBucket(), &quot;InfluxDBClientOptions.getBucket&quot;);</span>
+<span class="nc" id="L156">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L158">        writePoints(options.getBucket(), options.getOrg(), points);</span>
+<span class="nc" id="L159">    }</span>
+
+    @Override
+    public void writePoints(@Nonnull final String bucket,
+                            @Nonnull final String org,
+                            @Nonnull final List&lt;Point&gt; points) {
+
+<span class="fc" id="L166">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="fc" id="L167">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+<span class="fc" id="L168">        Arguments.checkNotNull(points, &quot;points&quot;);</span>
+
+<span class="fc" id="L170">        writePoints(points, new WriteParameters(bucket, org, WriteParameters.DEFAULT_WRITE_PRECISION));</span>
+<span class="fc" id="L171">    }</span>
+
+    @Override
+    public void writePoints(@Nonnull final List&lt;Point&gt; points,
+                            @Nonnull final WriteParameters parameters) throws InfluxException {
+<span class="fc" id="L176">        Arguments.checkNotNull(points, &quot;points&quot;);</span>
+<span class="fc" id="L177">        Arguments.checkNotNull(parameters, &quot;WriteParameters&quot;);</span>
+<span class="fc" id="L178">        parameters.check(options);</span>
+
+<span class="fc" id="L180">        points</span>
+<span class="fc" id="L181">                .stream()</span>
+<span class="fc" id="L182">                .filter(Objects::nonNull)</span>
+<span class="fc" id="L183">                .collect(Collectors.groupingBy(Point::getPrecision, LinkedHashMap::new, Collectors.toList()))</span>
+<span class="fc" id="L184">                .forEach((precision, grouped) -&gt; {</span>
+<span class="fc" id="L185">                    WriteParameters groupParameters = parameters.copy(precision, options);</span>
+<span class="fc" id="L186">                    write(</span>
+                            groupParameters,
+<span class="fc" id="L188">                            grouped.stream().map(it -&gt; new BatchWriteDataPoint(it, options)));</span>
+<span class="fc" id="L189">                });</span>
+<span class="fc" id="L190">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurement(@Nonnull final WritePrecision precision, @Nullable final M measurement) {
+
+<span class="nc" id="L195">        Arguments.checkNotNull(options.getBucket(), &quot;InfluxDBClientOptions.getBucket&quot;);</span>
+<span class="nc" id="L196">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L198">        writeMeasurement(options.getBucket(), options.getOrg(), precision, measurement);</span>
+<span class="nc" id="L199">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurement(@Nonnull final String bucket,
+                                     @Nonnull final String org,
+                                     @Nonnull final WritePrecision precision,
+                                     @Nullable final M measurement) {
+
+<span class="nc" id="L207">        writeMeasurement(measurement, new WriteParameters(bucket, org, precision));</span>
+<span class="nc" id="L208">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurement(@Nullable final M measurement,
+                                     @Nonnull final WriteParameters parameters) throws InfluxException {
+<span class="pc bpc" id="L213" title="1 of 2 branches missed.">        if (measurement == null) {</span>
+<span class="nc" id="L214">            return;</span>
+        }
+
+<span class="fc" id="L217">        Arguments.checkNotNull(parameters, &quot;WriteParameters&quot;);</span>
+<span class="fc" id="L218">        parameters.check(options);</span>
+
+<span class="fc" id="L220">        writeMeasurements(Collections.singletonList(measurement), parameters);</span>
+<span class="fc" id="L221">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurements(@Nonnull final WritePrecision precision, @Nonnull final List&lt;M&gt; measurements) {
+
+<span class="nc" id="L226">        Arguments.checkNotNull(options.getBucket(), &quot;InfluxDBClientOptions.getBucket&quot;);</span>
+<span class="nc" id="L227">        Arguments.checkNotNull(options.getOrg(), &quot;InfluxDBClientOptions.getOrg&quot;);</span>
+
+<span class="nc" id="L229">        writeMeasurements(options.getBucket(), options.getOrg(), precision, measurements);</span>
+<span class="nc" id="L230">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurements(@Nonnull final String bucket,
+                                      @Nonnull final String org,
+                                      @Nonnull final WritePrecision precision,
+                                      @Nonnull final List&lt;M&gt; measurements) {
+<span class="nc" id="L237">        Arguments.checkNonEmpty(bucket, &quot;bucket&quot;);</span>
+<span class="nc" id="L238">        Arguments.checkNonEmpty(org, &quot;org&quot;);</span>
+<span class="nc" id="L239">        Arguments.checkNotNull(precision, &quot;WritePrecision is required&quot;);</span>
+<span class="nc" id="L240">        Arguments.checkNotNull(measurements, &quot;records&quot;);</span>
+
+<span class="nc" id="L242">        writeMeasurements(measurements, new WriteParameters(bucket, org, precision));</span>
+<span class="nc" id="L243">    }</span>
+
+    @Override
+    public &lt;M&gt; void writeMeasurements(@Nonnull final List&lt;M&gt; measurements, @Nonnull final WriteParameters parameters)
+            throws InfluxException {
+
+<span class="fc" id="L249">        Arguments.checkNotNull(measurements, &quot;points&quot;);</span>
+<span class="fc" id="L250">        Arguments.checkNotNull(parameters, &quot;WriteParameters&quot;);</span>
+<span class="fc" id="L251">        parameters.check(options);</span>
+
+<span class="fc" id="L253">        write(parameters, measurements.stream().map(it -&gt; toMeasurementBatch(it, parameters.precisionSafe(options))));</span>
+<span class="fc" id="L254">    }</span>
+
+    private void write(@Nonnull final WriteParameters parameters,
+                       @Nonnull final BatchWriteData data) {
+
+<span class="fc" id="L259">        write(parameters, Stream.of(data));</span>
+<span class="fc" id="L260">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.11.202310140853</span></div></body></html>
