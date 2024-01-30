@@ -1,3 +1,5 @@
+## 7.1.0 [unreleased]
+
 ## 7.0.0 [2024-01-30]
 
 :warning: This client version discontinues support for JDK 8 and 11. The minimum supported JDK version is now JDK 17.
