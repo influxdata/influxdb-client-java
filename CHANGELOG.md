@@ -1,5 +1,18 @@
 ## 7.1.0 [unreleased]
 
+### Dependencies
+
+Update dependencies:
+
+#### Build:
+ - 
+
+#### Maven:
+ - [#682](https://github.com/influxdata/influxdb-client-java/pull/682): `maven-checkstyle-plugin` to `3.3.1`
+
+#### Test:
+ - 
+
 ## 7.0.0 [2024-01-30]
 
 :warning: This client version discontinues support for JDK 8 and 11. The minimum supported JDK version is now JDK 17.
