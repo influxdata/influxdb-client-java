@@ -5,7 +5,7 @@
 Update dependencies:
 
 #### Build:
- - 
+ - [#680](https://github.com/influxdata/influxdb-client-java/pull/680): `micrometer-registry-influx` to `1.12.2`
 
 #### Maven:
  - [#682](https://github.com/influxdata/influxdb-client-java/pull/682): `maven-checkstyle-plugin` to `3.3.1`
