@@ -11,7 +11,7 @@ Update dependencies:
  - [#682](https://github.com/influxdata/influxdb-client-java/pull/682): `maven-checkstyle-plugin` to `3.3.1`
 
 #### Test:
- - 
+ - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
 
 ## 7.0.0 [2024-01-30]
 
