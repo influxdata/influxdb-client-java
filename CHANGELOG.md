@@ -14,6 +14,9 @@ Update dependencies:
 #### Test:
  - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
 
+#### Provided:
+ - [#685](https://github.com/influxdata/influxdb-client-java/pull/685): `slf4j-api` to `2.0.12`
+
 ## 7.0.0 [2024-01-30]
 
 :warning: This client version discontinues support for JDK 8 and 11. The minimum supported JDK version is now JDK 17.
