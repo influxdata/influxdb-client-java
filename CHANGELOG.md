@@ -8,8 +8,9 @@ Update dependencies:
  - [#680](https://github.com/influxdata/influxdb-client-java/pull/680): `micrometer-registry-influx` to `1.12.2`
 
 #### Maven:
- - [#682](https://github.com/influxdata/influxdb-client-java/pull/682): `maven-checkstyle-plugin` to `3.3.1`
+ - [#677](https://github.com/influxdata/influxdb-client-java/pull/677): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.2.5`
  - [#679](https://github.com/influxdata/influxdb-client-java/pull/679): `build-helper-maven-plugin` to `3.5.0`
+ - [#682](https://github.com/influxdata/influxdb-client-java/pull/682): `maven-checkstyle-plugin` to `3.3.1`
 
 #### Test:
  - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
