@@ -6,7 +6,10 @@ Update dependencies:
 
 #### Build:
  - [#678](https://github.com/influxdata/influxdb-client-java/pull/678): `karaf` to `4.4.5`
- - [#680](https://github.com/influxdata/influxdb-client-java/pull/680): `micrometer-registry-influx` to `1.12.2`
+ - [#688](https://github.com/influxdata/influxdb-client-java/pull/688): `spring-boot` to `3.2.3`
+ - [#690](https://github.com/influxdata/influxdb-client-java/pull/690): `kotlinx-coroutines` to `1.8.0`
+ - [#691](https://github.com/influxdata/influxdb-client-java/pull/691): `micrometer-registry-influx` to `1.12.3`
+ - [#692](https://github.com/influxdata/influxdb-client-java/pull/692): `okio` to `3.8.0`
 
 #### Maven:
  - [#676](https://github.com/influxdata/influxdb-client-java/pull/676): `maven-compiler-plugin` to `3.12.1`
@@ -16,6 +19,7 @@ Update dependencies:
 
 #### Test:
  - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
+ - [#687](https://github.com/influxdata/influxdb-client-java/pull/687): `junit-jupiter` to `5.10.2`
  - [#689](https://github.com/influxdata/influxdb-client-java/pull/689): `logback-classic` to `1.5.1`
 
 #### Provided:
