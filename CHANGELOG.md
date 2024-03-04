@@ -18,6 +18,7 @@ Update dependencies:
 
 #### Test:
  - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
+ - [#687](https://github.com/influxdata/influxdb-client-java/pull/687): `junit-jupiter` to `5.10.2`
 
 #### Provided:
  - [#685](https://github.com/influxdata/influxdb-client-java/pull/685): `slf4j-api` to `2.0.12`
