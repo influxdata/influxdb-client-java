@@ -7,6 +7,7 @@ Update dependencies:
 #### Build:
  - [#678](https://github.com/influxdata/influxdb-client-java/pull/678): `karaf` to `4.4.5`
  - [#691](https://github.com/influxdata/influxdb-client-java/pull/691): `micrometer-registry-influx` to `1.12.3`
+ - [#692](https://github.com/influxdata/influxdb-client-java/pull/692): `okio` to `3.8.0`
 
 #### Maven:
  - [#676](https://github.com/influxdata/influxdb-client-java/pull/676): `maven-compiler-plugin` to `3.12.1`
