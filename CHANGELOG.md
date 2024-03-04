@@ -7,6 +7,7 @@ Update dependencies:
 #### Build:
  - [#678](https://github.com/influxdata/influxdb-client-java/pull/678): `karaf` to `4.4.5`
  - [#680](https://github.com/influxdata/influxdb-client-java/pull/680): `micrometer-registry-influx` to `1.12.2`
+ - [#686](https://github.com/influxdata/influxdb-client-java/pull/686): `scala-library` to `2.12.19`
 
 #### Maven:
  - [#676](https://github.com/influxdata/influxdb-client-java/pull/676): `maven-compiler-plugin` to `3.12.1`
