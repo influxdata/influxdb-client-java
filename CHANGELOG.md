@@ -10,7 +10,7 @@ Update dependencies:
  - [#686](https://github.com/influxdata/influxdb-client-java/pull/686): `scala-library` to `2.12.19`
  - [#690](https://github.com/influxdata/influxdb-client-java/pull/690): `kotlinx-coroutines` to `1.8.0`
  - [#691](https://github.com/influxdata/influxdb-client-java/pull/691): `micrometer-registry-influx` to `1.12.3`
- - [#692](https://github.com/influxdata/influxdb-client-java/pull/692): `okio` to `3.8.0`
+ - [#696](https://github.com/influxdata/influxdb-client-java/pull/696): `okio` to `3.9.0`
 
 #### Maven:
  - [#676](https://github.com/influxdata/influxdb-client-java/pull/676): `maven-compiler-plugin` to `3.12.1`
