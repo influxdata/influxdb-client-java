@@ -13,6 +13,7 @@ Update dependencies:
  - [#696](https://github.com/influxdata/influxdb-client-java/pull/696): `okio` to `3.9.0`
  - [#694](https://github.com/influxdata/influxdb-client-java/pull/694): `retrofit` to `2.11.0`
  - [#699](https://github.com/influxdata/influxdb-client-java/pull/699): `kotlin` to `1.9.23`
+ - [#701](https://github.com/influxdata/influxdb-client-java/pull/701): `lombok` to `1.18.32`
  - [#702](https://github.com/influxdata/influxdb-client-java/pull/702): `commons-io` to `2.16.0`
 
 #### Maven:
