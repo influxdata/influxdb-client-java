@@ -13,12 +13,14 @@ Update dependencies:
  - [#696](https://github.com/influxdata/influxdb-client-java/pull/696): `okio` to `3.9.0`
  - [#694](https://github.com/influxdata/influxdb-client-java/pull/694): `retrofit` to `2.11.0`
  - [#701](https://github.com/influxdata/influxdb-client-java/pull/701): `lombok` to `1.18.32`
+ - [#702](https://github.com/influxdata/influxdb-client-java/pull/702): `commons-io` to `2.16.0`
 
 #### Maven:
  - [#676](https://github.com/influxdata/influxdb-client-java/pull/676): `maven-compiler-plugin` to `3.12.1`
  - [#677](https://github.com/influxdata/influxdb-client-java/pull/677): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.2.5`
  - [#679](https://github.com/influxdata/influxdb-client-java/pull/679): `build-helper-maven-plugin` to `3.5.0`
  - [#682](https://github.com/influxdata/influxdb-client-java/pull/682): `maven-checkstyle-plugin` to `3.3.1`
+ - [#697](https://github.com/influxdata/influxdb-client-java/pull/697): `maven-gpg-plugin` to `3.2.2`
  - [#703](https://github.com/influxdata/influxdb-client-java/pull/703): `dokka-maven-plugin` to `1.9.20`
 
 #### Test:
