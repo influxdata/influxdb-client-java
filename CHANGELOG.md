@@ -6,17 +6,19 @@ Update dependencies:
 
 #### Build:
  - [#678](https://github.com/influxdata/influxdb-client-java/pull/678): `karaf` to `4.4.5`
- - [#688](https://github.com/influxdata/influxdb-client-java/pull/688): `spring-boot` to `3.2.3`
+ - [#698](https://github.com/influxdata/influxdb-client-java/pull/698): `spring-boot` to `3.2.4`
  - [#686](https://github.com/influxdata/influxdb-client-java/pull/686): `scala-library` to `2.12.19`
  - [#690](https://github.com/influxdata/influxdb-client-java/pull/690): `kotlinx-coroutines` to `1.8.0`
  - [#691](https://github.com/influxdata/influxdb-client-java/pull/691): `micrometer-registry-influx` to `1.12.3`
  - [#696](https://github.com/influxdata/influxdb-client-java/pull/696): `okio` to `3.9.0`
+ - [#694](https://github.com/influxdata/influxdb-client-java/pull/694): `retrofit` to `2.11.0`
 
 #### Maven:
  - [#676](https://github.com/influxdata/influxdb-client-java/pull/676): `maven-compiler-plugin` to `3.12.1`
  - [#677](https://github.com/influxdata/influxdb-client-java/pull/677): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.2.5`
  - [#679](https://github.com/influxdata/influxdb-client-java/pull/679): `build-helper-maven-plugin` to `3.5.0`
  - [#682](https://github.com/influxdata/influxdb-client-java/pull/682): `maven-checkstyle-plugin` to `3.3.1`
+ - [#703](https://github.com/influxdata/influxdb-client-java/pull/703): `dokka-maven-plugin` to `1.9.20`
 
 #### Test:
  - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
