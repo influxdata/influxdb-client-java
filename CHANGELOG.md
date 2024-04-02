@@ -6,7 +6,7 @@ Update dependencies:
 
 #### Build:
  - [#678](https://github.com/influxdata/influxdb-client-java/pull/678): `karaf` to `4.4.5`
- - [#688](https://github.com/influxdata/influxdb-client-java/pull/688): `spring-boot` to `3.2.3`
+ - [#698](https://github.com/influxdata/influxdb-client-java/pull/698): `spring-boot` to `3.2.4`
  - [#686](https://github.com/influxdata/influxdb-client-java/pull/686): `scala-library` to `2.12.19`
  - [#690](https://github.com/influxdata/influxdb-client-java/pull/690): `kotlinx-coroutines` to `1.8.0`
  - [#691](https://github.com/influxdata/influxdb-client-java/pull/691): `micrometer-registry-influx` to `1.12.3`
