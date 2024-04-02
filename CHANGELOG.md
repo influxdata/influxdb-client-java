@@ -23,7 +23,7 @@ Update dependencies:
 #### Test:
  - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
  - [#687](https://github.com/influxdata/influxdb-client-java/pull/687): `junit-jupiter` to `5.10.2`
- - [#689](https://github.com/influxdata/influxdb-client-java/pull/689): `logback-classic` to `1.5.1`
+ - [#700](https://github.com/influxdata/influxdb-client-java/pull/700): `logback-classic` to `1.5.3`
 
 #### Provided:
  - [#685](https://github.com/influxdata/influxdb-client-java/pull/685): `slf4j-api` to `2.0.12`
