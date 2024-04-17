@@ -25,9 +25,13 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.time.Instant;
 import java.util.List;
+import java.util.Map;
 
 import com.influxdb.Cancellable;
 import com.influxdb.query.InfluxQLQueryResult;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -70,12 +74,19 @@ class InfluxQLQueryApiImplTest {
 				"name,tags,time,usage_user,usage_system\n" +
 				"cpu,\"region=us-east-1,host=server1\",1483225200,13.57,1.4\n" +
 				"cpu,\"region=us-east-1,host=server1\",1483225201,14.06,1.7\n" +
-				"cpu,\"region=us-east-1,host=server2\",1483225200,67.91,1.3\n");
+				"cpu,\"region=us-east-1,host=server2\",1483225200,67.91,1.3\n" +
+			  "\n" +
+			  "name,tags,key\n" + //emulate SHOW SERIES response
+			  ",,temperature\n" +
+			  ",,\"pressure\"\n" +
+			  ",,humid\n" +
+			  ",,\"temperature,locale=nw002,device=rpi5_88e1\""
+			);
 
 		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLResult(reader, NO_CANCELLING, extractValues);
 
 		List<InfluxQLQueryResult.Result> results = result.getResults();
-		Assertions.assertThat(results).hasSize(4);
+		Assertions.assertThat(results).hasSize(5);
 		Assertions.assertThat(results.get(0))
 				.extracting(InfluxQLQueryResult.Result::getSeries)
 				.satisfies(series -> {
@@ -170,5 +181,29 @@ class InfluxQLQueryApiImplTest {
 										.isEqualTo("1.3");
 							});
 				});
+
+		Assertions.assertThat(results.get(4))
+			.extracting(InfluxQLQueryResult.Result::getSeries)
+			.satisfies(series -> {
+				Assertions.assertThat(series).hasSize(1);
+				Assertions.assertThat(series.get(0))
+					.satisfies(series1 -> {
+						Assertions.assertThat(series1.getName()).isEmpty();
+						Assertions.assertThat(series1.getTags()).isEmpty();
+						Assertions.assertThat(series1.getValues()).hasSize(4);
+						Assertions.assertThat(series1.getValues())
+							.satisfies(records -> {
+								Assertions.assertThat(records.size()).isEqualTo(4);
+								Assertions.assertThat(records.get(0).getValueByKey("key"))
+									.isEqualTo("temperature");
+								Assertions.assertThat(records.get(1).getValueByKey("key"))
+									.isEqualTo("pressure");
+								Assertions.assertThat(records.get(2).getValueByKey("key"))
+									.isEqualTo("humid");
+								Assertions.assertThat(records.get(3).getValueByKey("key"))
+									.isEqualTo("temperature,locale=nw002,device=rpi5_88e1");
+							});
+					});
+			});
 	}
 }
