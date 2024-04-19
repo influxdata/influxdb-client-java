@@ -126,7 +126,7 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
                     break;
                 }
                 int resultIndex = results.size();
-                if (csvRecord.size() == 1 || csvRecord.get(0).equals("")) {
+                if (csvRecord.size() == 1 && csvRecord.get(0).equals("")) {
                     if (series != null) {
                         InfluxQLQueryResult.Result result = new InfluxQLQueryResult.Result(
                                 resultIndex,
