@@ -74,19 +74,13 @@ class InfluxQLQueryApiImplTest {
 				"name,tags,time,usage_user,usage_system\n" +
 				"cpu,\"region=us-east-1,host=server1\",1483225200,13.57,1.4\n" +
 				"cpu,\"region=us-east-1,host=server1\",1483225201,14.06,1.7\n" +
-				"cpu,\"region=us-east-1,host=server2\",1483225200,67.91,1.3\n" +
-			  "\n" +
-			  "name,tags,key\n" + //emulate SHOW SERIES response
-			  ",,temperature\n" +
-			  ",,\"pressure\"\n" +
-			  ",,humid\n" +
-			  ",,\"temperature,locale=nw002,device=rpi5_88e1\""
-			);
+				"cpu,\"region=us-east-1,host=server2\",1483225200,67.91,1.3\n"
+		);
 
 		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLResult(reader, NO_CANCELLING, extractValues);
 
 		List<InfluxQLQueryResult.Result> results = result.getResults();
-		Assertions.assertThat(results).hasSize(5);
+		Assertions.assertThat(results).hasSize(4);
 		Assertions.assertThat(results.get(0))
 				.extracting(InfluxQLQueryResult.Result::getSeries)
 				.satisfies(series -> {
@@ -181,8 +175,22 @@ class InfluxQLQueryApiImplTest {
 										.isEqualTo("1.3");
 							});
 				});
+	}
 
-		Assertions.assertThat(results.get(4))
+	@Test
+	public void readInfluxQLShowSeriesRequest() throws IOException {
+
+		StringReader reader = new StringReader("name,tags,key\n" + //emulate SHOW SERIES response
+			",,temperature\n" +
+			",,\"pressure\"\n" +
+			",,humid\n" +
+			",,\"temperature,locale=nw002,device=rpi5_88e1\""
+		);
+
+		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLResult(reader, NO_CANCELLING,
+			(columnName, rawValue, resultIndex, seriesName) -> { return rawValue;});
+
+		Assertions.assertThat(result.getResults().get(0))
 			.extracting(InfluxQLQueryResult.Result::getSeries)
 			.satisfies(series -> {
 				Assertions.assertThat(series).hasSize(1);
@@ -205,5 +213,6 @@ class InfluxQLQueryApiImplTest {
 							});
 					});
 			});
+
 	}
 }
