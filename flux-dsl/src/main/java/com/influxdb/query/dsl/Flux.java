@@ -46,6 +46,7 @@ import com.influxdb.query.dsl.functions.DifferenceFlux;
 import com.influxdb.query.dsl.functions.DistinctFlux;
 import com.influxdb.query.dsl.functions.DropFlux;
 import com.influxdb.query.dsl.functions.DuplicateFlux;
+import com.influxdb.query.dsl.functions.ElapsedFlux;
 import com.influxdb.query.dsl.functions.ExpressionFlux;
 import com.influxdb.query.dsl.functions.FillFlux;
 import com.influxdb.query.dsl.functions.FilterFlux;
@@ -89,6 +90,7 @@ import com.influxdb.query.dsl.functions.UnionFlux;
 import com.influxdb.query.dsl.functions.WindowFlux;
 import com.influxdb.query.dsl.functions.YieldFlux;
 import com.influxdb.query.dsl.functions.properties.FunctionsParameters;
+import com.influxdb.query.dsl.functions.properties.TimeInterval;
 import com.influxdb.query.dsl.functions.restriction.Restrictions;
 import com.influxdb.query.dsl.utils.ImportUtils;
 import com.influxdb.utils.Arguments;
@@ -111,6 +113,8 @@ import com.influxdb.utils.Arguments;
  * <li>{@link DistinctFlux}</li>
  * <li>{@link DropFlux}</li>
  * <li>{@link DuplicateFlux}</li>
+ * <li>{@link ElapsedFlux}</li>
+ * <li>{@link FillFlux}</li>
  * <li>{@link FilterFlux}</li>
  * <li>{@link FirstFlux}</li>
  * <li>{@link GroupFlux}</li>
@@ -827,6 +831,56 @@ public abstract class Flux implements HasImports, Expression {
     @Nonnull
     public final DuplicateFlux duplicate(@Nonnull final String column, @Nonnull final String as) {
         return new DuplicateFlux(this).withColumn(column).withAs(as);
+    }
+
+    /**
+     * Elapsed will add a column "elapsed" which measures the time elapsed since the last reading in the series.
+     * <p>The unit parameter is defined by {@link ElapsedFlux#withDuration}.
+     *
+     * @param unit the {@link TimeInterval} used for measuring elapsed time.
+     * @return an {@link ElapsedFlux} object.
+     */
+    @Nonnull
+    public final ElapsedFlux elapsed(@Nonnull final TimeInterval unit) {
+        return new ElapsedFlux(this).withDuration(unit);
+    }
+
+    /**
+     * Elapsed will add a column "elapsed" which measures the time elapsed since the last reading in the series.
+     * <p> The unit parameter is defined by {@link ElapsedFlux#withDuration}.
+     *
+     * @param count the number of ChronoUnits used for measuring elapsed time.
+     * @param unit {@link java.time.temporal.ChronoUnit}
+     * @return an {@link ElapsedFlux} object.
+     */
+    @Nonnull
+    public final ElapsedFlux elapsed(@Nonnull final int count, @Nonnull final ChronoUnit unit) {
+        return new ElapsedFlux(this).withDuration(new TimeInterval((long) count, unit));
+    }
+
+    /**
+     * Elapsed will add a column "elapsed" which measures the time elapsed since the last reading in the series.
+     * <p>In this version the default count is 1.  So the interval will be measured only in the provided ChronoUnit.
+     * <p>Internally, the unit parameter is defined by {@link ElapsedFlux#withDuration}.
+     *
+     * @param unit the {@link java.time.temporal.ChronoUnit} used for measuring elapsed time.
+     * @return an {@link ElapsedFlux} object.
+     */
+    @Nonnull
+    public final ElapsedFlux elapsed(@Nonnull final ChronoUnit unit) {
+        return new ElapsedFlux(this).withDuration(new TimeInterval(1L, unit));
+    }
+
+    /**
+     * Elapsed will add a column "elapsed" which measures the time elapsed since the last reading in the series
+     * (this method defaults to units of 1 ms).
+     * <p>This version defaults to single millisecond time units.
+     *
+     * @return an {@link ElapsedFlux} object.
+     */
+    @Nonnull
+    public final ElapsedFlux elapsed() {
+        return new ElapsedFlux(this).withDuration(new TimeInterval(1L, ChronoUnit.MILLIS));
     }
 
     /**
