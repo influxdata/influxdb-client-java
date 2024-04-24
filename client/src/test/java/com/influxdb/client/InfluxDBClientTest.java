@@ -519,6 +519,8 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
         HTTPServerThread st = new HTTPServerThread(handler);
         st.start();
 
+        Thread.sleep(500);
+
         InfluxDBClientOptions options = InfluxDBClientOptions.builder()
           .url("http://[::1]:44404")
           .bucket("my-bucket")
