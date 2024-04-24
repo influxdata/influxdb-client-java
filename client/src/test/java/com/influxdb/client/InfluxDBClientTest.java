@@ -21,7 +21,9 @@
  */
 package com.influxdb.client;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
 import java.util.List;
@@ -31,6 +33,9 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpServer;
+import com.sun.net.httpserver.HttpHandler;
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Run;
@@ -467,6 +472,83 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
                 .get();
 
         Assertions.assertThat(authorizationLog.getMessage()).isEqualTo("Authorization: ██");
+    }
+
+    static class HTTPServerThread extends Thread {
+        HttpServer server;
+        public HTTPServerThread(ServerHandler handler) throws IOException {
+            server = HttpServer.create(new InetSocketAddress(44404), 0);
+            server.createContext("/", handler);
+        }
+
+        @Override
+        public void run() {
+            server.start();
+        }
+    }
+
+    static class ServerHandler implements HttpHandler {
+
+        public String lastUri;
+        public String lastMethod;
+        public String lastPostBody;
+
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+            lastUri = exchange.getRequestURI().toString();
+            lastMethod = exchange.getRequestMethod();
+            if(lastMethod.equalsIgnoreCase("POST")){
+                ByteArrayOutputStream os = new ByteArrayOutputStream();
+                byte[] buffer = new byte[1024];
+                for(int length; (length = exchange.getRequestBody().read(buffer)) != -1; ) {
+                    os.write(buffer, 0, length);
+                }
+                lastPostBody = os.toString();
+            }
+            String response = "OK";
+            exchange.sendResponseHeaders(200, response.length());
+            OutputStream os = exchange.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+    }
+
+    @Test
+    public void ipv6Calls() throws InterruptedException, IOException {
+        ServerHandler handler = new ServerHandler();
+        HTTPServerThread st = new HTTPServerThread(handler);
+        st.start();
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+          .url("http://[::1]:44404")
+          .bucket("my-bucket")
+          .org("my-org")
+          .build();
+        InfluxDBClient client = InfluxDBClientFactory.create(options);
+        WriteApiBlocking writer = client.getWriteApiBlocking();
+        writer.writeRecord(WritePrecision.NS, "mem,source=ff10 use=87");
+
+        Assertions.assertThat(handler.lastUri)
+          .isEqualTo("/api/v2/write?org=my-org&bucket=my-bucket&precision=ns");
+        Assertions.assertThat(handler.lastMethod).isEqualTo("POST");
+        Assertions.assertThat(handler.lastPostBody).isEqualTo("mem,source=ff10 use=87");
+
+        QueryApi queryApi = client.getQueryApi();
+        String qresult = queryApi
+          .queryRaw("from(bucket: \"my-bucket\") " +
+            "|> range(start: -1h) " +
+            "|> filter(fn: (r) => r._field == \"cpu\"");
+        Assertions.assertThat("OK").isEqualTo(qresult);
+        Assertions.assertThat(handler.lastUri).isEqualTo("/api/v2/query?org=my-org");
+        Assertions.assertThat(handler.lastMethod).isEqualTo("POST");
+        Assertions.assertThat(handler.lastPostBody)
+          .isEqualTo("{\"query\":\"from(bucket: \\\"my-bucket\\\") " +
+            "|\\u003e range(start: -1h) " +
+            "|\\u003e filter(fn: (r) " +
+            "\\u003d\\u003e r._field " +
+            "\\u003d\\u003d \\\"cpu\\\"\",\"type\":\"flux\",\"params\":{}}");
+
+        st.server.stop(0);
     }
 
     private void queryAndTest(final String expected) throws InterruptedException {
