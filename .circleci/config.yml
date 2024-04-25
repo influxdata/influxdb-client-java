@@ -28,18 +28,10 @@ commands:
       - run:
           name: "Post onBoarding request to InfluxDB 2"
           command: ./scripts/influxdb-onboarding.sh
-  enable-ipv6:
-    steps:
-      - run:
-          name: ipv6-enable
-          command: |
-             sudo service --status-all
-             sudo service docker restart
   prepare:
     description: "Prepare environment to tests"
     steps:
       - checkout
-      - enable-ipv6
       - influxdb-onboarding
   client-test:
     description: "Run tests"
