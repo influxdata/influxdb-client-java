@@ -33,7 +33,7 @@ commands:
       - run:
           name: ipv6-enable
           command: |
-             cat <<'EOF' | sudo tee /etc/docker/daemon.json
+             cat \<<'EOF' | sudo tee /etc/docker/daemon.json
              {
                "ipv6": true,
                "fixed-cidr-v6": "2001:db8:1::/64"
