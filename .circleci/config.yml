@@ -39,7 +39,9 @@ commands:
       - run:
           name: ipv6-enable
           command: |
-             sudo service docker restart
+             sudo service docker status
+             sudo service docker stop
+             sudo service docker start
   prepare:
     description: "Prepare environment to tests"
     steps:
