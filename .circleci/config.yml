@@ -22,12 +22,6 @@
 
 version: 2.1
 
-machine:
-  # The image uses the current tag, which always points to the most recent
-  # supported release. If stability and determinism are crucial for your CI
-  # pipeline, use a release date tag with your image, e.g. ubuntu-2004:202201-02
-  image: ubuntu-2204:current
-
 commands:
   influxdb-onboarding:
     steps:
@@ -40,7 +34,7 @@ commands:
           name: ipv6-enable
           command: |
              sudo service --status-all
-             sudo service docker start
+             sudo service docker restart
   prepare:
     description: "Prepare environment to tests"
     steps:
@@ -120,6 +114,11 @@ commands:
 jobs:
 
   tests-java:
+  machine:
+    # The image uses the current tag, which always points to the most recent
+    # supported release. If stability and determinism are crucial for your CI
+    # pipeline, use a release date tag with your image, e.g. ubuntu-2004:202201-02
+    image: ubuntu-2204:current
     parameters:
       maven-image:
         type: string
