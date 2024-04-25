@@ -3,7 +3,8 @@
 ### Bug Fixes
 
 1. [#684](https://github.com/influxdata/influxdb-client-java/issues/684): Fix checking for CSV end of table marker when parsing CSV stream to InfluxQLQueryResult, needed for example when parsing the results of a query like "SHOW SERIES".
-2. [#662](https://github.com/influxdata/influxdb-client-java/issues/662): Adds to FluxDsl support for the `|> elapsed(unit)` function. 
+2. [#662](https://github.com/influxdata/influxdb-client-java/issues/662): Adds to FluxDsl support for the `|> elapsed(unit)` function.
+3. [#623](https://github.com/influxdata/influxdb-client-java/issues/623): Enables the use of IPv6 addresses. 
 
 ### Dependencies
 
