@@ -39,8 +39,6 @@ commands:
       - run:
           name: ipv6-enable
           command: |
-             cat  /etc/docker/daemon.json
-             echo "====="
              cat \<<'EOF' | sudo tee /etc/docker/daemon.json
              {
                "ipv6": true,
