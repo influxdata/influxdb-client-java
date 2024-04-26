@@ -694,12 +694,13 @@ public final class InfluxDBClientOptions {
 
                 HttpUrl url = this.httpUrl.newBuilder().build();
 
-                String urlWithoutParams = url.scheme() + "://" + url.host() + ":" + url.port() + url.encodedPath();
-                if (!urlWithoutParams.endsWith("/")) {
-                    urlWithoutParams += "/";
-                }
+                //detect IPV6
+                String host = url.host().contains(":") ? "[" + url.host() + "]" : url.host();
+                String urlWithoutParams = url.scheme() + "://" + host + ":" + url.port() + url.encodedPath();
 
-                this.urlWithoutParams = urlWithoutParams;
+                this.urlWithoutParams = urlWithoutParams.endsWith("/")
+                  ? urlWithoutParams
+                  : urlWithoutParams + "/";
             }
         }
     }
