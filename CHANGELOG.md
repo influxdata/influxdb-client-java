@@ -30,6 +30,7 @@ Update dependencies:
  - [#697](https://github.com/influxdata/influxdb-client-java/pull/697): `maven-gpg-plugin` to `3.2.2`
  - [#703](https://github.com/influxdata/influxdb-client-java/pull/703): `dokka-maven-plugin` to `1.9.20`
  - [#713](https://github.com/influxdata/influxdb-client-java/pull/713): `maven-jar-plugin` to `3.4.1`
+ - [#712](https://github.com/influxdata/influxdb-client-java/pull/712): `maven-gpg-plugin` to `3.2.4`
 
 #### Test:
  - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
