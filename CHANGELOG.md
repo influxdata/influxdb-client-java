@@ -38,6 +38,9 @@ Update dependencies:
 #### Provided:
  - [#685](https://github.com/influxdata/influxdb-client-java/pull/685): `slf4j-api` to `2.0.12`
 
+#### Examples:
+ - [#715](https://github.com/influxdata/influxdb-client-java/pull/715): `commons-cli ` to `1.7.0`
+
 ## 7.0.0 [2024-01-30]
 
 :warning: This client version discontinues support for JDK 8 and 11. The minimum supported JDK version is now JDK 17.
