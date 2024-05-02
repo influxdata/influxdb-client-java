@@ -31,6 +31,7 @@ Update dependencies:
  - [#703](https://github.com/influxdata/influxdb-client-java/pull/703): `dokka-maven-plugin` to `1.9.20`
  - [#713](https://github.com/influxdata/influxdb-client-java/pull/713): `maven-jar-plugin` to `3.4.1`
  - [#709](https://github.com/influxdata/influxdb-client-java/pull/709): `scala-maven-plugin` to `4.9.0`
+ - [#708](https://github.com/influxdata/influxdb-client-java/pull/708): `maven-deploy-plugin` to `3.1.2`
 
 #### Test:
  - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
