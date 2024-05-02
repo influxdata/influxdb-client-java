@@ -27,10 +27,10 @@ Update dependencies:
  - [#677](https://github.com/influxdata/influxdb-client-java/pull/677): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.2.5`
  - [#679](https://github.com/influxdata/influxdb-client-java/pull/679): `build-helper-maven-plugin` to `3.5.0`
  - [#682](https://github.com/influxdata/influxdb-client-java/pull/682): `maven-checkstyle-plugin` to `3.3.1`
- - [#697](https://github.com/influxdata/influxdb-client-java/pull/697): `maven-gpg-plugin` to `3.2.2`
+ - [#712](https://github.com/influxdata/influxdb-client-java/pull/712): `maven-gpg-plugin` to `3.2.4`
  - [#703](https://github.com/influxdata/influxdb-client-java/pull/703): `dokka-maven-plugin` to `1.9.20`
  - [#713](https://github.com/influxdata/influxdb-client-java/pull/713): `maven-jar-plugin` to `3.4.1`
- - [#712](https://github.com/influxdata/influxdb-client-java/pull/712): `maven-gpg-plugin` to `3.2.4`
+ - [#709](https://github.com/influxdata/influxdb-client-java/pull/709): `scala-maven-plugin` to `4.9.0`
 
 #### Test:
  - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
