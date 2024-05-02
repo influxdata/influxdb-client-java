@@ -36,7 +36,7 @@ Update dependencies:
  - [#700](https://github.com/influxdata/influxdb-client-java/pull/700): `logback-classic` to `1.5.3`
 
 #### Provided:
- - [#685](https://github.com/influxdata/influxdb-client-java/pull/685): `slf4j-api` to `2.0.12`
+ - [#711](https://github.com/influxdata/influxdb-client-java/pull/711): `slf4j-api` to `2.0.13`
 
 ## 7.0.0 [2024-01-30]
 
