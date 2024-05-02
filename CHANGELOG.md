@@ -11,7 +11,7 @@
 Update dependencies:
 
 #### Build:
- - [#678](https://github.com/influxdata/influxdb-client-java/pull/678): `karaf` to `4.4.5`
+ - [#716](https://github.com/influxdata/influxdb-client-java/pull/716): `karaf` to `4.4.6`
  - [#710](https://github.com/influxdata/influxdb-client-java/pull/710): `spring-boot` to `3.2.5`
  - [#686](https://github.com/influxdata/influxdb-client-java/pull/686): `scala-library` to `2.12.19`
  - [#690](https://github.com/influxdata/influxdb-client-java/pull/690): `kotlinx-coroutines` to `1.8.0`
@@ -29,14 +29,19 @@ Update dependencies:
  - [#682](https://github.com/influxdata/influxdb-client-java/pull/682): `maven-checkstyle-plugin` to `3.3.1`
  - [#697](https://github.com/influxdata/influxdb-client-java/pull/697): `maven-gpg-plugin` to `3.2.2`
  - [#703](https://github.com/influxdata/influxdb-client-java/pull/703): `dokka-maven-plugin` to `1.9.20`
+ - [#713](https://github.com/influxdata/influxdb-client-java/pull/713): `maven-jar-plugin` to `3.4.1`
+ - [#712](https://github.com/influxdata/influxdb-client-java/pull/712): `maven-gpg-plugin` to `3.2.4`
 
 #### Test:
  - [#683](https://github.com/influxdata/influxdb-client-java/pull/683): `assertj` to `3.25.3`
  - [#687](https://github.com/influxdata/influxdb-client-java/pull/687): `junit-jupiter` to `5.10.2`
- - [#700](https://github.com/influxdata/influxdb-client-java/pull/700): `logback-classic` to `1.5.3`
+ - [#714](https://github.com/influxdata/influxdb-client-java/pull/714): `logback-classic` to `1.5.6`
 
 #### Provided:
- - [#685](https://github.com/influxdata/influxdb-client-java/pull/685): `slf4j-api` to `2.0.12`
+ - [#711](https://github.com/influxdata/influxdb-client-java/pull/711): `slf4j-api` to `2.0.13`
+
+#### Examples:
+ - [#715](https://github.com/influxdata/influxdb-client-java/pull/715): `commons-cli ` to `1.7.0`
 
 ## 7.0.0 [2024-01-30]
 
