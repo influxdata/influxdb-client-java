@@ -15,7 +15,7 @@ Update dependencies:
  - [#698](https://github.com/influxdata/influxdb-client-java/pull/698): `spring-boot` to `3.2.4`
  - [#686](https://github.com/influxdata/influxdb-client-java/pull/686): `scala-library` to `2.12.19`
  - [#690](https://github.com/influxdata/influxdb-client-java/pull/690): `kotlinx-coroutines` to `1.8.0`
- - [#695](https://github.com/influxdata/influxdb-client-java/pull/695): `micrometer-registry-influx` to `1.12.4`
+ - [#707](https://github.com/influxdata/influxdb-client-java/pull/707): `micrometer-registry-influx` to `1.12.5`
  - [#696](https://github.com/influxdata/influxdb-client-java/pull/696): `okio` to `3.9.0`
  - [#694](https://github.com/influxdata/influxdb-client-java/pull/694): `retrofit` to `2.11.0`
  - [#699](https://github.com/influxdata/influxdb-client-java/pull/699): `kotlin` to `1.9.23`
