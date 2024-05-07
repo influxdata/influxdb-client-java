@@ -192,7 +192,12 @@ public final class ColumnRestriction {
 
             String value;
             if (fieldValue instanceof String) {
-                value = "\"" + escapeDoubleQuotes((String) fieldValue) + "\"";
+                if(operator.contains("~")){
+                    value = escapeDoubleQuotes((String) fieldValue);
+                }
+                else{
+                    value = "\"" + escapeDoubleQuotes((String) fieldValue) + "\"";
+                }
             } else {
                 value = FunctionsParameters.serializeValue(fieldValue, false);
             }

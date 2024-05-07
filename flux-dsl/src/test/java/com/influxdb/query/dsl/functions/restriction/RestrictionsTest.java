@@ -75,6 +75,17 @@ class RestrictionsTest {
     }
 
     @Test
+    void custom(){
+        Restrictions restrictions = Restrictions.value().custom("/.*target.*/", "=~");
+
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_value\"] =~ /.*target.*/");
+
+        restrictions = Restrictions.value().custom("1", "==");
+
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_value\"] == \"1\"");
+    }
+
+    @Test
     void not() {
 
         Restrictions restrictions = Restrictions.not(Restrictions.value().exists());
@@ -108,6 +119,7 @@ class RestrictionsTest {
         Assertions.assertThat(restrictions.toString()).isEqualTo("exists r[\"my\\\"column\"]");
 
         restrictions = Restrictions.tag("_value").contains(new String[]{"val\"ue1", "value2"});
+
 
         Assertions.assertThat(restrictions.toString()).isEqualTo("contains(value: r[\"_value\"], set:[\"val\\\"ue1\", \"value2\"])");
 
