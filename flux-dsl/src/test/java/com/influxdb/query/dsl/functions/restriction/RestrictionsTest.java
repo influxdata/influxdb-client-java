@@ -75,6 +75,17 @@ class RestrictionsTest {
     }
 
     @Test
+    void custom (){
+        Restrictions restrictions = Restrictions.value().custom("/.*target.*/", "=~");
+
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_value\"] =~ /.*target.*/");
+
+        restrictions = Restrictions.value().custom("1", "==");
+
+        Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_value\"] == \"1\"");
+    }
+
+    @Test
     void not() {
 
         Restrictions restrictions = Restrictions.not(Restrictions.value().exists());
