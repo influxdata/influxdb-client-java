@@ -75,7 +75,7 @@ class RestrictionsTest {
     }
 
     @Test
-    void custom(){
+    void custom (){
         Restrictions restrictions = Restrictions.value().custom("/.*target.*/", "=~");
 
         Assertions.assertThat(restrictions.toString()).isEqualTo("r[\"_value\"] =~ /.*target.*/");
