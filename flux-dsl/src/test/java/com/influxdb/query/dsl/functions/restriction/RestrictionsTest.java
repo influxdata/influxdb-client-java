@@ -120,7 +120,6 @@ class RestrictionsTest {
 
         restrictions = Restrictions.tag("_value").contains(new String[]{"val\"ue1", "value2"});
 
-
         Assertions.assertThat(restrictions.toString()).isEqualTo("contains(value: r[\"_value\"], set:[\"val\\\"ue1\", \"value2\"])");
 
         Flux flux = Flux
