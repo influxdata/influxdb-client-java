@@ -17,6 +17,9 @@ Update dependencies:
  - [#724](https://github.com/influxdata/influxdb-client-java/pull/724): `assertj` to `3.26.0`
  - [#725](https://github.com/influxdata/influxdb-client-java/pull/725): `assertk-jvm` to `0.28.1`
 
+#### Examples:
+ - [#723](https://github.com/influxdata/influxdb-client-java/pull/723): `commons-cli ` to `1.8.0`
+
 ## 7.1.0 [2024-05-17]
 
 ### Bug Fixes
