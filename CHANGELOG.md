@@ -13,6 +13,9 @@ Update dependencies:
  - [#729](https://github.com/influxdata/influxdb-client-java/pull/729): `maven-enforcer-plugin` to `3.5.0`
  - [#730](https://github.com/influxdata/influxdb-client-java/pull/730): `scala-maven-plugin` to `4.9.1`
 
+#### Test:
+ - [#725](https://github.com/influxdata/influxdb-client-java/pull/725): `assertk-jvm` to `0.28.1`
+
 ## 7.1.0 [2024-05-17]
 
 ### Bug Fixes
