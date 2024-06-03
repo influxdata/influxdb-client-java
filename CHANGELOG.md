@@ -9,6 +9,7 @@ Update dependencies:
  - [#727](https://github.com/influxdata/influxdb-client-java/pull/727): `micrometer-registry-influx` to `1.30.0`
 
 #### Maven:
+ - [#721](https://github.com/influxdata/influxdb-client-java/pull/721): `build-helper-maven-plugin` to `3.6.0`
  - [#728](https://github.com/influxdata/influxdb-client-java/pull/728): `maven-source-plugin` to `3.3.1`
  - [#729](https://github.com/influxdata/influxdb-client-java/pull/729): `maven-enforcer-plugin` to `3.5.0`
  - [#730](https://github.com/influxdata/influxdb-client-java/pull/730): `scala-maven-plugin` to `4.9.1`
