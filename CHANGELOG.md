@@ -1,5 +1,12 @@
 ## 7.2.0 [unreleased]
 
+### Dependencies
+
+Update dependencies:
+
+#### Maven:
+ - [#729](https://github.com/influxdata/influxdb-client-java/pull/729): `maven-enforcer-plugin` to `3.5.0`
+
 ## 7.1.0 [2024-05-17]
 
 ### Bug Fixes
