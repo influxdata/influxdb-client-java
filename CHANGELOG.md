@@ -5,6 +5,7 @@
 Update dependencies:
 
 #### Maven:
+ - [#728](https://github.com/influxdata/influxdb-client-java/pull/728): `maven-source-plugin` to `3.3.1`
  - [#729](https://github.com/influxdata/influxdb-client-java/pull/729): `maven-enforcer-plugin` to `3.5.0`
  - [#730](https://github.com/influxdata/influxdb-client-java/pull/730): `scala-maven-plugin` to `4.9.1`
 
