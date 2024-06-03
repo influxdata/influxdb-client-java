@@ -5,6 +5,7 @@
 Update dependencies:
 
 #### Build:
+ - [#722](https://github.com/influxdata/influxdb-client-java/pull/722): `spring-boot` to `3.3.0`
  - [#726](https://github.com/influxdata/influxdb-client-java/pull/726): `kotlin` to `2.0.0`
  - [#727](https://github.com/influxdata/influxdb-client-java/pull/727): `micrometer-registry-influx` to `1.30.0`
 
