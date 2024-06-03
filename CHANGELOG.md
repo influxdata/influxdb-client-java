@@ -4,8 +4,11 @@
 
 Update dependencies:
 
-#### Maven:
+#### Build:
+ - [#726](https://github.com/influxdata/influxdb-client-java/pull/726): `kotlin` to `2.0.0`
  - [#727](https://github.com/influxdata/influxdb-client-java/pull/727): `micrometer-registry-influx` to `1.30.0`
+
+#### Maven:
  - [#728](https://github.com/influxdata/influxdb-client-java/pull/728): `maven-source-plugin` to `3.3.1`
  - [#729](https://github.com/influxdata/influxdb-client-java/pull/729): `maven-enforcer-plugin` to `3.5.0`
  - [#730](https://github.com/influxdata/influxdb-client-java/pull/730): `scala-maven-plugin` to `4.9.1`
