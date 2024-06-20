@@ -24,6 +24,7 @@ package com.influxdb.client.internal;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +32,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.BiConsumer;
 import javax.annotation.Nonnull;
@@ -44,6 +46,16 @@ import com.influxdb.internal.AbstractQueryApi;
 import com.influxdb.query.InfluxQLQueryResult;
 import com.influxdb.utils.Arguments;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonIOException;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
 import okhttp3.ResponseBody;
 import okio.BufferedSource;
 import org.apache.commons.csv.CSVFormat;
@@ -102,11 +114,12 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         Arguments.checkNotNull(bufferedSource, "bufferedSource");
 
         try (Reader reader = new InputStreamReader(bufferedSource.inputStream(), StandardCharsets.UTF_8)) {
-            return readInfluxQLResult(reader, cancellable, valueExtractor);
+//            return readInfluxQLCSVResult(reader, cancellable, valueExtractor);
+            return readInfluxQLJsonResult(reader, cancellable, valueExtractor);
         }
     }
 
-    static InfluxQLQueryResult readInfluxQLResult(
+    static InfluxQLQueryResult readInfluxQLCSVResult(
             @Nonnull final Reader reader,
             @Nonnull final Cancellable cancellable,
             @Nullable final InfluxQLQueryResult.Series.ValueExtractor valueExtractor
@@ -188,5 +201,118 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         }
 
         return tags;
+    }
+
+    static InfluxQLQueryResult readInfluxQLJsonResult(
+      @Nonnull final Reader reader,
+      @Nonnull final Cancellable cancellable,
+      @Nullable final InfluxQLQueryResult.Series.ValueExtractor valueExtractor
+    ) {
+
+        Gson gson = new GsonBuilder()
+          .registerTypeAdapter(InfluxQLQueryResult.class, new ResultsDeserializer(cancellable))
+          .registerTypeAdapter(InfluxQLQueryResult.Result.class, new ResultDeserializer(valueExtractor))
+          .create();
+
+        try {
+            return gson.fromJson(reader, InfluxQLQueryResult.class);
+        } catch (JsonSyntaxException | JsonIOException jse) {
+            ERROR_CONSUMER.accept(jse);
+            return null;
+        }
+    }
+
+    public static class ResultsDeserializer implements JsonDeserializer<InfluxQLQueryResult> {
+
+        Cancellable cancellable;
+
+        public ResultsDeserializer(final Cancellable cancellable) {
+            this.cancellable = cancellable;
+        }
+
+        @Override
+        public InfluxQLQueryResult deserialize(
+          final JsonElement elem,
+          final Type type,
+          final JsonDeserializationContext ctx) throws JsonParseException {
+            List<InfluxQLQueryResult.Result> results = new ArrayList<>();
+            JsonArray jsonArray = elem.getAsJsonObject().get("results").getAsJsonArray();
+            for (JsonElement jsonElement : jsonArray) {
+                if (cancellable.isCancelled()) {
+                    break;
+                }
+                results.add(ctx.deserialize(jsonElement, InfluxQLQueryResult.Result.class));
+            }
+            return new InfluxQLQueryResult(results);
+        }
+    }
+
+    public static class ResultDeserializer implements JsonDeserializer<InfluxQLQueryResult.Result> {
+
+        InfluxQLQueryResult.Series.ValueExtractor extractor;
+
+        public ResultDeserializer(final InfluxQLQueryResult.Series.ValueExtractor extractor) {
+            this.extractor = extractor;
+        }
+
+        @Override
+        public InfluxQLQueryResult.Result deserialize(
+          final JsonElement elem,
+          final Type type,
+          final JsonDeserializationContext ctx) throws JsonParseException {
+            JsonObject eobj = elem.getAsJsonObject();
+            int id = eobj.get("statement_id").getAsInt();
+            List<InfluxQLQueryResult.Series> series = new ArrayList<>();
+            JsonArray seriesArray = eobj.getAsJsonArray("series");
+            for (JsonElement jserie : seriesArray) {
+                JsonObject sobj = jserie.getAsJsonObject();
+                String name = sobj.getAsJsonObject().get("name").getAsString();
+                Map<String, Integer> columns = new LinkedHashMap<>();
+                Map<String, String> tags = null;
+                // Handle columns
+                JsonArray jac = sobj.get("columns").getAsJsonArray();
+                final AtomicInteger count = new AtomicInteger(0);
+                jac.forEach(e -> {
+                    columns.put(e.getAsString(), count.getAndIncrement());
+                });
+
+                InfluxQLQueryResult.Series serie = null;
+                // Handle tags - if they exist
+                if (sobj.get("tags") != null) {
+                    JsonObject tagsObj = sobj.get("tags").getAsJsonObject();
+                    tags = new LinkedHashMap<>();
+                    for (String key : tagsObj.keySet()) {
+                        tags.put(key, tagsObj.get(key).getAsString());
+                    }
+                    serie = new InfluxQLQueryResult.Series(name, tags, columns);
+                } else {
+                    serie = new InfluxQLQueryResult.Series(name, columns);
+                }
+                JsonArray jvals = sobj.get("values").getAsJsonArray();
+                for (JsonElement jval : jvals) {
+                    List<Object> values = new ArrayList<>();
+                    JsonArray jae = jval.getAsJsonArray();
+                    int index = 0;
+                    for (JsonElement je : jae) {
+                        List<String> columnKeys = new ArrayList<>(serie.getColumns().keySet());
+                        if (extractor != null) {
+                            String stringVal = je.getAsString();
+                            Object ov = extractor.extractValue(
+                              columnKeys.get(index),
+                              stringVal,
+                              id,
+                              serie.getName());
+                            values.add(ov);
+                        } else {
+                            values.add(je.getAsString());
+                        }
+                        index++;
+                    }
+                    serie.addRecord(serie.new Record(values.toArray()));
+                }
+                series.add(serie);
+            }
+            return new InfluxQLQueryResult.Result(id, series);
+        }
     }
 }

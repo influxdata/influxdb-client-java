@@ -89,7 +89,8 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 				.hasSize(1)
 				.first()
 				.satisfies(record -> {
-					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
+//					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
+					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("2022-06-22T12:13:20Z");
 					Assertions.assertThat(record.getValueByKey("first")).isEqualTo("10");
 				});
 	}
@@ -126,11 +127,43 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 				.hasSize(1)
 				.first()
 				.satisfies(record -> {
-					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
+					// Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
+					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("2022-06-22T12:13:20Z");
 					Assertions.assertThat(record.getValueByKey("free")).isEqualTo("10");
 					Assertions.assertThat(record.getValueByKey("host")).isEqualTo("A");
 					Assertions.assertThat(record.getValueByKey("region")).isEqualTo("west");
 				});
+	}
+
+	@Test
+	public void testSelectGroupBy(){
+		InfluxQLQueryResult result = influxQLQueryApi.query(
+			new InfluxQLQuery("SELECT * FROM \"influxql\" GROUP By \"region\",\"host\"", DATABASE_NAME)
+		);
+
+		assertSingleSeriesRecords(result)
+			.hasSize(1)
+			.first()
+			.satisfies(record -> {
+				Assertions.assertThat(record.getValueByKey("region")).isNull();
+				Assertions.assertThat(record.getValueByKey("host")).isNull();
+				Assertions.assertThat(record.getValueByKey("time")).isEqualTo("2022-06-22T12:13:20Z");
+				Assertions.assertThat(record.getValueByKey("free")).isEqualTo("10");
+			});
+
+		Assertions.assertThat(result)
+			.extracting(InfluxQLQueryResult::getResults, list(InfluxQLQueryResult.Result.class))
+			.hasSize(1)
+			.first()
+				.extracting(InfluxQLQueryResult.Result::getSeries, list(InfluxQLQueryResult.Series.class))
+			  .hasSize(1)
+				.first()
+				  .extracting(InfluxQLQueryResult.Series::getTags)
+					.satisfies(tagz -> {
+					  Assertions.assertThat(tagz).isNotNull();
+						Assertions.assertThat(tagz.get("host")).isEqualTo("A");
+						Assertions.assertThat(tagz.get("region")).isEqualTo("west");
+					});
 	}
 
 	@Test
