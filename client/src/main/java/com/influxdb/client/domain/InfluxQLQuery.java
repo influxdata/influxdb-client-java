@@ -26,14 +26,18 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.influxdb.client.JSON;
+
 /**
  * A InfluxQL query.
  */
 public class InfluxQLQuery {
+
     private final String command;
     private final String database;
     private String retentionPolicy;
     private InfluxQLPrecision precision;
+    private AcceptHeader acceptHeader;
 
     /**
      * @param command the InfluxQL command to execute
@@ -42,6 +46,15 @@ public class InfluxQLQuery {
     public InfluxQLQuery(@Nonnull final String command, @Nonnull final String database) {
         this.command = command;
         this.database = database;
+        this.acceptHeader = AcceptHeader.JSON;
+    }
+
+    public InfluxQLQuery(@Nonnull final String command,
+                         @Nonnull final String database,
+                         @Nonnull final AcceptHeader acceptHeader) {
+        this.command = command;
+        this.database = database;
+        this.acceptHeader = acceptHeader;
     }
 
     /**
@@ -97,6 +110,18 @@ public class InfluxQLQuery {
         return this;
     }
 
+    public AcceptHeader getAcceptHeader() {
+        return acceptHeader;
+    }
+
+    public void setAcceptHeader(final AcceptHeader acceptHeader) {
+        this.acceptHeader = acceptHeader;
+    }
+
+    public String getAcceptHeaderVal() {
+        return acceptHeader != null ? acceptHeader.getVal() : AcceptHeader.JSON.getVal();
+    }
+
     /**
      * The precision used for the timestamps returned by InfluxQL queries.
      */
@@ -141,6 +166,21 @@ public class InfluxQLQuery {
                     throw new IllegalArgumentException("time precision must be one of:"
                             + Arrays.toString(InfluxQLPrecision.values()));
             }
+        }
+    }
+
+    public enum AcceptHeader {
+        JSON("application/json"),
+        CSV("application/csv");
+
+        private final String val;
+
+        AcceptHeader(final String val) {
+            this.val = val;
+        }
+
+        public String getVal() {
+            return val;
         }
     }
 }

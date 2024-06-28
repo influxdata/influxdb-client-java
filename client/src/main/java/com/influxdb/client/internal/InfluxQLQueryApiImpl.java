@@ -76,14 +76,32 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
 
     @Nonnull
     @Override
-    public InfluxQLQueryResult query(@Nonnull final InfluxQLQuery influxQlQuery) {
-        return query(influxQlQuery, null);
+    public InfluxQLQueryResult query(@Nonnull final InfluxQLQuery influxQLQuery) {
+        return query(influxQLQuery, influxQLQuery.getAcceptHeader(), null);
+    }
+
+    @Nonnull
+    @Override
+    public InfluxQLQueryResult query(@Nonnull final InfluxQLQuery influxQLQuery,
+                                     @Nullable final InfluxQLQueryResult.Series.ValueExtractor valueExtractor) {
+        return query(influxQLQuery, influxQLQuery.getAcceptHeader(), valueExtractor);
     }
 
     @Nonnull
     @Override
     public InfluxQLQueryResult query(
+      @Nonnull final InfluxQLQuery influxQLQuery,
+      @Nonnull final InfluxQLQuery.AcceptHeader accept) {
+        return query(influxQLQuery, accept, null);
+    }
+
+
+
+    @Nonnull
+    @Override
+    public InfluxQLQueryResult query(
             @Nonnull final InfluxQLQuery influxQlQuery,
+            @Nullable final InfluxQLQuery.AcceptHeader accept,
             @Nullable final InfluxQLQueryResult.Series.ValueExtractor valueExtractor
     ) {
         Call<ResponseBody> call = service.query(
@@ -91,12 +109,18 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
                 influxQlQuery.getDatabase(),
                 influxQlQuery.getRetentionPolicy(),
                 influxQlQuery.getPrecision() != null ? influxQlQuery.getPrecision().getSymbol() : null,
-                null);
+                null,
+          accept != null ? accept.getVal() : InfluxQLQuery.AcceptHeader.JSON.getVal());
+
+        System.out.println("DEBUG call header: " + call.request().header("Accept"));
 
         AtomicReference<InfluxQLQueryResult> atomicReference = new AtomicReference<>();
         BiConsumer<Cancellable, BufferedSource> consumer = (cancellable, bufferedSource) -> {
             try {
-                InfluxQLQueryResult result = parseResponse(bufferedSource, cancellable, valueExtractor);
+                InfluxQLQueryResult result = parseResponse(bufferedSource,
+                  cancellable,
+                  accept,
+                  valueExtractor);
                 atomicReference.set(result);
             } catch (IOException e) {
                 ERROR_CONSUMER.accept(e);
@@ -109,12 +133,17 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
     private InfluxQLQueryResult parseResponse(
             @Nonnull final BufferedSource bufferedSource,
             @Nonnull final Cancellable cancellable,
+            @Nonnull final InfluxQLQuery.AcceptHeader accept,
             @Nullable final InfluxQLQueryResult.Series.ValueExtractor valueExtractor) throws IOException {
 
         Arguments.checkNotNull(bufferedSource, "bufferedSource");
 
         try (Reader reader = new InputStreamReader(bufferedSource.inputStream(), StandardCharsets.UTF_8)) {
-//            return readInfluxQLCSVResult(reader, cancellable, valueExtractor);
+            if (accept == InfluxQLQuery.AcceptHeader.CSV) {
+                System.out.println("DEBUG have CSV");
+              return readInfluxQLCSVResult(reader, cancellable, valueExtractor);
+            }
+            System.out.println("DEBUG have JSON");
             return readInfluxQLJsonResult(reader, cancellable, valueExtractor);
         }
     }

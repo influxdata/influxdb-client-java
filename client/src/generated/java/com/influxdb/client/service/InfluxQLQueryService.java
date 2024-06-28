@@ -15,7 +15,7 @@ public interface InfluxQLQueryService {
      * @param zapTraceSpan    OpenTracing span context (optional)
      * @return response in csv format
      */
-    @Headers({"Accept:application/json", "Content-Type:application/x-www-form-urlencoded"})
+    @Headers({"Content-Type:application/x-www-form-urlencoded"})
     @FormUrlEncoded
     @POST("query")
     Call<ResponseBody> query(
@@ -23,6 +23,7 @@ public interface InfluxQLQueryService {
             @Nonnull @Query("db") String db,
             @Query("rp") String retentionPolicy,
             @Query("epoch") String epoch,
-            @Header("Zap-Trace-Span") String zapTraceSpan
+            @Header("Zap-Trace-Span") String zapTraceSpan,
+            @Header("Accept") String accept
     );
 }

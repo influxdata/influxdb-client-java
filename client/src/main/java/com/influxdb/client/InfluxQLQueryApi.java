@@ -92,4 +92,17 @@ public interface InfluxQLQueryApi {
             @Nonnull InfluxQLQuery influxQlQuery,
             @Nullable InfluxQLQueryResult.Series.ValueExtractor valueExtractor
     );
+
+    @Nonnull
+    InfluxQLQueryResult query(
+      @Nonnull InfluxQLQuery influxQlQuery,
+      @Nullable InfluxQLQuery.AcceptHeader header,
+      @Nullable InfluxQLQueryResult.Series.ValueExtractor valueExtractor
+    );
+
+    @Nonnull
+    InfluxQLQueryResult query(
+      @Nonnull InfluxQLQuery influxQLQuery,
+      @Nullable InfluxQLQuery.AcceptHeader header
+    );
 }

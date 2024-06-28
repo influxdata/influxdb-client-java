@@ -24,6 +24,10 @@ package com.influxdb.client;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.DBRPCreate;
@@ -33,9 +37,14 @@ import com.influxdb.client.service.DbrPsService;
 import com.influxdb.client.write.Point;
 import com.influxdb.query.InfluxQLQueryResult;
 
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.assertj.core.api.ListAssert;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.InstanceOfAssertFactories.BIG_DECIMAL;
@@ -81,6 +90,15 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 				.contains(DATABASE_NAME);
 	}
 
+	@Test
+	void testShowDatabasesCSV() {
+		InfluxQLQueryResult result = influxQLQueryApi.query(
+			new InfluxQLQuery("SHOW DATABASES", DATABASE_NAME, InfluxQLQuery.AcceptHeader.CSV));
+		assertSingleSeriesRecords(result)
+			.map(record -> record.getValueByKey("name"))
+			// internal buckets are also available by DBRP mapping
+			.contains(DATABASE_NAME);
+	}
 
 	@Test
 	void testQueryData() {
@@ -198,5 +216,165 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 				.hasSize(1)
 				.first()
 				.extracting(InfluxQLQueryResult.Series::getValues, list(InfluxQLQueryResult.Series.Record.class));
+	}
+
+  @Nested
+  class ServiceHeaderTest {
+
+		protected MockWebServer mockServer = new MockWebServer();
+
+		@BeforeEach
+		void setUp() throws IOException {
+			mockServer.enqueue(new MockResponse().setBody(""));
+			mockServer.start();
+		}
+
+		@AfterEach
+		void tearDown() throws IOException {
+			mockServer.shutdown();
+		}
+
+		@Test
+		public void serviceHeaderCSV() throws InterruptedException {
+			InfluxDBClient client = InfluxDBClientFactory.create(
+				mockServer.url("/").toString(),
+				"my_token".toCharArray(),
+				"my_org",
+				"my_bucket"
+			);
+
+			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
+			InfluxQLQueryResult result = influxQuery.query(new InfluxQLQuery("SELECT * FROM cpu", "test_db", InfluxQLQuery.AcceptHeader.CSV));
+			RecordedRequest request = mockServer.takeRequest();
+			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
+			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/csv");
+		}
+
+
+		@Test
+		public void serviceHeaderJSON() throws InterruptedException {
+			InfluxDBClient client = InfluxDBClientFactory.create(
+				mockServer.url("/").toString(),
+				"my_token".toCharArray(),
+				"my_org",
+				"my_bucket"
+			);
+
+			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
+			InfluxQLQueryResult result = influxQuery.query(new InfluxQLQuery("SELECT * FROM cpu", "test_db",
+				InfluxQLQuery.AcceptHeader.JSON));
+			RecordedRequest request = mockServer.takeRequest();
+			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
+			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/json");
+		}
+
+		@Test
+		public void serviceHeaderDefault() throws InterruptedException {
+			InfluxDBClient client = InfluxDBClientFactory.create(
+				mockServer.url("/").toString(),
+				"my_token".toCharArray(),
+				"my_org",
+				"my_bucket"
+			);
+
+			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
+			InfluxQLQueryResult result = influxQuery.query(new InfluxQLQuery("SELECT * FROM cpu", "test_db"));
+			RecordedRequest request = mockServer.takeRequest();
+			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
+			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/json");
+		}
+
+		@Test
+		public void serviceHeaderInCallCSV() throws InterruptedException {
+			InfluxDBClient client = InfluxDBClientFactory.create(
+				mockServer.url("/").toString(),
+				"my_token".toCharArray(),
+				"my_org",
+				"my_bucket"
+			);
+
+			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
+			InfluxQLQueryResult result = influxQuery.query(
+				new InfluxQLQuery("SELECT * FROM cpu", "test_db"),
+				InfluxQLQuery.AcceptHeader.CSV);
+			RecordedRequest request = mockServer.takeRequest();
+			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
+			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/csv");
+		}
+
+		@Test
+		public void serviceHeaderInCallJSON() throws InterruptedException {
+			InfluxDBClient client = InfluxDBClientFactory.create(
+				mockServer.url("/").toString(),
+				"my_token".toCharArray(),
+				"my_org",
+				"my_bucket"
+			);
+
+			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
+			InfluxQLQueryResult result = influxQuery.query(
+				new InfluxQLQuery("SELECT * FROM cpu", "test_db"),
+				InfluxQLQuery.AcceptHeader.JSON);
+			RecordedRequest request = mockServer.takeRequest();
+			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
+			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/json");
+		}
+	}
+
+	@Test
+	public void testQueryJsonPrecision(){
+		Bucket bucket = influxDBClient.getBucketsApi().findBucketByName("my-bucket");
+		int idx = 0;
+		Map<String,Instant> precisionValues = new HashMap<>();
+	  for(WritePrecision precision : WritePrecision.values()){
+			 Instant time = Instant.now().minusSeconds(10 * (1 + idx++));
+			 long nanoTimestamp = (time.getEpochSecond() * 1_000_000_000L) + time.getNano();
+
+			 long timestamp = 0;
+			 switch(precision){
+				 case S:
+					 timestamp = nanoTimestamp/1_000_000_000L;
+					 precisionValues.put(precision.getValue(), Instant.ofEpochSecond(timestamp));
+           break;
+				 case MS:
+					 timestamp = nanoTimestamp/1_000_000L;
+					 precisionValues.put(precision.getValue(), Instant.ofEpochMilli(timestamp));
+					 break;
+				 case US:
+					 timestamp = nanoTimestamp/1_000L;
+					 precisionValues.put(precision.getValue(),
+						 Instant.ofEpochSecond(timestamp/1_000_000L, (timestamp%1_000_000L) * 1000));
+					 break;
+				 case NS:
+					 timestamp = nanoTimestamp;
+					 precisionValues.put(precision.getValue(),
+						 Instant.ofEpochSecond(timestamp/1_000_000_000L, timestamp%1_000_000_000L));
+					 break;
+			 }
+		   influxDBClient.getWriteApiBlocking()
+			  .writePoint(bucket.getId(), bucket.getOrgID(), new Point("precise")
+				  .time(timestamp, precision)
+				  .addField("cpu_usage", 10.42)
+				  .addTag("domain", precision.toString()));
+		}
+    assert bucket != null;
+    InfluxQLQueryResult result = influxDBClient.getInfluxQLQueryApi()
+			.query(new InfluxQLQuery(
+				"SELECT * FROM precise WHERE time > now() - 1m",
+				bucket.getName()), InfluxQLQuery.AcceptHeader.JSON);
+
+		for(InfluxQLQueryResult.Result r: result.getResults()){
+			InfluxQLQueryResult.Series s = r.getSeries().get(0);
+			for(InfluxQLQueryResult.Series.Record record: s.getValues()){
+				System.out.println("DEBUG record: " + Arrays.toString(record.getValues()));
+				String domain = Objects.requireNonNull(record.getValueByKey("domain")).toString();
+				System.out.println("DEBUG time " +  domain + " " + record.getValueByKey("time"));
+				System.out.println("DEBUG precision value " + precisionValues.get(domain));
+				Assertions.assertThat(precisionValues.get(domain))
+					.isEqualTo(Instant.parse(
+						Objects.requireNonNull(record.getValueByKey("time")
+						).toString()));
+			}
+		}
 	}
 }
