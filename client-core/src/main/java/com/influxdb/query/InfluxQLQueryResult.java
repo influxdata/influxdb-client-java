@@ -21,8 +21,6 @@
  */
 package com.influxdb.query;
 
-import java.time.Instant;
-import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -211,42 +209,6 @@ public final class InfluxQLQueryResult {
             public Object[] getValues() {
                 return values;
             }
-        }
-
-        public static Object defaultExtractValue(@Nonnull final String columnName,
-                                                 @Nonnull final String rawValue,
-                                                 final int resultIndex,
-                                                 @Nonnull final String seriesName) {
-            try {
-                return Long.parseLong(rawValue);
-            } catch (NumberFormatException le) {
-                try {
-                    return Double.parseDouble(rawValue);
-                } catch (NumberFormatException de) {
-                    try {
-                        return Instant.parse(rawValue);
-                    } catch (DateTimeParseException dte) {
-                        return rawValue;
-                    }
-                }
-            }
-        }
-
-        @SuppressWarnings("MagicNumber")
-        public static Object legacyExtractValue(@Nonnull final String columnName,
-                                                 @Nonnull final String rawValue,
-                                                 final int resultIndex,
-                                                 @Nonnull final String seriesName) {
-
-            if (columnName.toLowerCase().equals("time")) {
-                try {
-                    Instant instant = Instant.parse(rawValue);
-                    return String.valueOf(instant.getEpochSecond() * 1_000_000_000L + instant.getNano());
-                } catch (DateTimeParseException dtpe) {
-                      return rawValue;
-                }
-            }
-            return rawValue;
         }
     }
 
