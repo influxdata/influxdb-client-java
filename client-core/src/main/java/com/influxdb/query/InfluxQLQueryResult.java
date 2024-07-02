@@ -210,7 +210,6 @@ public final class InfluxQLQueryResult {
                 return values;
             }
         }
-
     }
 
 }

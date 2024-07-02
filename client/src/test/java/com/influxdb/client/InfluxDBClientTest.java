@@ -33,6 +33,8 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 
+import com.influxdb.client.domain.InfluxQLQuery;
+import com.influxdb.client.service.InfluxQLQueryService;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import com.sun.net.httpserver.HttpHandler;
@@ -48,12 +50,14 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 14:00)
@@ -120,6 +124,28 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
     @Test
     public void createNotificationRulesApi() {
         Assertions.assertThat(influxDBClient.getNotificationRulesApi()).isNotNull();
+    }
+
+    @Test
+    public void serviceHeaderDefault() {
+        InfluxQLQueryService service = influxDBClient.getService(InfluxQLQueryService.class);
+        Call<ResponseBody> call = service.query("SELECT * FROM cpu", "test_db",
+          null,
+          null,
+          null,
+          InfluxQLQuery.AcceptHeader.JSON.getVal());
+        Assertions.assertThat(call.request().header("Accept")).isEqualTo("application/json");
+    }
+
+    @Test
+    public void serviceHeaderChange() {
+        InfluxQLQueryService service = influxDBClient.getService(InfluxQLQueryService.class);
+        Call<ResponseBody> call = service.query("SELECT * FROM cpu", "test_db",
+          null,
+          null,
+          null,
+          InfluxQLQuery.AcceptHeader.CSV.getVal());
+        Assertions.assertThat(call.request().header("accept")).isEqualTo("application/csv");
     }
 
     @Test
