@@ -24,7 +24,17 @@ package com.influxdb.client.domain;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 public class InfluxQLQueryTest {
+
+  @Test
+  public void setRetentionPolicy(){
+    String rp = "oneOffRP";
+    InfluxQLQuery query = new InfluxQLQuery("SELECT * FROM cpu", "test_db");
+    Assertions.assertThat(query.setRetentionPolicy(rp).getRetentionPolicy()).isEqualTo(rp);
+  }
 
   @Test
   public void headerSelectDefault(){
@@ -38,5 +48,33 @@ public class InfluxQLQueryTest {
       "test_db",
       InfluxQLQuery.AcceptHeader.CSV);
     Assertions.assertThat(query.getAcceptHeaderVal()).isEqualTo("application/csv");
+  }
+
+  @Test
+  public void headerSet(){
+    InfluxQLQuery query = new InfluxQLQuery("SELECT * FROM cpu", "test_db");
+    Assertions.assertThat(query.getAcceptHeaderVal()).isEqualTo("application/json");
+    query.setAcceptHeader(InfluxQLQuery.AcceptHeader.CSV);
+    Assertions.assertThat(query.getAcceptHeaderVal()).isEqualTo("application/csv");
+  }
+
+  @Test
+  public void timeUnitPrecisionConversion(){
+    Map<TimeUnit, String> expected = Map.of(
+      TimeUnit.NANOSECONDS, "n",
+      TimeUnit.MICROSECONDS, "u",
+      TimeUnit.MILLISECONDS, "ms",
+      TimeUnit.SECONDS, "s",
+      TimeUnit.MINUTES, "m",
+      TimeUnit.HOURS, "h");
+    for(TimeUnit tu: TimeUnit.values()){
+      if(!tu.equals(TimeUnit.DAYS)){
+        Assertions.assertThat(expected.get(tu)).isEqualTo(InfluxQLQuery.InfluxQLPrecision.toTimePrecision(tu).getSymbol());
+      } else {
+        Assertions.assertThatThrownBy(() -> InfluxQLQuery.InfluxQLPrecision.toTimePrecision(tu))
+          .isInstanceOf(IllegalArgumentException.class)
+          .hasMessage("time precision must be one of:[HOURS, MINUTES, SECONDS, MILLISECONDS, MICROSECONDS, NANOSECONDS]");
+      }
+    }
   }
 }
