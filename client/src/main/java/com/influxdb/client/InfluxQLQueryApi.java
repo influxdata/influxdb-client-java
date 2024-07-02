@@ -29,10 +29,25 @@ import com.influxdb.client.domain.InfluxQLQuery;
 import com.influxdb.query.InfluxQLQueryResult;
 
 /**
- * The <code>InfluxQL</code> can be used with <code>/query compatibility</code> endpoint which uses the
+ * The <code>InfluxQL</code> API can be used with the <code>/query compatibility</code> endpoint which uses the
  * <strong>{@link InfluxQLQuery#getDatabase() database}</strong> and
  * <strong>{@link InfluxQLQuery#getRetentionPolicy() retention policy}</strong> specified in the query request to
  * map the request to an InfluxDB bucket.
+ *
+ * <p>Note that as of release 7.2 queries using the legacy <code>InfluxQL</code> compatible endpoint, will use
+ * the default <code>Accept</code> header mime type of <code>application/json</code> instead of the previous
+ * mime type of <code>application/csv</code>.  This means timestamps will be returned in the RFC3339 format,
+ * e.g. <code>"2024-06-18T11:29:48.454Z"</code> instead of in the Epoch format, e.g. <code>1655900000000000000</code>.
+ * </p>
+ *
+ * <p>To continue to use the <code>application/csv</code> mime type and to receive Epoch timestamps, use a
+ * new convenience method <code>queryCSV</code>.  To explicitly indicate use of the <code>application/json</code>
+ * mime type additional convenience methods <code>queryJSON</code> are also now available.  These are synonymous
+ * with the original <code>query</code> methods.</p>
+ *
+ * <p>Note that the <code>Accept</code> header mime type can now also be specified when instantiating the
+ *{@link com.influxdb.client.domain.InfluxQLQuery} class.</p>
+ *
  * <br>
  * For more information, see:
  * <ul>
@@ -45,6 +60,11 @@ import com.influxdb.query.InfluxQLQueryResult;
  *         <a href="https://docs.influxdata.com/influxdb/latest/reference/api/influxdb-1x/dbrp/">
  *             Database and retention policy mapping
  *         </a>
+ *     </li>
+ *     <li>
+ *       <a href="https://docs.influxdata.com/influxdb/v2/api/v1-compatibility/#operation/PostQueryV1">
+ *         OpenApi generated definitions
+ *       </a>
  *     </li>
  * </ul>
  **/
@@ -93,16 +113,48 @@ public interface InfluxQLQueryApi {
             @Nullable InfluxQLQueryResult.Series.ValueExtractor valueExtractor
     );
 
+    /**
+     * Convenience method to specify use of the mime type <code>application/csv</code>
+     * in the <code>Accept</code> header.  Result timestamps will be in the Epoch format.
+     *
+     * @param influxQLQuery the query
+     * @return the result
+     */
     @Nonnull
-    InfluxQLQueryResult query(
-      @Nonnull InfluxQLQuery influxQlQuery,
-      @Nullable InfluxQLQuery.AcceptHeader header,
-      @Nullable InfluxQLQueryResult.Series.ValueExtractor valueExtractor
-    );
+    InfluxQLQueryResult queryCSV(@Nonnull final InfluxQLQuery influxQLQuery);
 
+    /**
+     * Convenience method to specify use of the mime type <code>application/csv</code>
+     * in the <code>Accept</code> header.  Result timestamps will be in the Epoch format.
+     *
+     * @param influxQLQuery the query
+     * @param valueExtractor a callback, to convert column values
+     * @return the result
+     */
+    InfluxQLQueryResult queryCSV(@Nonnull final InfluxQLQuery influxQLQuery,
+                                 @Nullable InfluxQLQueryResult.Series.ValueExtractor valueExtractor);
+
+    /**
+     * Convenience method to specify use of the mime type <code>application/json</code>
+     * in the <code>Accept</code> header.  Result timestamps will be in the RFC3339 format.
+     *
+     * @param influxQLQuery the query
+     * @return the result
+     */
     @Nonnull
-    InfluxQLQueryResult query(
-      @Nonnull InfluxQLQuery influxQLQuery,
-      @Nullable InfluxQLQuery.AcceptHeader header
-    );
+    InfluxQLQueryResult queryJSON(@Nonnull final InfluxQLQuery influxQLQuery);
+
+    /**
+     * Convenience method to specify use of the mime type <code>application/json</code>
+     * in the <code>Accept</code> header.  Result timestamps will be in the RFC3339 format.
+     *
+     * @param influxQLQuery the query
+     * @param valueExtractor a callback, to convert column values
+     * @return the result
+     */
+    @Nonnull
+    InfluxQLQueryResult queryJSON(@Nonnull final InfluxQLQuery influxQLQuery,
+                                 @Nullable InfluxQLQueryResult.Series.ValueExtractor valueExtractor);
+
+
 }

@@ -225,7 +225,6 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 
 		@BeforeEach
 		void setUp() throws IOException {
-			mockServer.enqueue(new MockResponse().setBody(""));
 			mockServer.start();
 		}
 
@@ -236,6 +235,7 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 
 		@Test
 		public void serviceHeaderCSV() throws InterruptedException {
+			mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("a,b,c,d,e,f"));
 			InfluxDBClient client = InfluxDBClientFactory.create(
 				mockServer.url("/").toString(),
 				"my_token".toCharArray(),
@@ -245,6 +245,8 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 
 			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
 			InfluxQLQueryResult result = influxQuery.query(new InfluxQLQuery("SELECT * FROM cpu", "test_db", InfluxQLQuery.AcceptHeader.CSV));
+			Assertions.assertThat(result.getResults()).hasSize(1);
+
 			RecordedRequest request = mockServer.takeRequest();
 			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
 			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/csv");
@@ -253,6 +255,7 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 
 		@Test
 		public void serviceHeaderJSON() throws InterruptedException {
+			mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{results:[]}"));
 			InfluxDBClient client = InfluxDBClientFactory.create(
 				mockServer.url("/").toString(),
 				"my_token".toCharArray(),
@@ -263,6 +266,8 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
 			InfluxQLQueryResult result = influxQuery.query(new InfluxQLQuery("SELECT * FROM cpu", "test_db",
 				InfluxQLQuery.AcceptHeader.JSON));
+			Assertions.assertThat(result.getResults()).hasSize(0);
+
 			RecordedRequest request = mockServer.takeRequest();
 			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
 			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/json");
@@ -270,6 +275,7 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 
 		@Test
 		public void serviceHeaderDefault() throws InterruptedException {
+			mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{results:[]}"));
 			InfluxDBClient client = InfluxDBClientFactory.create(
 				mockServer.url("/").toString(),
 				"my_token".toCharArray(),
@@ -285,7 +291,8 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 		}
 
 		@Test
-		public void serviceHeaderInCallCSV() throws InterruptedException {
+		public void serviceHeaderMethodQueryCSV() throws InterruptedException {
+			mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("a,b,c,d,e,f"));
 			InfluxDBClient client = InfluxDBClientFactory.create(
 				mockServer.url("/").toString(),
 				"my_token".toCharArray(),
@@ -294,16 +301,49 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 			);
 
 			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
-			InfluxQLQueryResult result = influxQuery.query(
-				new InfluxQLQuery("SELECT * FROM cpu", "test_db"),
-				InfluxQLQuery.AcceptHeader.CSV);
+			InfluxQLQueryResult result = influxQuery.queryCSV(
+				new InfluxQLQuery("SELECT * FROM cpu", "test_db"));
+			Assertions.assertThat(result.getResults()).hasSize(1);
 			RecordedRequest request = mockServer.takeRequest();
 			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
 			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/csv");
 		}
 
 		@Test
-		public void serviceHeaderInCallJSON() throws InterruptedException {
+		public void serverHeaderMethodQueryCSVExtractor(){
+			mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("a,tags,c,d,e\n\"mem\",\"foo=bar\",2,3,4"));
+			InfluxDBClient client = InfluxDBClientFactory.create(
+				mockServer.url("/").toString(),
+				"my_token".toCharArray(),
+				"my_org",
+				"my_bucket"
+			);
+			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
+			InfluxQLQueryResult result = influxQuery.queryCSV(
+				new InfluxQLQuery("SELECT * FROM cpu", "test_db"),
+				(columnName, rawValue, resultIndex, seriesName) -> {
+					switch(columnName) {
+						case "c":
+							return Long.valueOf(rawValue);
+						case "d":
+							return Double.valueOf(rawValue);
+					}
+					return rawValue;
+				});
+			InfluxQLQueryResult.Series series = result.getResults().get(0).getSeries().get(0);
+			Assertions.assertThat(series.getName()).isEqualTo("mem");
+			Assertions.assertThat(series.getTags().get("foo")).isEqualTo("bar");
+			Assertions.assertThat(series.getColumns().get("c")).isEqualTo(0);
+			Assertions.assertThat(series.getColumns().get("d")).isEqualTo(1);
+			Assertions.assertThat(series.getColumns().get("e")).isEqualTo(2);
+			Assertions.assertThat(series.getValues().get(0).getValueByKey("c")).isEqualTo(2L);
+			Assertions.assertThat(series.getValues().get(0).getValueByKey("d")).isEqualTo(3.0);
+			Assertions.assertThat(series.getValues().get(0).getValueByKey("e")).isEqualTo("4");
+		}
+
+		@Test
+		public void serviceHeaderMethodQueryJSON() throws InterruptedException {
+			mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{results:[]}"));
 			InfluxDBClient client = InfluxDBClientFactory.create(
 				mockServer.url("/").toString(),
 				"my_token".toCharArray(),
@@ -312,9 +352,78 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 			);
 
 			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
-			InfluxQLQueryResult result = influxQuery.query(
-				new InfluxQLQuery("SELECT * FROM cpu", "test_db"),
-				InfluxQLQuery.AcceptHeader.JSON);
+			InfluxQLQueryResult result = influxQuery.queryJSON(new InfluxQLQuery("SELECT * FROM cpu", "test_db"));
+			Assertions.assertThat(result.getResults()).hasSize(0);
+			RecordedRequest request = mockServer.takeRequest();
+			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
+			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/json");
+		}
+
+		@Test
+		public void serviceHeaderMethodQueryJSONExtractor() throws InterruptedException {
+			mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{\"results\":[{\"statement_id\":0," +
+				"\"series\":[{\"name\":\"mem\",\"tags\": { \"foo\":\"bar\"},\"columns\": [\"c\",\"d\",\"e\"]," +
+				"\"values\":[[2,3,4]]}]}]}"));
+			InfluxDBClient client = InfluxDBClientFactory.create(
+				mockServer.url("/").toString(),
+				"my_token".toCharArray(),
+				"my_org",
+				"my_bucket"
+			);
+			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
+			InfluxQLQueryResult result = influxQuery.queryJSON
+				(new InfluxQLQuery("SELECT * FROM cpu", "test_db"),
+					(columnName, rawValue, resultIndex, seriesName) -> {
+						switch(columnName) {
+							case "c":
+								return Long.valueOf(rawValue);
+							case "d":
+								return Double.valueOf(rawValue);
+						}
+						return rawValue;
+					});
+			InfluxQLQueryResult.Series series = result.getResults().get(0).getSeries().get(0);
+			Assertions.assertThat(series.getName()).isEqualTo("mem");
+			Assertions.assertThat(series.getTags().get("foo")).isEqualTo("bar");
+			Assertions.assertThat(series.getColumns().get("c")).isEqualTo(0);
+			Assertions.assertThat(series.getColumns().get("d")).isEqualTo(1);
+			Assertions.assertThat(series.getColumns().get("e")).isEqualTo(2);
+			Assertions.assertThat(series.getValues().get(0).getValueByKey("c")).isEqualTo(2L);
+			Assertions.assertThat(series.getValues().get(0).getValueByKey("d")).isEqualTo(3.0);
+			Assertions.assertThat(series.getValues().get(0).getValueByKey("e")).isEqualTo("4");
+		}
+
+		@Test
+		public void serviceHeaderMethodQueryCSVPrecedent() throws InterruptedException {
+			mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("a,b,c,d,e,f"));
+			InfluxDBClient client = InfluxDBClientFactory.create(
+				mockServer.url("/").toString(),
+				"my_token".toCharArray(),
+				"my_org",
+				"my_bucket"
+			);
+			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
+			InfluxQLQueryResult result = influxQuery.queryCSV(
+				new InfluxQLQuery("SELECT * FROM cpu", "test_db", InfluxQLQuery.AcceptHeader.JSON));
+			Assertions.assertThat(result.getResults()).hasSize(1);
+			RecordedRequest request = mockServer.takeRequest();
+			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
+			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/csv");
+		}
+
+		@Test
+		public void serviceHeaderMethodQueryJSONPrecedent() throws InterruptedException {
+			mockServer.enqueue(new MockResponse().setResponseCode(200).setBody("{results:[]}"));
+			InfluxDBClient client = InfluxDBClientFactory.create(
+				mockServer.url("/").toString(),
+				"my_token".toCharArray(),
+				"my_org",
+				"my_bucket"
+			);
+			InfluxQLQueryApi influxQuery = client.getInfluxQLQueryApi();
+			InfluxQLQueryResult result = influxQuery.queryJSON(
+				new InfluxQLQuery("SELECT * FROM cpu", "test_db", InfluxQLQuery.AcceptHeader.CSV));
+			Assertions.assertThat(result.getResults()).hasSize(0);
 			RecordedRequest request = mockServer.takeRequest();
 			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
 			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/json");
@@ -359,17 +468,14 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 		}
     assert bucket != null;
     InfluxQLQueryResult result = influxDBClient.getInfluxQLQueryApi()
-			.query(new InfluxQLQuery(
+			.queryJSON(new InfluxQLQuery(
 				"SELECT * FROM precise WHERE time > now() - 1m",
-				bucket.getName()), InfluxQLQuery.AcceptHeader.JSON);
+				bucket.getName()));
 
 		for(InfluxQLQueryResult.Result r: result.getResults()){
 			InfluxQLQueryResult.Series s = r.getSeries().get(0);
 			for(InfluxQLQueryResult.Series.Record record: s.getValues()){
-				System.out.println("DEBUG record: " + Arrays.toString(record.getValues()));
 				String domain = Objects.requireNonNull(record.getValueByKey("domain")).toString();
-				System.out.println("DEBUG time " +  domain + " " + record.getValueByKey("time"));
-				System.out.println("DEBUG precision value " + precisionValues.get(domain));
 				Assertions.assertThat(precisionValues.get(domain))
 					.isEqualTo(Instant.parse(
 						Objects.requireNonNull(record.getValueByKey("time")

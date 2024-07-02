@@ -26,8 +26,6 @@ import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.influxdb.client.JSON;
-
 /**
  * A InfluxQL query.
  */
@@ -49,6 +47,11 @@ public class InfluxQLQuery {
         this.acceptHeader = AcceptHeader.JSON;
     }
 
+    /**
+     * @param command the InfluxQL command to execute
+     * @param database the database to run this query against
+     * @param acceptHeader the <code>Accept</code> header to use in the request
+     */
     public InfluxQLQuery(@Nonnull final String command,
                          @Nonnull final String database,
                          @Nonnull final AcceptHeader acceptHeader) {
@@ -110,14 +113,23 @@ public class InfluxQLQuery {
         return this;
     }
 
+    /**
+     * @return the current AcceptHeader used when making queries.
+     */
     public AcceptHeader getAcceptHeader() {
         return acceptHeader;
     }
 
+    /***
+     * @param acceptHeader the AcceptHeader to be used when making queries.
+     */
     public void setAcceptHeader(final AcceptHeader acceptHeader) {
         this.acceptHeader = acceptHeader;
     }
 
+    /**
+     * @return the string value of the AcceptHeader used when making queries.
+     */
     public String getAcceptHeaderVal() {
         return acceptHeader != null ? acceptHeader.getVal() : AcceptHeader.JSON.getVal();
     }
@@ -169,6 +181,9 @@ public class InfluxQLQuery {
         }
     }
 
+    /**
+     * The possible values to be used in the header <code>Accept</code>, when making queries.
+     */
     public enum AcceptHeader {
         JSON("application/json"),
         CSV("application/csv");
