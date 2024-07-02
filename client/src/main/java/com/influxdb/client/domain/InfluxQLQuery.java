@@ -21,8 +21,6 @@
  */
 package com.influxdb.client.domain;
 
-import com.influxdb.query.InfluxQLQueryResult;
-
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
