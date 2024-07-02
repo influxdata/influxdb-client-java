@@ -21,6 +21,8 @@
  */
 package com.influxdb.client.domain;
 
+import com.influxdb.query.InfluxQLQueryResult;
+
 import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import javax.annotation.Nonnull;
@@ -122,9 +124,11 @@ public class InfluxQLQuery {
 
     /***
      * @param acceptHeader the AcceptHeader to be used when making queries.
+     * @return this
      */
-    public void setAcceptHeader(final AcceptHeader acceptHeader) {
+    public InfluxQLQuery setAcceptHeader(final AcceptHeader acceptHeader) {
         this.acceptHeader = acceptHeader;
+        return this;
     }
 
     /**

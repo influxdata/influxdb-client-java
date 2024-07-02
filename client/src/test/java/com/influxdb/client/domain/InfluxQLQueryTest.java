@@ -54,8 +54,8 @@ public class InfluxQLQueryTest {
   public void headerSet(){
     InfluxQLQuery query = new InfluxQLQuery("SELECT * FROM cpu", "test_db");
     Assertions.assertThat(query.getAcceptHeaderVal()).isEqualTo("application/json");
-    query.setAcceptHeader(InfluxQLQuery.AcceptHeader.CSV);
-    Assertions.assertThat(query.getAcceptHeaderVal()).isEqualTo("application/csv");
+    Assertions.assertThat(query.setAcceptHeader(InfluxQLQuery.AcceptHeader.CSV).getAcceptHeaderVal())
+      .isEqualTo("application/csv");
   }
 
   @Test
