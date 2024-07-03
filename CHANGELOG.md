@@ -1,5 +1,29 @@
 ## 7.2.0 [unreleased]
 
+### Breaking Changes
+
+#### InfluxQLQuery default timestamp
+
+The default timestamp returned by `InfluxQLQueryAPI.query()` is no longer in the POSIX epoch format.  It is now in the RFC3339 format.  The Epoch format is still supported.  It is sufficient to add the `epoch` query parameter to a query request via `InfluxQLQuery.setPrecision()` or to use a new dedicated CSV query method, `InfluxQLQueryAPI.queryCSV()`.
+
+See header changes in features below.
+
+### Features 
+
+- [#719](https://github.com/influxdata/influxdb-client-java/issues/719): `InfluxQLQueryService` header changes.
+   - Now uses `Accept` header with the value `application/json` by default.
+   - The `Accept` header for InfluxQLQuery calls can now be set dynamically as either `application/json` or `application/csv`.
+   - :warning: Side effects of these changes:
+      - When using `application/json` timestamp fields are returned in the [RFC3339](https://www.rfc-editor.org/rfc/rfc3339) format.
+      - When using `application/csv` timestamp fields are returned in the POSIX epoch format.
+   - Convenience methods have been added to `InfluxQLQueryAPI` to simplify using CSV if desired.
+   - Epoch timestamps can also be ensured by calling `InfluxQLQuery.setPrecision()` before executing a query call.
+   - An `AcceptHeader` field has also been added to the `InfluxQLQuery` class and can be set with `InfluxQLQuery.setAcceptHeader()`.
+   - More information from the server side:
+      - [Generated REST API Documentation](https://docs.influxdata.com/influxdb/v2/api/v1-compatibility/#operation/PostQueryV1)
+      - [Influx 1.1 query compatibility](https://docs.influxdata.com/influxdb/latest/reference/api/influxdb-1x/query/)
+   - See the updated InfluxQLExample 
+
 ### Dependencies
 
 Update dependencies:
