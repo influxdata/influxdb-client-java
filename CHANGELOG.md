@@ -9,6 +9,7 @@ Update dependencies:
  - [#726](https://github.com/influxdata/influxdb-client-java/pull/726): `kotlin` to `2.0.0`
  - [#727](https://github.com/influxdata/influxdb-client-java/pull/727): `micrometer-registry-influx` to `1.30.0`
  - [#740](https://github.com/influxdata/influxdb-client-java/pull/740): `pekko` to `1.0.3`
+ - [#743](https://github.com/influxdata/influxdb-client-java/pull/743): `gson` to `2.11.0`
 
 #### Maven:
  - [#721](https://github.com/influxdata/influxdb-client-java/pull/721): `build-helper-maven-plugin` to `3.6.0`
