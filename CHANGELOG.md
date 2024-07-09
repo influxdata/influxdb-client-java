@@ -21,6 +21,7 @@ Update dependencies:
 
 #### Examples:
  - [#723](https://github.com/influxdata/influxdb-client-java/pull/723): `commons-cli ` to `1.8.0`
+ - [#742](https://github.com/influxdata/influxdb-client-java/pull/742): `commons-io ` to `2.16.1`
 
 ## 7.1.0 [2024-05-17]
 
