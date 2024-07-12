@@ -278,12 +278,15 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
           final Type type,
           final JsonDeserializationContext ctx) throws JsonParseException {
             List<InfluxQLQueryResult.Result> results = new ArrayList<>();
-            JsonArray jsonArray = elem.getAsJsonObject().get("results").getAsJsonArray();
-            for (JsonElement jsonElement : jsonArray) {
-                if (cancellable.isCancelled()) {
-                    break;
+            JsonObject result = elem.getAsJsonObject();
+            if (result.has("results")) {
+                JsonArray jsonArray = result.get("results").getAsJsonArray();
+                for (JsonElement jsonElement : jsonArray) {
+                    if (cancellable.isCancelled()) {
+                        break;
+                    }
+                    results.add(ctx.deserialize(jsonElement, InfluxQLQueryResult.Result.class));
                 }
-                results.add(ctx.deserialize(jsonElement, InfluxQLQueryResult.Result.class));
             }
             return new InfluxQLQueryResult(results);
         }
@@ -306,53 +309,55 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
             int id = eobj.get("statement_id").getAsInt();
             List<InfluxQLQueryResult.Series> series = new ArrayList<>();
             JsonArray seriesArray = eobj.getAsJsonArray("series");
-            for (JsonElement jserie : seriesArray) {
-                JsonObject sobj = jserie.getAsJsonObject();
-                String name = sobj.getAsJsonObject().get("name").getAsString();
-                Map<String, Integer> columns = new LinkedHashMap<>();
-                Map<String, String> tags = null;
-                // Handle columns
-                JsonArray jac = sobj.get("columns").getAsJsonArray();
-                final AtomicInteger count = new AtomicInteger(0);
-                jac.forEach(e -> {
-                    columns.put(e.getAsString(), count.getAndIncrement());
-                });
+            if (seriesArray != null) {
+                for (JsonElement jserie : seriesArray) {
+                    JsonObject sobj = jserie.getAsJsonObject();
+                    String name = sobj.getAsJsonObject().get("name").getAsString();
+                    Map<String, Integer> columns = new LinkedHashMap<>();
+                    Map<String, String> tags = null;
+                    // Handle columns
+                    JsonArray jac = sobj.get("columns").getAsJsonArray();
+                    final AtomicInteger count = new AtomicInteger(0);
+                    jac.forEach(e -> {
+                        columns.put(e.getAsString(), count.getAndIncrement());
+                    });
 
-                InfluxQLQueryResult.Series serie = null;
-                // Handle tags - if they exist
-                if (sobj.get("tags") != null) {
-                    JsonObject tagsObj = sobj.get("tags").getAsJsonObject();
-                    tags = new LinkedHashMap<>();
-                    for (String key : tagsObj.keySet()) {
-                        tags.put(key, tagsObj.get(key).getAsString());
-                    }
-                    serie = new InfluxQLQueryResult.Series(name, tags, columns);
-                } else {
-                    serie = new InfluxQLQueryResult.Series(name, columns);
-                }
-                JsonArray jvals = sobj.get("values").getAsJsonArray();
-                for (JsonElement jval : jvals) {
-                    List<Object> values = new ArrayList<>();
-                    JsonArray jae = jval.getAsJsonArray();
-                    int index = 0;
-                    for (JsonElement je : jae) {
-                        List<String> columnKeys = new ArrayList<>(serie.getColumns().keySet());
-                        if (extractor != null) {
-                            String stringVal = je.getAsString();
-                            Object ov = extractor.extractValue(
-                              columnKeys.get(index),
-                              stringVal,
-                              id,
-                              serie.getName());
-                            values.add(ov);
-                        } else {
-                            values.add(je.getAsString());
+                    InfluxQLQueryResult.Series serie = null;
+                    // Handle tags - if they exist
+                    if (sobj.get("tags") != null) {
+                        JsonObject tagsObj = sobj.get("tags").getAsJsonObject();
+                        tags = new LinkedHashMap<>();
+                        for (String key : tagsObj.keySet()) {
+                            tags.put(key, tagsObj.get(key).getAsString());
                         }
-                        index++;
+                        serie = new InfluxQLQueryResult.Series(name, tags, columns);
+                    } else {
+                        serie = new InfluxQLQueryResult.Series(name, columns);
                     }
-                    serie.addRecord(serie.new Record(values.toArray()));
+                    JsonArray jvals = sobj.get("values").getAsJsonArray();
+                    for (JsonElement jval : jvals) {
+                        List<Object> values = new ArrayList<>();
+                        JsonArray jae = jval.getAsJsonArray();
+                        int index = 0;
+                        for (JsonElement je : jae) {
+                            List<String> columnKeys = new ArrayList<>(serie.getColumns().keySet());
+                            if (extractor != null) {
+                                String stringVal = je.getAsString();
+                                Object ov = extractor.extractValue(
+                                  columnKeys.get(index),
+                                  stringVal,
+                                  id,
+                                  serie.getName());
+                                values.add(ov);
+                            } else {
+                                values.add(je.getAsString());
+                            }
+                            index++;
+                        }
+                        serie.addRecord(serie.new Record(values.toArray()));
+                    }
+                    series.add(serie);
                 }
-                series.add(serie);
             }
             return new InfluxQLQueryResult.Result(id, series);
         }

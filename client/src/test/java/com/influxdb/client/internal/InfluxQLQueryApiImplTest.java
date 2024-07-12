@@ -485,4 +485,48 @@ class InfluxQLQueryApiImplTest {
 					});
 			});
 	}
+
+	@Test
+	public void deserializeNullSeriesJSON(){
+		String nullSeriesResponse = "{\"results\":[{\"statement_id\":0}]}";
+		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLJsonResult(new StringReader(nullSeriesResponse), NO_CANCELLING, null);
+		List<InfluxQLQueryResult.Result> results = result.getResults();
+		Assertions.assertThat(results).hasSize(1);
+		Assertions.assertThat(results.get(0).getIndex()).isEqualTo(0);
+		Assertions.assertThat(results.get(0).getSeries()).hasSize(0);
+	}
+
+	@Test
+	public void deserializeNullSeriesCSV() throws IOException {
+		String nullSeriesResponse = "name,tags,time,val1,val2";
+		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLCSVResult(new StringReader(nullSeriesResponse), NO_CANCELLING, null);
+		List<InfluxQLQueryResult.Result> results = result.getResults();
+		Assertions.assertThat(results).hasSize(1);
+		Assertions.assertThat(results.get(0).getIndex()).isEqualTo(0);
+		Assertions.assertThat(results.get(0).getSeries()).hasSize(0);
+	}
+
+	@Test
+	public void deserializeZeroResultJSON() throws IOException {
+		String zeroResultResponse = "{\"results\":[]}";
+		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLJsonResult(new StringReader(zeroResultResponse), NO_CANCELLING, null);
+		List<InfluxQLQueryResult.Result> results = result.getResults();
+		Assertions.assertThat(results).hasSize(0);
+	}
+
+	@Test
+	public void deserializeZeroResultsCSV() throws IOException {
+		String nullResponse = "";
+		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLCSVResult(new StringReader(nullResponse), NO_CANCELLING, null);
+		List<InfluxQLQueryResult.Result> results = result.getResults();
+		Assertions.assertThat(results).hasSize(0);
+	}
+
+	@Test
+	public void deserializeEmptyResultJSON(){
+		String emptyResultResponse = "{}";
+		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLJsonResult(new StringReader(emptyResultResponse), NO_CANCELLING, null);
+		List<InfluxQLQueryResult.Result> results = result.getResults();
+		Assertions.assertThat(results).hasSize(0);
+	}
 }
