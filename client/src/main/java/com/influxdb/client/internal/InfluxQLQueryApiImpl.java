@@ -335,26 +335,28 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
                         serie = new InfluxQLQueryResult.Series(name, columns);
                     }
                     JsonArray jvals = sobj.get("values").getAsJsonArray();
-                    for (JsonElement jval : jvals) {
-                        List<Object> values = new ArrayList<>();
-                        JsonArray jae = jval.getAsJsonArray();
-                        int index = 0;
-                        for (JsonElement je : jae) {
-                            List<String> columnKeys = new ArrayList<>(serie.getColumns().keySet());
-                            if (extractor != null) {
-                                String stringVal = je.getAsString();
-                                Object ov = extractor.extractValue(
-                                  columnKeys.get(index),
-                                  stringVal,
-                                  id,
-                                  serie.getName());
-                                values.add(ov);
-                            } else {
-                                values.add(je.getAsString());
+                    if (jvals != null) {
+                        for (JsonElement jval : jvals) {
+                            List<Object> values = new ArrayList<>();
+                            JsonArray jae = jval.getAsJsonArray();
+                            int index = 0;
+                            for (JsonElement je : jae) {
+                                List<String> columnKeys = new ArrayList<>(serie.getColumns().keySet());
+                                if (extractor != null) {
+                                    String stringVal = je.getAsString();
+                                    Object ov = extractor.extractValue(
+                                      columnKeys.get(index),
+                                      stringVal,
+                                      id,
+                                      serie.getName());
+                                    values.add(ov);
+                                } else {
+                                    values.add(je.getAsString());
+                                }
+                                index++;
                             }
-                            index++;
+                            serie.addRecord(serie.new Record(values.toArray()));
                         }
-                        serie.addRecord(serie.new Record(values.toArray()));
                     }
                     series.add(serie);
                 }
