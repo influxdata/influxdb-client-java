@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.Objects;
 
 import com.influxdb.client.domain.Bucket;
+import com.influxdb.client.domain.DBRP;
 import com.influxdb.client.domain.DBRPCreate;
 import com.influxdb.client.domain.InfluxQLQuery;
 import com.influxdb.client.domain.WritePrecision;
@@ -46,6 +47,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import retrofit2.Response;
 
 import static org.assertj.core.api.InstanceOfAssertFactories.BIG_DECIMAL;
 import static org.assertj.core.api.InstanceOfAssertFactories.INSTANT;
@@ -481,6 +483,17 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 						Objects.requireNonNull(record.getValueByKey("time")
 						).toString()));
 			}
+		}
+	}
+
+	@Test
+	public void testEmptyResultsResponse() {
+
+		try(InfluxDBClient localClient = InfluxDBClientFactory.create(influxDB_URL, "my-token".toCharArray())) {
+			InfluxQLQueryResult result = localClient.getInfluxQLQueryApi().query(
+				new InfluxQLQuery("SHOW FIELD KEYS", "inexistant", InfluxQLQuery.AcceptHeader.CSV));
+
+			Assertions.assertThat(result.getResults()).hasSize(0);
 		}
 	}
 }
