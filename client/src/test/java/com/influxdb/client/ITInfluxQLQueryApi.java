@@ -109,8 +109,8 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 				.hasSize(1)
 				.first()
 				.satisfies(record -> {
-//					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
-					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("2022-06-22T12:13:20Z");
+					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
+//					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("2022-06-22T12:13:20Z");
 					Assertions.assertThat(record.getValueByKey("first")).isEqualTo("10");
 				});
 	}
@@ -147,12 +147,29 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 				.hasSize(1)
 				.first()
 				.satisfies(record -> {
-					// Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
-					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("2022-06-22T12:13:20Z");
+					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
+					// Assertions.assertThat(record.getValueByKey("time")).isEqualTo("2022-06-22T12:13:20Z");
 					Assertions.assertThat(record.getValueByKey("free")).isEqualTo("10");
 					Assertions.assertThat(record.getValueByKey("host")).isEqualTo("A");
 					Assertions.assertThat(record.getValueByKey("region")).isEqualTo("west");
 				});
+	}
+
+	@Test
+	void testSelectAllJSON() {
+		InfluxQLQueryResult result = influxQLQueryApi.query(
+			new InfluxQLQuery("SELECT * FROM \"influxql\"", DATABASE_NAME, InfluxQLQuery.AcceptHeader.JSON)
+		);
+		assertSingleSeriesRecords(result)
+			.hasSize(1)
+			.first()
+			.satisfies(record -> {
+				//Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
+				Assertions.assertThat(record.getValueByKey("time")).isEqualTo("2022-06-22T12:13:20Z");
+				Assertions.assertThat(record.getValueByKey("free")).isEqualTo("10");
+				Assertions.assertThat(record.getValueByKey("host")).isEqualTo("A");
+				Assertions.assertThat(record.getValueByKey("region")).isEqualTo("west");
+			});
 	}
 
 	@Test
@@ -166,8 +183,9 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 			.first()
 			.satisfies(record -> {
 				Assertions.assertThat(record.getValueByKey("region")).isNull();
+				Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
 				Assertions.assertThat(record.getValueByKey("host")).isNull();
-				Assertions.assertThat(record.getValueByKey("time")).isEqualTo("2022-06-22T12:13:20Z");
+				// Assertions.assertThat(record.getValueByKey("time")).isEqualTo("2022-06-22T12:13:20Z");
 				Assertions.assertThat(record.getValueByKey("free")).isEqualTo("10");
 			});
 
@@ -289,7 +307,7 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 			InfluxQLQueryResult result = influxQuery.query(new InfluxQLQuery("SELECT * FROM cpu", "test_db"));
 			RecordedRequest request = mockServer.takeRequest();
 			Assertions.assertThat(request.getHeader("Authorization")).isEqualTo("Token my_token");
-			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/json");
+			Assertions.assertThat(request.getHeader("Accept")).isEqualTo("application/csv");
 		}
 
 		@Test

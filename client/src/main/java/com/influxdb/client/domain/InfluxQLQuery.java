@@ -44,7 +44,7 @@ public class InfluxQLQuery {
     public InfluxQLQuery(@Nonnull final String command, @Nonnull final String database) {
         this.command = command;
         this.database = database;
-        this.acceptHeader = AcceptHeader.JSON;
+        this.acceptHeader = AcceptHeader.CSV;
     }
 
     /**
@@ -133,7 +133,7 @@ public class InfluxQLQuery {
      * @return the string value of the AcceptHeader used when making queries.
      */
     public String getAcceptHeaderVal() {
-        return acceptHeader != null ? acceptHeader.getVal() : AcceptHeader.JSON.getVal();
+        return acceptHeader != null ? acceptHeader.getVal() : AcceptHeader.CSV.getVal();
     }
 
     /**
