@@ -34,19 +34,28 @@ import com.influxdb.query.InfluxQLQueryResult;
  * <strong>{@link InfluxQLQuery#getRetentionPolicy() retention policy}</strong> specified in the query request to
  * map the request to an InfluxDB bucket.
  *
- * <p>Note that as of release 7.2 queries using the legacy <code>InfluxQL</code> compatible endpoint, will use
- * the default <code>Accept</code> header mime type of <code>application/json</code> instead of the previous
- * mime type of <code>application/csv</code>.  This means timestamps will be returned in the RFC3339 format,
- * e.g. <code>"2024-06-18T11:29:48.454Z"</code> instead of in the Epoch format, e.g. <code>1655900000000000000</code>.
- * </p>
+ * <p>Note that as of release 7.2 queries using the legacy <code>InfluxQL</code> compatible endpoint can specify
+ * the <code>Accept</code> header MIME type.  Two MIME types are supported. </p>
+ * <ul>
+ *   <li><code>application/csv</code> - client default and legacy value.</li>
+ *   <li><code>application/json</code></li>
+ * </ul>
  *
- * <p>To continue to use the <code>application/csv</code> mime type and to receive Epoch timestamps, use a
- * new convenience method <code>queryCSV</code>.  To explicitly indicate use of the <code>application/json</code>
- * mime type additional convenience methods <code>queryJSON</code> are also now available.  These are synonymous
- * with the original <code>query</code> methods.</p>
+ * <p>The selected <code>Accept</code> header mime type impacts the timestamp format returned from the server.</p>
+ * <ul>
+ *   <li><code>application/csv</code> returns timestamps in the POSIX epoch format.</li>
+ *   <li><code>application/json</code> returns timestamps as RFC3339 strings.
+ *     <ul>
+ *       <li>Caveat.  If <code>InfluxQLQuery.setPrecision()</code> is called before the query is sent, then
+ *       the timestamp will be returned as a POSIX epoch reflecting the desired precision, even when using the
+ *       <code>application/json</code> MIME type.</li>
+ *     </ul>
+ *  </li>
+ * </ul>
  *
- * <p>Note that the <code>Accept</code> header mime type can now also be specified when instantiating the
- *{@link com.influxdb.client.domain.InfluxQLQuery} class.</p>
+ * <p>To explicitly choose one or the other MIME type new convenience methods are povided: <code>queryCSV</code>
+ * and <code>queryJSON</code>. Note that the <code>Accept</code> header MIME type can now also be specified
+ * when instantiating the {@link com.influxdb.client.domain.InfluxQLQuery} class.</p>
  *
  * <br>
  * For more information, see:
