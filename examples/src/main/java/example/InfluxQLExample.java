@@ -62,7 +62,10 @@ public class InfluxQLExample {
                     (columnName, rawValue, resultIndex, seriesName) -> {  // custom valueExtractor
                         // convert columns
                       return switch (columnName) {
-                        case "time" -> Instant.parse(rawValue);
+                        case "time" -> {
+                            long l = Long.parseLong(rawValue);
+                            yield Instant.ofEpochMilli(l / 1_000_000L);
+                        }
                         case "first" -> Long.parseLong(rawValue);
                         default -> throw new IllegalArgumentException("unexpected column " + columnName);
                       };
@@ -88,6 +91,22 @@ public class InfluxQLExample {
               });
 
             System.out.println("QueryCSV with valueExtractor.");
+            dumpResult(result);
+
+            result = queryApi.query(
+              new InfluxQLQuery(
+                influxQL,
+                database,
+                InfluxQLQuery.AcceptHeader.JSON),
+              (columnName, rawValue, resultIndex, seriesName) -> {
+                return switch(columnName) {
+                    case "time" -> Instant.parse(rawValue);
+                    case "first" -> Long.parseLong(rawValue);
+                    default -> throw new IllegalArgumentException("Unexpected column " + columnName);
+                };
+              });
+
+            System.out.println("Query with JSON accept header and valueExtractor");
             dumpResult(result);
 
             // send request - set `Accept` header in InfluxQLQuery object, use raw results.
