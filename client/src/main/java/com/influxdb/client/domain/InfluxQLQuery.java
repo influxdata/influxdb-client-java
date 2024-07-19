@@ -30,10 +30,12 @@ import javax.annotation.Nullable;
  * A InfluxQL query.
  */
 public class InfluxQLQuery {
+
     private final String command;
     private final String database;
     private String retentionPolicy;
     private InfluxQLPrecision precision;
+    private AcceptHeader acceptHeader;
 
     /**
      * @param command the InfluxQL command to execute
@@ -42,6 +44,20 @@ public class InfluxQLQuery {
     public InfluxQLQuery(@Nonnull final String command, @Nonnull final String database) {
         this.command = command;
         this.database = database;
+        this.acceptHeader = AcceptHeader.CSV;
+    }
+
+    /**
+     * @param command the InfluxQL command to execute
+     * @param database the database to run this query against
+     * @param acceptHeader the <code>Accept</code> header to use in the request
+     */
+    public InfluxQLQuery(@Nonnull final String command,
+                         @Nonnull final String database,
+                         @Nonnull final AcceptHeader acceptHeader) {
+        this.command = command;
+        this.database = database;
+        this.acceptHeader = acceptHeader;
     }
 
     /**
@@ -98,6 +114,29 @@ public class InfluxQLQuery {
     }
 
     /**
+     * @return the current AcceptHeader used when making queries.
+     */
+    public AcceptHeader getAcceptHeader() {
+        return acceptHeader;
+    }
+
+    /***
+     * @param acceptHeader the AcceptHeader to be used when making queries.
+     * @return this
+     */
+    public InfluxQLQuery setAcceptHeader(final AcceptHeader acceptHeader) {
+        this.acceptHeader = acceptHeader;
+        return this;
+    }
+
+    /**
+     * @return the string value of the AcceptHeader used when making queries.
+     */
+    public String getAcceptHeaderVal() {
+        return acceptHeader != null ? acceptHeader.getVal() : AcceptHeader.CSV.getVal();
+    }
+
+    /**
      * The precision used for the timestamps returned by InfluxQL queries.
      */
     public enum InfluxQLPrecision {
@@ -141,6 +180,24 @@ public class InfluxQLQuery {
                     throw new IllegalArgumentException("time precision must be one of:"
                             + Arrays.toString(InfluxQLPrecision.values()));
             }
+        }
+    }
+
+    /**
+     * The possible values to be used in the header <code>Accept</code>, when making queries.
+     */
+    public enum AcceptHeader {
+        JSON("application/json"),
+        CSV("application/csv");
+
+        private final String val;
+
+        AcceptHeader(final String val) {
+            this.val = val;
+        }
+
+        public String getVal() {
+            return val;
         }
     }
 }

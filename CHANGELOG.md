@@ -1,5 +1,27 @@
 ## 7.2.0 [unreleased]
 
+### Features 
+
+- [#719](https://github.com/influxdata/influxdb-client-java/issues/719): `InfluxQLQueryService` header changes.
+   - `Accept` header can now be defined when making `InfluxQLQuery` calls. Supoorted MIME types:
+      - `application/csv`
+      - `application/json`
+   - The value `application/csv` remains the default.
+   - :warning: Side effects of these changes:
+      - When using `application/json`, timestamp fields are returned in the [RFC3339](https://www.rfc-editor.org/rfc/rfc3339) format unless `InfluxQLQuery.setPrecision()` has been previously called, in which case they are returned in the POSIX epoch format.
+      - When using `application/csv`, timestamp fields are returned in the POSIX epoch format.
+   - Convenience methods have been added to `InfluxQLQueryAPI` to simplify expressly specifying JSON or CSV calls.
+   - Epoch timestamps can also be ensured by calling `InfluxQLQuery.setPrecision()` before executing a query call.
+   - An `AcceptHeader` field has also been added to the `InfluxQLQuery` class and can be set with `InfluxQLQuery.setAcceptHeader()`.
+   - More information from the server side:
+      - [Generated REST API Documentation](https://docs.influxdata.com/influxdb/v2/api/v1-compatibility/#operation/PostQueryV1)
+      - [Influx 1.1 query compatibility](https://docs.influxdata.com/influxdb/latest/reference/api/influxdb-1x/query/)
+   - See the updated InfluxQLExample
+
+### Bug Fixes
+
+1. [#744](https://github.com/influxdata/influxdb-client-java/issues/744) following an `InfluxQLQueryAPI.query()` call, empty results from the server no longer result in a `null` result value. 
+
 ### Dependencies
 
 Update dependencies:

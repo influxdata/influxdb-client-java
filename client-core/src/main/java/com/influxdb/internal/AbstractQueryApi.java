@@ -174,13 +174,21 @@ public abstract class AbstractQueryApi extends AbstractRestClient {
         Consumer<ResponseBody> bodyConsumer = body -> {
             try {
                 BufferedSource source = body.source();
-
-                //
-                // Source has data => parse
-                //
-                while (source.isOpen() && !source.exhausted() && !cancellable.wasCancelled) {
-
+                // already exhausted - empty or very short response
+                if (source.exhausted()) {
+                    LOG.log(Level.WARNING, String.format("Query %s already exhausted.",
+                      query.request().tag(retrofit2.Invocation.class)
+                        .toString().split(" \\[")[1]
+                        .replace("]", "")));
                     consumer.accept(cancellable, source);
+                } else {
+
+                    //
+                    // Source has data => parse
+                    //
+                    while (source.isOpen() && !source.exhausted() && !cancellable.wasCancelled) {
+                        consumer.accept(cancellable, source);
+                    }
                 }
 
                 if (!cancellable.wasCancelled) {

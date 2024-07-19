@@ -24,10 +24,15 @@ package example;
 import java.math.BigDecimal;
 import java.time.Instant;
 
+import com.influxdb.LogLevel;
+import com.influxdb.annotations.Column;
+import com.influxdb.annotations.Measurement;
 import com.influxdb.client.InfluxDBClient;
 import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.InfluxQLQueryApi;
+import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.InfluxQLQuery;
+import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.query.InfluxQLQueryResult;
 
 public class InfluxQLExample {
@@ -35,11 +40,14 @@ public class InfluxQLExample {
     private static char[] token = "my-token".toCharArray();
     private static String org = "my-org";
 
-    private static String database = "my-org";
+    private static String database = "my-bucket";
 
     public static void main(final String[] args) {
 
-        try (InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org)) {
+        try (InfluxDBClient influxDBClient = InfluxDBClientFactory.create("http://localhost:8086", token, org, database)) {
+            //influxDBClient.setLogLevel(LogLevel.BODY); // uncomment to inspect communication messages
+
+            write(influxDBClient);
 
             //
             // Query data
@@ -48,28 +56,116 @@ public class InfluxQLExample {
 
             InfluxQLQueryApi queryApi = influxDBClient.getInfluxQLQueryApi();
 
-            // send request
-            InfluxQLQueryResult result = queryApi.query(new InfluxQLQuery(influxQL, database).setPrecision(InfluxQLQuery.InfluxQLPrecision.SECONDS),
-                    (columnName, rawValue, resultIndex, seriesName) -> {
+            // send request - uses default Accept: application/json and returns RFC3339 timestamp
+            InfluxQLQueryResult result = queryApi.query(
+              new InfluxQLQuery(influxQL, database),
+                    (columnName, rawValue, resultIndex, seriesName) -> {  // custom valueExtractor
                         // convert columns
-                        switch (columnName) {
-                            case "time":
-                                return Instant.ofEpochSecond(Long.parseLong(rawValue));
-                            case "first":
-                                return new BigDecimal(rawValue);
-                            default:
-                                throw new IllegalArgumentException("unexpected column " + columnName);
+                      return switch (columnName) {
+                        case "time" -> {
+                            long l = Long.parseLong(rawValue);
+                            yield Instant.ofEpochMilli(l / 1_000_000L);
                         }
+                        case "first" -> Long.parseLong(rawValue);
+                        default -> throw new IllegalArgumentException("unexpected column " + columnName);
+                      };
                     });
 
-            for (InfluxQLQueryResult.Result resultResult : result.getResults()) {
-                for (InfluxQLQueryResult.Series series : resultResult.getSeries()) {
-                    for (InfluxQLQueryResult.Series.Record record : series.getValues()) {
-                        System.out.println(record.getValueByKey("time") + ": " + record.getValueByKey("first"));
-                    }
+            System.out.println("Default query with valueExtractor");
+            dumpResult(result);
+
+            // send request - use Accept: application/csv returns epoch timestamp
+            result = queryApi.queryCSV(
+              new InfluxQLQuery(influxQL,database),
+              (columnName, rawValue, resultIndex, seriesName) -> { // custom valueExtractor
+                  // convert columns
+                return switch (columnName) {
+                  case "time" -> {
+                    long l = Long.parseLong(rawValue);
+                    yield Instant.ofEpochSecond(l / 1_000_000_000L,
+                      l % 1_000_000_000L);
+                  }
+                  case "first" -> Long.parseLong(rawValue);
+                  default -> throw new IllegalArgumentException("unexpected column " + columnName);
+                };
+              });
+
+            System.out.println("QueryCSV with valueExtractor.");
+            dumpResult(result);
+
+            result = queryApi.query(
+              new InfluxQLQuery(
+                influxQL,
+                database,
+                InfluxQLQuery.AcceptHeader.JSON),
+              (columnName, rawValue, resultIndex, seriesName) -> {
+                return switch(columnName) {
+                    case "time" -> Instant.parse(rawValue);
+                    case "first" -> Long.parseLong(rawValue);
+                    default -> throw new IllegalArgumentException("Unexpected column " + columnName);
+                };
+              });
+
+            System.out.println("Query with JSON accept header and valueExtractor");
+            dumpResult(result);
+
+            // send request - set `Accept` header in InfluxQLQuery object, use raw results.
+            //  N.B. timestamp returned is Epoch nanos in String format.
+            result = queryApi.query(
+              new InfluxQLQuery(influxQL,database)
+                .setAcceptHeader(InfluxQLQuery.AcceptHeader.CSV)
+            );
+
+            System.out.println("Default query method with AcceptHeader.CSV in InfluxQLQuery object.  Raw results");
+            dumpResult(result);
+
+            // send request - use default `Accept` header (application/json),
+            // but specify epoch precision, use raw results
+            result = queryApi.query(
+              new InfluxQLQuery(influxQL, database)
+                .setPrecision(InfluxQLQuery.InfluxQLPrecision.MILLISECONDS)
+            );
+
+            System.out.println("Default query method with Epoch precision in InfluxQLQuery object. Raw results.");
+            dumpResult(result);
+
+        }
+    }
+
+    public static void write(InfluxDBClient influxDBClient){
+        WriteApiBlocking writeApi = influxDBClient.getWriteApiBlocking();
+
+        InfluxQLTestData testData = new InfluxQLTestData(Instant.now().minusSeconds(1));
+
+        writeApi.writeMeasurement(WritePrecision.NS, testData);
+
+    }
+
+    public static void dumpResult(InfluxQLQueryResult result){
+        for (InfluxQLQueryResult.Result resultResult : result.getResults()) {
+            for (InfluxQLQueryResult.Series series : resultResult.getSeries()) {
+                for (InfluxQLQueryResult.Series.Record record : series.getValues()) {
+                    System.out.println(record.getValueByKey("time") + ": " + record.getValueByKey("first"));
                 }
             }
+        }
+    }
 
+    @Measurement(name = "influxql")
+    public static class InfluxQLTestData{
+        @Column(timestamp = true)
+        Instant time;
+
+        @Column
+        Long free;
+
+        @Column(tag = true)
+        String machine;
+
+        public InfluxQLTestData(Instant instant) {
+            free = (long) (Math.random() * 100);
+            machine = "test";
+            time = instant;
         }
     }
 }
