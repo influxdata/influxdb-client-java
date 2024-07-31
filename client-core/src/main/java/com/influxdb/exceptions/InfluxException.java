@@ -156,17 +156,6 @@ public class InfluxException extends RuntimeException {
     @Nullable
     private String messageFromResponse() {
         if (response != null) {
-            String selectHeaders = Stream.of("trace-id",
-                "trace-sampled",
-                "X-Influxdb-Build",
-                "X-Influxdb-Request-ID",
-                "X-Influxdb-Version")
-              .filter(name -> response.headers().get(name) != null)
-              .reduce("", (message, name) -> message.concat(String.format("%s: %s\n",
-                name, response.headers().get(name))));
-
-            LOG.warning(String.format("Received HTTP Error %d with selected headers:\n%s",
-              response.code(), selectHeaders));
             int code = response.code();
             try {
                 ResponseBody body = response.errorBody();

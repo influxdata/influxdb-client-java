@@ -23,8 +23,10 @@ package com.influxdb.client.write.events;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 import javax.annotation.Nonnull;
 
+import com.influxdb.exceptions.InfluxException;
 import com.influxdb.utils.Arguments;
 
 /**
@@ -55,6 +57,22 @@ public final class WriteErrorEvent extends AbstractWriteEvent {
 
     @Override
     public void logEvent() {
-        LOG.log(Level.SEVERE, "The error occurred during writing of data", throwable);
+        //LOG.log(Level.SEVERE, "The error occurred during writing of data", throwable);
+        if (throwable instanceof InfluxException ie) {
+          String selectHeaders = Stream.of("trace-id",
+                "trace-sampled",
+                "X-Influxdb-Build",
+                "X-Influxdb-Request-ID",
+                "X-Influxdb-Version")
+              .filter(name -> ie.headers().get(name) != null)
+              .reduce("", (message, name) -> message.concat(String.format("%s: %s\n",
+                name, ie.headers().get(name))));
+            LOG.log(Level.SEVERE,
+              String.format("An error occurred during writing of data.  Select Response Headers:\n%s", selectHeaders),
+              throwable);
+        } else {
+            LOG.log(Level.SEVERE, "An error occurred during writing of data", throwable);
+
+        }
     }
 }
