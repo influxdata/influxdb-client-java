@@ -21,9 +21,12 @@
  */
 package com.influxdb.client;
 
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
@@ -185,5 +188,23 @@ class ITWriteApiBlocking extends AbstractITWrite {
         Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("customer")).isEqualTo("California Miner");
         Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("sensor-version")).isEqualTo("1.23a");
         Assertions.assertThat(query.get(0).getRecords().get(0).getValueByKey("env-var")).isEqualTo(System.getenv(envKey));
+    }
+
+
+    @Test
+    public void httpErrorHeaders(){
+        Assertions.assertThatThrownBy(() -> {
+            influxDBClient.getWriteApiBlocking().writeRecord(WritePrecision.MS, "asdf");
+        }).isInstanceOf(InfluxException.class)
+          .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals(
+            "HTTP status code: 400; Message: unable to parse 'asdf': missing fields"
+          ))
+          .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().keySet().size() == 6)
+          .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("X-Influxdb-Build").equals("OSS"))
+          .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("X-Influxdb-Version") != null)
+          .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("X-Platform-Error-Code") != null)
+          .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("Content-Length") != null)
+          .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("Content-Type") != null)
+          .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("Date") != null);
     }
 }

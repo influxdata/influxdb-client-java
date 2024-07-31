@@ -33,7 +33,10 @@ import okhttp3.Protocol;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.commons.logging.Logger;
+import org.junit.platform.commons.logging.LoggerFactory;
 import retrofit2.HttpException;
 import retrofit2.Response;
 
@@ -320,6 +323,32 @@ class InfluxExceptionTest {
                 })
                 .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals("HTTP status code: 501; Message: Wrong query"))
                 .matches((Predicate<Throwable>) throwable -> throwable.toString().equals("com.influxdb.exceptions.InfluxException: HTTP status code: 501; Message: Wrong query"));
+    }
+
+    @Test
+    void exceptionContainsHttpResponseHeaders() {
+      Assertions.assertThatThrownBy(() -> {
+        Response<Object> response = errorResponse(
+          "not found",
+          404,
+          15,
+          "not-json",
+          "X-Platform-Error-Code",
+          Map.of("Retry-After", "145",
+            "Trace-ID", "1234567989ABCDEF0",
+            "X-Influxdb-Build", "OSS"));
+        throw new InfluxException(new HttpException(response));
+        }
+      ).matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).status() == 404)
+       .matches((Predicate<Throwable>) throwable -> throwable.getMessage().equals(
+         "HTTP status code: 404; Message: not found"
+       ))
+       .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().size() == 5)
+       .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("Retry-After").equals("145"))
+       .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("X-Influxdb-Build").equals("OSS"))
+       .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("X-Influx-Reference").equals("15"))
+       .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("X-Platform-Error-Code").equals("not found"))
+       .matches((Predicate<Throwable>) throwable -> ((InfluxException) throwable).headers().get("Trace-ID").equals("1234567989ABCDEF0"));
     }
 
     @Nonnull
