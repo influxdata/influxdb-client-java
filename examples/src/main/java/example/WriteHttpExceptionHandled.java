@@ -98,7 +98,6 @@ public class WriteHttpExceptionHandled {
 
   private static void logInfluxException(@Nonnull InfluxException e) {
     StringBuilder sBuilder = new StringBuilder().append("Handling InfluxException:\n");
-    //Log.info("Message: " + e.getMessage());
     sBuilder.append("      ").append(e.getMessage());
     String headers = e.headers()
       .keySet()
