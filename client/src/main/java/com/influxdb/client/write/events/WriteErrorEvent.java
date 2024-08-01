@@ -57,7 +57,6 @@ public final class WriteErrorEvent extends AbstractWriteEvent {
 
     @Override
     public void logEvent() {
-        //LOG.log(Level.SEVERE, "The error occurred during writing of data", throwable);
         if (throwable instanceof InfluxException ie) {
           String selectHeaders = Stream.of("trace-id",
                 "trace-sampled",
