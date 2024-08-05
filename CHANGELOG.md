@@ -47,7 +47,7 @@ Update dependencies:
 #### Test:
  - [#724](https://github.com/influxdata/influxdb-client-java/pull/724): `assertj` to `3.26.0`
  - [#725](https://github.com/influxdata/influxdb-client-java/pull/725): `assertk-jvm` to `0.28.1`
- - [#750](https://github.com/influxdata/influxdb-client-java/pull/750): `assertj-core` to `3.26.0`
+ - [#750](https://github.com/influxdata/influxdb-client-java/pull/750): `assertj-core` to `3.26.3`
  - [#737](https://github.com/influxdata/influxdb-client-java/pull/737): `junit-jupiter` to `5.10.3`
 
 #### Examples:
