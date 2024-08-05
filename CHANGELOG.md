@@ -27,7 +27,7 @@
 Update dependencies:
 
 #### Build:
- - [#738](https://github.com/influxdata/influxdb-client-java/pull/738): `spring-boot` to `3.3.1`
+ - [#753](https://github.com/influxdata/influxdb-client-java/pull/753): `spring-boot` to `3.3.2`
  - [#726](https://github.com/influxdata/influxdb-client-java/pull/726): `kotlin` to `2.0.0`
  - [#727](https://github.com/influxdata/influxdb-client-java/pull/727): `micrometer-registry-influx` to `1.30.0`
  - [#735](https://github.com/influxdata/influxdb-client-java/pull/735): `scala-collection-compat_2.12` to `2.12.0`
