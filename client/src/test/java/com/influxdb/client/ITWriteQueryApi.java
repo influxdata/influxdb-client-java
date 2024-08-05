@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -41,6 +42,7 @@ import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.events.WriteErrorEvent;
 import com.influxdb.client.write.events.WriteSuccessEvent;
+import com.influxdb.exceptions.InfluxException;
 import com.influxdb.query.FluxRecord;
 import com.influxdb.query.FluxTable;
 
@@ -858,6 +860,36 @@ class ITWriteQueryApi extends AbstractITClientTest {
         Assertions.assertThat(query.get(0).getRecords().get(0).getValue()).isEqualTo(60.0);
 
         client.close();
+    }
+
+    @Test
+    public void handlesWriteApiHttpError(){
+
+        InfluxDBClient client = InfluxDBClientFactory.create(influxDB_URL, token.toCharArray());
+        WriteApi writeApi = influxDBClient.makeWriteApi();
+        AtomicReference<Boolean> called = new AtomicReference<>(false);
+
+        writeApi.listenEvents(WriteErrorEvent.class, (error) -> {
+            called.set(true);
+            Assertions.assertThat(error).isInstanceOf(WriteErrorEvent.class);
+            Assertions.assertThat(error.getThrowable()).isInstanceOf(InfluxException.class);
+            if(error.getThrowable() instanceof InfluxException ie){
+                Assertions.assertThat(ie.headers()).isNotNull();
+                Assertions.assertThat(ie.headers().keySet()).hasSize(6);
+                Assertions.assertThat(ie.headers().get("Content-Length")).isNotNull();
+                Assertions.assertThat(ie.headers().get("Content-Type")).contains("application/json");
+                Assertions.assertThat(ie.headers().get("Date")).isNotNull();
+                Assertions.assertThat(ie.headers().get("X-Influxdb-Build")).isEqualTo("OSS");
+                Assertions.assertThat(ie.headers().get("X-Influxdb-Version")).startsWith("v");
+                Assertions.assertThat(ie.headers().get("X-Platform-Error-Code")).isNotNull();
+            }
+        });
+
+        writeApi.writeRecord(bucket.getName(), organization.getId(), WritePrecision.MS, "asdf");
+        writeApi.flush();
+        writeApi.close();
+        Assertions.assertThat(called.get()).as("WriteErrorEvent should have occurred")
+          .isEqualTo(true);
     }
 
 }
