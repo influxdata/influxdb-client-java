@@ -258,6 +258,11 @@
                             <value>Apache-2.0</value>
                         </dependencyPolicy>
                         <dependencyPolicy>
+                            <type>LICENSE_NAME</type>
+                            <rule>APPROVE</rule>
+                            <value>BSD-3-Clause</value>
+                        </dependencyPolicy>
+                        <dependencyPolicy>
                             <type>LICENSE_URL</type>
                             <rule>APPROVE</rule>
                             <value>http://www.apache.org/licenses/LICENSE-2.0.txt</value>
@@ -672,7 +677,7 @@
             <dependency>
                 <groupId>org.hamcrest</groupId>
                 <artifactId>hamcrest</artifactId>
-                <version>2.2</version>
+                <version>3.0</version>
             </dependency>
 
             <dependency>
