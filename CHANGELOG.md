@@ -29,7 +29,7 @@ Update dependencies:
 #### Build:
  - [#753](https://github.com/influxdata/influxdb-client-java/pull/753): `spring-boot` to `3.3.2`
  - [#726](https://github.com/influxdata/influxdb-client-java/pull/726): `kotlin` to `2.0.0`
- - [#727](https://github.com/influxdata/influxdb-client-java/pull/727): `micrometer-registry-influx` to `1.30.0`
+ - [#752](https://github.com/influxdata/influxdb-client-java/pull/752): `micrometer-registry-influx` to `1.30.2`
  - [#735](https://github.com/influxdata/influxdb-client-java/pull/735): `scala-collection-compat_2.12` to `2.12.0`
  - [#740](https://github.com/influxdata/influxdb-client-java/pull/740): `pekko` to `1.0.3`
  - [#741](https://github.com/influxdata/influxdb-client-java/pull/741): `commons-csv` to `1.11.0`
