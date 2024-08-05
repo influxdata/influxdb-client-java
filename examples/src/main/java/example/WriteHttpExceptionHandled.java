@@ -26,6 +26,7 @@ import com.influxdb.client.InfluxDBClientFactory;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteApiBlocking;
 import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.write.events.WriteErrorEvent;
 import com.influxdb.exceptions.InfluxException;
 
 import javax.annotation.Nonnull;
@@ -52,20 +53,28 @@ public class WriteHttpExceptionHandled {
 
     InfluxDBClient influxDBClient = InfluxDBClientFactory.create(influxUrl, token, org, bucket);
 
-    Log.info("\nWriting invalid records to InfluxDB reactively - check log SEVERE messages.\n");
+    WriteApiBlocking writeApiBlocking = influxDBClient.getWriteApiBlocking();
     WriteApi writeApi = influxDBClient.makeWriteApi();
 
-    // the following call will cause an HTTP 400 error, which will
-    // include selected HTTP response headers in the error log
+    // InfluxExceptions in Rx streams can be handled in an EventListener
+    writeApi.listenEvents(WriteErrorEvent.class, (error) -> {
+      if (error.getThrowable() instanceof InfluxException ie) {
+        Log.warning("\n*** Custom event handler\n******\n"
+          + influxExceptionString(ie)
+          + "******\n");
+      }
+    });
+
+    // the following call will cause an HTTP 400 error
     writeApi.writeRecords(WritePrecision.MS, List.of("invalid", "clumsy", "broken", "unusable"));
     writeApi.close();
 
+
     Log.info("\nWriting invalid records to InfluxDB blocking - can handle caught InfluxException.\n");
-    WriteApiBlocking writeApiBlocking = influxDBClient.getWriteApiBlocking();
     try {
       writeApiBlocking.writeRecord(WritePrecision.MS, "asdf");
     } catch (InfluxException e) {
-      logInfluxException(e);
+      Log.info(influxExceptionString(e));
     }
 
     // Note when writing batches with one bad record:
@@ -90,13 +99,20 @@ public class WriteHttpExceptionHandled {
     try {
       writeApiBlocking.writeRecords(WritePrecision.MS, lpData);
     } catch (InfluxException e) {
-      logInfluxException(e);
+      Log.info(influxExceptionString(e));
     }
 
+    try {
+      writeApi.writeRecords(WritePrecision.MS, lpData);
+    } catch (Exception exception) {
+      if (exception instanceof InfluxException) {
+        Log.info(influxExceptionString((InfluxException) exception));
+      }
+    }
     Log.info("Done");
   }
 
-  private static void logInfluxException(@Nonnull InfluxException e) {
+  private static String influxExceptionString(@Nonnull InfluxException e) {
     StringBuilder sBuilder = new StringBuilder().append("Handling InfluxException:\n");
     sBuilder.append("      ").append(e.getMessage());
     String headers = e.headers()
@@ -107,6 +123,6 @@ public class WriteHttpExceptionHandled {
       );
     sBuilder.append("\n      HTTP Response Headers:");
     sBuilder.append(headers);
-    Log.info(sBuilder.toString());
+    return sBuilder.toString();
   }
 }
