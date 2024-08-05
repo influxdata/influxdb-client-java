@@ -124,7 +124,7 @@
         <pekko.version>1.0.3</pekko.version>
         <kotlin.version>2.0.0</kotlin.version>
         <junit-jupiter.version>5.10.3</junit-jupiter.version>
-        <kotlin-coroutines.version>1.8.0</kotlin-coroutines.version>
+        <kotlin-coroutines.version>1.8.1</kotlin-coroutines.version>
         <mockito.version>4.10.0</mockito.version>
     </properties>
 
@@ -156,7 +156,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.1</version>
+                <version>3.4.2</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -418,7 +418,7 @@
                 <plugin>
                     <groupId>com.mycila</groupId>
                     <artifactId>license-maven-plugin</artifactId>
-                    <version>4.3</version>
+                    <version>4.5</version>
                 </plugin>
 
                 <plugin>
@@ -466,7 +466,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-project-info-reports-plugin</artifactId>
-                <version>3.6.1</version>
+                <version>3.6.2</version>
                 <configuration>
                     <dependencyDetailsEnabled>true</dependencyDetailsEnabled>
                 </configuration>
@@ -702,7 +702,7 @@
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.26.0</version>
+                <version>3.26.3</version>
             </dependency>
 
             <dependency>
