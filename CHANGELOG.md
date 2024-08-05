@@ -27,9 +27,10 @@
 Update dependencies:
 
 #### Build:
- - [#738](https://github.com/influxdata/influxdb-client-java/pull/738): `spring-boot` to `3.3.1`
+ - [#753](https://github.com/influxdata/influxdb-client-java/pull/753): `spring-boot` to `3.3.2`
  - [#726](https://github.com/influxdata/influxdb-client-java/pull/726): `kotlin` to `2.0.0`
- - [#727](https://github.com/influxdata/influxdb-client-java/pull/727): `micrometer-registry-influx` to `1.30.0`
+ - [#752](https://github.com/influxdata/influxdb-client-java/pull/752): `micrometer-registry-influx` to `1.13.2`
+ - [#749](https://github.com/influxdata/influxdb-client-java/pull/749): `kotlin-coroutines` to `1.8.1`
  - [#735](https://github.com/influxdata/influxdb-client-java/pull/735): `scala-collection-compat_2.12` to `2.12.0`
  - [#740](https://github.com/influxdata/influxdb-client-java/pull/740): `pekko` to `1.0.3`
  - [#741](https://github.com/influxdata/influxdb-client-java/pull/741): `commons-csv` to `1.11.0`
@@ -42,12 +43,15 @@ Update dependencies:
  - [#730](https://github.com/influxdata/influxdb-client-java/pull/730): `scala-maven-plugin` to `4.9.1`
  - [#734](https://github.com/influxdata/influxdb-client-java/pull/734): `maven-compiler-plugin` to `3.13.0`
  - [#736](https://github.com/influxdata/influxdb-client-java/pull/736): `jacoco-maven-plugin` to `0.8.12`
- - [#739](https://github.com/influxdata/influxdb-client-java/pull/739): `maven-project-info-reports-plugin` to `3.6.1`
  - [#748](https://github.com/influxdata/influxdb-client-java/pull/748): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.3.1`
+ - [#746](https://github.com/influxdata/influxdb-client-java/pull/746): `maven-jar-plugin` to `3.4.2`
+ - [#747](https://github.com/influxdata/influxdb-client-java/pull/747): `maven-project-info-reports-plugin` to `3.6.2`
+ - [#751](https://github.com/influxdata/influxdb-client-java/pull/751): `license-maven-plugin` to `4.5`
 
 #### Test:
  - [#724](https://github.com/influxdata/influxdb-client-java/pull/724): `assertj` to `3.26.0`
  - [#725](https://github.com/influxdata/influxdb-client-java/pull/725): `assertk-jvm` to `0.28.1`
+ - [#750](https://github.com/influxdata/influxdb-client-java/pull/750): `assertj-core` to `3.26.3`
  - [#737](https://github.com/influxdata/influxdb-client-java/pull/737): `junit-jupiter` to `5.10.3`
 
 #### Examples:
