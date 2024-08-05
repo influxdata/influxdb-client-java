@@ -43,6 +43,7 @@ Update dependencies:
  - [#734](https://github.com/influxdata/influxdb-client-java/pull/734): `maven-compiler-plugin` to `3.13.0`
  - [#736](https://github.com/influxdata/influxdb-client-java/pull/736): `jacoco-maven-plugin` to `0.8.12`
  - [#739](https://github.com/influxdata/influxdb-client-java/pull/739): `maven-project-info-reports-plugin` to `3.6.1`
+ - [#746](https://github.com/influxdata/influxdb-client-java/pull/746): `maven-jar-plugin` to `3.4.2`
 
 #### Test:
  - [#724](https://github.com/influxdata/influxdb-client-java/pull/724): `assertj` to `3.26.0`
