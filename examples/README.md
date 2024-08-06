@@ -18,6 +18,7 @@ This directory contains Java, Kotlin and Scala examples.
 - [InfluxDBEnterpriseExample.java](src/main/java/example/InfluxDBEnterpriseExample.java) - How to use `consistency` parameter for InfluxDB Enterprise
 - [RecordRowExample.java](src/main/java/example/RecordRowExample.java) - How to use `FluxRecord.getRow()` (List) instead of `FluxRecord.getValues()` (Map),
   in case of duplicity column names
+- [WriteHttpExceptionHandled](src/main/java/example/WriteHttpExceptionHandled.java) - How to work with HTTP Exceptions for debugging and recovery.
 
 ## Kotlin
 

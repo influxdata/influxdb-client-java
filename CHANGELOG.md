@@ -2,6 +2,7 @@
 
 ### Features 
 
+- [#745](https://github.com/influxdata/influxdb-client-java/pull/745): New example `WriteHttpExceptionHandled.java` showing how to make use of `InfluxException.headers()` when HTTP Errors are returned from server.  Also, now writes selected headers to client log.
 - [#719](https://github.com/influxdata/influxdb-client-java/issues/719): `InfluxQLQueryService` header changes.
    - `Accept` header can now be defined when making `InfluxQLQuery` calls. Supoorted MIME types:
       - `application/csv`
