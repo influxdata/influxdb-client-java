@@ -1,5 +1,21 @@
 ## 7.3.0 [unreleased]
 
+### Dependencies
+
+Update dependencies:
+
+#### Build:
+ - 
+
+#### Maven:
+ - 
+
+#### Test:
+ - 
+
+#### Examples:
+ - [#760](https://github.com/influxdata/influxdb-client-java/pull/760): `commons-lang3` to `3.17.0`
+
 ## 7.2.0 [2024-08-12]
 
 ### Features 
