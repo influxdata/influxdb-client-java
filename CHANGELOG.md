@@ -5,7 +5,7 @@
 Update dependencies:
 
 #### Build:
- - 
+ - [#762](https://github.com/influxdata/influxdb-client-java/pull/762): `spring-boot` to `3.3.3`
 
 #### Maven:
  - 
