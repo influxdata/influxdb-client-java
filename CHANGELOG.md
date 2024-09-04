@@ -8,7 +8,7 @@ Update dependencies:
  - 
 
 #### Maven:
- - 
+ - [#766](https://github.com/influxdata/influxdb-client-java/pull/766): `versions-maven-plugin` to `2.17.1`
 
 #### Test:
  - 
