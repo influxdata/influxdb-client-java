@@ -72,7 +72,7 @@
   </scm>
 
   <properties>
-    <scala.version>2.13.11</scala.version>
+    <scala.version>2.12.20</scala.version>
   </properties>
 
   <build>
