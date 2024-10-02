@@ -5,7 +5,7 @@
 Update dependencies:
 
 #### Build:
- - [#761](https://github.com/influxdata/influxdb-client-java/pull/761): `micrometer-registry-influx` to `1.13.3`
+ - [#773](https://github.com/influxdata/influxdb-client-java/pull/773): `micrometer-registry-influx` to `1.13.4`
  - [#770](https://github.com/influxdata/influxdb-client-java/pull/770): `spring-boot` to `3.3.4`
 
 #### Maven:
