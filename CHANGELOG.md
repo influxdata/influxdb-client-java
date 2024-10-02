@@ -15,6 +15,7 @@ Update dependencies:
  - [#764](https://github.com/influxdata/influxdb-client-java/pull/764): `maven-javadoc-plugin` to `3.10.0`
  - [#765](https://github.com/influxdata/influxdb-client-java/pull/765): `maven-site-plugin` to `3.20.0`
  - [#766](https://github.com/influxdata/influxdb-client-java/pull/766): `versions-maven-plugin` to `2.17.1`
+ - [#775](https://github.com/influxdata/influxdb-client-java/pull/775): `scala-maven-plugin` to `4.9.2`
  - [#777](https://github.com/influxdata/influxdb-client-java/pull/777): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.5.0`
  - [#778](https://github.com/influxdata/influxdb-client-java/pull/778): `maven-deploy-plugin` to `3.1.3`
 
