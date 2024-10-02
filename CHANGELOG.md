@@ -12,7 +12,7 @@ Update dependencies:
 #### Maven:
  - [#758](https://github.com/influxdata/influxdb-client-java/pull/758): `maven-checkstyle-plugin` to `3.5.0`
  - [#763](https://github.com/influxdata/influxdb-client-java/pull/763): `maven-project-info-reports-plugin` to `3.7.0`
- - [#764](https://github.com/influxdata/influxdb-client-java/pull/764): `maven-javadoc-plugin` to `3.10.0`
+ - [#776](https://github.com/influxdata/influxdb-client-java/pull/776): `maven-javadoc-plugin` to `3.10.1`
  - [#765](https://github.com/influxdata/influxdb-client-java/pull/765): `maven-site-plugin` to `3.20.0`
  - [#766](https://github.com/influxdata/influxdb-client-java/pull/766): `versions-maven-plugin` to `2.17.1`
  - [#777](https://github.com/influxdata/influxdb-client-java/pull/777): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.5.0`
