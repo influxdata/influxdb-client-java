@@ -17,7 +17,7 @@ Update dependencies:
  - [#778](https://github.com/influxdata/influxdb-client-java/pull/778): `maven-deploy-plugin` to `3.1.3`
 
 #### Test:
- - 
+ - [#774](https://github.com/influxdata/influxdb-client-java/pull/774): `junit-jupiter` to `5.11.1`
 
 #### Examples:
  - [#760](https://github.com/influxdata/influxdb-client-java/pull/760): `commons-lang3` to `3.17.0`
