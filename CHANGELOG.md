@@ -7,6 +7,7 @@ Update dependencies:
 #### Build:
  - [#773](https://github.com/influxdata/influxdb-client-java/pull/773): `micrometer-registry-influx` to `1.13.4`
  - [#770](https://github.com/influxdata/influxdb-client-java/pull/770): `spring-boot` to `3.3.4`
+ - [#771](https://github.com/influxdata/influxdb-client-java/pull/771): `pekko` to `1.1.1`
 
 #### Maven:
  - [#758](https://github.com/influxdata/influxdb-client-java/pull/758): `maven-checkstyle-plugin` to `3.5.0`
