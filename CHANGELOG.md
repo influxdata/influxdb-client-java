@@ -16,7 +16,7 @@ Update dependencies:
  - [#766](https://github.com/influxdata/influxdb-client-java/pull/766): `versions-maven-plugin` to `2.17.1`
 
 #### Test:
- - 
+ - [#774](https://github.com/influxdata/influxdb-client-java/pull/774): `junit-jupiter` to `5.11.1`
 
 #### Examples:
  - [#760](https://github.com/influxdata/influxdb-client-java/pull/760): `commons-lang3` to `3.17.0`
