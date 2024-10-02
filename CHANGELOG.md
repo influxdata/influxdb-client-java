@@ -6,7 +6,7 @@ Update dependencies:
 
 #### Build:
  - [#773](https://github.com/influxdata/influxdb-client-java/pull/773): `micrometer-registry-influx` to `1.13.4`
- - [#762](https://github.com/influxdata/influxdb-client-java/pull/762): `spring-boot` to `3.3.3`
+ - [#770](https://github.com/influxdata/influxdb-client-java/pull/770): `spring-boot` to `3.3.4`
 
 #### Maven:
  - [#758](https://github.com/influxdata/influxdb-client-java/pull/758): `maven-checkstyle-plugin` to `3.5.0`
@@ -14,6 +14,7 @@ Update dependencies:
  - [#764](https://github.com/influxdata/influxdb-client-java/pull/764): `maven-javadoc-plugin` to `3.10.0`
  - [#765](https://github.com/influxdata/influxdb-client-java/pull/765): `maven-site-plugin` to `3.20.0`
  - [#766](https://github.com/influxdata/influxdb-client-java/pull/766): `versions-maven-plugin` to `2.17.1`
+ - [#778](https://github.com/influxdata/influxdb-client-java/pull/778): `maven-deploy-plugin` to `3.1.3`
 
 #### Test:
  - 
