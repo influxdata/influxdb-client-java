@@ -2,31 +2,7 @@
 
 ### Dependencies
 
-Update dependencies:
-
-#### Build:
- - [#773](https://github.com/influxdata/influxdb-client-java/pull/773): `micrometer-registry-influx` to `1.13.4`
- - [#770](https://github.com/influxdata/influxdb-client-java/pull/770): `spring-boot` to `3.3.4`
- - [#769](https://github.com/influxdata/influxdb-client-java/pull/769): `scala-library` to `2.12.20`
- - [#771](https://github.com/influxdata/influxdb-client-java/pull/771): `pekko` to `1.1.1`
- - [#772](https://github.com/influxdata/influxdb-client-java/pull/772): `kotlin` to `2.0.20`
-
-#### Maven:
- - [#758](https://github.com/influxdata/influxdb-client-java/pull/758): `maven-checkstyle-plugin` to `3.5.0`
- - [#763](https://github.com/influxdata/influxdb-client-java/pull/763): `maven-project-info-reports-plugin` to `3.7.0`
- - [#776](https://github.com/influxdata/influxdb-client-java/pull/776): `maven-javadoc-plugin` to `3.10.1`
- - [#765](https://github.com/influxdata/influxdb-client-java/pull/765): `maven-site-plugin` to `3.20.0`
- - [#766](https://github.com/influxdata/influxdb-client-java/pull/766): `versions-maven-plugin` to `2.17.1`
- - [#775](https://github.com/influxdata/influxdb-client-java/pull/775): `scala-maven-plugin` to `4.9.2`
- - [#777](https://github.com/influxdata/influxdb-client-java/pull/777): `maven-surefire-plugin`, `maven-failsafe-plugin` to `3.5.0`
- - [#778](https://github.com/influxdata/influxdb-client-java/pull/778): `maven-deploy-plugin` to `3.1.3`
-
-#### Test:
- - [#774](https://github.com/influxdata/influxdb-client-java/pull/774): `junit-jupiter` to `5.11.1`
-
-#### Examples:
- - [#760](https://github.com/influxdata/influxdb-client-java/pull/760): `commons-lang3` to `3.17.0`
- - [#767](https://github.com/influxdata/influxdb-client-java/pull/767): `commons-cli` to `1.9.0`
+⚠️ Important Notice: Starting from this release, we won’t be listing every dependency change in our changelog. This helps us maintain the project faster and focus on important features for our InfluxDB client.
 
 ## 7.2.0 [2024-08-12]
 
