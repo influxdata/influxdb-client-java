@@ -1,5 +1,10 @@
 ## 7.3.0 [unreleased]
 
+### Bug Fixes
+
+- [#807](https://github.com/influxdata/influxdb-client-java/pull/807): fix: Issue/806: Add a lock to prevent the disposal of the timer while it is running.
+
+
 ### Dependencies
 
 ⚠️ Important Notice: Starting from this release, we won’t be listing every dependency change in our changelog. This helps us maintain the project faster and focus on important features for our InfluxDB client.
