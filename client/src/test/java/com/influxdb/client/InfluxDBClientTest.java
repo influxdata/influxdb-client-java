@@ -21,36 +21,11 @@
  */
 package com.influxdb.client;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.net.InetSocketAddress;
-import java.net.Proxy;
-import java.util.List;
-import java.util.Objects;
-import java.util.logging.Level;
-import java.util.logging.LogRecord;
-import java.util.logging.Logger;
-import javax.annotation.Nonnull;
-
-import com.influxdb.client.domain.InfluxQLQuery;
-import com.influxdb.client.service.InfluxQLQueryService;
-import com.sun.net.httpserver.HttpExchange;
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpHandler;
 import com.influxdb.LogLevel;
-import com.influxdb.client.domain.Authorization;
-import com.influxdb.client.domain.Run;
-import com.influxdb.client.domain.WriteConsistency;
-import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.domain.*;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
-
-import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import com.influxdb.client.service.InfluxQLQueryService;
+import okhttp3.*;
 import okhttp3.mockwebserver.Dispatcher;
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
@@ -58,6 +33,16 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
+
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Proxy;
+import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.LogRecord;
+import java.util.logging.Logger;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 14:00)
@@ -498,6 +483,43 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
                 .get();
 
         Assertions.assertThat(authorizationLog.getMessage()).isEqualTo("Authorization: ██");
+    }
+
+    @Test
+    void testDefaultInterceptors() {
+        String url = "http://localhost:8086";
+        InfluxDBClientOptions options = new InfluxDBClientOptions.Builder()
+                .url(url)
+                .build();
+
+        InfluxDBClient client = InfluxDBClientFactory.create(options);
+        List<Interceptor> interceptors = options.getOkHttpClient().interceptors();
+        Assertions.assertThat(interceptors.size()).isEqualTo(4);
+        client.close();
+
+        InfluxDBClient client1 = InfluxDBClientFactory.create(options);
+        interceptors = options.getOkHttpClient().interceptors();
+        Assertions.assertThat(interceptors.size()).isEqualTo(4);
+        client1.close();
+
+        // okHttpBuilder with additional Interceptors
+        OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
+        okHttpBuilder.addInterceptor(chain -> chain.proceed(chain.request()));
+        okHttpBuilder.addInterceptor(chain -> chain.proceed(chain.request()));
+
+        InfluxDBClientOptions options1 = new InfluxDBClientOptions.Builder()
+                .url(url)
+                .okHttpClient(okHttpBuilder)
+                .build();
+        client = InfluxDBClientFactory.create(options1);
+        interceptors = options1.getOkHttpClient().interceptors();
+        Assertions.assertThat(interceptors.size()).isEqualTo(6);
+        client.close();
+
+        client1 = InfluxDBClientFactory.create(options1);
+        interceptors = options1.getOkHttpClient().interceptors();
+        Assertions.assertThat(interceptors.size()).isEqualTo(6);
+        client1.close();
     }
 
     private void queryAndTest(final String expected) throws InterruptedException {
