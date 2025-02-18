@@ -26,6 +26,8 @@ import java.util.logging.Logger;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import retrofit2.Call;
+
 import com.influxdb.LogLevel;
 import com.influxdb.client.AuthorizationsApi;
 import com.influxdb.client.BucketsApi;
@@ -80,8 +82,6 @@ import com.influxdb.client.service.WriteService;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.exceptions.UnprocessableEntityException;
 import com.influxdb.utils.Arguments;
-
-import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/10/2018 09:36)

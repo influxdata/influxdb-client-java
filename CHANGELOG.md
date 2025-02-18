@@ -1,5 +1,9 @@
 ## 7.3.0 [unreleased]
 
+### Features
+
+- [#821](https://github.com/influxdata/influxdb-client-java/pull/821): Prevent duplicate interceptors in OkHttpClient builder
+
 ### Dependencies
 
 ⚠️ Important Notice: Starting from this release, we won’t be listing every dependency change in our changelog. This helps us maintain the project faster and focus on important features for our InfluxDB client.
