@@ -21,19 +21,6 @@
  */
 package com.influxdb.client;
 
-import com.influxdb.LogLevel;
-import com.influxdb.client.domain.*;
-import com.influxdb.client.internal.AbstractInfluxDBClientTest;
-import com.influxdb.client.service.InfluxQLQueryService;
-import okhttp3.*;
-import okhttp3.mockwebserver.Dispatcher;
-import okhttp3.mockwebserver.MockResponse;
-import okhttp3.mockwebserver.MockWebServer;
-import okhttp3.mockwebserver.RecordedRequest;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
-import retrofit2.Call;
-
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -43,6 +30,27 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import com.influxdb.LogLevel;
+import com.influxdb.client.domain.Authorization;
+import com.influxdb.client.domain.InfluxQLQuery;
+import com.influxdb.client.domain.Run;
+import com.influxdb.client.domain.WriteConsistency;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.internal.AbstractInfluxDBClientTest;
+import com.influxdb.client.service.InfluxQLQueryService;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import okhttp3.mockwebserver.Dispatcher;
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
+import okhttp3.mockwebserver.RecordedRequest;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
+import retrofit2.Call;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 14:00)
@@ -115,10 +123,10 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
     public void serviceHeaderDefault() {
         InfluxQLQueryService service = influxDBClient.getService(InfluxQLQueryService.class);
         Call<ResponseBody> call = service.query("SELECT * FROM cpu", "test_db",
-          null,
-          null,
-          null,
-          InfluxQLQuery.AcceptHeader.JSON.getVal());
+                null,
+                null,
+                null,
+                InfluxQLQuery.AcceptHeader.JSON.getVal());
         Assertions.assertThat(call.request().header("Accept")).isEqualTo("application/json");
     }
 
@@ -126,10 +134,10 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
     public void serviceHeaderChange() {
         InfluxQLQueryService service = influxDBClient.getService(InfluxQLQueryService.class);
         Call<ResponseBody> call = service.query("SELECT * FROM cpu", "test_db",
-          null,
-          null,
-          null,
-          InfluxQLQuery.AcceptHeader.CSV.getVal());
+                null,
+                null,
+                null,
+                InfluxQLQuery.AcceptHeader.CSV.getVal());
         Assertions.assertThat(call.request().header("accept")).isEqualTo("application/csv");
     }
 
@@ -206,7 +214,8 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
 
     @Test
     void parseDateTime() {
-        mockServer.enqueue(new MockResponse().setBody("{\"id\":\"runID\",\"taskID\":\"taskID\",\"startedAt\":\"2019-03-11T11:57:30.830995162Z\"}"));
+        mockServer.enqueue(new MockResponse().setBody(
+                "{\"id\":\"runID\",\"taskID\":\"taskID\",\"startedAt\":\"2019-03-11T11:57:30.830995162Z\"}"));
 
         Run run = influxDBClient.getTasksApi().getRun("taskID", "runID");
 
@@ -230,19 +239,23 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
         InfluxDBClient influxDBClient = InfluxDBClientFactory
                 .create(path, "my-token".toCharArray());
 
-        influxDBClient.getWriteApiBlocking().writeRecord("my-bucket", "my-org", WritePrecision.NS, "record,tag=a value=1");
+        influxDBClient.getWriteApiBlocking()
+                .writeRecord("my-bucket", "my-org", WritePrecision.NS, "record,tag=a value=1");
 
         RecordedRequest request = mockServer.takeRequest();
-        Assertions.assertThat(request.getRequestUrl().toString()).isEqualTo(path + "api/v2/write?org=my-org&bucket=my-bucket&precision=ns");
+        Assertions.assertThat(request.getRequestUrl().toString())
+                .isEqualTo(path + "api/v2/write?org=my-org&bucket=my-bucket&precision=ns");
         influxDBClient.close();
 
         influxDBClient = InfluxDBClientFactory
                 .create(path.substring(0, path.length() - 1), "my-token".toCharArray());
 
-        influxDBClient.getWriteApiBlocking().writeRecord("my-bucket", "my-org", WritePrecision.NS, "record,tag=a value=1");
+        influxDBClient.getWriteApiBlocking()
+                .writeRecord("my-bucket", "my-org", WritePrecision.NS, "record,tag=a value=1");
 
         request = mockServer.takeRequest();
-        Assertions.assertThat(request.getRequestUrl().toString()).isEqualTo(path + "api/v2/write?org=my-org&bucket=my-bucket&precision=ns");
+        Assertions.assertThat(request.getRequestUrl().toString())
+                .isEqualTo(path + "api/v2/write?org=my-org&bucket=my-bucket&precision=ns");
         influxDBClient.close();
     }
 
@@ -262,9 +275,11 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
                 // http://localhost:8086 -> http://localhost:8086/api/v2/query
                 {serverURL, serverURL + "/api/v2/query"},
                 // http://localhost:8086?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS" -> http://localhost:8086/api/v2/query
-                {serverURL + "?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS", serverURL + "/api/v2/query"},
+                {serverURL + "?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS",
+                        serverURL + "/api/v2/query"},
                 // http://localhost:8086/influx?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS" -> http://localhost:8086/influx/api/v2/query
-                {serverURL + "/influx?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS", serverURL + "/influx/api/v2/query"}
+                {serverURL + "/influx?readTimeout=1000&writeTimeout=3000&connectTimeout=2000&logLevel=HEADERS",
+                        serverURL + "/influx/api/v2/query"}
         };
 
         for (String[] connectionString : connectionStrings) {
@@ -409,14 +424,14 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
         InfluxDBClientOptions options = InfluxDBClientOptions.builder()
                 .connectionString("https://us-west-2-1.aws.cloud2.influxdata.com?precision=US")
                 .build();
-        
+
         Assertions.assertThat(options.getPrecision()).isEqualTo(WritePrecision.US);
     }
 
     @Test
     public void propertiesPrecision() {
         InfluxDBClientOptions options = InfluxDBClientOptions.builder().loadProperties().build();
-        
+
         Assertions.assertThat(options.getPrecision()).isEqualTo(WritePrecision.US);
     }
 
@@ -453,7 +468,8 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
                     .writeRecord("my-bucket", "my-org", WritePrecision.NS, "record,tag=a value=1");
 
             RecordedRequest request = mockServer.takeRequest();
-            Assertions.assertThat(request.getHeaders().get("User-Agent")).startsWith("influxdb-client-awesome-service/");
+            Assertions.assertThat(request.getHeaders().get("User-Agent"))
+                    .startsWith("influxdb-client-awesome-service/");
         }
     }
 
@@ -467,7 +483,8 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
         final Logger logger = Logger.getLogger("okhttp3.OkHttpClient");
         logger.addHandler(handler);
 
-        try (InfluxDBClient client = InfluxDBClientFactory.create(mockServer.url("/").toString(), "my-token".toCharArray())) {
+        try (InfluxDBClient client = InfluxDBClientFactory.create(mockServer.url("/").toString(),
+                "my-token".toCharArray())) {
             client.setLogLevel(LogLevel.HEADERS);
             client
                     .getWriteApiBlocking()
