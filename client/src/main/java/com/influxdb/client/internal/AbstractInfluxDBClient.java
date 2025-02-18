@@ -21,6 +21,15 @@
  */
 package com.influxdb.client.internal;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.JSON;
 import com.influxdb.client.domain.Dialect;
@@ -40,16 +49,6 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava3.RxJava3CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-
-import javax.annotation.Nonnull;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 07:13)
