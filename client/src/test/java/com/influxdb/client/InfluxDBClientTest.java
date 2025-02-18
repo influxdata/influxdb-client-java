@@ -21,7 +21,6 @@
  */
 package com.influxdb.client;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.Proxy;
@@ -30,14 +29,8 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import com.influxdb.LogLevel;
-import com.influxdb.client.domain.Authorization;
-import com.influxdb.client.domain.InfluxQLQuery;
-import com.influxdb.client.domain.Run;
-import com.influxdb.client.domain.WriteConsistency;
-import com.influxdb.client.domain.WritePrecision;
-import com.influxdb.client.internal.AbstractInfluxDBClientTest;
-import com.influxdb.client.service.InfluxQLQueryService;
+import javax.annotation.Nonnull;
+
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -51,6 +44,15 @@ import okhttp3.mockwebserver.RecordedRequest;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import retrofit2.Call;
+
+import com.influxdb.LogLevel;
+import com.influxdb.client.domain.Authorization;
+import com.influxdb.client.domain.InfluxQLQuery;
+import com.influxdb.client.domain.Run;
+import com.influxdb.client.domain.WriteConsistency;
+import com.influxdb.client.domain.WritePrecision;
+import com.influxdb.client.internal.AbstractInfluxDBClientTest;
+import com.influxdb.client.service.InfluxQLQueryService;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 14:00)
