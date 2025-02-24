@@ -33,10 +33,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
-import okhttp3.HttpUrl;
-import okhttp3.OkHttpClient;
-import okhttp3.Protocol;
-
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
@@ -44,6 +40,10 @@ import com.influxdb.client.write.PointSettings;
 import com.influxdb.client.write.WriteParameters;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.utils.Arguments;
+
+import okhttp3.HttpUrl;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
 
 /**
  * InfluxDBClientOptions are used to configure theInfluxDB 2.x connections.
@@ -699,8 +699,8 @@ public final class InfluxDBClientOptions {
                 String urlWithoutParams = url.scheme() + "://" + host + ":" + url.port() + url.encodedPath();
 
                 this.urlWithoutParams = urlWithoutParams.endsWith("/")
-                  ? urlWithoutParams
-                  : urlWithoutParams + "/";
+                        ? urlWithoutParams
+                        : urlWithoutParams + "/";
             }
         }
     }
