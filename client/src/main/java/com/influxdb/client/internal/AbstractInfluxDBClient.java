@@ -24,6 +24,7 @@ package com.influxdb.client.internal;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -41,6 +42,7 @@ import com.influxdb.internal.AbstractRestClient;
 import com.influxdb.internal.UserAgentInterceptor;
 import com.influxdb.utils.Arguments;
 
+import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
@@ -93,6 +95,17 @@ public abstract class AbstractInfluxDBClient extends AbstractRestClient {
         setLogLevel(loggingInterceptor, options.getLogLevel());
         this.authenticateInterceptor = new AuthenticateInterceptor(options);
         this.gzipInterceptor = new GzipInterceptor();
+
+        // These Interceptors are the default for OkHttpClient. It must be unique for every OkHttpClient
+        List<Class<? extends Interceptor>> excludeInterceptorClasses = List.of(
+                UserAgentInterceptor.class,
+                AuthenticateInterceptor.class,
+                HttpLoggingInterceptor.class,
+                GzipInterceptor.class
+        );
+        options.getOkHttpClient()
+                .interceptors()
+                .removeIf(interceptor -> excludeInterceptorClasses.contains(interceptor.getClass()));
 
         String customClientType = options.getClientType() != null ? options.getClientType() : clientType;
         this.okHttpClient = options.getOkHttpClient()

@@ -699,8 +699,8 @@ public final class InfluxDBClientOptions {
                 String urlWithoutParams = url.scheme() + "://" + host + ":" + url.port() + url.encodedPath();
 
                 this.urlWithoutParams = urlWithoutParams.endsWith("/")
-                  ? urlWithoutParams
-                  : urlWithoutParams + "/";
+                        ? urlWithoutParams
+                        : urlWithoutParams + "/";
             }
         }
     }
