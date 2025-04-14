@@ -183,6 +183,16 @@ class PointTest {
     }
 
     @Test
+    void tagEscape() {
+        Point point = Point.measurement("h2o")
+                .addTag("location", "\\")
+                .addTag("zone", "europe")
+                .addField("level", "dummy value");
+
+        Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=\\\\,zone=europe level=\"dummy value\"");
+    }
+
+    @Test
     void time() {
 
         Point point = Point.measurement("h2o")
