@@ -445,14 +445,14 @@ dependencies {
 ```
 
 ### Snapshot Repository
-The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
+The snapshots are deployed into [OSS Snapshot repository](https://central.sonatype.com/repository/maven-snapshots/).
 
 #### Maven
 ```xml
 <repository>
     <id>ossrh</id>
     <name>OSS Snapshot repository</name>
-    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
     <releases>
         <enabled>false</enabled>
     </releases>
@@ -464,6 +464,6 @@ The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.o
 #### Gradle
 ```
 repositories {
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "https://central.sonatype.com/repository/maven-snapshots" }
 }
 ```
