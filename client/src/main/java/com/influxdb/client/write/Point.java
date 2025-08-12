@@ -26,6 +26,7 @@ import java.math.BigInteger;
 import java.text.NumberFormat;
 import java.time.Instant;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -93,6 +94,24 @@ public final class Point {
         Arguments.checkNotNull(measurementName, "measurement");
 
         return new Point(measurementName);
+    }
+
+    /**
+     * Returns a read-only reference to the tags.
+     * @return The point tags as read-only map.
+     */
+    @Nonnull
+    public Map<String, String> getTags() {
+        return Collections.unmodifiableMap(this.tags);
+    }
+
+    /**
+     * Returns a read-only reference to the fields.
+     * @return The point fields as read-only map.
+     */
+    @Nonnull
+    public Map<String, Object> getFields() {
+        return Collections.unmodifiableMap(this.fields);
     }
 
     /**
