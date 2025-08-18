@@ -1120,7 +1120,7 @@ jacoco-maven-plugin: 0.8.5, maven-checkstyle: 3.1.1, maven-javadoc: 3.2.0, maven
 1. [#40](https://github.com/influxdata/influxdb-client-java/issues/40): The client is hosted in Maven Central repository
     - Repackaged from `org.influxdata` to `com.influxdb`
     - Changed _groupId_ from `org.influxdata` to `com.influxdb`
-    - Snapshots are located in the _OSS Snapshot repository_: `https://oss.sonatype.org/content/repositories/snapshots/`
+    - Snapshots are located in the _OSS Snapshot repository_: `https://central.sonatype.com/repository/maven-snapshots/`
 
 ### Features
 1. [#34](https://github.com/influxdata/influxdb-client-java/issues/34): Auto-configure client from configuration file

@@ -93,11 +93,11 @@
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://central.sonatype.com/repository/maven-snapshots</url>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
         </repository>
         <site>
             <id>GitHubPages</id>
@@ -110,18 +110,18 @@
 
         <dependency.retrofit.version>2.11.0</dependency.retrofit.version>
         <dependency.okhttp3.version>4.12.0</dependency.okhttp3.version>
-        <dependency.com.squareup.okio>3.9.0</dependency.com.squareup.okio>
+        <dependency.com.squareup.okio>3.16.0</dependency.com.squareup.okio>
         <dependency.gson.version>2.12.1</dependency.gson.version>
         <dependency.io.reactivex.rxjava3>3.1.10</dependency.io.reactivex.rxjava3>
 
         <plugin.surefire.version>3.5.2</plugin.surefire.version>
-        <plugin.javadoc.version>3.10.1</plugin.javadoc.version>
+        <plugin.javadoc.version>3.11.2</plugin.javadoc.version>
         <plugin.checkstyle.version>3.6.0</plugin.checkstyle.version>
         <plugin.jacoco.version>0.8.12</plugin.jacoco.version>
-        <plugin.site.version>3.20.0</plugin.site.version>
+        <plugin.site.version>3.21.0</plugin.site.version>
         <plugin.scala.version>4.9.2</plugin.scala.version>
 
-        <pekko.version>1.1.2</pekko.version>
+        <pekko.version>1.1.5</pekko.version>
         <kotlin.version>2.1.10</kotlin.version>
         <junit-jupiter.version>5.11.4</junit-jupiter.version>
         <kotlin-coroutines.version>1.8.1</kotlin-coroutines.version>
@@ -412,12 +412,6 @@
                     <groupId>org.sonatype.plugins</groupId>
                     <artifactId>nexus-staging-maven-plugin</artifactId>
                     <version>1.7.0</version>
-                    <extensions>true</extensions>
-                    <configuration>
-                        <serverId>ossrh</serverId>
-                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-                        <autoReleaseAfterClose>true</autoReleaseAfterClose>
-                    </configuration>
                 </plugin>
 
                 <plugin>
@@ -659,7 +653,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-csv</artifactId>
-                <version>1.11.0</version>
+                <version>1.14.1</version>
             </dependency>
 
             <dependency>
@@ -707,7 +701,7 @@
             <dependency>
                 <groupId>org.assertj</groupId>
                 <artifactId>assertj-core</artifactId>
-                <version>3.26.3</version>
+                <version>3.27.4</version>
             </dependency>
 
             <dependency>
@@ -780,6 +774,17 @@
                                 </configuration>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.sonatype.plugins</groupId>
+                        <artifactId>nexus-staging-maven-plugin</artifactId>
+                        <version>1.7.0</version>
+                        <extensions>true</extensions>
+                        <configuration>
+                            <serverId>ossrh</serverId>
+                            <nexusUrl>https://ossrh-staging-api.central.sonatype.com/</nexusUrl>
+                            <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>
