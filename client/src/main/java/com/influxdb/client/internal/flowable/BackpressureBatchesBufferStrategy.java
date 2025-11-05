@@ -1,9 +1,14 @@
 package com.influxdb.client.internal.flowable;
 
+import java.util.Collections;
 import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.Deque;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.function.Consumer;
 
 import com.influxdb.client.internal.AbstractWriteClient;
 
@@ -13,7 +18,6 @@ import io.reactivex.rxjava3.core.FlowableOperator;
 import io.reactivex.rxjava3.core.FlowableSubscriber;
 import io.reactivex.rxjava3.exceptions.Exceptions;
 import io.reactivex.rxjava3.exceptions.MissingBackpressureException;
-import io.reactivex.rxjava3.functions.Action;
 import io.reactivex.rxjava3.internal.operators.flowable.FlowableOnBackpressureBufferStrategy;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava3.internal.util.BackpressureHelper;
@@ -34,21 +38,32 @@ public final class BackpressureBatchesBufferStrategy implements
 
     final long bufferSize;
 
-    final Action onOverflow;
+    final Consumer<List<String>> onOverflow;
 
     final BackpressureOverflowStrategy strategy;
 
-    public BackpressureBatchesBufferStrategy(long bufferSize, Action onOverflow,
-                                             BackpressureOverflowStrategy strategy) {
+    final boolean captureBackpressureData;
+
+    public BackpressureBatchesBufferStrategy(long bufferSize,
+            Consumer<List<String>> onOverflow,
+            BackpressureOverflowStrategy strategy) {
+        this(bufferSize, onOverflow, strategy, false);
+    }
+
+    public BackpressureBatchesBufferStrategy(long bufferSize,
+            Consumer<List<String>> onOverflow,
+            BackpressureOverflowStrategy strategy,
+            boolean captureBackpressureData) {
         this.bufferSize = bufferSize;
         this.onOverflow = onOverflow;
         this.strategy = strategy;
+        this.captureBackpressureData = captureBackpressureData;
     }
 
     @Override
     public @NonNull Subscriber<? super AbstractWriteClient.BatchWriteItem> apply(
             @NonNull final Subscriber<? super AbstractWriteClient.BatchWriteItem> subscriber) throws Throwable {
-        return new OnBackpressureBufferStrategySubscriber(subscriber, onOverflow, strategy, bufferSize);
+        return new OnBackpressureBufferStrategySubscriber(subscriber, onOverflow, strategy, bufferSize, captureBackpressureData);
     }
 
     static final class OnBackpressureBufferStrategySubscriber
@@ -58,8 +73,6 @@ public final class BackpressureBatchesBufferStrategy implements
         private static final long serialVersionUID = 3240706908776709697L;
 
         final Subscriber<? super AbstractWriteClient.BatchWriteItem> downstream;
-
-        final Action onOverflow;
 
         final BackpressureOverflowStrategy strategy;
 
@@ -76,14 +89,20 @@ public final class BackpressureBatchesBufferStrategy implements
         volatile boolean done;
         Throwable error;
 
+        final Consumer<List<String>> onOverflow;
+
+        final boolean captureBackpressureData;
+
         OnBackpressureBufferStrategySubscriber(Subscriber<? super AbstractWriteClient.BatchWriteItem> actual,
-                                               Action onOverflow,
+                                               Consumer<List<String>> onOverflow,
                                                BackpressureOverflowStrategy strategy,
-                                               long bufferSize) {
+                                               long bufferSize,
+                                               boolean captureBackpressureData) {
             this.downstream = actual;
             this.onOverflow = onOverflow;
             this.strategy = strategy;
             this.bufferSize = bufferSize;
+            this.captureBackpressureData = captureBackpressureData;
             this.requested = new AtomicLong();
             this.deque = new ArrayDeque<>();
         }
@@ -107,18 +126,25 @@ public final class BackpressureBatchesBufferStrategy implements
             boolean callOnOverflow = false;
             boolean callError = false;
             Deque<AbstractWriteClient.BatchWriteItem> dq = deque;
+            List<String> overflowSnapshot = null;
             synchronized (dq) {
                 AtomicLong size = new AtomicLong(t.length());
                 dq.forEach(batchWriteItem -> size.addAndGet(batchWriteItem.length()));
                 if (size.get() > bufferSize) {
                     switch (strategy) {
                         case DROP_LATEST:
+                            if (captureBackpressureData) {
+                                overflowSnapshot = captureBatch(t);
+                            }
                             dq.pollLast();
                             dq.offer(t);
                             callOnOverflow = true;
                             break;
                         case DROP_OLDEST:
-                            dq.poll();
+                            AbstractWriteClient.BatchWriteItem droppedBatch = dq.poll();
+                            if (captureBackpressureData) {
+                                overflowSnapshot = captureBatch(droppedBatch);
+                            }
                             dq.offer(t);
                             callOnOverflow = true;
                             break;
@@ -135,7 +161,13 @@ public final class BackpressureBatchesBufferStrategy implements
             if (callOnOverflow) {
                 if (onOverflow != null) {
                     try {
-                        onOverflow.run();
+                        List<String> droppedPoints;
+                        if (captureBackpressureData) {
+                            droppedPoints = overflowSnapshot;
+                        } else {
+                            droppedPoints = Collections.emptyList();
+                        }
+                        onOverflow.accept(droppedPoints);
                     } catch (Throwable ex) {
                         Exceptions.throwIfFatal(ex);
                         upstream.cancel();
@@ -148,6 +180,24 @@ public final class BackpressureBatchesBufferStrategy implements
             } else {
                 drain();
             }
+        }
+
+        /**
+         * Captures snapshot of a single batch item for overflow handling.
+         *
+         * @param item the batch item to capture
+         * @return list of line protocol points from the item
+         */
+        List<String> captureBatch(AbstractWriteClient.BatchWriteItem item) {
+            String lp = item.toLineProtocol();
+            if (lp == null || lp.isEmpty()) {
+                return Collections.emptyList();
+            }
+            
+            return Arrays.stream(lp.split("\n"))
+                .map(String::trim)
+                .filter(s -> !s.isEmpty())
+                .collect(Collectors.toList());
         }
 
         @Override

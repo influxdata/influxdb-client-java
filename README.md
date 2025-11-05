@@ -418,6 +418,8 @@ If you have Docker running, but it is not available over localhost (e.g. you are
 - `INFLUXDB_PORT_API`
 - `INFLUXDB_2_IP`
 - `INFLUXDB_2_PORT_API`
+- `INFLUXDB_2_ONBOARDING_IP`
+- `INFLUXDB_2_ONBOARDING_PORT`
 
 ```bash
 $ export INFLUXDB_IP=192.168.99.100
