@@ -24,12 +24,16 @@ package com.influxdb.client.write;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.time.Instant;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
 import com.influxdb.client.domain.WritePrecision;
 
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author Jakub Bednar (bednar@github) (11/10/2018 12:57)
@@ -437,5 +441,22 @@ class PointTest {
                 .addFields(fields);
 
         Assertions.assertThat(point.toLineProtocol()).isEqualTo("h2o,location=europe accepted=true,level=2i,power=2.56");
+    }
+
+    @Test
+    void getFieldsGetTags() {
+        Point point = Point.measurement("h2 o")
+                .addTag("location", "europe")
+                .addField("level", 2);
+
+        Map<String, Object> fields = point.getFields();
+        Map<String, String> tags = point.getTags();
+
+        Assertions.assertThat(fields).isEqualTo(Map.of("level",2L));
+        Assertions.assertThat(tags).isEqualTo(Map.of("location","europe"));
+
+        // Assert that returned maps are immutable
+        assertThrows(UnsupportedOperationException.class, () -> fields.put("test", "value"));
+        assertThrows(UnsupportedOperationException.class, () -> tags.put("test", "value"));
     }
 }
