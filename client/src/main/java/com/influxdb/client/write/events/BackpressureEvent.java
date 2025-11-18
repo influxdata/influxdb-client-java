@@ -21,9 +21,12 @@
  */
 package com.influxdb.client.write.events;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.influxdb.utils.Arguments;
 
@@ -35,6 +38,7 @@ import com.influxdb.utils.Arguments;
 public final class BackpressureEvent extends AbstractWriteEvent {
 
     private final BackpressureReason reason;
+    private final List<String> droppedLineProtocol;
 
     public enum BackpressureReason {
         /**
@@ -51,17 +55,29 @@ public final class BackpressureEvent extends AbstractWriteEvent {
     private static final Logger LOG = Logger.getLogger(BackpressureEvent.class.getName());
 
     public BackpressureEvent(@Nonnull final BackpressureReason reason) {
+        this(reason, null);
+    }
+
+    public BackpressureEvent(@Nonnull final BackpressureReason reason,
+            @Nullable final List<String> droppedLineProtocol) {
 
         Arguments.checkNotNull(reason, "reason");
 
         this.reason = reason;
+        this.droppedLineProtocol = droppedLineProtocol != null
+                ? Collections.unmodifiableList(droppedLineProtocol)
+                : Collections.emptyList();
     }
 
     @Override
     public void logEvent() {
+        String message = String.format("Backpressure[%s] applied, try increase WriteOptions.bufferLimit.", reason);
 
-        LOG.log(Level.WARNING,
-                String.format("Backpressure[%s] applied, try increase WriteOptions.bufferLimit", reason));
+        if (!droppedLineProtocol.isEmpty()) {
+            message += String.format(" Buffer contains %d line protocol points.", droppedLineProtocol.size());
+        }
+
+        LOG.log(Level.WARNING, message);
     }
 
     /**
@@ -70,5 +86,14 @@ public final class BackpressureEvent extends AbstractWriteEvent {
     @Nonnull
     public BackpressureReason getReason() {
         return reason;
+    }
+
+    /**
+     * @return unmodifiable list of line protocol points in the buffer at the time
+     *         of the backpressure event
+     */
+    @Nonnull
+    public List<String> getDroppedLineProtocol() {
+        return droppedLineProtocol;
     }
 }

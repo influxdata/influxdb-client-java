@@ -51,7 +51,7 @@ class BackpressureBatchesBufferStrategyTest {
                         itemsToWrite(dataPerBatches)
                                 .lift(new BackpressureBatchesBufferStrategy(
                                         bufferSize,
-                                        backpressure::incrementAndGet,
+                                        droppedPoints -> backpressure.incrementAndGet(),
                                         DROP_OLDEST)))
                 .subscribe(testSubscriber);
 

@@ -161,12 +161,15 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                 //
                 .lift(new BackpressureBatchesBufferStrategy(
                         writeOptions.getBufferLimit(),
-                        () -> publish(new BackpressureEvent(BackpressureEvent.BackpressureReason.TOO_MUCH_BATCHES)),
-                        writeOptions.getBackpressureStrategy()))
+                        droppedPoints -> publish(new BackpressureEvent(
+                                BackpressureEvent.BackpressureReason.TOO_MUCH_BATCHES, droppedPoints)),
+                        writeOptions.getBackpressureStrategy(),
+                        writeOptions.getCaptureBackpressureData()))
                 //
-                // Use concat to process batches one by one
+                // Use concat to process batches with configurable prefetch
                 //
-                .concatMapMaybe(new ToWritePointsMaybe(processorScheduler, writeOptions))
+                .concatMapMaybe(new ToWritePointsMaybe(processorScheduler, writeOptions),
+                        writeOptions.getConcatMapPrefetch())
                 .doFinally(() -> finished.set(true))
                 .subscribe(responseNotification -> {
 

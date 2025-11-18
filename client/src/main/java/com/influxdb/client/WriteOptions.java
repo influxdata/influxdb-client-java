@@ -43,6 +43,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * <li>retryInterval = 5000 ms</li>
  * <li>jitterInterval = 0</li>
  * <li>bufferLimit = 10_000</li>
+ * <li>concatMapPrefetch = 2</li>
+ * <li>captureBackpressureData = false</li>
  * </ul>
  * <p>
  * The default backpressure strategy is {@link BackpressureOverflowStrategy#DROP_OLDEST}.
@@ -62,6 +64,8 @@ public final class WriteOptions implements WriteApi.RetryOptions {
     public static final int DEFAULT_MAX_RETRY_TIME = 180_000;
     public static final int DEFAULT_EXPONENTIAL_BASE = 2;
     public static final int DEFAULT_BUFFER_LIMIT = 10000;
+    public static final int DEFAULT_CONCAT_MAP_PREFETCH = 2;
+    public static final boolean DEFAULT_CAPTURE_BACKPRESSURE_DATA = false;
 
     /**
      * Default configuration with values that are consistent with Telegraf.
@@ -77,8 +81,10 @@ public final class WriteOptions implements WriteApi.RetryOptions {
     private final int maxRetryTime;
     private final int exponentialBase;
     private final int bufferLimit;
+    private final int concatMapPrefetch;
     private final Scheduler writeScheduler;
     private final BackpressureOverflowStrategy backpressureStrategy;
+    private final boolean captureBackpressureData;
 
     /**
      * @return the number of data point to collect in batch
@@ -172,6 +178,17 @@ public final class WriteOptions implements WriteApi.RetryOptions {
     }
 
     /**
+     * The number of upstream items to prefetch so that fresh items are ready to be mapped when a previous
+     * MaybeSource terminates.
+     *
+     * @return the prefetch value for concatMapMaybe operator
+     * @see WriteOptions.Builder#concatMapPrefetch(int)
+     */
+    public int getConcatMapPrefetch() {
+        return concatMapPrefetch;
+    }
+
+    /**
      * @return The scheduler which is used for write data points.
      * @see WriteOptions.Builder#writeScheduler(Scheduler)
      */
@@ -189,6 +206,14 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         return backpressureStrategy;
     }
 
+    /**
+     * @return whether to capture affected data points in backpressure events
+     * @see WriteOptions.Builder#captureBackpressureData(boolean)
+     */
+    public boolean getCaptureBackpressureData() {
+        return captureBackpressureData;
+    }
+
     private WriteOptions(@Nonnull final Builder builder) {
 
         Arguments.checkNotNull(builder, "WriteOptions.Builder");
@@ -202,8 +227,10 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         maxRetryTime = builder.maxRetryTime;
         exponentialBase = builder.exponentialBase;
         bufferLimit = builder.bufferLimit;
+        concatMapPrefetch = builder.concatMapPrefetch;
         writeScheduler = builder.writeScheduler;
         backpressureStrategy = builder.backpressureStrategy;
+        captureBackpressureData = builder.captureBackpressureData;
     }
 
     /**
@@ -231,8 +258,10 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         private int maxRetryTime = DEFAULT_MAX_RETRY_TIME;
         private int exponentialBase = DEFAULT_EXPONENTIAL_BASE;
         private int bufferLimit = DEFAULT_BUFFER_LIMIT;
+        private int concatMapPrefetch = DEFAULT_CONCAT_MAP_PREFETCH;
         private Scheduler writeScheduler = Schedulers.newThread();
         private BackpressureOverflowStrategy backpressureStrategy = BackpressureOverflowStrategy.DROP_OLDEST;
+        private boolean captureBackpressureData = DEFAULT_CAPTURE_BACKPRESSURE_DATA;
 
         /**
          * Set the number of data point to collect in batch.
@@ -339,7 +368,9 @@ public final class WriteOptions implements WriteApi.RetryOptions {
          */
         @Nonnull
         public Builder exponentialBase(final int exponentialBase) {
-            Arguments.checkPositiveNumber(exponentialBase, "exponentialBase");
+            if (exponentialBase < 2) {
+                throw new IllegalArgumentException("Expecting a number >= 2 for exponentialBase");
+            }
             this.exponentialBase = exponentialBase;
             return this;
         }
@@ -354,8 +385,24 @@ public final class WriteOptions implements WriteApi.RetryOptions {
          */
         @Nonnull
         public Builder bufferLimit(final int bufferLimit) {
-            Arguments.checkNotNegativeNumber(bufferLimit, "bufferLimit");
+            Arguments.checkPositiveNumber(bufferLimit, "bufferLimit");
             this.bufferLimit = bufferLimit;
+            return this;
+        }
+
+        /**
+         * Set the prefetch value for the concatMapMaybe operator that processes write batches.
+         *
+         * The number of upstream items to prefetch so that fresh items are ready to be mapped when a previous
+         * MaybeSource terminates.
+         *
+         * @param concatMapPrefetch the prefetch value for concatMapMaybe operator (must be positive)
+         * @return {@code this}
+         */
+        @Nonnull
+        public Builder concatMapPrefetch(final int concatMapPrefetch) {
+            Arguments.checkPositiveNumber(concatMapPrefetch, "concatMapPrefetch");
+            this.concatMapPrefetch = concatMapPrefetch;
             return this;
         }
 
@@ -386,6 +433,25 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         public Builder backpressureStrategy(@Nonnull final BackpressureOverflowStrategy backpressureStrategy) {
             Arguments.checkNotNull(backpressureStrategy, "Backpressure Overflow Strategy");
             this.backpressureStrategy = backpressureStrategy;
+            return this;
+        }
+
+        /**
+         * Set whether to capture affected data points in backpressure events.
+         *
+         * When enabled, BackpressureEvent will include the specific line protocol points
+         * that are affected by the backpressure condition:
+         * - For DROP_OLDEST strategy: points that will be dropped
+         * - For DROP_LATEST strategy: newest points being added
+         *
+         * Disabling this can improve performance when backpressure data capture is not needed.
+         *
+         * @param captureBackpressureData whether to capture affected data points. Default is false.
+         * @return {@code this}
+         */
+        @Nonnull
+        public Builder captureBackpressureData(final boolean captureBackpressureData) {
+            this.captureBackpressureData = captureBackpressureData;
             return this;
         }
 
