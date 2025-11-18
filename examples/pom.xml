@@ -33,6 +33,10 @@
     <properties>
         <checkstyle.skip>true</checkstyle.skip>
         <influxdb-client.version>7.4.0-SNAPSHOT</influxdb-client.version>
+        <!-- Ensure this module never deploys to any repository (including OSSRH staging) -->
+        <maven.deploy.skip>true</maven.deploy.skip>
+        <!-- Explicitly skip Nexus Staging deploy mojo when release profile is active -->
+        <skipNexusStagingDeployMojo>true</skipNexusStagingDeployMojo>
     </properties>
 
     <modelVersion>4.0.0</modelVersion>
