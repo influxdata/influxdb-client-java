@@ -1,14 +1,14 @@
 ## 7.5.0 [unreleased]
 
+### Features
+
+- [#828](https://github.com/influxdata/influxdb-client-java/pull/828): Add read-only getters for `Point.fields` and `Point.tags`
+
 ## 7.4.0 [2025-11-18]
 
 ### Features
 
 - [#848](https://github.com/influxdata/influxdb-client-java/pull/848): new WriteOption config for capturing backpressure data
-
-### Features
-
-- [#828](https://github.com/influxdata/influxdb-client-java/pull/828): Add read-only getters for `Point.fields` and `Point.tags`
 
 ## 7.3.0 [2025-05-22]
 
