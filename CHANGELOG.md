@@ -1,5 +1,9 @@
 ## 7.5.0 [unreleased]
 
+### Features
+
+- [#828](https://github.com/influxdata/influxdb-client-java/pull/828): Add read-only getters for `Point.fields` and `Point.tags`
+
 ## 7.4.0 [2025-11-18]
 
 ### Features
