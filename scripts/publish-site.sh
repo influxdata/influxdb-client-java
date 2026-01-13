@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 #
 # The MIT License
 #
@@ -19,8 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 #
-
-#!/usr/bin/env bash
 
 # mvn site site:stage -DskipTests
 #
