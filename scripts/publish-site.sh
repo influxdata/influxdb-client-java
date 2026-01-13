@@ -33,6 +33,10 @@
 
 set -e
 
+# Install Git
+apt-get -y update
+apt-get -y install git
+
 SCRIPT_PATH="$( cd "$(dirname "$0")" ; pwd -P )"
 
 echo
