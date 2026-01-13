@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1723447766869">
-    <module artifactId="influxdb-client-scala_2.13" groupId="com.influxdb" version="7.2.0"/>
+<licensePluginReport goal="CHECK" timestamp="1763474952983">
+    <module artifactId="influxdb-client-scala_2.13" groupId="com.influxdb" version="7.4.0"/>
     <files>
         <file path="pom.xml" result="PRESENT"/>
         <file path="src/main/scala/com/influxdb/client/scala/InfluxDBClientScala.scala" result="PRESENT"/>

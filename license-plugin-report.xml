@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1723447709289">
-    <module artifactId="influxdb-client" groupId="com.influxdb" version="7.2.0"/>
+<licensePluginReport goal="CHECK" timestamp="1763474881413">
+    <module artifactId="influxdb-client" groupId="com.influxdb" version="7.4.0"/>
     <files>
         <file path=".circleci/config.yml" result="PRESENT"/>
         <file path=".github/dependabot.yml" result="PRESENT"/>

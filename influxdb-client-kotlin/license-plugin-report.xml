@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1723447748288">
-    <module artifactId="influxdb-client-kotlin" groupId="com.influxdb" version="7.2.0"/>
+<licensePluginReport goal="CHECK" timestamp="1763474928423">
+    <module artifactId="influxdb-client-kotlin" groupId="com.influxdb" version="7.4.0"/>
     <files>
         <file path="pom.xml" result="PRESENT"/>
         <file path="src/main/kotlin/com/influxdb/client/kotlin/InfluxDBClientKotlin.kt" result="PRESENT"/>

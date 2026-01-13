@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1723447727261">
-    <module artifactId="influxdb-client-java" groupId="com.influxdb" version="7.2.0"/>
+<licensePluginReport goal="CHECK" timestamp="1763474906011">
+    <module artifactId="influxdb-client-java" groupId="com.influxdb" version="7.4.0"/>
     <files>
         <file path="pom.xml" result="PRESENT"/>
         <file path="src/main/java/com/influxdb/client/AuthorizationsApi.java" result="PRESENT"/>
@@ -81,6 +81,7 @@
         <file path="src/test/java/com/influxdb/client/ITBackpressure.java" result="PRESENT"/>
         <file path="src/test/java/com/influxdb/client/ITBenchmarkTest.java" result="PRESENT"/>
         <file path="src/test/java/com/influxdb/client/ITBucketsApi.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/ITCaptureBackpressureDataTest.java" result="PRESENT"/>
         <file path="src/test/java/com/influxdb/client/ITChecksApi.java" result="PRESENT"/>
         <file path="src/test/java/com/influxdb/client/ITDashboardsApi.java" result="PRESENT"/>
         <file path="src/test/java/com/influxdb/client/ITDeleteApi.java" result="PRESENT"/>
@@ -125,6 +126,7 @@
         <file path="src/test/java/com/influxdb/client/write/PointSettingsTest.java" result="PRESENT"/>
         <file path="src/test/java/com/influxdb/client/write/PointTest.java" result="PRESENT"/>
         <file path="src/test/java/com/influxdb/client/write/WriteParametersTest.java" result="PRESENT"/>
+        <file path="src/test/java/com/influxdb/client/write/events/BackpressureEventDataCaptureTest.java" result="PRESENT"/>
         <file path="src/test/resources/influx2.properties" result="PRESENT"/>
     </files>
 </licensePluginReport>

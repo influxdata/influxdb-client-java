@@ -52,4 +52,3 @@ $dokka.location:com.influxdb.client.kotlin/WriteKotlinApi/writeRecords/#kotlin.c
 $dokka.location:com.influxdb.client.kotlin/WriteKotlinApi/writeRecords/#kotlinx.coroutines.flow.Flow[kotlin.String]#com.influxdb.client.domain.WritePrecision#kotlin.String?#kotlin.String?/PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-write-kotlin-api/write-records.html
 $dokka.location:com.influxdb.client.kotlin/WriteKotlinApi/writeRecords/#kotlinx.coroutines.flow.Flow[kotlin.String]#com.influxdb.client.write.WriteParameters/PointingToDeclaration/influxdb-client-kotlin/com.influxdb.client.kotlin/-write-kotlin-api/write-records.html
 com.influxdb.client.kotlin
-
