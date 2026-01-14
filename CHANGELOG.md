@@ -14,9 +14,16 @@
 
 ## 7.3.0 [2025-05-22]
 
+
+### Bug Fixes
+
+- [#807](https://github.com/influxdata/influxdb-client-java/pull/807): fix: Issue/806: Add a lock to prevent the disposal of the timer while it is running.
+
+
 ### Features
 
 - [#821](https://github.com/influxdata/influxdb-client-java/pull/821): Prevent duplicate interceptors in OkHttpClient builder
+
 
 ### Dependencies
 
