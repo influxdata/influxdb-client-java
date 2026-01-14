@@ -22,6 +22,10 @@
 
 ⚠️ Important Notice: Starting from this release, we won’t be listing every dependency change in our changelog. This helps us maintain the project faster and focus on important features for our InfluxDB client.
 
+### Bug Fixes
+
+1. [#794](https://github.com/influxdata/influxdb-client-java/issues/794): Delete unnecessary inheritance of `FlowableBufferTimedFlushable`.
+
 ## 7.2.0 [2024-08-12]
 
 ### Features 
