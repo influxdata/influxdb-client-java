@@ -49,6 +49,7 @@ class WriteOptionsTest {
         Assertions.assertThat(writeOptions.getWriteScheduler()).isEqualTo(Schedulers.newThread());
         Assertions.assertThat(writeOptions.getBackpressureStrategy()).isEqualTo(BackpressureOverflowStrategy.DROP_OLDEST);
         Assertions.assertThat(writeOptions.getCaptureBackpressureData()).isFalse();
+        Assertions.assertThat(writeOptions.getEnableBufferTracking()).isFalse();
     }
 
     @Test
@@ -67,6 +68,7 @@ class WriteOptionsTest {
                 .writeScheduler(Schedulers.computation())
                 .backpressureStrategy(BackpressureOverflowStrategy.ERROR)
                 .captureBackpressureData(true)
+                .enableBufferTracking(true)
                 .build();
 
         Assertions.assertThat(writeOptions.getBatchSize()).isEqualTo(10_000);
@@ -81,6 +83,7 @@ class WriteOptionsTest {
         Assertions.assertThat(writeOptions.getWriteScheduler()).isEqualTo(Schedulers.computation());
         Assertions.assertThat(writeOptions.getBackpressureStrategy()).isEqualTo(BackpressureOverflowStrategy.ERROR);
         Assertions.assertThat(writeOptions.getCaptureBackpressureData()).isTrue();
+        Assertions.assertThat(writeOptions.getEnableBufferTracking()).isTrue();
     }
 
     @Test

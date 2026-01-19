@@ -22,10 +22,12 @@
 package com.influxdb.client;
 
 import java.util.List;
+import java.util.Map;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.ThreadSafe;
 
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.write.Point;
 import com.influxdb.client.write.WriteParameters;
@@ -282,6 +284,55 @@ public interface WriteApi extends AutoCloseable {
      * Forces the client to flush all pending writes from the buffer toInfluxDB 2.x via HTTP.
      */
     void flush();
+
+    /**
+     * Returns the current pre-batch buffer size for the specified destination.
+     * This represents the number of data points waiting to be batched for the given
+     * bucket, organization, precision, and consistency combination.
+     *
+     * <p>
+     * Note: Each unique combination of (bucket, org, precision, consistency) has its own
+     * independent pre-batch buffer. The parameters must match exactly how the data was written.
+     * </p>
+     *
+     * @param bucket    the destination bucket
+     * @param org       the destination organization
+     * @param precision the write precision
+     * @return current number of points waiting to be batched, or 0 if no buffer exists
+     */
+    int getPreBatchBufferSize(@Nonnull final String bucket,
+                              @Nonnull final String org,
+                              @Nonnull final WritePrecision precision);
+
+    /**
+     * Returns the current pre-batch buffer size for the specified destination.
+     *
+     * @param bucket      the destination bucket
+     * @param org         the destination organization
+     * @param precision   the write precision
+     * @param consistency the write consistency (for InfluxDB Enterprise clusters)
+     * @return current number of points waiting to be batched, or 0 if no buffer exists
+     */
+    int getPreBatchBufferSize(@Nonnull final String bucket,
+                              @Nonnull final String org,
+                              @Nonnull final WritePrecision precision,
+                              @Nullable final WriteConsistency consistency);
+
+    /**
+     * Returns the current pre-batch buffer size for the specified destination.
+     *
+     * @param params the write parameters identifying the destination
+     * @return current number of points waiting to be batched, or 0 if no buffer exists
+     */
+    int getPreBatchBufferSize(@Nonnull final WriteParameters params);
+
+    /**
+     * Returns a snapshot of all current pre-batch buffer sizes.
+     *
+     * @return map of WriteParameters to current buffer size
+     */
+    @Nonnull
+    Map<WriteParameters, Integer> getPreBatchBufferSizes();
 
     /**
      * Close threads for asynchronous batch writing.

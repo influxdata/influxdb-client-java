@@ -1,5 +1,9 @@
 ## 7.6.0 [unreleased]
 
+### Features
+
+- [TODO](): Add getter for fetching pre-batch buffer sizes
+
 ## 7.5.0 [2026-01-13]
 
 ### Features

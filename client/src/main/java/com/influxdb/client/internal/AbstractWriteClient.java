@@ -22,10 +22,13 @@
 package com.influxdb.client.internal;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 import java.util.logging.Level;
@@ -90,6 +93,7 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
     private final Collection<AutoCloseable> autoCloseables;
 
     private AtomicBoolean finished = new AtomicBoolean(false);
+    private final ConcurrentHashMap<WriteParameters, AtomicInteger> preBatchBufferSizes = new ConcurrentHashMap<>();
 
     public AbstractWriteClient(@Nonnull final WriteOptions writeOptions,
                                @Nonnull final InfluxDBClientOptions options,
@@ -124,15 +128,30 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
                         //
                         // Use Buffer to create Batch Items
                         //
-                        .compose(source ->
-                                new FlowableBufferTimedFlushable<>(
+                        .compose(source -> {
+                            if (writeOptions.getEnableBufferTracking()) {
+                                AtomicInteger groupSize = preBatchBufferSizes.computeIfAbsent(
+                                        group.getKey(), k -> new AtomicInteger(0));
+                                return new FlowableBufferTimedFlushable<>(
+                                        source,
+                                        flushPublisher,
+                                        writeOptions.getFlushInterval(),
+                                        TimeUnit.MILLISECONDS,
+                                        writeOptions.getBatchSize(), processorScheduler,
+                                        ArrayListSupplier.asSupplier(),
+                                        groupSize::set
+                                );
+                            } else {
+                                return new FlowableBufferTimedFlushable<>(
                                         source,
                                         flushPublisher,
                                         writeOptions.getFlushInterval(),
                                         TimeUnit.MILLISECONDS,
                                         writeOptions.getBatchSize(), processorScheduler,
                                         ArrayListSupplier.asSupplier()
-                                ))
+                                );
+                            }
+                        })
                         //
                         // Collect Batch items into one Write Item
                         //
@@ -191,6 +210,32 @@ public abstract class AbstractWriteClient extends AbstractRestClient implements 
 
     public void flush() {
         flushPublisher.offer(true);
+    }
+
+    /**
+     * Returns the current pre-batch buffer size for the specified destination.
+     * This represents the number of data points waiting to be batched for the given
+     * bucket, organization, precision, and consistency combination.
+     *
+     * @param params the write parameters identifying the destination
+     * @return current number of points waiting to be batched, or 0 if no buffer exists
+     */
+    public int getPreBatchBufferSize(@Nonnull final WriteParameters params) {
+        Arguments.checkNotNull(params, "WriteParameters");
+        AtomicInteger size = preBatchBufferSizes.get(params);
+        return size != null ? size.get() : 0;
+    }
+
+    /**
+     * Returns a snapshot of all current pre-batch buffer sizes.
+     *
+     * @return map of WriteParameters to current buffer size
+     */
+    @Nonnull
+    public Map<WriteParameters, Integer> getPreBatchBufferSizes() {
+        ConcurrentHashMap<WriteParameters, Integer> result = new ConcurrentHashMap<>();
+        preBatchBufferSizes.forEach((key, value) -> result.put(key, value.get()));
+        return result;
     }
 
     public void close() {

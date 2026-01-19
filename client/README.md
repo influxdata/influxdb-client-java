@@ -613,6 +613,7 @@ The writes are processed in batches which are configurable by `WriteOptions`:
 | **backpressureStrategy** | the strategy to deal with buffer overflow | DROP_OLDEST |
 | **captureBackpressureData** | whether to capture affected data points in backpressure events | false |
 | **concatMapPrefetch** | the number of upstream items to prefetch for the concatMapMaybe operator | 2 |
+| **enableBufferTracking** | whether to enable pre-batch buffer size tracking via `getPreBatchBufferSize()` | false |
 
 There is also a synchronous blocking version of `WriteApi` - [WriteApiBlocking](#writing-data-using-synchronous-blocking-api).
 
@@ -679,6 +680,39 @@ writeApi.listenEvents(BackpressureEvent.class, backpressureEvent -> {
 ```
 
 Note: Disabling `captureBackpressureData` can improve performance when backpressure data capture is not needed.
+
+##### Buffer Size Monitoring
+
+The `WriteApi` provides methods to monitor the number of data points waiting in the pre-batch buffer before being sent to InfluxDB. This is useful for monitoring write throughput and detecting potential bottlenecks.
+
+Each unique combination of bucket, organization, precision, and consistency has its own independent buffer.
+
+```java
+WriteApi writeApi = influxDBClient.makeWriteApi(WriteOptions.builder()
+    .batchSize(1000)
+    .flushInterval(1000)
+    .build());
+
+// Write some data
+writeApi.writeRecord("my-bucket", "my-org", WritePrecision.NS, "measurement,tag=value field=1");
+
+// Get buffer size for a specific destination
+int bufferSize = writeApi.getPreBatchBufferSize("my-bucket", "my-org", WritePrecision.NS);
+System.out.println("Points waiting to be batched: " + bufferSize);
+
+// Get all buffer sizes across all destinations
+Map<WriteParameters, Integer> allSizes = writeApi.getPreBatchBufferSizes();
+allSizes.forEach((params, size) -> 
+    System.out.println(params + ": " + size + " points"));
+```
+
+To enable pre-batch buffer tracking:
+
+```java
+WriteOptions options = WriteOptions.builder()
+    .enableBufferTracking(true)
+    .build();
+```
 
 #### Writing data
 

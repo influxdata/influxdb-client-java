@@ -45,6 +45,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers;
  * <li>bufferLimit = 10_000</li>
  * <li>concatMapPrefetch = 2</li>
  * <li>captureBackpressureData = false</li>
+ * <li>enableBufferTracking = false</li>
  * </ul>
  * <p>
  * The default backpressure strategy is {@link BackpressureOverflowStrategy#DROP_OLDEST}.
@@ -66,6 +67,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
     public static final int DEFAULT_BUFFER_LIMIT = 10000;
     public static final int DEFAULT_CONCAT_MAP_PREFETCH = 2;
     public static final boolean DEFAULT_CAPTURE_BACKPRESSURE_DATA = false;
+    public static final boolean DEFAULT_ENABLE_BUFFER_TRACKING = false;
 
     /**
      * Default configuration with values that are consistent with Telegraf.
@@ -85,6 +87,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
     private final Scheduler writeScheduler;
     private final BackpressureOverflowStrategy backpressureStrategy;
     private final boolean captureBackpressureData;
+    private final boolean enableBufferTracking;
 
     /**
      * @return the number of data point to collect in batch
@@ -214,6 +217,14 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         return captureBackpressureData;
     }
 
+    /**
+     * @return whether to enable pre-batch buffer size tracking
+     * @see WriteOptions.Builder#enableBufferTracking(boolean)
+     */
+    public boolean getEnableBufferTracking() {
+        return enableBufferTracking;
+    }
+
     private WriteOptions(@Nonnull final Builder builder) {
 
         Arguments.checkNotNull(builder, "WriteOptions.Builder");
@@ -231,6 +242,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         writeScheduler = builder.writeScheduler;
         backpressureStrategy = builder.backpressureStrategy;
         captureBackpressureData = builder.captureBackpressureData;
+        enableBufferTracking = builder.enableBufferTracking;
     }
 
     /**
@@ -262,6 +274,7 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         private Scheduler writeScheduler = Schedulers.newThread();
         private BackpressureOverflowStrategy backpressureStrategy = BackpressureOverflowStrategy.DROP_OLDEST;
         private boolean captureBackpressureData = DEFAULT_CAPTURE_BACKPRESSURE_DATA;
+        private boolean enableBufferTracking = DEFAULT_ENABLE_BUFFER_TRACKING;
 
         /**
          * Set the number of data point to collect in batch.
@@ -452,6 +465,22 @@ public final class WriteOptions implements WriteApi.RetryOptions {
         @Nonnull
         public Builder captureBackpressureData(final boolean captureBackpressureData) {
             this.captureBackpressureData = captureBackpressureData;
+            return this;
+        }
+
+        /**
+         * Set whether to enable pre-batch buffer size tracking.
+         *
+         * When enabled, the WriteApi tracks the number of data points waiting in the pre-batch buffer
+         * for each destination (bucket, org, precision, consistency combination). This allows monitoring
+         * buffer sizes via {@link WriteApi#getPreBatchBufferSize} and {@link WriteApi#getPreBatchBufferSizes}.
+         *
+         * @param enableBufferTracking whether to enable buffer size tracking.
+         * @return {@code this}
+         */
+        @Nonnull
+        public Builder enableBufferTracking(final boolean enableBufferTracking) {
+            this.enableBufferTracking = enableBufferTracking;
             return this;
         }
 

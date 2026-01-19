@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 import io.reactivex.rxjava3.annotations.NonNull;
 import io.reactivex.rxjava3.core.Flowable;
@@ -48,6 +49,7 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
     final Supplier<U> bufferSupplier;
     final int maxSize;
     final boolean restartTimerOnMaxSize;
+    final Consumer<Integer> bufferSizeConsumer;
 
     public FlowableBufferTimedFlushable(Publisher<T> source,
                                         Publisher<Boolean> flusher,
@@ -56,6 +58,17 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
                                         int maxSize,
                                         Scheduler scheduler,
                                         Supplier<U> bufferSupplier) {
+        this(source, flusher, timespan, unit, maxSize, scheduler, bufferSupplier, null);
+    }
+
+    public FlowableBufferTimedFlushable(Publisher<T> source,
+                                        Publisher<Boolean> flusher,
+                                        long timespan,
+                                        TimeUnit unit,
+                                        int maxSize,
+                                        Scheduler scheduler,
+                                        Supplier<U> bufferSupplier,
+                                        Consumer<Integer> bufferSizeConsumer) {
         this.source = source;
         this.flusher = flusher;
         this.timespan = timespan;
@@ -65,11 +78,12 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
         this.bufferSupplier = bufferSupplier;
         this.maxSize = maxSize;
         this.restartTimerOnMaxSize = true;
+        this.bufferSizeConsumer = bufferSizeConsumer;
     }
 
     @Override
     public @NonNull Publisher<U> apply(@NonNull final Flowable<T> upstream) {
-        return new FlowableBufferTimedFlushable<>(upstream, flusher, timeskip, unit, maxSize, scheduler, bufferSupplier);
+        return new FlowableBufferTimedFlushable<>(upstream, flusher, timeskip, unit, maxSize, scheduler, bufferSupplier, bufferSizeConsumer);
     }
 
     @Override
@@ -78,7 +92,7 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
         source.subscribe(new BufferExactBoundedSubscriber<>(
                 new SerializedSubscriber<>(subscriber),
                 bufferSupplier,
-                timespan, unit, maxSize, restartTimerOnMaxSize, w, flusher
+                timespan, unit, maxSize, restartTimerOnMaxSize, w, flusher, bufferSizeConsumer
         ));
     }
 
@@ -92,6 +106,7 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
         final Worker w;
 
         final Publisher<Boolean> flusher;
+        final Consumer<Integer> bufferSizeConsumer;
 
         U buffer;
 
@@ -107,7 +122,8 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
                 Subscriber<? super U> actual,
                 Supplier<U> bufferSupplier,
                 long timespan, TimeUnit unit, int maxSize,
-                boolean restartOnMaxSize, Worker w, Publisher<Boolean> flusher) {
+                boolean restartOnMaxSize, Worker w, Publisher<Boolean> flusher,
+                Consumer<Integer> bufferSizeConsumer) {
             super(actual, new MpscLinkedQueue<>());
             this.bufferSupplier = bufferSupplier;
             this.timespan = timespan;
@@ -116,6 +132,7 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
             this.restartTimerOnMaxSize = restartOnMaxSize;
             this.w = w;
             this.flusher = flusher;
+            this.bufferSizeConsumer = bufferSizeConsumer;
         }
 
         @Override
@@ -162,13 +179,17 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
                 }
 
                 b.add(t);
+                int size = b.size();
 
-                if (b.size() < maxSize) {
+                if (size < maxSize) {
+                    notifyBufferSize(size);
                     return;
                 }
 
                 buffer = null;
                 producerIndex++;
+                // Buffer is full, notify size 0 since we're flushing
+                notifyBufferSize(0);
             }
 
             if (restartTimerOnMaxSize) {
@@ -192,6 +213,12 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
             }
             if (restartTimerOnMaxSize) {
                 timer = w.schedulePeriodically(this, timespan, timespan, unit);
+            }
+        }
+
+        private void notifyBufferSize(int size) {
+            if (bufferSizeConsumer != null) {
+                bufferSizeConsumer.accept(size);
             }
         }
 
@@ -276,6 +303,8 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
                     return;
                 }
                 buffer = next;
+                // Timer flush - notify size 0
+                notifyBufferSize(0);
             }
 
             fastPathOrderedEmitMax(current, false, this);

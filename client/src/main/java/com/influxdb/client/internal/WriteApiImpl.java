@@ -24,6 +24,7 @@ package com.influxdb.client.internal;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,6 +32,7 @@ import javax.annotation.Nullable;
 import com.influxdb.client.InfluxDBClientOptions;
 import com.influxdb.client.WriteApi;
 import com.influxdb.client.WriteOptions;
+import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.service.WriteService;
 import com.influxdb.client.write.Point;
@@ -267,6 +269,40 @@ final class WriteApiImpl extends AbstractWriteClient implements WriteApi {
         Disposable subscribe = super.addEventListener(eventType).subscribe(listener::onEvent);
 
         return subscribe::dispose;
+    }
+
+    @Override
+    public int getPreBatchBufferSize(@Nonnull final String bucket,
+                                     @Nonnull final String org,
+                                     @Nonnull final WritePrecision precision) {
+        Arguments.checkNonEmpty(bucket, "bucket");
+        Arguments.checkNonEmpty(org, "org");
+        Arguments.checkNotNull(precision, "WritePrecision");
+
+        return getPreBatchBufferSize(new WriteParameters(bucket, org, precision));
+    }
+
+    @Override
+    public int getPreBatchBufferSize(@Nonnull final String bucket,
+                                     @Nonnull final String org,
+                                     @Nonnull final WritePrecision precision,
+                                     @Nullable final WriteConsistency consistency) {
+        Arguments.checkNonEmpty(bucket, "bucket");
+        Arguments.checkNonEmpty(org, "org");
+        Arguments.checkNotNull(precision, "WritePrecision");
+
+        return getPreBatchBufferSize(new WriteParameters(bucket, org, precision, consistency));
+    }
+
+    @Override
+    public int getPreBatchBufferSize(@Nonnull final WriteParameters params) {
+        return super.getPreBatchBufferSize(params);
+    }
+
+    @Override
+    @Nonnull
+    public Map<WriteParameters, Integer> getPreBatchBufferSizes() {
+        return super.getPreBatchBufferSizes();
     }
 
     @Override
