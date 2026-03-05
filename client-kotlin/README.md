@@ -310,7 +310,7 @@ The latest version for Maven dependency:
 Or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-kotlin:8.0.0"
+    implementation "com.influxdb:influxdb-client-kotlin:7.5.0"
 }
 ```
 
