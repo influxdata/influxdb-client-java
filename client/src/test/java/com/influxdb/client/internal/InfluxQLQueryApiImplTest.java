@@ -24,12 +24,17 @@ package com.influxdb.client.internal;
 import java.io.IOException;
 import java.io.StringReader;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.influxdb.Cancellable;
 import com.influxdb.query.InfluxQLQueryResult;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.platform.engine.TestTag;
 
 class InfluxQLQueryApiImplTest {
 
@@ -43,6 +48,55 @@ class InfluxQLQueryApiImplTest {
 			return false;
 		}
 	};
+
+	@Test
+	void readInfluxQLResultWithTagCommas() throws IOException {
+		InfluxQLQueryResult.Series.ValueExtractor extractValue = (columnName, rawValue, resultIndex, seriesName) -> {
+			// System.out.println("DEBUG columnName: " + columnName + ", rawValue: " + rawValue + ", resultIndex: " + resultIndex + ", seriesName: " + seriesName);
+			if (resultIndex == 0 && seriesName.equals("data1")){
+				switch (columnName){
+					case "time": return Instant.ofEpochSecond(Long.parseLong(rawValue));
+					case "first": return Double.valueOf(rawValue);
+					//case "tags": return rawValue;
+				}
+			}
+			return rawValue;
+		};
+
+		// Cheb,CZ should be \"Cheb,CZ\" a single tag value
+		// double quotes should work - from raw sample results commas should always be escaped
+		StringReader reader = new StringReader("name,tags,time,first\n"
+			+ "data1,\"location=Cheb_CZ\",1483225200,42\n"
+			+ "data1,\"region=us-east-1,host=server1\",1483225200,13.57\n"
+		//	+ "data1,\"location=Cheb,CZ\",1483225200,42\n" // invalid - comma in value should be escaped
+		//	+ "data1,\"location=Cheb, CZ\",1483225200,42\n" // invalid - comma and space in value should be escaped
+			+ "data1,\"location=Cheb\\,\\ CZ\",1483225200,42\n"
+			+ "data1,\"location=Cheb_CZ,branch=Munchen_DE\",1483225200,42\n"
+			+ "data1,\"location=Cheb\\,\\ CZ,branch=Munchen\\,\\ DE\",1483225200,42\n"
+			+ "data1,\"model\\,\\ uin=C3PO\",1483225200,42\n"
+			+ "data1,\"model\\,\\ uin=Droid\\, C3PO\",1483225200,42\n"
+			+ "data1,\"location=Cheb\\,\\ CZ,branch=Munchen\\,\\ DE\",1483225200,42\n"
+			+ "data1,\"model\\,\\ uin=Droid\\,\\ C3PO,location=Cheb\\,\\ CZ,branch=Munchen\\,\\ DE\",1483225200,42\n"
+			+ "data1,\"silly\\,long\\,tag=a\\,b\\,\\ c\\,\\ d\",1483225200,42\n"
+			+ "\n"
+			+ "name,tags,time,usage_user,usage_system\n"
+			+ "cpu,\"region=us\\,\\ east-1,host\\,\\ name=ser\\,\\ ver1\",1483225200,13.57,1.4\n"
+		);
+
+        // TODO meaningful asserts
+		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLResult(reader, NO_CANCELLING, extractValue);
+		List<InfluxQLQueryResult.Result> results = result.getResults();
+		// System.out.println("DEBUG results\n" + results.get(0).getSeries().get(0).getValues().get(0).getValueByKey("tags"));
+	}
+
+	/*
+	Sample response 1 - note escaped commas
+name,tags,time,fVal,iVal,id,location,"location\,boo",model,"model\,uin",sVal
+zaphrod_b,,1773307528202967039,26.54671,-6922649068284626682,bar,Harfa,,R2D2,,FOO
+zaphrod_b,,1773322199131651270,26.54671,-6922649068284626682,bar,,Harfa,R2D2,,FOO
+zaphrod_b,,1773322228235655514,26.54671,-6922649068284626682,bar,,"Harfa\,\ Praha",R2D2,,FOO
+zaphrod_b,,1773322254827374192,26.54671,-6922649068284626682,bar,,"Harfa\,\ Praha",,R2D2,FOO
+	 */
 
 	@Test
 	void readInfluxQLResult() throws IOException {
