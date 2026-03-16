@@ -162,11 +162,8 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
                             Arrays.asList(name, finalTags),
                             n -> new InfluxQLQueryResult.Series(name, finalTags, finalHeaderCols)
                     );
-                    // System.out.println("DEBUG finalHeaderCols: " + finalHeaderCols + " dynamiColumnsStartIndex: " + dynamicColumnsStartIndex);
-                    //getCSVField(csvRecord, headerCols.get("time") + dynamicColumnsStartIndex);
                     Object[] values = headerCols.entrySet().stream().map(entry -> {
-                        // String value = csvRecord.get(entry.getValue() + dynamicColumnsStartIndex);
-                        String value = getCSVField(csvRecord, entry.getValue() + dynamicColumnsStartIndex);
+                        String value = csvRecord.get(entry.getValue() + dynamicColumnsStartIndex);
                         if (valueExtractor != null) {
                             return valueExtractor.extractValue(entry.getKey(), value, resultIndex, serie.getName());
                         }
@@ -185,26 +182,6 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
             results.add(result);
         }
         return new InfluxQLQueryResult(results);
-    }
-
-    // Need to fixup any fields that might have contained a commented comma
-    private static String getCSVField(CSVRecord record, int col_index) {
-        ArrayList<String> fixupValues = new ArrayList<>();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < record.size(); i++) {
-           // System.out.println("DEBUG record.values()["+ i + "]: " + record.values()[i]);
-            if(record.values()[i].endsWith("\\")){
-                sb.append(record.get(i)).append(",");
-            } else {
-                sb.append(record.get(i));
-                fixupValues.add(sb.toString());
-                sb.delete(0, sb.length());
-            }
-        }
-        // System.out.println("DEBUG fixupValues: " + fixupValues);
-        // System.out.println("DEBUG co_index: " + col_index + " fixupValues.size: " + fixupValues.size());
-        // System.out.println("DEBUG result: " + fixupValues.get(col_index));
-        return  fixupValues.get(col_index);
     }
 
     private static int IndexOfUnescapedChar(String str, char ch) {
