@@ -120,14 +120,10 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         // All other columns are dynamically parsed
         final int dynamicColumnsStartIndex = 2;
 
-       // CSVFormat.RFC4180.builder()
         try (CSVParser parser = new CSVParser(reader, CSVFormat.DEFAULT.builder()
-           // .setEscape('\\')
             .setIgnoreEmptyLines(false)
-           // .setTrim(true)
             .build())) {
             for (CSVRecord csvRecord : parser) {
-                // System.out.println("DEBUG csvRecord: " + csvRecord + ", size " +  csvRecord.size());
                 if (cancellable.isCancelled()) {
                     break;
                 }
@@ -184,10 +180,10 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         return new InfluxQLQueryResult(results);
     }
 
-    private static int IndexOfUnescapedChar(String str, char ch) {
+    private static int indexOfUnescapedChar(@Nonnull final String str, final char ch) {
         char[] chars = str.toCharArray();
         for (int i = 0; i < chars.length; i++) {
-            if (chars[i] == ch && chars[i-1] != '\\') {
+            if (chars[i] == ch && chars[i - 1] != '\\') {
                 return i;
             }
         }
@@ -198,46 +194,31 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         final Map<String, String> tags = new HashMap<>();
         final List<String> keys = new ArrayList<>();
         final List<String> values = new ArrayList<>();
-        // System.out.println("DEBUG ARG value: " + value);
         if (!value.isEmpty()) {
             String[] chunks = value.split("=");
             for (int i = 0; i < chunks.length; i++) {
-                // System.out.println("DEBUG chunks[" + i + "]: " + chunks[i]);
                 if (i == 0) {
                     keys.add(chunks[i]);
                 } else if (i == chunks.length - 1) {
                     values.add(chunks[i]);
                 } else {
-                    int comma_index = IndexOfUnescapedChar(chunks[i], ',');
-                    if (comma_index != -1) {
-                        String v = chunks[i].substring(0, comma_index);
-                        String k = chunks[i].substring(comma_index + 1);
-                        // System.out.println("DEBUG v: " + v + " k: " + k);
+                    int commaIndex = indexOfUnescapedChar(chunks[i], ',');
+                    if (commaIndex != -1) {
+                        String v = chunks[i].substring(0, commaIndex);
+                        String k = chunks[i].substring(commaIndex + 1);
                         keys.add(k);
                         values.add(v);
                     }
                 }
             }
-            // System.out.println("DEBUG keys: ");
-            // for(String key : keys) {
-            //    System.out.println(" key: " + key);
-            //}
-            // System.out.println("DEBUG values: ");
-            //for(String val : values) {
-            //    System.out.println(" val: " + val);
-            //}
             for (int i = 0; i < keys.size(); i++) {
-                // tags.put(keys.get(i), values.get(i));
                 tags.put(
                     keys.get(i).contains("\\,") ? "\"" + keys.get(i) + "\"" : keys.get(i),
                     values.get(i).contains("\\,") ? "\"" + values.get(i) + "\"" : values.get(i)
                 );
             }
         }
-        // System.out.println("DEBUG tags: ");
-        // for(String key : tags.keySet()) {
-        //     System.out.println("   tags[" + key + "]: " + tags.get(key));
-        // }
+
         return tags;
     }
 
