@@ -220,7 +220,8 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
                 }
             }
             for (int i = 0; i < keys.size(); i++) {
-                tags.put(  // be sure to surround any values containing escapes with double quotes
+                // be sure to surround any values containing escapes with double quotes
+                tags.put(
                     keys.get(i).contains("\\") ? "\"" + keys.get(i) + "\"" : keys.get(i),
                     values.get(i).contains("\\") ? "\"" + values.get(i) + "\"" : values.get(i)
                 );
