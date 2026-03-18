@@ -164,6 +164,7 @@ class InfluxQLQueryApiImplTest {
 				}
 			}
 		}
+		Assertions.assertThat(index).isEqualTo(testTags.size());
 	}
 
 	/*
