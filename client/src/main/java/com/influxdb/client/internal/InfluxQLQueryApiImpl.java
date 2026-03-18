@@ -190,6 +190,14 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         return -1;
     }
 
+    /*
+       This works on the principle that the copula '=' is the _governing verb_ of any key to value
+       expression.  So parsing begins based on the verb ('=') not on the assumed expression termination
+       character (',').  The Left and right values of the split based on ('=') are collected and checked for
+       the correct statement terminator (an unescaped ',').  Any value on the left of an unescaped ',' is a
+       value.  Any value on the right is a key.  These are placed in their respective ordered lists and then
+       recombined into the tags HashMap.
+     */
     private static Map<String, String> parseTags(@Nonnull final String value) {
         final Map<String, String> tags = new HashMap<>();
         final List<String> keys = new ArrayList<>();
@@ -197,11 +205,11 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         if (!value.isEmpty()) {
             String[] chunks = value.split("=");
             for (int i = 0; i < chunks.length; i++) {
-                if (i == 0) {
+                if (i == 0) { // first element will be a key on its own.
                     keys.add(chunks[i]);
-                } else if (i == chunks.length - 1) {
+                } else if (i == chunks.length - 1) { // the last element will be a value on its own.
                     values.add(chunks[i]);
-                } else {
+                } else { // check for legitimate keys and values
                     int commaIndex = indexOfUnescapedChar(chunks[i], ',');
                     if (commaIndex != -1) {
                         String v = chunks[i].substring(0, commaIndex);
@@ -212,9 +220,9 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
                 }
             }
             for (int i = 0; i < keys.size(); i++) {
-                tags.put(
-                    keys.get(i).contains("\\,") ? "\"" + keys.get(i) + "\"" : keys.get(i),
-                    values.get(i).contains("\\,") ? "\"" + values.get(i) + "\"" : values.get(i)
+                tags.put(  // be sure to surround any values containing escapes with double quotes
+                    keys.get(i).contains("\\") ? "\"" + keys.get(i) + "\"" : keys.get(i),
+                    values.get(i).contains("\\") ? "\"" + values.get(i) + "\"" : values.get(i)
                 );
             }
         }
