@@ -182,7 +182,7 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
 
     private static int indexOfUnescapedChar(@Nonnull final String str, final char ch) {
         char[] chars = str.toCharArray();
-        for (int i = 0; i < chars.length; i++) {
+        for (int i = 1; i < chars.length; i++) { // ignore first value
             if (chars[i] == ch && chars[i - 1] != '\\') {
                 return i;
             }
@@ -195,36 +195,35 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
        expression.  So parsing begins based on the verb ('=') not on the assumed expression termination
        character (',').  The Left and right values of the split based on ('=') are collected and checked for
        the correct statement terminator (an unescaped ',').  Any value on the left of an unescaped ',' is a
-       value.  Any value on the right is a key.  These are placed in their respective ordered lists and then
-       recombined into the tags HashMap.
+       value.  Any value on the right is a key.
      */
     private static Map<String, String> parseTags(@Nonnull final String value) {
         final Map<String, String> tags = new HashMap<>();
-        final List<String> keys = new ArrayList<>();
-        final List<String> values = new ArrayList<>();
         if (!value.isEmpty()) {
             String[] chunks = value.split("=");
+            String currentKey = "";
+            String currentValue = "";
+            String nextKey = "";
             for (int i = 0; i < chunks.length; i++) {
                 if (i == 0) { // first element will be a key on its own.
-                    keys.add(chunks[i]);
+                    nextKey = chunks[i];
                 } else if (i == chunks.length - 1) { // the last element will be a value on its own.
-                    values.add(chunks[i]);
+                    currentValue = chunks[i];
                 } else { // check for legitimate keys and values
                     int commaIndex = indexOfUnescapedChar(chunks[i], ',');
                     if (commaIndex != -1) {
-                        String v = chunks[i].substring(0, commaIndex);
-                        String k = chunks[i].substring(commaIndex + 1);
-                        keys.add(k);
-                        values.add(v);
+                        currentValue = chunks[i].substring(0, commaIndex);
+                        nextKey = chunks[i].substring(commaIndex + 1);
                     }
                 }
-            }
-            for (int i = 0; i < keys.size(); i++) {
-                // be sure to surround any values containing escapes with double quotes
-                tags.put(
-                    keys.get(i).contains("\\") ? "\"" + keys.get(i) + "\"" : keys.get(i),
-                    values.get(i).contains("\\") ? "\"" + values.get(i) + "\"" : values.get(i)
-                );
+                if (i > 0) {
+                    // be sure to surround keys and values containing escapes with double quotes
+                    tags.put(
+                        currentKey.contains("\\") ? "\"" + currentKey + "\"" : currentKey,
+                        currentValue.contains("\\") ? "\"" + currentValue + "\"" : currentValue
+                    );
+                }
+                currentKey = nextKey;
             }
         }
 
