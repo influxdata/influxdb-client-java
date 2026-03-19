@@ -229,10 +229,7 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
                 String key = currentKey.toString();
                 String val = currentValue.toString();
                 if (!key.isEmpty()) {
-                    tags.put(
-                        key.contains("\\") ? "\"" + key + "\"" : key,
-                        val.contains("\\") ? "\"" + val + "\"" : val
-                    );
+                    tags.put(key, val);
                 }
                 currentKey.setLength(0);
                 currentValue.setLength(0);
@@ -252,10 +249,7 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         String val = currentValue.toString();
         if (!key.isEmpty() || inValue) {
             if (!key.isEmpty()) {
-                tags.put(
-                    key.contains("\\") ? "\"" + key + "\"" : key,
-                    val.contains("\\") ? "\"" + val + "\"" : val
-                );
+                tags.put(key, val);
             }
         }
 

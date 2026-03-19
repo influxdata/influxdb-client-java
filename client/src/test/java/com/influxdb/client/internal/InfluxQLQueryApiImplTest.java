@@ -34,6 +34,9 @@ import java.util.stream.Stream;
 
 import com.influxdb.Cancellable;
 import com.influxdb.query.InfluxQLQueryResult;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -101,7 +104,7 @@ class InfluxQLQueryApiImplTest {
 				)),
 			// 3. simpleTag with value comma and space
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(2),
-				mapOf("location", "\"Cheb\\,\\ CZ\"")),
+				mapOf("location", "Cheb\\,\\ CZ")),
 			// 4. multiple tags with underscore
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(3),
 				mapOf(
@@ -111,32 +114,32 @@ class InfluxQLQueryApiImplTest {
 			// 5. multiple tags with comma and space
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(4),
 				mapOf(
-					"location", "\"Cheb\\,\\ CZ\"",
-					"branch", "\"Munchen\\,\\ DE\""
+					"location", "Cheb\\,\\ CZ",
+					"branch", "Munchen\\,\\ DE"
 				)),
 			// 6. tag with comma and space in key
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(5),
-				mapOf("\"model\\,\\ uin\"", "C3PO")),
+				mapOf("model\\,\\ uin", "C3PO")),
 			// 7. tag with comma and space in key and value
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(6),
-				mapOf("\"model\\,\\ uin\"", "\"Droid\\, C3PO\"")),
+				mapOf("model\\,\\ uin", "Droid\\, C3PO")),
 			// 8. comma space in key and val with multiple tags
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(7),
 				mapOf(
-					"\"model\\,\\ uin\"", "\"Droid\\,\\ C3PO\"",
-					"location", "\"Cheb\\,\\ CZ\"",
-					"branch", "\"Munchen\\,\\ DE\""
+					"model\\,\\ uin", "Droid\\,\\ C3PO",
+					"location", "Cheb\\,\\ CZ",
+					"branch", "Munchen\\,\\ DE"
 				)),
 			// 9. multiple commas in key and value
 		    new AbstractMap.SimpleImmutableEntry<>(testTags.get(8),
 				mapOf(
-					"\"silly\\,\\=long\\,tag\"", "\"a\\,b\\\\\\,\\ c\\,\\ d\""
+					"silly\\,\\=long\\,tag", "a\\,b\\\\\\,\\ c\\,\\ d"
 				)),
 			// legacy broken tags
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(9),
 				mapOf(
-					"region", "\"us\\,\\ east-1\"",
-					"\"host\\,\\ name\"", "\"ser\\,\\ ver1\""
+					"region", "us\\,\\ east-1",
+					"host\\,\\ name", "ser\\,\\ ver1"
 				))
 		).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
