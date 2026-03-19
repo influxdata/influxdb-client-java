@@ -72,7 +72,7 @@ class InfluxQLQueryApiImplTest {
 			"model\\,\\ uin=C3PO", // tag with comma space in key
 			"model\\,\\ uin=Droid\\, C3PO", // tag with comma space in key and value
 			"model\\,\\ uin=Droid\\,\\ C3PO,location=Cheb\\,\\ CZ,branch=Munchen\\,\\ DE", // comma space in key and val
-			"silly\\,long\\,tag=a\\,b\\,\\ c\\,\\ d", // multiple commas in key and value
+			"silly\\,\\=long\\,tag=a\\,b\\\\\\,\\ c\\,\\ d", // multi commas in k and v plus escaped reserved chars
 			"region=us\\,\\ east-1,host\\,\\ name=ser\\,\\ ver1" // legacy broken tags
 		);
 
@@ -125,7 +125,7 @@ class InfluxQLQueryApiImplTest {
 			// 9. multiple commas in key and value
 		    new AbstractMap.SimpleImmutableEntry<>(testTags.get(8),
 			    new HashMap<String,String>() {{
-				    put("\"silly\\,long\\,tag\"", "\"a\\,b\\,\\ c\\,\\ d\"");
+				    put("\"silly\\,\\=long\\,tag\"", "\"a\\,b\\\\\\,\\ c\\,\\ d\"");
 			    }}),
 			// legacy broken tags
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(9),
@@ -161,6 +161,13 @@ class InfluxQLQueryApiImplTest {
 					InfluxQLQueryResult.Series.Record valRec = s.getValues().get(0);
 					Assertions.assertThat(valRec.getValueByKey("first")).isEqualTo(Double.valueOf("42.0"));
 					Assertions.assertThat(valRec.getValueByKey("time")).isEqualTo(Instant.ofEpochSecond(1483225200L));
+				} else if (index == 10) {
+					Assertions.assertThat(s.getColumns()).containsOnlyKeys("time", "usage_user", "usage_system");
+					InfluxQLQueryResult.Series.Record valRec = s.getValues().get(0);
+					// No value extractor created for "cpu" series
+					Assertions.assertThat(valRec.getValueByKey("time")).isEqualTo("1483225200");
+					Assertions.assertThat(valRec.getValueByKey("usage_user")).isEqualTo("13.57");
+					Assertions.assertThat(valRec.getValueByKey("usage_system")).isEqualTo("1.4");
 				}
 			}
 		}
