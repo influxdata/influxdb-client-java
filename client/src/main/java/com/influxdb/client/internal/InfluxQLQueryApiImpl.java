@@ -247,10 +247,8 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         // finalize last key/value pair if any
         String key =  currentKey.toString();
         String val = currentValue.toString();
-        if (!key.isEmpty() || inValue) {
-            if (!key.isEmpty()) {
-                tags.put(key, val);
-            }
+        if (inValue && !key.isEmpty()) {
+            tags.put(key, val);
         }
 
         return tags;

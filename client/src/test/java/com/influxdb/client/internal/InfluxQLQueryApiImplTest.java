@@ -34,9 +34,6 @@ import java.util.stream.Stream;
 
 import com.influxdb.Cancellable;
 import com.influxdb.query.InfluxQLQueryResult;
-import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
-import org.apache.commons.csv.CSVRecord;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
