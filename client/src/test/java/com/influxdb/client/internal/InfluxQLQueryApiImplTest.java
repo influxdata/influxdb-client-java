@@ -37,6 +37,8 @@ import com.influxdb.query.InfluxQLQueryResult;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
+
 class InfluxQLQueryApiImplTest {
 
 	private static final Cancellable NO_CANCELLING = new Cancellable() {
@@ -49,6 +51,17 @@ class InfluxQLQueryApiImplTest {
 			return false;
 		}
 	};
+
+	private static Map<String, String> mapOf(@Nonnull final String... valuePairs) {
+		Map<String, String> map = new HashMap<>();
+		if (valuePairs.length % 2 != 0) {
+			throw new IllegalArgumentException("value pairs must be even");
+		}
+		for (int i = 0; i < valuePairs.length; i += 2) {
+			map.put(valuePairs[i], valuePairs[i + 1]);
+		}
+		return map;
+	}
 
 	@Test
 	void readInfluxQLResultWithTagCommas() throws IOException {
@@ -79,60 +92,52 @@ class InfluxQLQueryApiImplTest {
 		Map<String,Map<String,String>> expectedTagsMap = Stream.of(
 			// 1. simpleTag
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(0),
-				new HashMap<String,String>() {{
-					put("location", "Cheb_CZ");
-			    }}),
+				mapOf("location", "Cheb_CZ")),
 			// 2. standardTags * 2
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(1),
-				new HashMap<String,String>() {{
-					put("region", "us-east-1");
-					put("host", "server1");
-			    }}),
+				mapOf(
+					"region", "us-east-1",
+					"host", "server1"
+				)),
 			// 3. simpleTag with value comma and space
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(2),
-				new HashMap<String,String>() {{
-					put("location", "\"Cheb\\,\\ CZ\"");
-				}}),
+				mapOf("location", "\"Cheb\\,\\ CZ\"")),
 			// 4. multiple tags with underscore
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(3),
-				new HashMap<String,String>() {{
-					put("location", "Cheb_CZ");
-					put("branch", "Munchen_DE");
-				}}),
+				mapOf(
+					"location", "Cheb_CZ",
+					"branch", "Munchen_DE"
+				)),
 			// 5. multiple tags with comma and space
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(4),
-				new HashMap<String,String>() {{
-					put("location", "\"Cheb\\,\\ CZ\"");
-					put("branch", "\"Munchen\\,\\ DE\"");
-				}}),
+				mapOf(
+					"location", "\"Cheb\\,\\ CZ\"",
+					"branch", "\"Munchen\\,\\ DE\""
+				)),
 			// 6. tag with comma and space in key
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(5),
-				new HashMap<String,String>() {{
-					put("\"model\\,\\ uin\"", "C3PO");
-				}}),
+				mapOf("\"model\\,\\ uin\"", "C3PO")),
 			// 7. tag with comma and space in key and value
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(6),
-				new HashMap<String,String>() {{
-					put("\"model\\,\\ uin\"", "\"Droid\\, C3PO\"");
-				}}),
+				mapOf("\"model\\,\\ uin\"", "\"Droid\\, C3PO\"")),
 			// 8. comma space in key and val with multiple tags
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(7),
-				new HashMap<String,String>() {{
-					put("\"model\\,\\ uin\"", "\"Droid\\,\\ C3PO\"");
-					put("location", "\"Cheb\\,\\ CZ\"");
-					put("branch", "\"Munchen\\,\\ DE\"");
-				}}),
+				mapOf(
+					"\"model\\,\\ uin\"", "\"Droid\\,\\ C3PO\"",
+					"location", "\"Cheb\\,\\ CZ\"",
+					"branch", "\"Munchen\\,\\ DE\""
+				)),
 			// 9. multiple commas in key and value
 		    new AbstractMap.SimpleImmutableEntry<>(testTags.get(8),
-			    new HashMap<String,String>() {{
-				    put("\"silly\\,\\=long\\,tag\"", "\"a\\,b\\\\\\,\\ c\\,\\ d\"");
-			    }}),
+				mapOf(
+					"\"silly\\,\\=long\\,tag\"", "\"a\\,b\\\\\\,\\ c\\,\\ d\""
+				)),
 			// legacy broken tags
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(9),
-				new HashMap<String,String>() {{
-					put("region", "\"us\\,\\ east-1\"");
-					put("\"host\\,\\ name\"", "\"ser\\,\\ ver1\"");
-				}})
+				mapOf(
+					"region", "\"us\\,\\ east-1\"",
+					"\"host\\,\\ name\"", "\"ser\\,\\ ver1\""
+				))
 		).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
 		StringReader reader = new StringReader("name,tags,time,first\n"
@@ -156,7 +161,7 @@ class InfluxQLQueryApiImplTest {
 		for(InfluxQLQueryResult.Result r : results) {
 			for(InfluxQLQueryResult.Series s : r.getSeries()){
 				Assertions.assertThat(s.getTags()).isEqualTo(expectedTagsMap.get(testTags.get(index++)));
-				if(index < 9) {
+				if(index < 10) {
 					Assertions.assertThat(s.getColumns()).containsOnlyKeys("time", "first");
 					InfluxQLQueryResult.Series.Record valRec = s.getValues().get(0);
 					Assertions.assertThat(valRec.getValueByKey("first")).isEqualTo(Double.valueOf("42.0"));
