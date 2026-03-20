@@ -76,17 +76,18 @@ class InfluxQLQueryApiImplTest {
 			return rawValue;
 		};
 
+		// Note that escapes in tags returned from server are themselves escaped
 		List<String> testTags = Arrays.asList(
 			"location=Cheb_CZ", //simpleTag
 			"region=us-east-1,host=server1", // standardTags * 2
-			"location=Cheb\\,\\ CZ", // simpleTag with value comma and space
+			"location=Cheb\\\\,\\\\ CZ", // simpleTag with value comma and space
 			"location=Cheb_CZ,branch=Munchen_DE", // multiple tags with underscore
-			"location=Cheb\\,\\ CZ,branch=Munchen\\,\\ DE", // multiple tags with comma and space
-			"model\\,\\ uin=C3PO", // tag with comma space in key
-			"model\\,\\ uin=Droid\\, C3PO", // tag with comma space in key and value
-			"model\\,\\ uin=Droid\\,\\ C3PO,location=Cheb\\,\\ CZ,branch=Munchen\\,\\ DE", // comma space in key and val
-			"silly\\,\\=long\\,tag=a\\,b\\\\\\,\\ c\\,\\ d", // multi commas in k and v plus escaped reserved chars
-			"region=us\\,\\ east-1,host\\,\\ name=ser\\,\\ ver1" // legacy broken tags
+			"location=Cheb\\\\,\\\\ CZ,branch=Munchen\\\\,\\\\ DE", // multiple tags with comma and space
+			"model\\\\,\\\\ uin=C3PO", // tag with comma space in key
+			"model\\\\,\\\\ uin=Droid\\\\, C3PO", // tag with comma space in key and value
+			"model\\\\,\\\\ uin=Droid\\\\,\\\\ C3PO,location=Cheb\\\\,\\\\ CZ,branch=Munchen\\\\,\\\\ DE", // comma space in key and val
+			"silly\\\\,\\\\=long\\\\,tag=a\\\\,b\\\\\\\\\\,\\\\ c\\\\,\\\\ d", // multi commas in k and v plus escaped reserved chars
+			"region=us\\\\,\\\\ east-1,host\\\\,\\\\ name=ser\\\\,\\\\ ver1" // legacy broken tags
 		);
 
 		Map<String,Map<String,String>> expectedTagsMap = Stream.of(

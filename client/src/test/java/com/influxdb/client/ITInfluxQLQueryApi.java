@@ -24,6 +24,8 @@ package com.influxdb.client;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.DBRPCreate;
@@ -92,6 +94,32 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 					Assertions.assertThat(record.getValueByKey("time")).isEqualTo("1655900000000000000");
 					Assertions.assertThat(record.getValueByKey("first")).isEqualTo("10");
 				});
+	}
+
+	@Test
+	void testQueryWithTagsWithEscapedChars() {
+		Bucket bucket = influxDBClient.getBucketsApi().findBucketByName("my-bucket");
+		influxDBClient.getWriteApiBlocking()
+			.writePoint(bucket.getId(), bucket.getOrgID(), new Point("specialTags")
+			.time(1655900000, WritePrecision.S)
+			.addField("free", 10)
+			.addTag("host", "A")
+			.addTag("region", "west")
+			.addTag("location", "vancouver\\,\\ BC")
+			.addTag("model\\,\\ uid","droid\\,\\ C3PO")
+			);
+
+		Map<String,String> expectedTags = new HashMap<>();
+		expectedTags.put("host", "A");
+		expectedTags.put("region", "west");
+		expectedTags.put("location", "vancouver\\,\\ BC");
+		expectedTags.put("model\\,\\ uid","droid\\,\\ C3PO");
+
+
+		InfluxQLQueryResult result = influxQLQueryApi.query(
+			new InfluxQLQuery("SELECT * FROM \"specialTags\" GROUP BY *", DATABASE_NAME));
+
+		Assertions.assertThat(result.getResults().get(0).getSeries().get(0).getTags()).isEqualTo(expectedTags);
 	}
 
 	@Test
