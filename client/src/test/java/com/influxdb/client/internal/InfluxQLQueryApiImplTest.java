@@ -116,7 +116,7 @@ class InfluxQLQueryApiImplTest {
 			"location=Cheb_CZ,branch=Munchen_DE", // multiple tags with underscore
 			"location=Cheb\\\\,\\\\ CZ,branch=Munchen\\\\,\\\\ DE", // multiple tags with comma and space
 			"model\\\\,\\\\ uin=C3PO", // tag with comma space in key
-			"model\\\\,\\\\ uin=Droid\\\\, C3PO", // tag with comma space in key and value
+			"model\\\\,\\\\ uin=Droid\\\\,\\\\ C3PO", // tag with comma space in key and value
 			"model\\\\,\\\\ uin=Droid\\\\,\\\\ C3PO,location=Cheb\\\\,\\\\ CZ,branch=Munchen\\\\,\\\\ DE", // comma space in key and val
 			"silly\\\\,\\\\=long\\\\,tag=a\\\\,b\\\\\\\\\\,\\\\ c\\\\,\\\\ d", // multi commas in k and v plus escaped reserved chars
 			"region=us\\\\,\\\\ east-1,host\\\\,\\\\ name=ser\\\\,\\\\ ver1" // legacy broken tags
@@ -152,7 +152,7 @@ class InfluxQLQueryApiImplTest {
 				mapOf("model\\,\\ uin", "C3PO")),
 			// 7. tag with comma and space in key and value
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(6),
-				mapOf("model\\,\\ uin", "Droid\\, C3PO")),
+				mapOf("model\\,\\ uin", "Droid\\,\\ C3PO")),
 			// 8. comma space in key and val with multiple tags
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(7),
 				mapOf(

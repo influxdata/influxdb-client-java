@@ -1,3 +1,12 @@
+## 6.10.1 [2026-03-24]
+
+### Bug Fixes
+
+1. [#862](https://github.com/influxdata/influxdb-client-java/pull/862): Improved tags parsing.
+    - Supports InfluxQL queries involving tag keys and values that incorporate escaped special characters such as commas.  e.g. (`"my_data,model\,\ uin=Droid\,\ C3PO ..."`)
+    - This support is stable for InfluxDB Enterprise v1.x databases and InfluxDB v2.x databases using legacy v1 query contexts - e.g (`/query?db=test_data`).
+    - Influxdb OSS v1.x uses slightly different escape semantics. Use of escaped commas or spaces in tag keys and values with this database can lead to unexpected behavior.  Support for special tags with OSS 1.x is not supported with this hotfix release.
+
 ## 6.10.0 [2023-07-28]
 
 ### Bug Fixes
