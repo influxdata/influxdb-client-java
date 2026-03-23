@@ -27,6 +27,7 @@ import java.time.Instant;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.DBRPCreate;
 import com.influxdb.client.domain.InfluxQLQuery;
@@ -83,7 +84,6 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 				.contains(DATABASE_NAME);
 	}
 
-
 	@Test
 	void testQueryData() {
 		InfluxQLQueryResult result = influxQLQueryApi.query(new InfluxQLQuery("SELECT FIRST(\"free\") FROM \"influxql\"", DATABASE_NAME));
@@ -114,7 +114,6 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 		expectedTags.put("region", "west");
 		expectedTags.put("location", "vancouver\\,\\ BC");
 		expectedTags.put("model\\,\\ uid","droid\\,\\ C3PO");
-
 
 		InfluxQLQueryResult result = influxQLQueryApi.query(
 			new InfluxQLQuery("SELECT * FROM \"specialTags\" GROUP BY *", DATABASE_NAME));

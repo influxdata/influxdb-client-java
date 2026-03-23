@@ -63,6 +63,38 @@ class InfluxQLQueryApiImplTest {
 		return map;
 	}
 
+    private static void assertParsedTags(
+        @Nonnull final String rawTags,
+        @Nonnull final Map<String, String> expectedTags
+    ) throws IOException {
+
+	    StringReader reader = new StringReader(
+			"name,tags,time,value\n" +
+			"m,\"" + rawTags + "\",1,1\n"
+			);
+		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLResult(reader, NO_CANCELLING, null);
+
+		Assertions.assertThat(result.getResults()).hasSize(1);
+		Assertions.assertThat(result.getResults().get(0).getSeries()).hasSize(1);
+		Assertions.assertThat(result.getResults().get(0).getSeries().get(0).getTags()).isEqualTo(expectedTags);
+	}
+
+    @Test
+    void readInfluxQLResultWithMalformedAndBoundaryTagCases() throws IOException {
+		assertParsedTags("", mapOf());
+		assertParsedTags("host=", mapOf("host", ""));
+		assertParsedTags("host=a,host=b", mapOf("host", "b"));
+		assertParsedTags("host=a,broken", mapOf("host", "a"));
+		assertParsedTags("=a,host=b", mapOf("host", "b"));
+		assertParsedTags("host=a,", mapOf("host", "a"));
+		assertParsedTags(",host=a", mapOf(",host", "a"));
+		assertParsedTags("a=1,,b=2", mapOf("a", "1", ",b", "2"));
+		assertParsedTags("a=foo\\", mapOf("a", "foo\\"));
+		assertParsedTags("k\\\\==v\\\\=1", mapOf("k\\=", "v\\=1"));
+		assertParsedTags("k\\\\,x=v\\\\,y,b=2", mapOf("k\\,x", "v\\,y", "b", "2"));
+		assertParsedTags("k\\\\=x", mapOf());
+	}
+
 	@Test
 	void readInfluxQLResultWithTagCommas() throws IOException {
 		InfluxQLQueryResult.Series.ValueExtractor extractValue = (columnName, rawValue, resultIndex, seriesName) -> {

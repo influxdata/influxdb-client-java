@@ -223,7 +223,7 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
                 continue;
             }
 
-            if(firstEscaped) {
+            if (firstEscaped) {
                 firstEscaped = false;
                 continue;
             }
