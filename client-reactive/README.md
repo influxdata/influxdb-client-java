@@ -433,26 +433,26 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-reactive</artifactId>
-  <version>6.10.0</version>
+  <version>6.10.1</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-reactive:6.10.0"
+    implementation "com.influxdb:influxdb-client-reactive:6.10.1"
 }
 ```
 
 ### Snapshot Repository
-The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.org/content/repositories/snapshots/).
+The snapshots are deployed into [OSS Snapshot repository](https://central.sonatype.com/repository/maven-snapshots/).
 
 #### Maven
 ```xml
 <repository>
     <id>ossrh</id>
     <name>OSS Snapshot repository</name>
-    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+    <url>https://central.sonatype.com/repository/maven-snapshots/</url>
     <releases>
         <enabled>false</enabled>
     </releases>
@@ -464,6 +464,6 @@ The snapshots are deployed into [OSS Snapshot repository](https://oss.sonatype.o
 #### Gradle
 ```
 repositories {
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    maven { url "https://central.sonatype.com/repository/maven-snapshots" }
 }
 ```
