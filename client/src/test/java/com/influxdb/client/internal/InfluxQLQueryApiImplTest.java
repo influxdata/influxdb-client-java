@@ -212,15 +212,6 @@ class InfluxQLQueryApiImplTest {
 		Assertions.assertThat(index).isEqualTo(testTags.size());
 	}
 
-	/*
-	Sample response 1 - note escaped commas
-name,tags,time,fVal,iVal,id,location,"location\,boo",model,"model\,uin",sVal
-zaphrod_b,,1773307528202967039,26.54671,-6922649068284626682,bar,Harfa,,R2D2,,FOO
-zaphrod_b,,1773322199131651270,26.54671,-6922649068284626682,bar,,Harfa,R2D2,,FOO
-zaphrod_b,,1773322228235655514,26.54671,-6922649068284626682,bar,,"Harfa\,\ Praha",R2D2,,FOO
-zaphrod_b,,1773322254827374192,26.54671,-6922649068284626682,bar,,"Harfa\,\ Praha",,R2D2,FOO
-	 */
-
 	@Test
 	void readInfluxQLResult() throws IOException {
 		InfluxQLQueryResult.Series.ValueExtractor extractValues = (columnName, rawValue, resultIndex, seriesName) -> {
