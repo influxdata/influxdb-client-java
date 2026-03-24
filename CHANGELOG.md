@@ -1,4 +1,17 @@
-## 7.6.0 [unreleased]
+## 8.0.0 [unreleased]
+
+:warning: The `spring` module now targets Spring Boot 4.x. Applications using `com.influxdb:influxdb-client-java-spring` should upgrade to Spring Boot 4.x.
+
+### Features
+
+- [#850](https://github.com/influxdata/influxdb-client-java/pull/850): Update the Spring health indicator integration to use the Spring Boot 4 health APIs.
+
+### Dependencies
+
+Update dependencies:
+
+#### Build:
+ - [#850](https://github.com/influxdata/influxdb-client-java/pull/850): `spring-boot` to `4.0.1`
 
 ## 7.5.0 [2026-01-13]
 
