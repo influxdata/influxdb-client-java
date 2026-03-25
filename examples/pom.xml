@@ -38,6 +38,43 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>examples</artifactId>
 
+    <name>The InfluxDB Client Examples</name>
+    <description>
+        The InfluxDB client's Examples - demonstrating various client features
+    </description>
+
+    <url>https://github.com/influxdata/influxdb-client-java/tree/master/examples</url>
+
+    <licenses>
+        <license>
+            <name>The MIT License (MIT)</name>
+            <url>https://raw.githubusercontent.com/influxdata/influxdb-client-java/master/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Jakub Bednar</name>
+            <email>jakub.bednar@bonitoo.io</email>
+            <organization>Bonitoo</organization>
+            <organizationUrl>https://www.bonitoo.io</organizationUrl>
+        </developer>
+        <developer>
+            <name>Robert Hajek</name>
+            <email>robert.hajek@bonitoo.io</email>
+            <organization>Bonitoo</organization>
+            <organizationUrl>https://www.bonitoo.io</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git@github.com:influxdata/influxdb-client-java.git</connection>
+        <developerConnection>scm:git:git@github.com:influxdata/influxdb-client-java.git</developerConnection>
+        <url>https://github.com/influxdata/influxdb-client-java/tree/master</url>
+        <tag>HEAD</tag>
+    </scm>
+
     <build>
         <plugins>
             <plugin>
