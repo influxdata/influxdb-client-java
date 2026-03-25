@@ -27,7 +27,7 @@
 
     <groupId>com.influxdb</groupId>
     <artifactId>influxdb-client</artifactId>
-    <version>6.10.0</version>
+    <version>6.10.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -87,17 +87,17 @@
         <connection>scm:git:git@github.com:influxdata/influxdb-client-java.git</connection>
         <developerConnection>scm:git:git@github.com:influxdata/influxdb-client-java.git</developerConnection>
         <url>http://github.com/influxdata/influxdb-client-java/tree/master</url>
-      <tag>v6.10.0</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <url>https://central.sonatype.com/repository/maven-snapshots</url>
         </snapshotRepository>
         <repository>
             <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+            <url>https://ossrh-staging-api.central.sonatype.com/service/local/staging/deploy/maven2/</url>
         </repository>
         <site>
             <id>GitHubPages</id>
@@ -409,7 +409,7 @@
                     <extensions>true</extensions>
                     <configuration>
                         <serverId>ossrh</serverId>
-                        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+                        <nexusUrl>https://ossrh-staging-api.central.sonatype.com/</nexusUrl>
                         <autoReleaseAfterClose>true</autoReleaseAfterClose>
                     </configuration>
                 </plugin>
@@ -538,38 +538,38 @@
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-test</artifactId>
-                <version>6.10.0</version>
+                <version>6.10.1-SNAPSHOT</version>
                 <scope>test</scope>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-core</artifactId>
-                <version>6.10.0</version>
+                <version>6.10.1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-utils</artifactId>
-                <version>6.10.0</version>
+                <version>6.10.1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-java</artifactId>
-                <version>6.10.0</version>
+                <version>6.10.1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-reactive</artifactId>
-                <version>6.10.0</version>
+                <version>6.10.1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
                 <groupId>com.influxdb</groupId>
                 <artifactId>influxdb-client-flux</artifactId>
-                <version>6.10.0</version>
+                <version>6.10.1-SNAPSHOT</version>
             </dependency>
 
             <dependency>
