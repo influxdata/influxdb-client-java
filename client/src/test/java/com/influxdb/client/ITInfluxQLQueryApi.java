@@ -105,15 +105,15 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 			.addField("free", 10)
 			.addTag("host", "A")
 			.addTag("region", "west")
-			.addTag("location", "vancouver\\,\\ BC")
-			.addTag("model\\,\\ uid","droid\\,\\ C3PO")
+			.addTag("location", "vancouver, BC")
+			.addTag("model, uid","droid, C3PO")
 			);
 
 		Map<String,String> expectedTags = new HashMap<>();
 		expectedTags.put("host", "A");
 		expectedTags.put("region", "west");
-		expectedTags.put("location", "vancouver\\,\\ BC");
-		expectedTags.put("model\\,\\ uid","droid\\,\\ C3PO");
+		expectedTags.put("location", "vancouver, BC");
+		expectedTags.put("model, uid","droid, C3PO");
 
 		InfluxQLQueryResult result = influxQLQueryApi.query(
 			new InfluxQLQuery("SELECT * FROM \"specialTags\" GROUP BY *", DATABASE_NAME));
