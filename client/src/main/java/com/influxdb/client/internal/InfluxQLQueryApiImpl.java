@@ -190,7 +190,6 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         StringBuilder currentValue = new StringBuilder();
         boolean inValue = false;
         boolean escaped = false;
-        // boolean firstEscaped = false;
 
         for (int i = 0; i < value.length(); i++) {
             char c = value.charAt(i);
