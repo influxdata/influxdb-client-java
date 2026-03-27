@@ -190,7 +190,6 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         StringBuilder currentValue = new StringBuilder();
         boolean inValue = false;
         boolean escaped = false;
-        boolean firstEscaped = false;
 
         for (int i = 0; i < value.length(); i++) {
             char c = value.charAt(i);
@@ -208,24 +207,9 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
 
             if (c == '\\') {
                 // start escape sequence
-                // preserve escape character
-                if (firstEscaped) {
+                // don't preserve escape character
                     escaped = true;
-                    firstEscaped = false;
                     continue;
-                }
-                if (inValue) {
-                    currentValue.append(c);
-                } else {
-                    currentKey.append(c);
-                }
-                firstEscaped = true;
-                continue;
-            }
-
-            if (firstEscaped) {
-                firstEscaped = false;
-                continue;
             }
 
             if (!inValue && c == '=') {

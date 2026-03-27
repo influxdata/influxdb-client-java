@@ -89,10 +89,10 @@ class InfluxQLQueryApiImplTest {
 		assertParsedTags("host=a,", mapOf("host", "a"));
 		assertParsedTags(",host=a", mapOf(",host", "a"));
 		assertParsedTags("a=1,,b=2", mapOf("a", "1", ",b", "2"));
-		assertParsedTags("a=foo\\", mapOf("a", "foo\\"));
-		assertParsedTags("k\\\\==v\\\\=1", mapOf("k\\=", "v\\=1"));
-		assertParsedTags("k\\\\,x=v\\\\,y,b=2", mapOf("k\\,x", "v\\,y", "b", "2"));
-		assertParsedTags("k\\\\=x", mapOf());
+		assertParsedTags("a=foo\\", mapOf("a", "foo"));
+		assertParsedTags("k\\==v\\=1", mapOf("k=", "v=1"));
+		assertParsedTags("k\\,x=v\\,y,b=2", mapOf("k,x", "v,y", "b", "2"));
+		assertParsedTags("k\\=x", mapOf());
 	}
 
 	@Test
@@ -112,14 +112,14 @@ class InfluxQLQueryApiImplTest {
 		List<String> testTags = Arrays.asList(
 			"location=Cheb_CZ", //simpleTag
 			"region=us-east-1,host=server1", // standardTags * 2
-			"location=Cheb\\\\,\\\\ CZ", // simpleTag with value comma and space
+			"location=Cheb\\,\\ CZ", // simpleTag with value comma and space
 			"location=Cheb_CZ,branch=Munchen_DE", // multiple tags with underscore
-			"location=Cheb\\\\,\\\\ CZ,branch=Munchen\\\\,\\\\ DE", // multiple tags with comma and space
-			"model\\\\,\\\\ uin=C3PO", // tag with comma space in key
-			"model\\\\,\\\\ uin=Droid\\\\,\\\\ C3PO", // tag with comma space in key and value
-			"model\\\\,\\\\ uin=Droid\\\\,\\\\ C3PO,location=Cheb\\\\,\\\\ CZ,branch=Munchen\\\\,\\\\ DE", // comma space in key and val
-			"silly\\\\,\\\\=long\\\\,tag=a\\\\,b\\\\\\\\\\,\\\\ c\\\\,\\\\ d", // multi commas in k and v plus escaped reserved chars
-			"region=us\\\\,\\\\ east-1,host\\\\,\\\\ name=ser\\\\,\\\\ ver1" // legacy broken tags
+			"location=Cheb\\,\\ CZ,branch=Munchen\\,\\ DE", // multiple tags with comma and space
+			"model\\,\\ uin=C3PO", // tag with comma space in key
+			"model\\,\\ uin=Droid\\,\\ C3PO", // tag with comma space in key and value
+			"model\\,\\ uin=Droid\\,\\ C3PO,location=Cheb\\,\\ CZ,branch=Munchen\\,\\ DE", // comma space in key and val
+			"silly\\,\\=long\\,tag=a\\,b\\\\\\,\\ c\\,\\ d", // multi commas in k and v plus escaped reserved chars
+			"region=us\\,\\ east-1,host\\,\\ name=ser\\,\\ ver1" // legacy broken tags
 		);
 
 		Map<String,Map<String,String>> expectedTagsMap = Stream.of(
@@ -134,7 +134,7 @@ class InfluxQLQueryApiImplTest {
 				)),
 			// 3. simpleTag with value comma and space
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(2),
-				mapOf("location", "Cheb\\,\\ CZ")),
+				mapOf("location", "Cheb, CZ")),
 			// 4. multiple tags with underscore
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(3),
 				mapOf(
@@ -144,32 +144,32 @@ class InfluxQLQueryApiImplTest {
 			// 5. multiple tags with comma and space
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(4),
 				mapOf(
-					"location", "Cheb\\,\\ CZ",
-					"branch", "Munchen\\,\\ DE"
+					"location", "Cheb, CZ",
+					"branch", "Munchen, DE"
 				)),
 			// 6. tag with comma and space in key
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(5),
-				mapOf("model\\,\\ uin", "C3PO")),
+				mapOf("model, uin", "C3PO")),
 			// 7. tag with comma and space in key and value
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(6),
-				mapOf("model\\,\\ uin", "Droid\\,\\ C3PO")),
+				mapOf("model, uin", "Droid, C3PO")),
 			// 8. comma space in key and val with multiple tags
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(7),
 				mapOf(
-					"model\\,\\ uin", "Droid\\,\\ C3PO",
-					"location", "Cheb\\,\\ CZ",
-					"branch", "Munchen\\,\\ DE"
+					"model, uin", "Droid, C3PO",
+					"location", "Cheb, CZ",
+					"branch", "Munchen, DE"
 				)),
 			// 9. multiple commas in key and value
 		    new AbstractMap.SimpleImmutableEntry<>(testTags.get(8),
 				mapOf(
-					"silly\\,\\=long\\,tag", "a\\,b\\\\\\,\\ c\\,\\ d"
+					"silly,=long,tag", "a,b\\, c, d"
 				)),
 			// legacy broken tags
 			new AbstractMap.SimpleImmutableEntry<>(testTags.get(9),
 				mapOf(
-					"region", "us\\,\\ east-1",
-					"host\\,\\ name", "ser\\,\\ ver1"
+					"region", "us, east-1",
+					"host, name", "ser, ver1"
 				))
 		).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
 
