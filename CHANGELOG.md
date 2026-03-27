@@ -1,3 +1,13 @@
+## 6.10.2 [2026-03-27]
+
+### Bug Fixes
+
+1. [#864](https://github.com/influxdata/influxdb-client-java/pull/864): Correct tags parsing.
+   - Previous hot fix 6.10.1 used incorrect escapes in testing tag keys and values.
+   - This fix...
+      - Uses correctly escaped keys and values
+      - Updates the tags parser in InfluxQLQueryAPI to handle them correctly
+
 ## 6.10.1 [2026-03-25]
 
 ### Bug Fixes
