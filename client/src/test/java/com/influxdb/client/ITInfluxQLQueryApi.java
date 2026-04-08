@@ -116,6 +116,31 @@ class ITInfluxQLQueryApi extends AbstractITClientTest {
 	}
 
 	@Test
+	void testQueryWithTagsWithEscapedChars() {
+		Bucket bucket = influxDBClient.getBucketsApi().findBucketByName("my-bucket");
+		influxDBClient.getWriteApiBlocking()
+			.writePoint(bucket.getId(), bucket.getOrgID(), new Point("specialTags")
+				.time(1655900000, WritePrecision.S)
+				.addField("free", 10)
+				.addTag("host", "A")
+				.addTag("region", "west")
+				.addTag("location", "vancouver, BC")
+				.addTag("model, uid","droid, C3PO")
+			);
+
+		Map<String,String> expectedTags = new HashMap<>();
+		expectedTags.put("host", "A");
+		expectedTags.put("region", "west");
+		expectedTags.put("location", "vancouver, BC");
+		expectedTags.put("model, uid","droid, C3PO");
+
+		InfluxQLQueryResult result = influxQLQueryApi.query(
+			new InfluxQLQuery("SELECT * FROM \"specialTags\" GROUP BY *", DATABASE_NAME));
+
+		Assertions.assertThat(result.getResults().get(0).getSeries().get(0).getTags()).isEqualTo(expectedTags);
+	}
+
+	@Test
 	void testQueryDataWithConversion() {
 		InfluxQLQueryResult result = influxQLQueryApi.query(
 				new InfluxQLQuery("SELECT FIRST(\"free\") FROM \"influxql\"", DATABASE_NAME)

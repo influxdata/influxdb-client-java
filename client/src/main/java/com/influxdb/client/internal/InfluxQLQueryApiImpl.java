@@ -233,13 +233,82 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         return new InfluxQLQueryResult(results);
     }
 
-    private static Map<String, String> parseTags(@Nonnull final String value) {
+    /*private static Map<String, String> parseTags(@Nonnull final String value) {
         final Map<String, String> tags = new HashMap<>();
         if (value.length() > 0) {
             for (String entry : value.split(",")) {
                 final String[] kv = entry.split("=");
                 tags.put(kv[0], kv[1]);
             }
+        }
+
+        return tags;
+    } */
+
+    private static Map<String, String> parseTags(@Nonnull final String value) {
+        final Map<String, String> tags = new HashMap<>();
+        if (value.isEmpty()) {
+            return tags;
+        }
+
+        StringBuilder currentKey  = new StringBuilder();
+        StringBuilder currentValue = new StringBuilder();
+        boolean inValue = false;
+        boolean escaped = false;
+
+        for (int i = 0; i < value.length(); i++) {
+            char c = value.charAt(i);
+
+            if (escaped) {
+                // current character is escaped - treat it as a literal
+                if (inValue) {
+                    currentValue.append(c);
+                } else {
+                    currentKey.append(c);
+                }
+                escaped = false;
+                continue;
+            }
+
+            if (c == '\\') {
+                // start escape sequence
+                // don't preserve escape character
+                escaped = true;
+                continue;
+            }
+
+            if (!inValue && c == '=') {
+                // unescaped '=' marks copula
+                inValue = true;
+                continue;
+            }
+
+            if (inValue && c == ',') {
+                // unescaped comma separates key value pairs
+                // finalize
+                String key = currentKey.toString();
+                String val = currentValue.toString();
+                if (!key.isEmpty()) {
+                    tags.put(key, val);
+                }
+                currentKey.setLength(0);
+                currentValue.setLength(0);
+                inValue = false;
+                continue;
+            }
+
+            if (inValue) {
+                currentValue.append(c);
+            } else {
+                currentKey.append(c);
+            }
+        }
+
+        // finalize last key/value pair if any
+        String key =  currentKey.toString();
+        String val = currentValue.toString();
+        if (inValue && !key.isEmpty()) {
+            tags.put(key, val);
         }
 
         return tags;

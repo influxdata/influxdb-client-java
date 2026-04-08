@@ -24,8 +24,13 @@ package com.influxdb.client.internal;
 import java.io.IOException;
 import java.io.StringReader;
 import java.time.Instant;
+import java.util.AbstractMap;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import com.influxdb.Cancellable;
 import com.influxdb.query.InfluxQLQueryResult;
@@ -33,6 +38,8 @@ import org.assertj.core.api.Assertions;
 import org.junit.Ignore;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+
+import javax.annotation.Nonnull;
 
 class InfluxQLQueryApiImplTest {
 
@@ -46,6 +53,166 @@ class InfluxQLQueryApiImplTest {
 			return false;
 		}
 	};
+
+	private static Map<String, String> mapOf(@Nonnull final String... valuePairs) {
+		Map<String, String> map = new HashMap<>();
+		if (valuePairs.length % 2 != 0) {
+			throw new IllegalArgumentException("value pairs must be even");
+		}
+		for (int i = 0; i < valuePairs.length; i += 2) {
+			map.put(valuePairs[i], valuePairs[i + 1]);
+		}
+		return map;
+	}
+
+	private static void assertParsedTags(
+		@Nonnull final String rawTags,
+		@Nonnull final Map<String, String> expectedTags
+	) throws IOException {
+
+		StringReader reader = new StringReader(
+			"name,tags,time,value\n" +
+				"m,\"" + rawTags + "\",1,1\n"
+		);
+		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLCSVResult(reader, NO_CANCELLING, null);
+
+		Assertions.assertThat(result.getResults()).hasSize(1);
+		Assertions.assertThat(result.getResults().get(0).getSeries()).hasSize(1);
+		Assertions.assertThat(result.getResults().get(0).getSeries().get(0).getTags()).isEqualTo(expectedTags);
+	}
+
+	@Test
+	void readInfluxQLResultWithMalformedAndBoundaryTagCases() throws IOException {
+		assertParsedTags("", mapOf());
+		assertParsedTags("host=", mapOf("host", ""));
+		assertParsedTags("host=a,host=b", mapOf("host", "b"));
+		assertParsedTags("host=a,broken", mapOf("host", "a"));
+		assertParsedTags("=a,host=b", mapOf("host", "b"));
+		assertParsedTags("host=a,", mapOf("host", "a"));
+		assertParsedTags(",host=a", mapOf(",host", "a"));
+		assertParsedTags("a=1,,b=2", mapOf("a", "1", ",b", "2"));
+		assertParsedTags("a=foo\\", mapOf("a", "foo"));
+		assertParsedTags("k\\==v\\=1", mapOf("k=", "v=1"));
+		assertParsedTags("k\\,x=v\\,y,b=2", mapOf("k,x", "v,y", "b", "2"));
+		assertParsedTags("k\\=x", mapOf());
+	}
+
+	@Test
+	void readInfluxQLResultWithTagCommas() throws IOException {
+		InfluxQLQueryResult.Series.ValueExtractor extractValue = (columnName, rawValue, resultIndex, seriesName) -> {
+			if (resultIndex == 0 && seriesName.equals("data1")){
+				switch (columnName){
+					case "time": return Instant.ofEpochSecond(Long.parseLong(rawValue));
+					case "first":
+						return Double.valueOf(rawValue);
+				}
+			}
+			return rawValue;
+		};
+
+		// Note that escapes in tags returned from server are themselves escaped
+		List<String> testTags = Arrays.asList(
+			"location=Cheb_CZ", //simpleTag
+			"region=us-east-1,host=server1", // standardTags * 2
+			"location=Cheb\\,\\ CZ", // simpleTag with value comma and space
+			"location=Cheb_CZ,branch=Munchen_DE", // multiple tags with underscore
+			"location=Cheb\\,\\ CZ,branch=Munchen\\,\\ DE", // multiple tags with comma and space
+			"model\\,\\ uin=C3PO", // tag with comma space in key
+			"model\\,\\ uin=Droid\\,\\ C3PO", // tag with comma space in key and value
+			"model\\,\\ uin=Droid\\,\\ C3PO,location=Cheb\\,\\ CZ,branch=Munchen\\,\\ DE", // comma space in key and val
+			"silly\\,\\=long\\,tag=a\\,b\\\\\\,\\ c\\,\\ d", // multi commas in k and v plus escaped reserved chars
+			"region=us\\,\\ east-1,host\\,\\ name=ser\\,\\ ver1" // legacy broken tags
+		);
+
+		Map<String,Map<String,String>> expectedTagsMap = Stream.of(
+			// 1. simpleTag
+			new AbstractMap.SimpleImmutableEntry<>(testTags.get(0),
+				mapOf("location", "Cheb_CZ")),
+			// 2. standardTags * 2
+			new AbstractMap.SimpleImmutableEntry<>(testTags.get(1),
+				mapOf(
+					"region", "us-east-1",
+					"host", "server1"
+				)),
+			// 3. simpleTag with value comma and space
+			new AbstractMap.SimpleImmutableEntry<>(testTags.get(2),
+				mapOf("location", "Cheb, CZ")),
+			// 4. multiple tags with underscore
+			new AbstractMap.SimpleImmutableEntry<>(testTags.get(3),
+				mapOf(
+					"location", "Cheb_CZ",
+					"branch", "Munchen_DE"
+				)),
+			// 5. multiple tags with comma and space
+			new AbstractMap.SimpleImmutableEntry<>(testTags.get(4),
+				mapOf(
+					"location", "Cheb, CZ",
+					"branch", "Munchen, DE"
+				)),
+			// 6. tag with comma and space in key
+			new AbstractMap.SimpleImmutableEntry<>(testTags.get(5),
+				mapOf("model, uin", "C3PO")),
+			// 7. tag with comma and space in key and value
+			new AbstractMap.SimpleImmutableEntry<>(testTags.get(6),
+				mapOf("model, uin", "Droid, C3PO")),
+			// 8. comma space in key and val with multiple tags
+			new AbstractMap.SimpleImmutableEntry<>(testTags.get(7),
+				mapOf(
+					"model, uin", "Droid, C3PO",
+					"location", "Cheb, CZ",
+					"branch", "Munchen, DE"
+				)),
+			// 9. multiple commas in key and value
+			new AbstractMap.SimpleImmutableEntry<>(testTags.get(8),
+				mapOf(
+					"silly,=long,tag", "a,b\\, c, d"
+				)),
+			// legacy broken tags
+			new AbstractMap.SimpleImmutableEntry<>(testTags.get(9),
+				mapOf(
+					"region", "us, east-1",
+					"host, name", "ser, ver1"
+				))
+		).collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+
+		StringReader reader = new StringReader("name,tags,time,first\n"
+			+ "data1,\"" + testTags.get(0) + "\",1483225200,42\n"
+			+ "data1,\"" + testTags.get(1) + "\",1483225200,42\n"
+			+ "data1,\"" + testTags.get(2) + "\",1483225200,42\n"
+			+ "data1,\"" + testTags.get(3) + "\",1483225200,42\n"
+			+ "data1,\"" + testTags.get(4) + "\",1483225200,42\n"
+			+ "data1,\"" + testTags.get(5) + "\",1483225200,42\n"
+			+ "data1,\"" + testTags.get(6) + "\",1483225200,42\n"
+			+ "data1,\"" + testTags.get(7) + "\",1483225200,42\n"
+			+ "data1,\"" + testTags.get(8) + "\",1483225200,42\n"
+			+ "\n"
+			+ "name,tags,time,usage_user,usage_system\n"
+			+ "cpu,\"" + testTags.get(9) + "\",1483225200,13.57,1.4\n"
+		);
+
+		InfluxQLQueryResult result = InfluxQLQueryApiImpl.readInfluxQLCSVResult(reader, NO_CANCELLING, extractValue);
+		List<InfluxQLQueryResult.Result> results = result.getResults();
+		int index = 0;
+		for(InfluxQLQueryResult.Result r : results) {
+			for(InfluxQLQueryResult.Series s : r.getSeries()){
+				Assertions.assertThat(s.getTags()).isEqualTo(expectedTagsMap.get(testTags.get(index++)));
+				if(index < 10) {
+					Assertions.assertThat(s.getColumns()).containsOnlyKeys("time", "first");
+					InfluxQLQueryResult.Series.Record valRec = s.getValues().get(0);
+					Assertions.assertThat(valRec.getValueByKey("first")).isEqualTo(Double.valueOf("42.0"));
+					Assertions.assertThat(valRec.getValueByKey("time")).isEqualTo(Instant.ofEpochSecond(1483225200L));
+				} else if (index == 10) {
+					Assertions.assertThat(s.getColumns()).containsOnlyKeys("time", "usage_user", "usage_system");
+					InfluxQLQueryResult.Series.Record valRec = s.getValues().get(0);
+					// No value extractor created for "cpu" series
+					Assertions.assertThat(valRec.getValueByKey("time")).isEqualTo("1483225200");
+					Assertions.assertThat(valRec.getValueByKey("usage_user")).isEqualTo("13.57");
+					Assertions.assertThat(valRec.getValueByKey("usage_system")).isEqualTo("1.4");
+				}
+			}
+		}
+		Assertions.assertThat(index).isEqualTo(testTags.size());
+	}
 
 	@Test
 	void readInfluxQLResult() throws IOException {
