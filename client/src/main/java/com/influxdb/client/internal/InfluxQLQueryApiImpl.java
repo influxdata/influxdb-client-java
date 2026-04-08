@@ -233,18 +233,6 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         return new InfluxQLQueryResult(results);
     }
 
-    /*private static Map<String, String> parseTags(@Nonnull final String value) {
-        final Map<String, String> tags = new HashMap<>();
-        if (value.length() > 0) {
-            for (String entry : value.split(",")) {
-                final String[] kv = entry.split("=");
-                tags.put(kv[0], kv[1]);
-            }
-        }
-
-        return tags;
-    } */
-
     private static Map<String, String> parseTags(@Nonnull final String value) {
         final Map<String, String> tags = new HashMap<>();
         if (value.isEmpty()) {
