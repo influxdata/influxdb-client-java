@@ -6,6 +6,10 @@
 
 - [#850](https://github.com/influxdata/influxdb-client-java/pull/850): Update the Spring health indicator integration to use the Spring Boot 4 health APIs.
 
+### Bug Fixes
+
+1. [#856](https://github.com/influxdata/influxdb-client-java/pull/865): with InfluxQL queries parse escaped special characters in tag keys and values e.g. (`"my_data,model\,\ uin=Droid\,\ C3PO ..."`)
+
 ### Dependencies
 
 Update dependencies:
