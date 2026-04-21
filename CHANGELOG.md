@@ -17,6 +17,9 @@ Update dependencies:
 #### Build:
  - [#850](https://github.com/influxdata/influxdb-client-java/pull/850): `spring-boot` to `4.0.1`
 
+### CI
+1. [#867](https://github.com/influxdata/influxdb-client-java/pull/867): Set up auto-merge for Dependabot PRs.
+
 ## 7.5.0 [2026-01-13]
 
 ### Features

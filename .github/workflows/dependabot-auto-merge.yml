@@ -1,0 +1,77 @@
+#
+# The MIT License
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+#
+
+name: Auto-merge Dependabot PRs
+on:
+  pull_request_target:
+    branches: [master]
+
+jobs:
+  automerge:
+    if: (github.event.pull_request.user.login == 'dependabot[bot]' || github.event.pull_request.user.login == 'dependabot-preview[bot]') && (github.event.sender.login == 'dependabot[bot]' || github.event.sender.login == 'dependabot-preview[bot]') && (github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]') && startsWith(github.event.pull_request.head.ref, 'dependabot/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+      checks: read
+    steps:
+      - name: Fetch Dependabot metadata
+        id: metadata
+        uses: dependabot/fetch-metadata@d7267f607e9d3fb96fc2fbe83e0af444713e90b7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check for restricted paths
+        id: restricted_paths
+        run: |
+          files="$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/files?per_page=100" \
+            --paginate \
+            --jq '.[].filename')"
+          if printf '%s\n' "$files" | grep -Eq '^\.github/workflows/'; then
+            echo "restricted=true" >> "$GITHUB_OUTPUT"
+            echo "Restricted workflow path change detected; skipping auto-approve/auto-merge."
+          else
+            echo "restricted=false" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Approve and merge
+        if: steps.metadata.outputs.update-type != 'version-update:semver-major' && steps.restricted_paths.outputs.restricted != 'true'
+        run: |
+          authenticated_user="$(gh api /user --jq .login)"
+          export authenticated_user
+          existing_approval="$(gh api \
+            -H "Accept: application/vnd.github+json" \
+            "/repos/$GITHUB_REPOSITORY/pulls/$PR_NUMBER/reviews?per_page=100" \
+            --paginate \
+            --jq '[.[] | select(.user.login == env.authenticated_user and .state == "APPROVED")] | length')"
+          if [ "$existing_approval" -eq 0 ]; then
+            gh pr review --approve "$PR_URL"
+          fi
+          gh pr merge --auto --squash "$PR_URL"
+        env:
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
