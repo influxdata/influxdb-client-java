@@ -162,14 +162,14 @@ The latest version for Maven dependency:
 <dependency>
   <groupId>com.influxdb</groupId>
   <artifactId>influxdb-client-flux</artifactId>
-  <version>7.5.0</version>
+  <version>8.0.0</version>
 </dependency>
 ```
   
 Or when using with Gradle:
 ```groovy
 dependencies {
-    implementation "com.influxdb:influxdb-client-flux:7.5.0"
+    implementation "com.influxdb:influxdb-client-flux:8.0.0"
 }
 ```
 
