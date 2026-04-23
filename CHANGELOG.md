@@ -1,3 +1,5 @@
+## 8.1.0 [unreleased]
+
 ## 8.0.0 [2026-04-23]
 
 :warning: The `spring` module now targets Spring Boot 4.x. Applications using `com.influxdb:influxdb-client-java-spring` should upgrade to Spring Boot 4.x.
