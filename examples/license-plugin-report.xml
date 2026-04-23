@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1763475002710">
-    <module artifactId="examples" groupId="com.influxdb" version="7.4.0"/>
+<licensePluginReport goal="CHECK" timestamp="1776918984547">
+    <module artifactId="examples" groupId="com.influxdb" version="8.0.0-SNAPSHOT"/>
     <files>
         <file path="pom.xml" result="PRESENT"/>
         <file path="src/main/java/example/AsynchronousQuery.java" result="PRESENT"/>

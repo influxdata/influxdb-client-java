@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<licensePluginReport goal="CHECK" timestamp="1763474881413">
-    <module artifactId="influxdb-client" groupId="com.influxdb" version="7.4.0"/>
+<licensePluginReport goal="CHECK" timestamp="1776918901982">
+    <module artifactId="influxdb-client" groupId="com.influxdb" version="8.0.0-SNAPSHOT"/>
     <files>
         <file path=".circleci/config.yml" result="PRESENT"/>
         <file path=".github/dependabot.yml" result="PRESENT"/>
+        <file path=".github/workflows/dependabot-auto-merge.yml" result="PRESENT"/>
         <file path="client-scala/src/main/scala/com/influxdb/client/scala/InfluxDBClientScala.scala" result="PRESENT"/>
         <file path="client-scala/src/main/scala/com/influxdb/client/scala/InfluxDBClientScalaFactory.scala" result="PRESENT"/>
         <file path="client-scala/src/main/scala/com/influxdb/client/scala/QueryScalaApi.scala" result="PRESENT"/>
