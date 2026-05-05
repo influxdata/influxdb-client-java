@@ -1,5 +1,18 @@
 ## 8.1.0 [unreleased]
 
+### Dependencies
+
+Update dependencies:
+
+#### Build:
+1. [#908](https://github.com/influxdata/influxdb-client-java/pull/908):
+   1. Add dependencies: 
+      - `junit-bom`
+      - `junit-platform-launcher`
+   2. Upgrade dependencies: 
+      - `surefire` to `3.5.5`
+      - `junit` to `5.13.4`
+
 ## 8.0.0 [2026-04-23]
 
 :warning: The `spring` module now targets Spring Boot 4.x. Applications using `com.influxdb:influxdb-client-java-spring` should upgrade to Spring Boot 4.x.
