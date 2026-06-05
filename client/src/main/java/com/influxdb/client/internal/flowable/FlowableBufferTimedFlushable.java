@@ -35,8 +35,7 @@ import org.reactivestreams.Subscription;
  * @param <U> the output value type
  * @see FlowableBufferTimed
  */
-public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> extends Flowable<U>
-        implements FlowableTransformer<T, U> {
+public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> extends Flowable<U> {
 
     final Publisher<T> source;
     final Publisher<Boolean> flusher;
@@ -65,11 +64,6 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
         this.bufferSupplier = bufferSupplier;
         this.maxSize = maxSize;
         this.restartTimerOnMaxSize = true;
-    }
-
-    @Override
-    public @NonNull Publisher<U> apply(@NonNull final Flowable<T> upstream) {
-        return new FlowableBufferTimedFlushable<>(upstream, flusher, timeskip, unit, maxSize, scheduler, bufferSupplier);
     }
 
     @Override
