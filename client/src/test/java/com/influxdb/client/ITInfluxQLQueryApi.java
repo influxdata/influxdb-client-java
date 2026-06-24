@@ -24,13 +24,11 @@ package com.influxdb.client;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
 import com.influxdb.client.domain.Bucket;
-import com.influxdb.client.domain.DBRP;
 import com.influxdb.client.domain.DBRPCreate;
 import com.influxdb.client.domain.InfluxQLQuery;
 import com.influxdb.client.domain.WritePrecision;
@@ -47,7 +45,6 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import retrofit2.Response;
 
 import static org.assertj.core.api.InstanceOfAssertFactories.BIG_DECIMAL;
 import static org.assertj.core.api.InstanceOfAssertFactories.INSTANT;

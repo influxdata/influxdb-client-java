@@ -245,33 +245,47 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
         boolean escaped = false;
 
         for (int i = 0; i < value.length(); i++) {
-            char c = value.charAt(i);
+            char currentChar = value.charAt(i);
+
+            char nextChar = '\u0000';
+            if (i != value.length() - 1) {
+                nextChar = value.charAt(i + 1);
+            }
+
 
             if (escaped) {
                 // current character is escaped - treat it as a literal
                 if (inValue) {
-                    currentValue.append(c);
+                    currentValue.append(currentChar);
                 } else {
-                    currentKey.append(c);
+                    currentKey.append(currentChar);
                 }
                 escaped = false;
                 continue;
             }
 
-            if (c == '\\') {
+            if (currentChar == '\\') {
                 // start escape sequence
                 // don't preserve escape character
                 escaped = true;
                 continue;
             }
 
-            if (!inValue && c == '=') {
+            if (!inValue && currentChar == '=') {
                 // unescaped '=' marks copula
                 inValue = true;
                 continue;
             }
 
-            if (inValue && c == ',') {
+            // host=A,location=vancouver, BC,model, uid=droid, C3PO,region=west
+            // nextChar != ' ' to accommodate cases like the string above,
+            // where the comma is followed by a space.
+            // It will be parsed to 4 tag pairs
+            // "host"="A"
+            // "location"="vancouver, BC"
+            // "model, uid"="droid, C3PO"
+            // "region"="west"
+            if (inValue && currentChar == ',' && nextChar != ' ') {
                 // unescaped comma separates key value pairs
                 // finalize
                 String key = currentKey.toString();
@@ -286,9 +300,9 @@ public class InfluxQLQueryApiImpl extends AbstractQueryApi implements InfluxQLQu
             }
 
             if (inValue) {
-                currentValue.append(c);
+                currentValue.append(currentChar);
             } else {
-                currentKey.append(c);
+                currentKey.append(currentChar);
             }
         }
 
