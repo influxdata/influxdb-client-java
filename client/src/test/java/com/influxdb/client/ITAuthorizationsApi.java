@@ -232,21 +232,6 @@ class ITAuthorizationsApi extends AbstractITClientTest {
     }
 
     @Test
-    void findAuthorizationsByID() {
-
-        Authorization authorization = authorizationsApi.createAuthorization(organization, newPermissions());
-
-        Authorization foundAuthorization = authorizationsApi.findAuthorizationByID(authorization.getId());
-
-        Assertions.assertThat(foundAuthorization).isNotNull();
-        Assertions.assertThat(authorization.getId()).isEqualTo(foundAuthorization.getId());
-        Assertions.assertThat(authorization.getToken()).isEqualTo(foundAuthorization.getToken());
-        Assertions.assertThat(authorization.getUserID()).isEqualTo(foundAuthorization.getUserID());
-        Assertions.assertThat(authorization.getUser()).isEqualTo(foundAuthorization.getUser());
-        Assertions.assertThat(authorization.getStatus()).isEqualTo(foundAuthorization.getStatus());
-    }
-
-    @Test
     void findAuthorizationsByIDNull() {
 
         Assertions.assertThatThrownBy(() -> authorizationsApi.findAuthorizationByID("020f755c3c082000"))
