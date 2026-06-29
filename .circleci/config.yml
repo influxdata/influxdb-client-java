@@ -263,9 +263,6 @@ workflows:
           name: jdk-17-nightly
           influxdb-image: "quay.io/influxdb/influxdb:nightly"
       - tests-java:
-          name: client-backpressure
-          junit-tests: "-DclientBackpressure=true -Dit.test=com.influxdb.client.ITBackpressure -Dsurefire.failIfNoSpecifiedTests=false -Dit.failIfNoSpecifiedTests=false -Dtest=ignore -DwildcardSuites=ignore"
-      - tests-java:
           name: client-benchmark
           junit-tests: "-DclientBenchmark=true -Dit.test=com.influxdb.client.ITBenchmarkTest -Dsurefire.failIfNoSpecifiedTests=false -Dit.failIfNoSpecifiedTests=false -Dtest=ignore -DwildcardSuites=ignore"
       - deploy-snapshot:
@@ -287,6 +284,3 @@ workflows:
     jobs:
       - tests-java:
           name: jdk-8
-      - tests-java:
-          name: client-backpressure
-          junit-tests: "-DclientBackpressure=true -Dit.test=com.influxdb.client.ITBackpressure -Dsurefire.failIfNoSpecifiedTests=false -Dit.failIfNoSpecifiedTests=false -Dtest=ignore -DwildcardSuites=ignore"
