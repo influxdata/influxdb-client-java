@@ -13,6 +13,10 @@ Update dependencies:
         - `surefire` to `3.5.5`
         - `junit` to `5.13.4`
 
+### CI
+
+1. [#928](https://github.com/influxdata/influxdb-client-java/pull/928): Remove backpressure jobs from CI.
+
 ## 8.0.0 [2026-04-23]
 
 :warning: The `spring` module now targets Spring Boot 4.x. Applications using `com.influxdb:influxdb-client-java-spring` should upgrade to Spring Boot 4.x.
