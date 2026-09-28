@@ -1,5 +1,9 @@
 ## 8.1.0 [unreleased]
 
+### Features
+
+- [#948](https://github.com/influxdata/influxdb-client-java/pull/948): Support TLS and mTLS configurations. 
+
 ### Dependencies
 
 Update dependencies:
