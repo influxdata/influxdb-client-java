@@ -26,6 +26,25 @@ import java.io.IOException;
 import java.util.concurrent.CountDownLatch;
 import javax.annotation.Nonnull;
 
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Protocol;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import okhttp3.logging.HttpLoggingInterceptor;
+import okhttp3.mockwebserver.MockResponse;
+import okio.Buffer;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import retrofit2.Call;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.http.GET;
+import retrofit2.http.Headers;
+import retrofit2.http.Path;
+
 import com.influxdb.LogLevel;
 import com.influxdb.exceptions.BadGatewayException;
 import com.influxdb.exceptions.BadRequestException;
@@ -45,25 +64,6 @@ import com.influxdb.exceptions.ServiceUnavailableException;
 import com.influxdb.exceptions.UnauthorizedException;
 import com.influxdb.exceptions.UnprocessableEntityException;
 import com.influxdb.test.AbstractMockServerTest;
-
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Protocol;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
-import okhttp3.logging.HttpLoggingInterceptor;
-import okhttp3.mockwebserver.MockResponse;
-import okio.Buffer;
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import retrofit2.Call;
-import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.http.GET;
-import retrofit2.http.Headers;
-import retrofit2.http.Path;
 
 /**
  * @author Jakub Bednar (bednar@github) (04/10/2018 07:57)

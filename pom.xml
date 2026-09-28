@@ -242,7 +242,7 @@
                         **/*nightly*/**, **/.m2/**, LICENSE, **/*.md, **/PLACEHOLDER, **/.influxdb/**, **/generated/**,
                         **/openapi-generator/**, **/swagger.yml, **/*.json, **/spring.factories, **/PULL_REQUEST_TEMPLATE,
                         release.properties/, **/pom.xml.releaseBackup, **/pom.xml.tag, **/semantic.yml, **/test.txt, **/*.csv,
-                        codecov.yml, **/flowable/*.java, **/spring/*.imports
+                        codecov.yml, **/flowable/*.java, **/spring/*.imports, **/*.p12, **/*.crt, **/*.key
                     </excludes>
                     <properties>
                         <organizationName>${project.organization.name}</organizationName>
