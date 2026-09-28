@@ -27,8 +27,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.influxdb.client.domain.WritePrecision;
-
 import com.influxdb.exceptions.InfluxException;
+import com.influxdb.utils.TlsUtils;
+
 import okhttp3.OkHttpClient;
 import okhttp3.Protocol;
 import org.assertj.core.api.Assertions;
@@ -154,6 +155,35 @@ class InfluxDBClientOptionsTest {
     }
 
     @Test
+    public void tlsFilesConfig() {
+        String tlsDir = "src/test/java/com/influxdb/client/tls/";
+        String influxdbCertPath = tlsDir + "influxdb.crt";
+        String clientCertPath = tlsDir + "client.crt";
+        String clientKeyPath = tlsDir + "client.key";
+        String clientP12 = tlsDir + "client.p12";
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url("http://localhost:8086")
+                .trustFilePath(influxdbCertPath, null)
+                .certificateFilePath(clientCertPath, clientKeyPath)
+                .build();
+
+        Assertions.assertThat(options.getTrustFilePath()).isEqualTo(influxdbCertPath);
+        Assertions.assertThat(options.getCertificatePath()).isEqualTo(clientCertPath);
+        Assertions.assertThat(options.getCertificateKeyPath()).isEqualTo(clientKeyPath);
+
+        // For .p12 files
+        var password = "changeit".toCharArray();
+        InfluxDBClientOptions options1 = InfluxDBClientOptions.builder()
+                .url("http://localhost:8086")
+                .certificateP12FilePath(clientP12, password)
+                .build();
+
+        Assertions.assertThat(options1.getCertificateP12FilePath()).isEqualTo(clientP12);
+        Assertions.assertThat(options1.getKeyPassword()).isEqualTo(password);
+    }
+
+    @Test
     public void customClientTypeFromProperties() {
         InfluxDBClientOptions options = InfluxDBClientOptions.builder().loadProperties().build();
 
@@ -223,7 +253,58 @@ class InfluxDBClientOptionsTest {
               .build();}).isInstanceOf(InfluxException.class)
               .hasMessage(String.format("Unable to parse connection string http://%s:9999/api/v2/query?orgID=my-org", ipv6));
         }
-
     }
 
+    @Test
+    void tlsBothCertificateAndP12Configured() {
+        Assertions.assertThatThrownBy(() -> InfluxDBClientOptions.builder()
+                        .url("https://localhost:9999")
+                        .certificateFilePath("cert.pem", "key.pem")
+                        .certificateP12FilePath("client.p12", null)
+                        .build())
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Cannot set both p12FilePath and certificatePath");
+    }
+
+    @Test
+    void tlsOnlyClientCertificatesConfigured() {
+        String clientCertPath = "src/test/java/com/influxdb/client/tls/client.crt";
+        String clientKeyPath = "src/test/java/com/influxdb/client/tls/client.key";
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url("https://localhost:9999")
+                .certificateFilePath(clientCertPath, clientKeyPath)
+                .build();
+
+        Assertions.assertThat(options.getOkHttpClient()).isNotNull();
+    }
+
+    @Test
+    void tlsOnlyClientP12Configured() {
+        String clientP12 = "src/test/java/com/influxdb/client/tls/client.p12";
+
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url("https://localhost:9999")
+                .certificateP12FilePath(clientP12, "changeit".toCharArray())
+                .build();
+
+        Assertions.assertThat(options.getOkHttpClient()).isNotNull();
+    }
+
+    @Test
+    void tlsInvalidCertificatePath() {
+        Assertions.assertThatThrownBy(() -> InfluxDBClientOptions.builder()
+                        .url("https://localhost:9999")
+                        .certificateFilePath("non_existing_file.pem", "non_existing_file.key")
+                        .build())
+                .isInstanceOf(InfluxException.class);
+    }
+
+    @Test
+    void encryptedPemKeyIsRejected() {
+        Assertions.assertThatThrownBy(() ->
+                        TlsUtils.loadPrivateKey("src/test/java/com/influxdb/client/tls/client_pkcs8.key"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Encrypted PKCS#8 private keys are not supported");
+    }
 }
