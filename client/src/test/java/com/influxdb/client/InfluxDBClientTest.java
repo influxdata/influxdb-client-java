@@ -30,6 +30,10 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javax.annotation.Nonnull;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
@@ -53,6 +57,7 @@ import com.influxdb.client.domain.WriteConsistency;
 import com.influxdb.client.domain.WritePrecision;
 import com.influxdb.client.internal.AbstractInfluxDBClientTest;
 import com.influxdb.client.service.InfluxQLQueryService;
+import com.influxdb.utils.TlsUtils;
 
 /**
  * @author Jakub Bednar (bednar@github) (05/09/2018 14:00)
@@ -421,6 +426,130 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
         proxy.shutdown();
     }
 
+    String tlsDir = "src/test/java/com/influxdb/client/tls/";
+
+    String influxdbCertPath = tlsDir + "influxdb.crt";
+    String influxdbKeyPath = tlsDir + "influxdb.key";
+    String influxdbP12 = tlsDir + "influxdb.p12";
+
+    String otherCertPath = tlsDir + "other-server.crt";
+    String otherKeyCertPath = tlsDir + "other-server.key";
+    String otherP12 = tlsDir + "other-server.p12";
+
+    String clientCertPath = tlsDir + "client.crt";
+    String clientKeyPath = tlsDir + "client.key";
+    String clientP12 = tlsDir + "client.p12";
+
+    char[] defaultPassword = "changeit".toCharArray();
+
+    record TlsTest(boolean isMutualTls, boolean isP12) {
+    }
+
+    private static List<TlsTest> tlsCases() {
+        return List.of(
+                new TlsTest(false, false),
+                new TlsTest(false, true),
+                new TlsTest(true, false),
+                new TlsTest(true, true)
+        );
+    }
+
+    @Test
+    public void testMutualTlsSuccess() throws Exception {
+        for (TlsTest tlsCase : tlsCases()) {
+            boolean isMutualTls = tlsCase.isMutualTls;
+            boolean isP12 = tlsCase.isP12;
+
+            MockWebServer mockServer = getMutualTlsMockServer(isMutualTls, isP12);
+            try {
+                InfluxDBClientOptions.Builder options = InfluxDBClientOptions.builder()
+                        .url(mockServer.url("/").url().toString())
+                        .authenticateToken("my-token".toCharArray())
+                        .trustFilePath(isP12 ? influxdbP12 : influxdbCertPath, defaultPassword);
+
+                if (isMutualTls) {
+                    if (isP12) {
+                        options.certificateP12FilePath(clientP12, defaultPassword);
+                    } else {
+                        options.certificateFilePath(clientCertPath, clientKeyPath);
+                    }
+                }
+
+                try (InfluxDBClient client = InfluxDBClientFactory.create(options.build())) {
+                    client.version();
+                }
+            } finally {
+                mockServer.shutdown();
+            }
+        }
+    }
+
+    @Test
+    public void testMutualTlsFailClientUntrustedServer() throws Exception {
+        // Client trusts other cert, but server uses influxdb cert -> handshake should fail
+        for (boolean isP12 : List.of(false, true)) {
+            MockWebServer mockServer = getMutualTlsMockServer(false, isP12);
+            InfluxDBClientOptions.Builder options = InfluxDBClientOptions.builder()
+                    .url(mockServer.url("/").url().toString())
+                    .authenticateToken("my-token".toCharArray());
+            if (isP12) {
+                options.trustFilePath(otherP12, defaultPassword);
+            } else {
+                options.trustFilePath(otherCertPath, defaultPassword);
+            }
+
+            try (InfluxDBClient client = InfluxDBClientFactory.create(options.build())) {
+                Assertions.assertThatThrownBy(client::version)
+                        .isInstanceOf(com.influxdb.exceptions.InfluxException.class);
+            } finally {
+                mockServer.shutdown();
+            }
+        }
+    }
+
+    @Test
+    public void testMutualTlsFailServerUntrustedClient() throws Exception {
+        // Server requires client auth and trusts client cert, but client provides wrong (other) cert -> handshake should fail
+        for (boolean isP12 : List.of(false, true)) {
+            MockWebServer mockServer = getMutualTlsMockServer(true, isP12);
+            InfluxDBClientOptions.Builder options = InfluxDBClientOptions.builder()
+                    .url(mockServer.url("/").url().toString())
+                    .authenticateToken("my-token".toCharArray());
+
+            if (isP12) {
+                options.certificateP12FilePath(otherP12, defaultPassword)
+                        .trustFilePath(influxdbP12, defaultPassword);
+            } else {
+                options.certificateFilePath(otherCertPath, otherKeyCertPath)
+                        .trustFilePath(influxdbCertPath, defaultPassword);
+            }
+
+            try (InfluxDBClient client = InfluxDBClientFactory.create(options.build())) {
+                Assertions.assertThatThrownBy(client::version)
+                        .isInstanceOf(com.influxdb.exceptions.InfluxException.class);
+            } finally {
+                mockServer.shutdown();
+            }
+        }
+    }
+
+    @Test
+    public void testMutualTlsSuccessDifferentFileTypes() throws Exception {
+        MockWebServer mockServer = getMutualTlsMockServer(true, true);
+        InfluxDBClientOptions options = InfluxDBClientOptions.builder()
+                .url(mockServer.url("/").url().toString())
+                .certificateFilePath(clientCertPath, clientKeyPath)
+                .trustFilePath(influxdbP12, defaultPassword)
+                .authenticateToken("my-token".toCharArray())
+                .build();
+
+        try (InfluxDBClient client = InfluxDBClientFactory.create(options)) {
+            client.version();
+        } finally {
+            mockServer.shutdown();
+        }
+    }
+
     @Test
     public void connectionStringPrecision() {
         InfluxDBClientOptions options = InfluxDBClientOptions.builder()
@@ -546,5 +675,32 @@ class InfluxDBClientTest extends AbstractInfluxDBClientTest {
         Assertions.assertThat(request).isNotNull();
         Assertions.assertThat(request.getRequestUrl()).isNotNull();
         Assertions.assertThat(request.getRequestUrl().toString()).isEqualTo(expected + "?org=my-org");
+    }
+
+    private MockWebServer getMutualTlsMockServer(final boolean isMutualTls, final boolean isP12) throws Exception {
+        KeyManagerFactory kmf;
+        TrustManagerFactory tmf;
+
+
+        if (isP12) {
+            kmf = TlsUtils.createKmfP12(influxdbP12, defaultPassword);
+            tmf = isMutualTls ? TlsUtils.createTmfP12(clientP12, defaultPassword) : null;
+        } else {
+            kmf = TlsUtils.createKmf(influxdbCertPath, influxdbKeyPath);
+            tmf = isMutualTls ? TlsUtils.createTmf(clientCertPath, defaultPassword) : null;
+        }
+
+        SSLContext sslContext = TlsUtils.buildSslContext(kmf, tmf);
+
+        var mockServer = new MockWebServer();
+        mockServer.useHttps(sslContext.getSocketFactory(), false);
+
+        if (isMutualTls) {
+            mockServer.requireClientAuth();
+        }
+        mockServer.start();
+        mockServer.enqueue(createResponse("ok"));
+
+        return mockServer;
     }
 }

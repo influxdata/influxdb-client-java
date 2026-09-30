@@ -32,6 +32,10 @@ import java.util.regex.Pattern;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
+import javax.net.ssl.KeyManagerFactory;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
 
 import com.influxdb.LogLevel;
 import com.influxdb.client.domain.WriteConsistency;
@@ -40,6 +44,7 @@ import com.influxdb.client.write.PointSettings;
 import com.influxdb.client.write.WriteParameters;
 import com.influxdb.exceptions.InfluxException;
 import com.influxdb.utils.Arguments;
+import com.influxdb.utils.TlsUtils;
 
 import okhttp3.HttpUrl;
 import okhttp3.OkHttpClient;
@@ -65,6 +70,15 @@ public final class InfluxDBClientOptions {
     private final String username;
     private final char[] password;
 
+    private final String certificatePath;
+    private final String certificateKeyPath;
+    private final String certificateP12FilePath;
+    private final char[] keyPassword;
+
+    private final String trustFilePath;
+    private final char[] trustFilePassword;
+
+
     private final String org;
     private final String bucket;
     private final WritePrecision precision;
@@ -89,6 +103,13 @@ public final class InfluxDBClientOptions {
         this.precision = builder.precision != null ? builder.precision : WriteParameters.DEFAULT_WRITE_PRECISION;
         this.consistency = builder.consistency;
         this.pointSettings = builder.pointSettings;
+
+        this.certificatePath = builder.certificatePath;
+        this.certificateKeyPath = builder.certificateKeyPath;
+        this.certificateP12FilePath = builder.certificateP12FilePath;
+        this.keyPassword = builder.keyPassword;
+        this.trustFilePath = builder.trustFilePath;
+        this.trustFilePassword = builder.trustFilePassword;
     }
 
     /**
@@ -239,6 +260,66 @@ public final class InfluxDBClientOptions {
     }
 
     /**
+     * Retrieves the file path of the certificate used for secure communication.
+     *
+     * @return the file path of the certificate, or null if no certificate path is specified
+     */
+    @Nullable
+    public String getCertificatePath() {
+        return certificatePath;
+    }
+
+    /**
+     * Retrieves the file path of the certificate key used for secure communication.
+     *
+     * @return the file path of the certificate key, or null if no certificate key path is specified
+     */
+    @Nullable
+    public String getCertificateKeyPath() {
+        return certificateKeyPath;
+    }
+
+    /**
+     * Retrieves the file path of the PKCS#12 (P12) certificate used for secure communication.
+     *
+     * @return the file path of the PKCS#12 certificate, or null if no certificate path is specified
+     */
+    @Nullable
+    public String getCertificateP12FilePath() {
+        return certificateP12FilePath;
+    }
+
+    /**
+     * Retrieves the password for the key used in secure communication.
+     *
+     * @return the key password as a character array, or null if no key password is specified
+     */
+    @Nullable
+    public char[] getKeyPassword() {
+        return keyPassword;
+    }
+
+    /**
+     * Retrieves the file path of the trust store used for secure communication.
+     *
+     * @return the file path of the trust store, or null if no trust store path is specified
+     */
+    @Nullable
+    public String getTrustFilePath() {
+        return trustFilePath;
+    }
+
+    /**
+     * Retrieves the password for the trust store used in secure communication.
+     *
+     * @return the trust store password as a character array, or null if no trust store password is specified
+     */
+    @Nullable
+    public char[] getTrustFilePassword() {
+        return trustFilePassword;
+    }
+
+    /**
      * Creates a builder instance.
      *
      * @return a builder
@@ -263,6 +344,14 @@ public final class InfluxDBClientOptions {
         private char[] token;
         private String username;
         private char[] password;
+
+        private String certificatePath;
+        private String certificateKeyPath;
+        private String certificateP12FilePath;
+        private char[] keyPassword;
+
+        private String trustFilePath;
+        private char[] trustFilePassword;
 
         private String org;
         private String bucket;
@@ -449,6 +538,54 @@ public final class InfluxDBClientOptions {
         }
 
         /**
+         * Sets the file paths for the certificate and its corresponding private key for secure connections.
+         *
+         * @param certificatePath the file path to the certificate file in PEM format, must not be null.
+         * @param certificateKeyPath the file path to the certificate's private key in PEM format, must not be null.
+         * @return the updated {@link InfluxDBClientOptions.Builder} instance.
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder certificateFilePath(@Nonnull final String certificatePath,
+                                                                 @Nonnull final String certificateKeyPath) {
+            this.certificatePath = certificatePath;
+            this.certificateKeyPath = certificateKeyPath;
+
+            return this;
+        }
+
+        /**
+         * Sets the file path to the certificate in P12 format and the optional password for the certificate key.
+         *
+         * @param p12FilePath the file path to the P12 certificate. Must not be null.
+         * @param password the optional password for the certificate key. Can be null if no password is required.
+         * @return the Builder instance for method chaining.
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder certificateP12FilePath(@Nonnull final String p12FilePath,
+                                                                    @Nullable final char[] password) {
+            this.certificateP12FilePath = p12FilePath;
+            this.keyPassword = password;
+
+            return this;
+        }
+
+        /**
+         * Sets the file path to the trusted certificate for SSL/TLS communication.
+         *
+         * @param trustFilePath the file path to the trusted certificate; must not be null.
+         * @param password the password for the trusted certificate file; can be null if not required.
+         * @return the updated {@link InfluxDBClientOptions.Builder} instance.
+         */
+        @Nonnull
+        public InfluxDBClientOptions.Builder trustFilePath(@Nonnull final String trustFilePath,
+                                                           @Nullable final char[] password) {
+            this.trustFilePath = trustFilePath;
+            this.trustFilePassword = password;
+
+            return this;
+        }
+
+        /**
          * Add default tag that will be use for writes by Point and POJO.
          * <p>
          * The expressions can be:
@@ -584,11 +721,60 @@ public final class InfluxDBClientOptions {
                         .protocols(Collections.singletonList(Protocol.HTTP_1_1));
             }
 
+            HttpUrl parsedUrl = HttpUrl.parse(url);
+            if (parsedUrl != null && parsedUrl.isHttps()) {
+                configureTls(okHttpClient);
+            }
+
             if (logLevel == null) {
                 logLevel = LogLevel.NONE;
             }
 
             return new InfluxDBClientOptions(this);
+        }
+
+        /**
+         * Configures TLS for an OkHttpClient by setting up SSL context and trust managers based on
+         * provided certificate paths or trust file paths.
+         *
+         * @param okHttpClient an OkHttpClient.Builder instance on which TLS configuration will be applied.
+         *                     This is required to establish secure connections with the server.
+         * @throws IllegalArgumentException if both {@code certificatePath} and {@code certificateP12FilePath}
+         *                                  are set, as only one can be specified at a time.
+         * @throws InfluxException if there is an error during the TLS configuration process, such as issues
+         *                         with loading the certificate, trust file, or setting up the SSL context.
+         */
+        private void configureTls(@Nonnull final OkHttpClient.Builder okHttpClient) {
+
+            if (certificatePath != null && certificateP12FilePath != null) {
+                throw new IllegalArgumentException("Cannot set both p12FilePath and certificatePath");
+            }
+
+            if (certificatePath == null && certificateP12FilePath == null && trustFilePath == null) {
+                return;
+            }
+
+            try {
+                TrustManagerFactory tmf = null;
+                if (trustFilePath != null) {
+                    tmf = TlsUtils.createTmf(trustFilePath, trustFilePassword);
+                }
+
+                KeyManagerFactory kmf = null;
+                if (certificatePath != null) {
+                    kmf = TlsUtils.createKmf(certificatePath, certificateKeyPath);
+                } else if (certificateP12FilePath != null) {
+                    kmf = TlsUtils.createKmfP12(certificateP12FilePath, keyPassword);
+                }
+
+                SSLContext sslContext = TlsUtils.buildSslContext(kmf, tmf);
+                if (sslContext != null) {
+                    X509TrustManager trustManager = TlsUtils.getX509TrustManager(tmf);
+                    okHttpClient.sslSocketFactory(sslContext.getSocketFactory(), trustManager);
+                }
+            } catch (Exception e) {
+                throw new InfluxException(e);
+            }
         }
 
         @Nonnull
