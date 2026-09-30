@@ -77,7 +77,8 @@ public final class TlsUtils {
      *
      * @param tmf the {@link TrustManagerFactory} to retrieve the {@link X509TrustManager} from,
      *            or null to use a default {@link TrustManagerFactory}.
-     * @return an instance of {@link X509TrustManager} initialized from the given or default {@link TrustManagerFactory}.
+     * @return an instance of {@link X509TrustManager} initialized from the given or
+     * default {@link TrustManagerFactory}.
      * @throws Exception if an error occurs during the initialization or retrieval of the {@link X509TrustManager}.
      */
     @Nonnull
