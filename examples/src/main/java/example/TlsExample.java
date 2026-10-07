@@ -27,7 +27,7 @@ import com.influxdb.client.InfluxDBClientOptions;
 
 public class TlsExample {
 
-    private static final String INFLUXDB_URL = "http://localhost:8086";
+    private static final String INFLUXDB_URL = "https://localhost:8086";
     private static final char[] AUTH_TOKEN = "my-token".toCharArray();
     private static final char[] DEFAULT_PASSWORD = "my-password".toCharArray();
 

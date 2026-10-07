@@ -547,6 +547,7 @@ public final class InfluxDBClientOptions {
         @Nonnull
         public InfluxDBClientOptions.Builder certificateFilePath(@Nonnull final String certificatePath,
                                                                  @Nonnull final String certificateKeyPath) {
+            Arguments.checkNonEmpty(certificatePath, "certificatePath");
             this.certificatePath = certificatePath;
             this.certificateKeyPath = certificateKeyPath;
 
@@ -563,6 +564,7 @@ public final class InfluxDBClientOptions {
         @Nonnull
         public InfluxDBClientOptions.Builder certificateP12FilePath(@Nonnull final String p12FilePath,
                                                                     @Nullable final char[] password) {
+            Arguments.checkNonEmpty(p12FilePath, "p12FilePath");
             this.certificateP12FilePath = p12FilePath;
             this.keyPassword = password;
 
@@ -579,6 +581,7 @@ public final class InfluxDBClientOptions {
         @Nonnull
         public InfluxDBClientOptions.Builder trustFilePath(@Nonnull final String trustFilePath,
                                                            @Nullable final char[] password) {
+            Arguments.checkNonEmpty(trustFilePath, "trustFilePath");
             this.trustFilePath = trustFilePath;
             this.trustFilePassword = password;
 
