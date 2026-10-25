@@ -23,6 +23,8 @@ import io.reactivex.rxjava3.internal.subscriptions.EmptySubscription;
 import io.reactivex.rxjava3.internal.subscriptions.SubscriptionHelper;
 import io.reactivex.rxjava3.internal.util.QueueDrainHelper;
 import io.reactivex.rxjava3.subscribers.SerializedSubscriber;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 import org.reactivestreams.Publisher;
 import org.reactivestreams.Subscriber;
 import org.reactivestreams.Subscription;
@@ -103,6 +105,8 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
 
         long consumerIndex;
 
+        Lock timerLock = new ReentrantLock();
+
         BufferExactBoundedSubscriber(
                 Subscriber<? super U> actual,
                 Supplier<U> bufferSupplier,
@@ -171,8 +175,16 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
                 producerIndex++;
             }
 
-            if (restartTimerOnMaxSize) {
-                timer.dispose();
+            // If try lock fails, it indicates that the timer is doing run logic,
+            // so there is no need to dispose it.
+            if (timerLock.tryLock()) {
+                try {
+                    if (restartTimerOnMaxSize) {
+                        timer.dispose();
+                    }
+                } finally {
+                    timerLock.unlock();
+                }
             }
 
             fastPathOrderedEmitMax(b, false, this);
@@ -257,6 +269,18 @@ public final class FlowableBufferTimedFlushable<T, U extends List<? super T>> ex
 
         @Override
         public void run() {
+            // If try lock fails, it indicates that the timer is doing dispose,
+            // so there is no need to do the actual running action.
+            if (timerLock.tryLock()) {
+                try {
+                    doRun();
+                } finally {
+                    timerLock.unlock();
+                }
+            }
+        }
+
+        public void doRun() {
             U next;
 
             try {
