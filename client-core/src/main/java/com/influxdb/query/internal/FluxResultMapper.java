@@ -22,6 +22,7 @@
 package com.influxdb.query.internal;
 
 import java.lang.reflect.Field;
+import java.time.Instant;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
@@ -155,6 +156,10 @@ public class FluxResultMapper {
             }
             if (BigDecimal.class.isAssignableFrom(fieldType)) {
                 field.set(object, toBigDecimalValue(value));
+                return;
+            }
+            if (Instant.class.isAssignableFrom(fieldType)) {
+                field.set(object, Instant.parse(value.toString())); 
                 return;
             }
 
