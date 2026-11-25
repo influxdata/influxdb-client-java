@@ -51,10 +51,12 @@ class ITInfluxDBClient extends AbstractITClientTest {
 
         HealthCheck check = influxDBClient.health();
 
+        String[] healthResponses = new String[]{"ready for queries and writes", "healthy"};
+
         Assertions.assertThat(check).isNotNull();
         Assertions.assertThat(check.getName()).isEqualTo("influxdb");
         Assertions.assertThat(check.getStatus()).isEqualTo(HealthCheck.StatusEnum.PASS);
-        Assertions.assertThat(check.getMessage()).isEqualTo("ready for queries and writes");
+        Assertions.assertThat(healthResponses).contains(check.getMessage());
     }
 
     @Test

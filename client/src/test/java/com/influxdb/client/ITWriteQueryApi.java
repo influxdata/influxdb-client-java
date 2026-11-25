@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.influxdb.LogLevel;
 import com.influxdb.client.domain.Authorization;
 import com.influxdb.client.domain.Bucket;
 import com.influxdb.client.domain.Organization;
@@ -420,7 +421,8 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         PermissionResource orgResource = new PermissionResource();
         orgResource.setId(organization.getId());
-        orgResource.setOrgID(organization.getId());
+        // N.B. organization permission requests can no longer (v2.10+) handle orgID
+        // orgResource.setOrgID(organization.getId());
         orgResource.setType(PermissionResource.TYPE_ORGS);
 
         Permission readOrganization = new Permission();
