@@ -420,7 +420,8 @@ class ITWriteQueryApi extends AbstractITClientTest {
 
         PermissionResource orgResource = new PermissionResource();
         orgResource.setId(organization.getId());
-        orgResource.setOrgID(organization.getId());
+        // N.B. organization permission requests can no longer (v2.10+) handle orgID
+        // orgResource.setOrgID(organization.getId());
         orgResource.setType(PermissionResource.TYPE_ORGS);
 
         Permission readOrganization = new Permission();

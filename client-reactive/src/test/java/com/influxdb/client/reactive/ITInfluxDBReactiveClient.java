@@ -50,6 +50,7 @@ class ITInfluxDBReactiveClient extends AbstractITInfluxDBClientTest {
     void health() {
 
         Publisher<HealthCheck> check = influxDBClient.health();
+        String[] healthMessages = new String[]{"ready for queries and writes","healthy"};
 
         Single.fromPublisher(check)
                 .test()
@@ -58,7 +59,7 @@ class ITInfluxDBReactiveClient extends AbstractITInfluxDBClientTest {
 
                     Assertions.assertThat(it).isNotNull();
                     Assertions.assertThat(it.getStatus()).isEqualTo(HealthCheck.StatusEnum.PASS);
-                    Assertions.assertThat(it.getMessage()).isEqualTo("ready for queries and writes");
+                    Assertions.assertThat(healthMessages).contains(it.getMessage());
 
                     return true;
                 });

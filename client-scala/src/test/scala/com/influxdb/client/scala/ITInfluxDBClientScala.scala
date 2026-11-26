@@ -43,9 +43,10 @@ class ITInfluxDBClientScala extends AbstractITQueryScalaApi with Matchers {
 
     val health = influxDBClient.health
 
+    val healthReplies = Array("ready for queries and writes", "healthy")
     health should not be null
     health.getStatus should be(HealthCheck.StatusEnum.PASS)
-    health.getMessage should be("ready for queries and writes")
+    healthReplies should contain(health.getMessage)
   }
 
   test("health not running") {
