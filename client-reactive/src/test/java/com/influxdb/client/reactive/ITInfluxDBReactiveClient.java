@@ -29,9 +29,6 @@ import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.reactivestreams.Publisher;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * @author Jakub Bednar (bednar@github) (20/11/2018 08:06)
  */
