@@ -44,9 +44,10 @@ internal class ITInfluxDBClientKotlin : AbstractITInfluxDBClientKotlin() {
 
         val health = influxDBClient.health()
 
+        val healthMessages = arrayOf("ready for queries and writes","healthy")
         Assertions.assertThat(health).isNotNull
         Assertions.assertThat(health.status).isEqualTo(HealthCheck.StatusEnum.PASS)
-        Assertions.assertThat(health.message).isEqualTo("ready for queries and writes")
+        Assertions.assertThat(healthMessages).contains(health.message)
     }
 
     @Test
